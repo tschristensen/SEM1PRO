@@ -1,0 +1,11 @@
+#Latex
+*.aux
+*.lof
+*.lot
+*.pdf
+*.synctex.gz
+*.tdo
+*.toc
+*.out
+*.soc
+*.log
