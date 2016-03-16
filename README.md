@@ -4,4 +4,4 @@ Thomas S. Christensen
 Mikkel S. Jaedicke - mijae12@student.sdu.dk
 Kyriakos Dovelos
 Erlingur Ívar Jóhannsson
-Martin Brøchner Andersen - marti11.student.sdu.dk
+Martin Brøchner Andersen - marti11@student.sdu.dk
