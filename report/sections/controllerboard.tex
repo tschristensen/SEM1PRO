@@ -1,0 +1,64 @@
+\section{Controller Board}
+This section describes the different parts present on the board housing the motor driver. 
+DRV8301DCA
+
+\subsection{Logic-Level-Converters}
+\label{sec:llc}
+The encoder present on the motor uses 5V signals for communication while the Z-7010 FPGA present on the Zybo board is a 3.3V chip. 
+For this reason it is necessary to shift the logic levels between these chips to ensure compatibility.
+This is done using simple logic level converters (LLCs).
+Five signals require shifting in total, four of which are positional information about the motor sent to the FPGA.
+These four signals therefore need to be downscaled such that the voltage seen by the FPGA is $3.3\pm0.2$V\cite{z7010}.
+This can be done by a simple voltage divider as seen in figure \ref{fig:llc5to33}.
+To ensure that the output and input resistances ($R_{out}$, $R_{in}$) of the encoder and the FPGA, respectively, do not influence the circuit, it is necessary that $R_{out}\ll R_1\ll R_{in}$.
+Usually, \todo{perhaps actually find the output and input resistances?} $R_{out}<100\Omega$ and $R_{in}>500k\Omega$.
+Then the ratio of the resistances $R_1$ and $R_2$ is:
+\begin{equation}
+	\frac{V_{out}}{V_{in}} = \frac{R_2}{R_1+R_2} = \frac{3.3}{5}
+\end{equation}
+Thus $R_2 = 33k\Omega$ and $R_1 = 17k\Omega$ satisfies the requirement.
+
+\begin{figure}[!h]
+	\begin{subfigure}[t]{.49\linewidth}
+			\centering
+			\includegraphics[width=\textwidth]{graphics/llc_5_33}
+			\caption{Logic Level Converter: $5V\rightarrow3.3V$.}
+			\label{fig:llc5to33}
+	\end{subfigure}
+	\begin{subfigure}[t]{.49\linewidth}
+		\includegraphics[width=\textwidth]{graphics/llc_33_5}
+		\caption{Logic Level Converter: $3.3V\rightarrow5V$.}
+		\label{fig:llc33to5}
+	\end{subfigure}
+	\caption{Logic level converters used to ensure compatibility between the motor encoder and the Z-7010.}
+	\label{fig:llc}
+\end{figure}
+The final signal is the clock.
+When this signal is output from the FPGA, the encoder will latch the position of the motor onto the data line.
+The clock signal will be $3.3V$ while the TTL $V_{ih} = 3.5V$. 
+Therefore it is necessary to boost the voltage above $V_{ih}$.
+This is done using a diode offset circuit as seen in figure \ref{fig:llc33to5}.
+The circuit will offset the $V_{oh}$ and $V_{ol}$ by the forward voltage, $V_f$, of the diode.
+Typically $V_f\approx0.7V$ and therefore $V_{oh} \approx 4.0V$ and $V_{ol} \approx 0.7V$.
+These values satisfy the high/low requirements of TTL.
+The pull-up resistor, $R_1$, should be sufficiently high that the output pin of the FPGA can safely sink the resulting current.
+However, it should be small enough that the voltage divider created between it and the input resistance of the encoder.
+Choosing $R_1=5k\Omega$ will result in a max current of $1mA$, which is well within the specifications.
+
+\subsection{Torque Pedal Downscale}
+The torque pedal is simply a variable resistor, $R_{tp}=5k\Omega$.
+As the pedal is actuated the resistance changes.
+In order to limit the number of power supplies needed it was decided to set the voltage across the divider to 5$V$.
+The analog input of the ADC in the Z-7010 however, is limited to 0-1$V$.
+Therefore it is necessary to downscale the voltage.
+Intuitively this could be done using simply a voltage divider, but since the torque pedal functions as a voltage divider, the varying resistance distribution of the torque pedal would influence the voltage divider.
+For this reason a voltage follower is used to isolate the two circuits.
+See figure \ref{fig:torquepedaldownscale}.
+The ratio of $R_1$ and $R_2$ is found similarly to that in section \ref{sec:llc}.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=.75\linewidth]{graphics/torque_pedal_downscale}
+	\caption{Circuit used to scale the voltage from the torque pedal from $0V\rightarrow5V$ to $0V\rightarrow1V$.}
+	\label{fig:torquepedaldownscale}
+\end{figure}

@@ -2,10 +2,19 @@
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{caption}
 \usepackage{hyperref}
 \usepackage{float}
 \usepackage{epstopdf} %Convert EPS files to PDF format
 \usepackage{pdfpages} %Utility to include pdf documents into the report, used to include datasheets in appendices.
+
+\usepackage{tikz} 			%Utility to draw nice figures
+\usepackage{circuitikz} 	%Utility to draw circuits in tikz
+
+\usepackage{chngcntr} %Change the counters of objects. Used to make figure/table and equation counting specific to the section they are in.
+\counterwithin{figure}{section}
+\counterwithin{equation}{section}
 
 \usepackage{todonotes}
 \usepackage{listings}
@@ -39,6 +48,7 @@
 \newpage
 \input{sections/introduction}
 \input{sections/currentsensor}
+\input{sections/controllerboard}
 \newpage
 \input{bib}
 
