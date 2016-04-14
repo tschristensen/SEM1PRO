@@ -1,1 +1,14 @@
-\section{Current Sensor}
+\section{Current Transducer - LF 205-S}
+The LF 205-S utilises the Hall effect in order to measure the current flowing through a wire.
+Figure \ref{fig:lf205function} depicts an equivalent circuit of the functionality of the transducer.
+As can be seen, the LF 205-S functions like a transformer.
+As per the datasheet this transformer has a 1:2000 turns ratio, therefore:
+\begin{equation}
+	\frac{I_S}{I_P}=\frac{N_P}{N_S} \quad \Rightarrow \quad I_S = \frac{I_P}{N_S}
+\end{equation}
+Essentially, the LF 205-S generates a current, $I_S$, proportional to the current flowing through the device, $I_P$.
+By changing the value of the resistor $R_m$, the resulting voltage drop can be dictated.
+
+In section \todo{Section documenting the maximum current to be expected in each phase.} the maximum current to be expected in each phase is found to be 115 A.
+This value can be both positive and negative.
+In order to properly read 
