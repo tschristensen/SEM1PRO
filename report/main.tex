@@ -1,5 +1,6 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8]{inputenc}
+\usepackage{blindtext}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{subcaption}
@@ -39,6 +40,8 @@
 \input{sections/titlepage.tex}
 
 \newpage
+\input{sections/abstract}
+\newpage
 \tableofcontents
 \newpage
 \listoffigures
@@ -49,7 +52,7 @@
 \input{sections/introduction}
 \input{sections/systemdescription}
 \input{sections/requirements}
-\input{sections/supply}
+%\input{sections/supply}
 \input{sections/currentsensor}
 \input{sections/controllerboard}
 \input{sections/zybo}
