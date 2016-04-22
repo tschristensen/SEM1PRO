@@ -28,10 +28,21 @@ To test the back-EMF constant, a hand-held battery-powered drill will be used to
 	17.7 & 44.9\\
 	9.7 & 23.49\\
 	21.8 & 54.7\\
-	24.2 & 61.81\\
+	24.2 & 61.81
 \end{tabular}
 \end{center}
 \caption{Measured line-line voltage at electric frequencies}
 \label{tab:KE_measurements}
 \end{table}
 
+The phase amplitude of the voltage is calculated by dividing the voltages in table~\ref*{tab:KE_measurements} with $2\sqrt{3}$. The mechanical angular velocity is calculated by multiplying the frequency in table~\ref*{tab:KE_measurements} with $2\pi$, and dividing with $4$ pole pairs. The resultant voltages and velocities are divided to calculate $K_E$, and the average is calculated for these. The result is:
+
+\begin{equation}\label{eq:K_E}
+K_E = K_T = 0.0733 \frac{V s}{rad}
+\end{equation}
+
+with a spread of 1.3 percent. 
+
+According to the datasheet, $K_T$ is 0.13. This is 1.77 times higher than the measured $K_E$, and there are two potential reasons for this. One is, that the manufacturer uses line-to-line current instead of phase current, since the difference is close to $\sqrt{3}$. Another possible reason is, that the manufacturer defines $K_T$ as the torque produced with the given q-current, in which case $K_T = 1.5K_E$, and the measured $K_T$ is about 15\% below the manufacturer's datasheet. Either way, equation~\ref{eq:K_E} will be considered true from now on. 
+
+\subsubsection{Armature Resistance}\label{sub:R_a-measurements}
