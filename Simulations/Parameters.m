@@ -1,16 +1,16 @@
 clear all;clc;
 % Mechanical constants
-m = 150;            % Total mass of the car with driver
+m = 250;            % Total mass of the car with driver
 r = 11*.0254/2;     % Radius of driving wheels
 G1 = 12;            % Number of teeth on motor-side cog
-G2 = 48;            % Number of teeth on wheel-side cog
+G2 = 50;            % Number of teeth on wheel-side cog
 J_G1 = (.01*G1/(2*pi)).^4*pi*8050*.01/2; %Inertia of motor-side cog
 J_G2 = (.01*G2/(2*pi)).^4*pi*8050*.01/2; %Inertia of wheel-side cog (assuming 1 cm per tooth, and 1 cm wide steel)
 c_drag = -1/2*1.3*.804*.6; %Drag coefficient. 
 
 % Motor parameters
-R=.013;             % Armature Resistance
-L=1e-4;             % Armature inductance
+R=.013/2;             % Armature Resistance
+L=1e-4/2;             % Armature inductance
 N=4;                % Number of pole pairs
 Kt=.07329;          % Kt (real version)
 J_M = 52e-4;        % Internal torque of the motor
