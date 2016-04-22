@@ -1,5 +1,37 @@
-\section{PMAC Motor}
+\section{PMAC Motor}\label{sec:PMAC} %by Martin
 
 %\subsection{Requirements}
 %\subsection{Analysis}
 %\subsection{Conclusion}
+
+The motor used to drive the go kart is a 8 pole permanent magnet synchronous motor. Physically there is no difference between brushless DC motors, permanent magnet AC motors, and permanent magnet synchronous motors. The motor will be driven as an AC or synchronous motor (since these are the same) to produce a more consistent torque, and the name permanent magnet synchronous motor (PMSM for short) best describes how the motor is driven.
+
+\subsection{Motor parameterization}\label{sub:1117_param}
+Due to the sparse information available from the manufacturer of the motor, it is necessary to measure some of the parameters of the motor. It will also be necessary to define exactly what these parameters define, since the manufacturer has not defined certain things such as what current measurement is related to torque through $K_T$.
+
+Parameters to test are the back-EMF constant, $K_E$, armature resistance $R_a$ and armature inductance $L_a$. 
+
+\subsubsection{Back-EMF and torque constant}\label{sub:KE-KT}
+The parameters $K_E$ and $K_T$ must be the same for a PMSM motor, since they are depended on the flux produced in the permanent magnet of the rotor. Another proof, that they are the same is, that the motor converts electrical energy to mechanical energy, and electrical energy is the product of current and voltage, and (rotational) mechanical energy is the product of torque and angular velocity. A mismatch between $K_E$ and $K_T$ could imply, that the motor creates energy from nothing. 
+
+The Back-EMF constant is defined as the amplitude of each phase-voltage divided with the mechanical angular velocity. The torque constant is defined as the peak phase-current divided by the peak-torque produced by that phase. This means that $K_E$ and $K_T$ are the same, and the torque produced is the q-current multiplied by $K_T$ and 1.5 \todo{More on this later, I have proof in simulink}. The torque constant will not be tested, because there is not a proper test bench for it.
+
+To test the back-EMF constant, a hand-held battery-powered drill will be used to rotate the motor at a constant speed. An oscilloscope with a differential probe will be used to measure the voltage between two of the phases. Because of the high input impedance of the differential probe, there is no current and thus the armature inductance and resistance can be neglected. The peak-peak voltage and the corresponding frequency is noted in the table below:
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{r | l}
+	Voltage [$V_{pp}$]  & Frequency [Hz] \\
+	\hline
+	28.3 & 72.13 \\
+	15.3 & 38.32\\
+	16.5 & 40.97\\
+	17.7 & 44.9\\
+	9.7 & 23.49\\
+	21.8 & 54.7\\
+	24.2 & 61.81\\
+\end{tabular}
+\end{center}
+\caption{Measured line-line voltage at electric frequencies}
+\label{tab:KE_measurements}
+\end{table}
+
