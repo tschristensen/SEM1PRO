@@ -1,0 +1,27 @@
+\subsection{Bootstrap capacitors for gate drivers}\label{sub:bootstrap_gate_driver} %by Martin
+
+To determine the size of the bootstrap capacitors used for the gate drivers, the application note~\cite{bootstrap_paper} has been used as a guide. According to the datasheet~\cite{DRV8301}, the suggested size of the capacitors are 100 nF, and 16 or more volts. However, for the mosfets used, this is not enough.
+
+The maximum allowable voltage drop across the bootstrap capacitor is defined by equation~\ref{eq:delta_v_bootstrap}:
+
+\begin{equation}
+\Delta V_{BOOT} = V_{DD} - V_F - V_{GS(th)}
+\label{eq:delta_v_bootstrap}
+\end{equation}
+
+where $V_{DD}$ is the gate supply voltage internally supplied by the driver, $V_F$ is the voltage drop across the bootstrap diode, and $V_{GS(th)$ is the voltage threshold, where that will ensure, that the mosfet is turned on.
+	
+$V_{DD}$ is defined on figure 5 in the datasheet~\cite{DRV8301} as 10.9 V. The bootstrap diode is internal and not documented, $V_F$ will be assumed to be 0.8 V. The threshold voltage is defined on fig 2 in the datasheet~\cite{IRF4468PbF} with $I_D = 300$ and $V_{DS} = 10$ as 5 V. Hence the maximum allowable voltage drop across the bootstrap capacitors is:
+
+\begin{equation}
+\Delta V_{BOOT} = 5.1 V
+\end{equation}
+
+The total charge supplied to the gate is given by equation~\ref{eq:total_charge}
+
+\begin{equation}
+Q_{total} = Q_{g} + \big( I_{LKGS} + I_{LKCAP} \big)t_{on}
+\label{eq:total_charge}
+\end{equation}
+
+There are some parameters that have been omitted, because they are unknown and comparatively small. The gate charge needed to turn on one mosfet is ideally around 375 nC, but when designing for worst case scenario, we need to use 5
