@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Webtalk v2015.4 (64-bit)
+# SW Build 1412921 on Wed Nov 18 09:44:32 MST 2015
+# 
+# Start of session at: Fri Apr 22 13:05:53 2016
+# Process ID: 18583
+# Current directory: /home/mikkeljaedicke/Zynq_Book/small_motor2/small_motor2.sdk/webtalk
+# Command line: wbtcv -mode batch -source sdk_webtalk.tcl
+# Log file: /home/mikkeljaedicke/Zynq_Book/small_motor2/small_motor2.sdk/webtalk/webtalk.log
+# Journal file: /home/mikkeljaedicke/Zynq_Book/small_motor2/small_motor2.sdk/webtalk/webtalk.jou
+#-----------------------------------------------------------
+source sdk_webtalk.tcl
