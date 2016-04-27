@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SemiconductorLibrary xmlns="http://www.plexim.com/xml/semiconductors/" version="1.0">
+    <Package class="MOSFET" vendor="International Rectifier" partnumber="IRFP4468PbF_parallel">
+        <SemiconductorData type="MOSFET">
+            <TurnOnLoss>
+                <CurrentAxis> -33 0 25 50 75 100 150 180</CurrentAxis>
+                <VoltageAxis> 30 50 80</VoltageAxis>
+                <TemperatureAxis> 25</TemperatureAxis>
+                <Energy scale="0.001">
+                    <Temperature>
+                        <Voltage> 1.048 0.0004 0.672 2.76 6.376 10.34 23.14 33.47</Voltage>
+                        <Voltage> 1.292 0.0004 0.88 2.984 6.4 10.8 23.84 33.6</Voltage>
+                        <Voltage> 1.116 0.0004 0.928 3.1 6.72 11.04 23.96 34.6</Voltage>
+                    </Temperature>
+                </Energy>
+            </TurnOnLoss>
+            <TurnOffLoss>
+                <CurrentAxis> 0</CurrentAxis>
+                <VoltageAxis> 0</VoltageAxis>
+                <TemperatureAxis> 25</TemperatureAxis>
+                <Energy scale="1">
+                    <Temperature>
+                        <Voltage> 0</Voltage>
+                    </Temperature>
+                </Energy>
+            </TurnOffLoss>
+            <ConductionLoss>
+                <CurrentAxis> 0 350</CurrentAxis>
+                <TemperatureAxis> 25 50 75 100 125</TemperatureAxis>
+                <VoltageDrop scale="1">
+                    <Temperature> 0 0.349</Temperature>
+                    <Temperature> 0 0.408</Temperature>
+                    <Temperature> 0 0.476</Temperature>
+                    <Temperature> 0 0.551</Temperature>
+                    <Temperature> 0 0.634</Temperature>
+                </VoltageDrop>
+            </ConductionLoss>
+        </SemiconductorData>
+        <ThermalModel>
+            <Branch type="Cauer">
+                <RCElement R="0.53" C="0.3"/>
+            </Branch>
+        </ThermalModel>
+        <Comment>
+            <Line></Line>
+        </Comment>
+    </Package>
+</SemiconductorLibrary>
