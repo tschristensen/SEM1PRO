@@ -1,6 +1,6 @@
 Plecs {
   Name          "Switching_power_loss"
-  Version       "3.6"
+  Version       "3.7"
   CircuitModel  "ContStateSpace"
   StartTime     "0.0"
   StopTime      "10.0"
@@ -10,12 +10,14 @@ Plecs {
   FixedStep     ".25e-5"
   Refine        "1"
   ZCStepSize    "1e-9"
-  RelTol        "1e-4"
+  RelTol        "1e-6"
   AbsTol        "-1"
   TurnOnThreshold "0"
   SyncFixedStepTasks "2"
   UseSingleCommonBaseRate "2"
+  LossVariableLimitExceededMsg "3"
   NegativeSwitchLossMsg "1"
+  DivisionByZeroMsg "2"
   StiffnessDetectionMsg "2"
   MaxConsecutiveZCs "1000"
   AssertionAction "1"
@@ -31,12 +33,13 @@ Plecs {
   CodeGenAbsTimeUsageMsg "3"
   CodeGenBaseName ""
   CodeGenOutputDir ""
+  CodeGenExtraOpts ""
   ExtendedMatrixPrecision "1"
   MatrixSignificanceCheck "2"
   Schematic {
-    Location      [0, 23; 2560, 1359]
+    Location      [0, 38; 1920, 993]
     ZoomFactor    1.33333
-    SliderPosition [252, 0]
+    SliderPosition [920, 137]
     ShowBrowser   off
     BrowserWidth  100
     Component {
@@ -139,7 +142,7 @@ Plecs {
       Name          "Logical\nOperator"
       Show          on
       Position      [535, 320]
-      Direction     right
+      Direction     up
       Flipped       off
       Parameter {
         Variable      "Operator"
@@ -157,7 +160,7 @@ Plecs {
       Name          "Logical\nOperator1"
       Show          on
       Position      [850, 325]
-      Direction     right
+      Direction     up
       Flipped       off
       Parameter {
         Variable      "Operator"
@@ -175,7 +178,7 @@ Plecs {
       Name          "Logical\nOperator2"
       Show          on
       Position      [1180, 320]
-      Direction     right
+      Direction     up
       Flipped       off
       Parameter {
         Variable      "Operator"
@@ -250,7 +253,7 @@ Plecs {
       Name          "Product"
       Show          on
       Position      [1850, 305]
-      Direction     right
+      Direction     up
       Flipped       off
       Parameter {
         Variable      "Inputs"
@@ -281,7 +284,7 @@ Plecs {
       Name          "Product1"
       Show          on
       Position      [1970, 310]
-      Direction     right
+      Direction     up
       Flipped       off
       Parameter {
         Variable      "Inputs"
@@ -358,7 +361,7 @@ Plecs {
       Type          ThermalResistor
       Name          "Rth"
       Show          on
-      Position      [1525, 50]
+      Position      [1530, 25]
       Direction     right
       Flipped       on
       Parameter {
@@ -384,7 +387,7 @@ Plecs {
       Type          ThermometerGnd
       Name          "ThmG"
       Show          on
-      Position      [1350, 75]
+      Position      [1340, 30]
       Direction     down
       Flipped       on
     }
@@ -472,34 +475,6 @@ Plecs {
     }
     Component {
       Type          Diode
-      Name          "D3"
-      Show          on
-      Position      [770, 315]
-      Direction     down
-      Flipped       off
-      Parameter {
-        Variable      "Vf"
-        Value         ".6"
-        Show          off
-      }
-      Parameter {
-        Variable      "Ron"
-        Value         ".1"
-        Show          off
-      }
-      Parameter {
-        Variable      "thermal"
-        Value         ""
-        Show          off
-      }
-      Parameter {
-        Variable      "T_init"
-        Value         "0"
-        Show          off
-      }
-    }
-    Component {
-      Type          Diode
       Name          "D4"
       Show          on
       Position      [1455, 195]
@@ -531,34 +506,6 @@ Plecs {
       Name          "D5"
       Show          on
       Position      [1455, 310]
-      Direction     down
-      Flipped       off
-      Parameter {
-        Variable      "Vf"
-        Value         ".6"
-        Show          off
-      }
-      Parameter {
-        Variable      "Ron"
-        Value         ".1"
-        Show          off
-      }
-      Parameter {
-        Variable      "thermal"
-        Value         ""
-        Show          off
-      }
-      Parameter {
-        Variable      "T_init"
-        Value         "0"
-        Show          off
-      }
-    }
-    Component {
-      Type          Diode
-      Name          "D6"
-      Show          on
-      Position      [1100, 315]
       Direction     down
       Flipped       off
       Parameter {
@@ -753,12 +700,22 @@ Plecs {
       Direction     right
       Flipped       off
       Parameter {
+        Variable      "ExternalReset"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "InitialConditionSource"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
         Variable      "x0"
         Value         "0"
         Show          off
       }
       Parameter {
-        Variable      "ExternalReset"
+        Variable      "ShowStatePort"
         Value         "1"
         Show          off
       }
@@ -782,7 +739,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "K"
-        Value         "1"
+        Value         "2"
         Show          off
       }
       Parameter {
@@ -796,7 +753,7 @@ Plecs {
       Name          "Sum"
       Show          off
       Position      [320, 460]
-      Direction     right
+      Direction     up
       Flipped       off
       Parameter {
         Variable      "IconShape"
@@ -818,7 +775,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "K"
-        Value         ".1"
+        Value         ".2"
         Show          off
       }
       Parameter {
@@ -832,7 +789,7 @@ Plecs {
       Name          "Sum1"
       Show          off
       Position      [175, 480]
-      Direction     right
+      Direction     up
       Flipped       off
       Parameter {
         Variable      "IconShape"
@@ -866,12 +823,22 @@ Plecs {
       Direction     right
       Flipped       off
       Parameter {
+        Variable      "ExternalReset"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "InitialConditionSource"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
         Variable      "x0"
         Value         "0"
         Show          off
       }
       Parameter {
-        Variable      "ExternalReset"
+        Variable      "ShowStatePort"
         Value         "1"
         Show          off
       }
@@ -895,7 +862,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "K"
-        Value         "5"
+        Value         "1"
         Show          off
       }
       Parameter {
@@ -909,7 +876,7 @@ Plecs {
       Name          "Sum2"
       Show          off
       Position      [495, 605]
-      Direction     right
+      Direction     up
       Flipped       off
       Parameter {
         Variable      "IconShape"
@@ -931,7 +898,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "K"
-        Value         ".3"
+        Value         ".1"
         Show          off
       }
       Parameter {
@@ -945,7 +912,7 @@ Plecs {
       Name          "Sum3"
       Show          off
       Position      [350, 625]
-      Direction     right
+      Direction     up
       Flipped       off
       Parameter {
         Variable      "IconShape"
@@ -1014,23 +981,24 @@ Plecs {
       Position      [1920, 200]
       Direction     up
       Flipped       off
-      Location      [0, 23; 2560, 1380]
+      Location      [0, 38; 1914, 1014]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
-"G0AQQByAGUAYQAAAAAA/////wAAADQA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
-"///wAAAGYA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABmAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABQAP///wAACgAAAAUyAAAA"
+"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3oAAAOxAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAwgAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABeAAA"
+"AAZAAAAAEAAABkAAAAxQAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABhAAA"
 "AAQAAAAAAAAAAAAAACQAAAAAAAABkAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
+      ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "0"
+      Open          "1"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
@@ -1042,6 +1010,8 @@ Plecs {
         Signals       {}
         SignalTypes   [ ]
         Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
       }
       Fourier {
         SingleXAxis   on
@@ -1055,6 +1025,8 @@ Plecs {
           MaxValue      1
           Signals       {}
           Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
         }
       }
     }
@@ -1083,23 +1055,24 @@ Plecs {
       Position      [1770, 200]
       Direction     up
       Flipped       off
-      Location      [0, 31; 2560, 1388]
+      Location      [0, 38; 1914, 1058]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
-"G0AQQByAGUAYQAAAAAA/////wAAADQA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
-"///wAAAGYA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABmAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABQAP///wAACgAAAAUyAAAA"
+"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3oAAAPdAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAqgAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAACJAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAAAhAAAAAQAAAAA="
+"AAZAAAAAEAAABkAAAAsgAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAACJAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
+      ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "1"
+      Open          "0"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
@@ -1111,6 +1084,8 @@ Plecs {
         Signals       {}
         SignalTypes   [ ]
         Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
       }
       Fourier {
         SingleXAxis   on
@@ -1124,6 +1099,8 @@ Plecs {
           MaxValue      1
           Signals       {}
           Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
         }
       }
     }
@@ -1134,21 +1111,22 @@ Plecs {
       Position      [1890, 140]
       Direction     up
       Flipped       off
-      Location      [648, 463; 998, 690]
+      Location      [0, 38; 1914, 1014]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
-"G0AQQByAGUAYQAAAAAA/////wAAADQA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
-"///wAAAGYA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABmAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABQAP///wAAAV4AAADIAAAA"
+"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3oAAAOxAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAhgAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABlAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAAAhAAAAAQAAAAA="
+"AAZAAAAAEAAABkAAAAkQAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABoAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
+      ScrollingMode "1"
       SingleTimeAxis "1"
       Open          "1"
       Ts            "-1"
@@ -1162,6 +1140,8 @@ Plecs {
         Signals       {}
         SignalTypes   [ ]
         Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
       }
       Fourier {
         SingleXAxis   on
@@ -1175,6 +1155,8 @@ Plecs {
           MaxValue      1
           Signals       {}
           Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
         }
       }
     }
@@ -1185,23 +1167,24 @@ Plecs {
       Position      [900, 440]
       Direction     up
       Flipped       off
-      Location      [0, 31; 2560, 1388]
+      Location      [0, 38; 1914, 1014]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
-"G0AQQByAGUAYQAAAAAA/////wAAADQA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
-"///wAAAGYA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABmAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABQAP///wAACgAAAAUyAAAA"
+"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3oAAAOxAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAkgAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABxAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAAAhAAAAAQAAAAA="
+"AAZAAAAAEAAABkAAAAggAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABZAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
+      ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "1"
+      Open          "0"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
@@ -1213,6 +1196,8 @@ Plecs {
         Signals       {}
         SignalTypes   [ ]
         Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
       }
       Fourier {
         SingleXAxis   on
@@ -1226,31 +1211,34 @@ Plecs {
           MaxValue      1
           Signals       {}
           Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
         }
       }
     }
     Component {
       Type          Scope
-      Name          "DQ current1"
+      Name          "Heatsink Temperature"
       Show          on
-      Position      [1300, 75]
+      Position      [1290, 45]
       Direction     down
       Flipped       on
-      Location      [0, 23; 2560, 1380]
+      Location      [0, 29; 1920, 1005]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
-"G0AQQByAGUAYQAAAAAA/////wAAADQA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
-"///wAAAGYA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABmAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABQAP///wAACgAAAAUyAAAA"
+"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB4AAAAOxAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAwQAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABdAAA"
+"AAZAAAAAEAAABkAAAAxAAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABgAAA"
 "AAQAAAAAAAAAAAAAACQAAAAAAAABkAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
+      ScrollingMode "1"
       SingleTimeAxis "1"
       Open          "1"
       Ts            "-1"
@@ -1264,6 +1252,8 @@ Plecs {
         Signals       {}
         SignalTypes   [ ]
         Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
       }
       Fourier {
         SingleXAxis   on
@@ -1277,31 +1267,9 @@ Plecs {
           MaxValue      1
           Signals       {}
           Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
         }
-      }
-    }
-    Component {
-      Type          HeatSink
-      Name          "Heat Sink"
-      Show          on
-      Position      [1050, 240]
-      Direction     right
-      Flipped       off
-      Frame         [-437, -117; 437, 117]
-      Parameter {
-        Variable      "Cth"
-        Value         "400"
-        Show          off
-      }
-      Parameter {
-        Variable      "T_init"
-        Value         "25"
-        Show          off
-      }
-      Terminal {
-        Type          HeatPort
-        Position      [-95, -442]
-        Direction     up
       }
     }
     Component {
@@ -1319,21 +1287,22 @@ Plecs {
       Position      [1755, 40]
       Direction     up
       Flipped       off
-      Location      [0, 31; 2560, 1388]
+      Location      [0, 38; 1914, 1014]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
-"G0AQQByAGUAYQAAAAAA/////wAAADQA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
-"///wAAAGYA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABmAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABQAP///wAACgAAAAUyAAAA"
+"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3oAAAOxAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAzwAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAACuAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAAAhAAAAAQAAAAA="
+"AAZAAAAAEAAABkAAAA2gAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAACxAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
+      ScrollingMode "1"
       SingleTimeAxis "1"
       Open          "1"
       Ts            "-1"
@@ -1347,6 +1316,8 @@ Plecs {
         Signals       {}
         SignalTypes   [ ]
         Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
       }
       Fourier {
         SingleXAxis   on
@@ -1360,6 +1331,8 @@ Plecs {
           MaxValue      1
           Signals       {}
           Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
         }
       }
     }
@@ -1370,21 +1343,22 @@ Plecs {
       Position      [515, 185]
       Direction     up
       Flipped       off
-      Location      [0, 23; 2560, 1380]
+      Location      [0, 38; 1914, 1058]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
-"G0AQQByAGUAYQAAAAAA/////wAAADQA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
-"///wAAAGYA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABmAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABQAP///wAACgAAAAUyAAAA"
+"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3oAAAPdAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAdwAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABWAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAAAhAAAAAQAAAAA="
+"AAZAAAAAEAAABkAAAAvQAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABZAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAABkAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
+      ScrollingMode "1"
       SingleTimeAxis "1"
       Open          "0"
       Ts            "-1"
@@ -1398,6 +1372,8 @@ Plecs {
         Signals       {}
         SignalTypes   [ ]
         Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
       }
       Fourier {
         SingleXAxis   on
@@ -1411,6 +1387,8 @@ Plecs {
           MaxValue      1
           Signals       {}
           Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
         }
       }
     }
@@ -1418,24 +1396,25 @@ Plecs {
       Type          Scope
       Name          "Phase Voltage"
       Show          on
-      Position      [1635, 190]
+      Position      [1695, 190]
       Direction     up
       Flipped       off
-      Location      [0, 23; 2560, 1380]
+      Location      [0, 29; 1920, 1005]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
-"G0AQQByAGUAYQAAAAAA/////wAAADQA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
-"///wAAAGYA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABmAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABQAP///wAACgAAAAUyAAAA"
+"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB4AAAAOxAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAA0AAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAACvAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAAAhAAAAAQAAAAA="
+"AAZAAAAAEAAABkAAAAsgAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAACJAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
+      ScrollingMode "1"
       SingleTimeAxis "1"
       Open          "0"
       Ts            "-1"
@@ -1449,6 +1428,8 @@ Plecs {
         Signals       {}
         SignalTypes   [ ]
         Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
       }
       Fourier {
         SingleXAxis   on
@@ -1462,6 +1443,8 @@ Plecs {
           MaxValue      1
           Signals       {}
           Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
         }
       }
     }
@@ -1507,7 +1490,7 @@ Plecs {
       Name          "Product2"
       Show          on
       Position      [270, 625]
-      Direction     right
+      Direction     up
       Flipped       off
       Parameter {
         Variable      "Inputs"
@@ -1519,7 +1502,7 @@ Plecs {
       Type          HeatFlowMeter
       Name          "Wm"
       Show          on
-      Position      [1505, 85]
+      Position      [1505, 75]
       Direction     down
       Flipped       off
     }
@@ -1527,26 +1510,27 @@ Plecs {
       Type          Scope
       Name          "Cooling Power"
       Show          on
-      Position      [1425, 85]
+      Position      [1415, 40]
       Direction     down
       Flipped       on
-      Location      [648, 463; 998, 690]
+      Location      [0, 29; 1920, 1005]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
-"G0AQQByAGUAYQAAAAAA/////wAAADQA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
-"///wAAAGYA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABmAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABQAP///wAAAV4AAADIAAAA"
+"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB4AAAAOxAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAdQAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABUAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAAAhAAAAAQAAAAA="
+"AAZAAAAAEAAABkAAAAuwAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABXAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAABkAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
+      ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "1"
+      Open          "0"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
@@ -1558,6 +1542,8 @@ Plecs {
         Signals       {}
         SignalTypes   [ ]
         Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
       }
       Fourier {
         SingleXAxis   on
@@ -1571,35 +1557,9 @@ Plecs {
           MaxValue      1
           Signals       {}
           Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
         }
-      }
-    }
-    Component {
-      Type          Mosfet
-      Name          "FET1"
-      Show          on
-      Position      [650, 320]
-      Direction     up
-      Flipped       off
-      Parameter {
-        Variable      "Ron"
-        Value         "1.3e-3"
-        Show          off
-      }
-      Parameter {
-        Variable      "s_init"
-        Value         "0"
-        Show          off
-      }
-      Parameter {
-        Variable      "thermal"
-        Value         "file:IRFP4468PbF_parallel"
-        Show          off
-      }
-      Parameter {
-        Variable      "T_init"
-        Value         "25"
-        Show          off
       }
     }
     Component {
@@ -1611,35 +1571,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "Ron"
-        Value         "1.3e-3"
-        Show          off
-      }
-      Parameter {
-        Variable      "s_init"
-        Value         "0"
-        Show          off
-      }
-      Parameter {
-        Variable      "thermal"
-        Value         "file:IRFP4468PbF_parallel"
-        Show          off
-      }
-      Parameter {
-        Variable      "T_init"
-        Value         "25"
-        Show          off
-      }
-    }
-    Component {
-      Type          Mosfet
-      Name          "FET3"
-      Show          on
-      Position      [950, 195]
-      Direction     up
-      Flipped       off
-      Parameter {
-        Variable      "Ron"
-        Value         "1.3e-3"
+        Value         "1e-3"
         Show          off
       }
       Parameter {
@@ -1667,7 +1599,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "Ron"
-        Value         "1.3e-3"
+        Value         "1e-3"
         Show          off
       }
       Parameter {
@@ -1695,7 +1627,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "Ron"
-        Value         "1.3e-3"
+        Value         "1e-3"
         Show          off
       }
       Parameter {
@@ -1723,7 +1655,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "Ron"
-        Value         "1.3e-3"
+        Value         "1e-3"
         Show          off
       }
       Parameter {
@@ -1749,23 +1681,24 @@ Plecs {
       Position      [785, 685]
       Direction     up
       Flipped       off
-      Location      [0, 23; 2560, 1380]
+      Location      [0, 38; 1914, 1014]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
-"G0AQQByAGUAYQAAAAAA/////wAAADQA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
-"///wAAAGYA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABmAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABQAP///wAACgAAAAUyAAAA"
+"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3oAAAOxAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAkgAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABxAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAAAhAAAAAQAAAAA="
+"AAZAAAAAEAAABkAAAAjQAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABkAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
+      ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "1"
+      Open          "0"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
@@ -1777,6 +1710,8 @@ Plecs {
         Signals       {}
         SignalTypes   [ ]
         Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
       }
       Fourier {
         SingleXAxis   on
@@ -1790,6 +1725,8 @@ Plecs {
           MaxValue      1
           Signals       {}
           Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
         }
       }
     }
@@ -1800,23 +1737,24 @@ Plecs {
       Position      [600, 670]
       Direction     up
       Flipped       off
-      Location      [0, 23; 2560, 1380]
+      Location      [0, 38; 1914, 1014]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
-"G0AQQByAGUAYQAAAAAA/////wAAADQA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
-"///wAAAGYA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABmAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABQAP///wAACgAAAAUyAAAA"
+"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3oAAAOxAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAfQAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABcAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAAAhAAAAAQAAAAA="
+"AAZAAAAAEAAABkAAAAiAAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABfAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
+      ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "1"
+      Open          "0"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
@@ -1828,6 +1766,8 @@ Plecs {
         Signals       {}
         SignalTypes   [ ]
         Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
       }
       Fourier {
         SingleXAxis   on
@@ -1841,49 +1781,9 @@ Plecs {
           MaxValue      1
           Signals       {}
           Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
         }
-      }
-    }
-    Component {
-      Type          Reference
-      SrcComponent  "Components/Control/Modulators/Space Vector PWM"
-      Name          "Space Vector PWM"
-      Show          on
-      Position      [665, 565]
-      Direction     up
-      Flipped       off
-      Frame         [-20, -20; 20, 20]
-      LabelPosition [0, 23]
-      LabelAlign    up
-      Parameter {
-        Variable      "pattern"
-        Value         "1"
-        Show          off
-      }
-      Parameter {
-        Variable      "fs"
-        Value         "20e3"
-        Show          off
-      }
-      Parameter {
-        Variable      "output_values"
-        Value         "[0 1]"
-        Show          off
-      }
-      Terminal {
-        Type          Output
-        Position      [24, 0]
-        Direction     right
-      }
-      Terminal {
-        Type          Input
-        Position      [-20, -10]
-        Direction     left
-      }
-      Terminal {
-        Type          Input
-        Position      [-20, 10]
-        Direction     left
       }
     }
     Component {
@@ -1900,9 +1800,201 @@ Plecs {
       }
     }
     Component {
+      Type          Mosfet
+      Name          "FET7"
+      Show          on
+      Position      [955, 190]
+      Direction     up
+      Flipped       off
+      Parameter {
+        Variable      "Ron"
+        Value         "1e-3"
+        Show          off
+      }
+      Parameter {
+        Variable      "s_init"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "thermal"
+        Value         "file:IRFP4468PbF_parallel"
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         "25"
+        Show          off
+      }
+    }
+    Component {
+      Type          HeatSink
+      Name          "Heat Sink"
+      Show          on
+      Position      [1045, 240]
+      Direction     right
+      Flipped       off
+      Frame         [-432, -157; 432, 157]
+      Parameter {
+        Variable      "Cth"
+        Value         "400"
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         "25"
+        Show          off
+      }
+      Terminal {
+        Type          HeatPort
+        Position      [-135, -437]
+        Direction     up
+      }
+    }
+    Component {
+      Type          Scope
+      Name          "PWM A1"
+      Show          on
+      Position      [660, 430]
+      Direction     up
+      Flipped       off
+      Location      [0, 38; 1914, 1014]
+      State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
+"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3oAAAOxAAAA"
+"BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
+"AAAAA=="
+      SavedViews    "AAAAAgAAAAA="
+      HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
+"QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
+"AAZAAAAAEAAABkAAAAwgAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAACZAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
+      PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      Axes          "1"
+      TimeRange     "0.0"
+      ScrollingMode "1"
+      SingleTimeAxis "1"
+      Open          "0"
+      Ts            "-1"
+      SampleLimit   "0"
+      XAxisLabel    ""
+      Axis {
+        Name          ""
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Fourier {
+        SingleXAxis   on
+        AxisLabel     "Frequency"
+        Scaling       0
+        PhaseDisplay  0
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+      }
+    }
+    Component {
+      Type          Diode
+      Name          "D8"
+      Show          on
+      Position      [1100, 315]
+      Direction     down
+      Flipped       off
+      Parameter {
+        Variable      "Vf"
+        Value         ".6"
+        Show          off
+      }
+      Parameter {
+        Variable      "Ron"
+        Value         ".1"
+        Show          off
+      }
+      Parameter {
+        Variable      "thermal"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Diode
+      Name          "D9"
+      Show          on
+      Position      [770, 315]
+      Direction     down
+      Flipped       off
+      Parameter {
+        Variable      "Vf"
+        Value         ".6"
+        Show          off
+      }
+      Parameter {
+        Variable      "Ron"
+        Value         ".1"
+        Show          off
+      }
+      Parameter {
+        Variable      "thermal"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Mosfet
+      Name          "FET3"
+      Show          on
+      Position      [650, 320]
+      Direction     up
+      Flipped       off
+      Parameter {
+        Variable      "Ron"
+        Value         "1e-3"
+        Show          off
+      }
+      Parameter {
+        Variable      "s_init"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "thermal"
+        Value         "file:IRFP4468PbF_parallel"
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         "25"
+        Show          off
+      }
+    }
+    Component {
       Type          Reference
-      SrcComponent  "Components/Control/Transformations/RRF->SRF"
-      Name          "RRF->SRF"
+      SrcComponent  "Components/Control/Transformations/RRF->3ph"
+      Name          "RRF->3ph"
       Show          on
       Position      [605, 575]
       Direction     up
@@ -1927,18 +2019,370 @@ Plecs {
       }
     }
     Component {
-      Type          Constant
-      Name          "Constant1"
+      Type          Reference
+      SrcComponent  "Components/Control/Modulators/Symmetrical PWM"
+      Name          "Symmetrical PWM"
       Show          on
-      Position      [570, 510]
-      Direction     right
+      Position      [755, 500]
+      Direction     up
       Flipped       off
-      Frame         [-10, -10; 10, 10]
-      LabelPosition [0, 13]
+      Frame         [-20, -20; 20, 20]
+      LabelPosition [0, 23]
       LabelAlign    up
       Parameter {
-        Variable      "Value"
-        Value         "52.8"
+        Variable      "sampling"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "fc"
+        Value         "2e4"
+        Show          off
+      }
+      Parameter {
+        Variable      "offset"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "input_limits"
+        Value         "[-1 1]"
+        Show          off
+      }
+      Parameter {
+        Variable      "output_values"
+        Value         "[0 1]"
+        Show          off
+      }
+      Terminal {
+        Type          Output
+        Position      [24, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          Input
+        Position      [-20, 0]
+        Direction     left
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "Components/Control/Modulators/Symmetrical PWM"
+      Name          "Symmetrical PWM1"
+      Show          on
+      Position      [765, 550]
+      Direction     up
+      Flipped       off
+      Frame         [-20, -20; 20, 20]
+      LabelPosition [0, 23]
+      LabelAlign    up
+      Parameter {
+        Variable      "sampling"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "fc"
+        Value         "2e4"
+        Show          off
+      }
+      Parameter {
+        Variable      "offset"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "input_limits"
+        Value         "[-1 1]"
+        Show          off
+      }
+      Parameter {
+        Variable      "output_values"
+        Value         "[0 1]"
+        Show          off
+      }
+      Terminal {
+        Type          Output
+        Position      [24, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          Input
+        Position      [-20, 0]
+        Direction     left
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "Components/Control/Modulators/Symmetrical PWM"
+      Name          "Symmetrical PWM2"
+      Show          on
+      Position      [885, 595]
+      Direction     up
+      Flipped       off
+      Frame         [-20, -20; 20, 20]
+      LabelPosition [0, 23]
+      LabelAlign    up
+      Parameter {
+        Variable      "sampling"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "fc"
+        Value         "2e4"
+        Show          off
+      }
+      Parameter {
+        Variable      "offset"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "input_limits"
+        Value         "[-1 1]"
+        Show          off
+      }
+      Parameter {
+        Variable      "output_values"
+        Value         "[0 1]"
+        Show          off
+      }
+      Terminal {
+        Type          Output
+        Position      [24, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          Input
+        Position      [-20, 0]
+        Direction     left
+      }
+    }
+    Component {
+      Type          TransferFunction
+      Name          "Transfer Fcn"
+      Show          on
+      Position      [1610, 190]
+      Direction     right
+      Flipped       off
+      Frame         [-30, -15; 30, 15]
+      LabelPosition [0, 18]
+      LabelAlign    up
+      Parameter {
+        Variable      "Numerator"
+        Value         "[130]"
+        Show          off
+      }
+      Parameter {
+        Variable      "Denominator"
+        Value         "[1 130]"
+        Show          off
+      }
+      Parameter {
+        Variable      "X0"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Reference
+      SrcComponent  "Components/Control/Modulators/3-Phase\\nOvermodulation"
+      Name          "3-Phase\nOvermodulation"
+      Show          on
+      Position      [660, 575]
+      Direction     up
+      Flipped       off
+      Frame         [-20, -20; 20, 20]
+      LabelPosition [0, 23]
+      LabelAlign    up
+      Terminal {
+        Type          Output
+        Position      [24, 0]
+        Direction     right
+      }
+      Terminal {
+        Type          Input
+        Position      [-20, 0]
+        Direction     left
+      }
+    }
+    Component {
+      Type          Math
+      Name          "Math"
+      Show          on
+      Position      [685, 830]
+      Direction     up
+      Flipped       off
+      Parameter {
+        Variable      "Operator"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          Scope
+      Name          "Phase Voltages2"
+      Show          on
+      Position      [770, 830]
+      Direction     up
+      Flipped       off
+      Location      [0, 0; 0, 0]
+      State         ""
+      SavedViews    ""
+      HeaderState   ""
+      PlotPalettes  ""
+      Axes          "1"
+      TimeRange     "0.0"
+      ScrollingMode "1"
+      SingleTimeAxis "1"
+      Open          "0"
+      Ts            "-1"
+      SampleLimit   "0"
+      XAxisLabel    ""
+      Axis {
+        Name          ""
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Fourier {
+        SingleXAxis   on
+        AxisLabel     "Frequency"
+        Scaling       0
+        PhaseDisplay  0
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+      }
+    }
+    Component {
+      Type          Trigonometry
+      Name          "Trigonometric\nFunction"
+      Show          on
+      Position      [605, 730]
+      Direction     right
+      Flipped       off
+      Parameter {
+        Variable      "Operator"
+        Value         "7"
+        Show          off
+      }
+      Parameter {
+        Variable      "Unit"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          Scope
+      Name          "Set angle"
+      Show          on
+      Position      [685, 715]
+      Direction     up
+      Flipped       off
+      Location      [489, 362; 843, 593]
+      State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
+"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAAWIAAADIAAAA"
+"BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
+"AAAAA=="
+      SavedViews    "AAAAAgAAAAA="
+      HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
+"QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
+"AAZAAAAAEAAABkAAAA4wAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAAC6AAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
+      PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      Axes          "1"
+      TimeRange     "0.0"
+      ScrollingMode "1"
+      SingleTimeAxis "1"
+      Open          "1"
+      Ts            "-1"
+      SampleLimit   "0"
+      XAxisLabel    ""
+      Axis {
+        Name          ""
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Fourier {
+        SingleXAxis   on
+        AxisLabel     "Frequency"
+        Scaling       0
+        PhaseDisplay  0
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+      }
+    }
+    Component {
+      Type          Product
+      Name          "Product3"
+      Show          on
+      Position      [585, 795]
+      Direction     up
+      Flipped       off
+      Parameter {
+        Variable      "Inputs"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          Product
+      Name          "Product4"
+      Show          on
+      Position      [585, 850]
+      Direction     up
+      Flipped       off
+      Parameter {
+        Variable      "Inputs"
+        Value         "2"
+        Show          off
+      }
+    }
+    Component {
+      Type          Sum
+      Name          "Sum4"
+      Show          off
+      Position      [635, 830]
+      Direction     up
+      Flipped       off
+      Parameter {
+        Variable      "IconShape"
+        Value         "1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Inputs"
+        Value         "++"
         Show          off
       }
     }
@@ -1946,42 +2390,43 @@ Plecs {
       Type          Wire
       SrcComponent  "FET4"
       SrcTerminal   1
-      Points        [1300, 145]
+      Points        [1300, 140; 1295, 140; 1295, 105]
       Branch {
-        Points        [1100, 145; 1100, 150]
+        Points        [1100, 105]
         Branch {
-          Points        [950, 150]
+          DstComponent  "D7"
+          DstTerminal   2
+        }
+        Branch {
+          Points        [955, 105]
           Branch {
-            Points        [770, 150]
+            Points        [770, 105]
             Branch {
-              Points        [650, 150]
+              Points        [770, 145]
               Branch {
-                Points        [455, 150]
-                DstComponent  "Am1"
+                DstComponent  "D2"
                 DstTerminal   2
               }
               Branch {
+                Points        [650, 145]
                 DstComponent  "FET2"
                 DstTerminal   1
               }
             }
             Branch {
-              DstComponent  "D2"
+              Points        [455, 105]
+              DstComponent  "Am1"
               DstTerminal   2
             }
           }
           Branch {
-            DstComponent  "FET3"
+            DstComponent  "FET7"
             DstTerminal   1
           }
         }
-        Branch {
-          DstComponent  "D7"
-          DstTerminal   2
-        }
       }
       Branch {
-        Points        [1455, 145]
+        Points        [1455, 105]
         DstComponent  "D4"
         DstTerminal   2
       }
@@ -1994,7 +2439,7 @@ Plecs {
       Branch {
         Points        [1100, 375; 1100, 370]
         Branch {
-          DstComponent  "D6"
+          DstComponent  "D8"
           DstTerminal   1
         }
         Branch {
@@ -2027,12 +2472,12 @@ Plecs {
             DstTerminal   2
           }
           Branch {
-            DstComponent  "FET1"
+            DstComponent  "FET3"
             DstTerminal   2
           }
         }
         Branch {
-          DstComponent  "D3"
+          DstComponent  "D9"
           DstTerminal   1
         }
       }
@@ -2041,11 +2486,7 @@ Plecs {
       Type          Wire
       SrcComponent  "FET6"
       SrcTerminal   1
-      Points        [950, 255]
-      Branch {
-        DstComponent  "FET3"
-        DstTerminal   2
-      }
+      Points        [950, 255; 955, 255]
       Branch {
         Points        [1100, 255]
         Branch {
@@ -2060,36 +2501,41 @@ Plecs {
           }
         }
         Branch {
-          DstComponent  "D6"
+          DstComponent  "D8"
           DstTerminal   2
         }
+      }
+      Branch {
+        DstComponent  "FET7"
+        DstTerminal   2
       }
     }
     Connection {
       Type          Wire
-      SrcComponent  "D3"
-      SrcTerminal   2
-      Points        [770, 245]
+      SrcComponent  "3ph Meter"
+      SrcTerminal   1
+      Points        [770, 240]
       Branch {
-        Points        [650, 245]
+        Points        [770, 255]
         Branch {
-          DstComponent  "FET1"
-          DstTerminal   1
+          DstComponent  "D9"
+          DstTerminal   2
         }
         Branch {
-          DstComponent  "FET2"
-          DstTerminal   2
+          Points        [650, 255]
+          DstComponent  "FET3"
+          DstTerminal   1
         }
       }
       Branch {
-        Points        [770, 240]
+        Points        [770, 210]
         Branch {
           DstComponent  "D2"
           DstTerminal   1
         }
         Branch {
-          DstComponent  "3ph Meter"
-          DstTerminal   1
+          DstComponent  "FET2"
+          DstTerminal   2
         }
       }
     }
@@ -2259,21 +2705,6 @@ Plecs {
       DstTerminal   1
     }
     Connection {
-      Type          HeatPipe
-      SrcComponent  "Rth"
-      SrcTerminal   1
-      Points        [1505, 50]
-      Branch {
-        Points        [1350, 50]
-        DstComponent  "ThmG"
-        DstTerminal   1
-      }
-      Branch {
-        DstComponent  "Wm"
-        DstTerminal   2
-      }
-    }
-    Connection {
       Type          Signal
       SrcComponent  "Integrator"
       SrcTerminal   2
@@ -2371,7 +2802,7 @@ Plecs {
       Points        [1250, 625]
       Branch {
         Points        [560, 625; 560, 585; 575, 585]
-        DstComponent  "RRF->SRF"
+        DstComponent  "RRF->3ph"
         DstTerminal   3
       }
       Branch {
@@ -2390,14 +2821,6 @@ Plecs {
     }
     Connection {
       Type          Signal
-      SrcComponent  "Turn-on Delay"
-      SrcTerminal   2
-      Points        [605, 190]
-      DstComponent  "FET2"
-      DstTerminal   3
-    }
-    Connection {
-      Type          Signal
       SrcComponent  "Turn-on Delay5"
       SrcTerminal   2
       Points        [1260, 210; 1260, 190]
@@ -2408,21 +2831,23 @@ Plecs {
       Type          Signal
       SrcComponent  "Turn-on Delay2"
       SrcTerminal   2
-      Points        [915, 230]
-      DstComponent  "FET3"
+      Points        [915, 230; 915, 190]
+      DstComponent  "FET7"
       DstTerminal   3
     }
     Connection {
       Type          Signal
       SrcComponent  "ThmG"
       SrcTerminal   2
-      DstComponent  "DQ current1"
+      Points        [1325, 45]
+      DstComponent  "Heatsink Temperature"
       DstTerminal   1
     }
     Connection {
       Type          HeatPipe
       SrcComponent  "TconstG"
       SrcTerminal   1
+      Points        [1590, 25]
       DstComponent  "Rth"
       DstTerminal   2
     }
@@ -2457,14 +2882,6 @@ Plecs {
     }
     Connection {
       Type          Signal
-      SrcComponent  "3ph Meter"
-      SrcTerminal   7
-      Points        [1540, 190]
-      DstComponent  "Phase Voltage"
-      DstTerminal   1
-    }
-    Connection {
-      Type          Signal
       SrcComponent  "Pulse\nGenerator"
       SrcTerminal   1
       Points        [235, 600; 235, 620]
@@ -2487,26 +2904,12 @@ Plecs {
       DstTerminal   2
     }
     Connection {
-      Type          HeatPipe
-      SrcComponent  "Wm"
-      SrcTerminal   1
-      Points        [1505, 145]
-      DstComponent  "Heat Sink"
-      DstTerminal   1
-    }
-    Connection {
       Type          Signal
       SrcComponent  "Wm"
       SrcTerminal   3
+      Points        [1470, 75; 1470, 40]
       DstComponent  "Cooling Power"
       DstTerminal   1
-    }
-    Connection {
-      Type          Signal
-      SrcComponent  "Turn-on Delay1"
-      SrcTerminal   2
-      DstComponent  "FET1"
-      DstTerminal   3
     }
     Connection {
       Type          Signal
@@ -2545,9 +2948,94 @@ Plecs {
     }
     Connection {
       Type          Signal
+      SrcComponent  "Mux"
+      SrcTerminal   1
+      Points        [550, 575]
+      Branch {
+        Points        [550, 670]
+        DstComponent  "Phase Voltages1"
+        DstTerminal   1
+      }
+      Branch {
+        Points        [550, 570]
+        DstComponent  "RRF->3ph"
+        DstTerminal   1
+      }
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux1"
+      SrcTerminal   2
+      Points        [175, 750]
+      DstComponent  "Sum1"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux1"
+      SrcTerminal   3
+      Points        [350, 760]
+      DstComponent  "Sum3"
+      DstTerminal   3
+    }
+    Connection {
+      Type          HeatPipe
+      SrcComponent  "ThmG"
+      SrcTerminal   1
+      Points        [1505, 10; 1505, 25]
+      Branch {
+        DstComponent  "Wm"
+        DstTerminal   2
+      }
+      Branch {
+        DstComponent  "Rth"
+        DstTerminal   1
+      }
+    }
+    Connection {
+      Type          HeatPipe
+      SrcComponent  "Wm"
+      SrcTerminal   1
+      Points        [1505, 105]
+      DstComponent  "Heat Sink"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Turn-on Delay1"
+      SrcTerminal   2
+      Points        [605, 320]
+      Branch {
+        DstComponent  "FET3"
+        DstTerminal   3
+      }
+      Branch {
+        Points        [605, 430]
+        DstComponent  "PWM A1"
+        DstTerminal   1
+      }
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Turn-on Delay"
+      SrcTerminal   2
+      Points        [605, 190]
+      DstComponent  "FET2"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
       SrcComponent  "Demux"
       SrcTerminal   2
-      Points        [775, 540; 775, 475]
+      Points        [715, 500]
+      DstComponent  "Symmetrical PWM"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Symmetrical PWM"
+      SrcTerminal   1
+      Points        [780, 475; 775, 475]
       Branch {
         Points        [505, 475; 505, 320]
         Branch {
@@ -2569,22 +3057,14 @@ Plecs {
     Connection {
       Type          Signal
       SrcComponent  "Demux"
-      SrcTerminal   4
-      Points        [725, 560; 725, 595; 1135, 595; 1135, 320]
-      Branch {
-        DstComponent  "Logical\nOperator2"
-        DstTerminal   2
-      }
-      Branch {
-        Points        [1135, 210]
-        DstComponent  "Turn-on Delay5"
-        DstTerminal   1
-      }
+      SrcTerminal   3
+      DstComponent  "Symmetrical PWM1"
+      DstTerminal   2
     }
     Connection {
       Type          Signal
-      SrcComponent  "Demux"
-      SrcTerminal   3
+      SrcComponent  "Symmetrical PWM1"
+      SrcTerminal   1
       Points        [815, 550; 815, 325]
       Branch {
         Points        [815, 230]
@@ -2598,32 +3078,54 @@ Plecs {
     }
     Connection {
       Type          Signal
-      SrcComponent  "RRF->SRF"
+      SrcComponent  "Demux"
+      SrcTerminal   4
+      Points        [725, 560; 725, 595]
+      DstComponent  "Symmetrical PWM2"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Symmetrical PWM2"
+      SrcTerminal   1
+      Points        [1135, 595; 1135, 320]
+      Branch {
+        DstComponent  "Logical\nOperator2"
+        DstTerminal   2
+      }
+      Branch {
+        Points        [1135, 210]
+        DstComponent  "Turn-on Delay5"
+        DstTerminal   1
+      }
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "3ph Meter"
+      SrcTerminal   7
+      Points        [1540, 190]
+      DstComponent  "Transfer Fcn"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Transfer Fcn"
       SrcTerminal   2
-      DstComponent  "Space Vector PWM"
-      DstTerminal   3
+      DstComponent  "Phase Voltage"
+      DstTerminal   1
     }
     Connection {
       Type          Signal
-      SrcComponent  "Mux"
-      SrcTerminal   1
-      Points        [550, 575]
-      Branch {
-        Points        [550, 670]
-        DstComponent  "Phase Voltages1"
-        DstTerminal   1
-      }
-      Branch {
-        Points        [550, 570]
-        DstComponent  "RRF->SRF"
-        DstTerminal   1
-      }
+      SrcComponent  "RRF->3ph"
+      SrcTerminal   2
+      DstComponent  "3-Phase\nOvermodulation"
+      DstTerminal   2
     }
     Connection {
       Type          Signal
-      SrcComponent  "Space Vector PWM"
+      SrcComponent  "3-Phase\nOvermodulation"
       SrcTerminal   1
-      Points        [690, 565]
+      Points        [690, 575]
       Branch {
         DstComponent  "Demux"
         DstTerminal   1
@@ -2636,59 +3138,113 @@ Plecs {
     }
     Connection {
       Type          Signal
-      SrcComponent  "Constant1"
+      SrcComponent  "Math"
       SrcTerminal   1
-      Points        [605, 510; 605, 555]
-      DstComponent  "Space Vector PWM"
-      DstTerminal   2
-    }
-    Connection {
-      Type          Signal
-      SrcComponent  "Demux1"
-      SrcTerminal   2
-      Points        [175, 750]
-      DstComponent  "Sum1"
-      DstTerminal   3
-    }
-    Connection {
-      Type          Signal
-      SrcComponent  "Sum"
-      SrcTerminal   1
-      Points        [470, 460; 470, 570]
-      DstComponent  "Mux"
-      DstTerminal   2
+      DstComponent  "Phase Voltages2"
+      DstTerminal   1
     }
     Connection {
       Type          Signal
       SrcComponent  "Sum2"
       SrcTerminal   1
-      Points        [515, 605; 515, 580]
-      DstComponent  "Mux"
+      Points        [515, 605]
+      Branch {
+        Points        [515, 580]
+        DstComponent  "Mux"
+        DstTerminal   3
+      }
+      Branch {
+        Points        [515, 725]
+        Branch {
+          DstComponent  "Trigonometric\nFunction"
+          DstTerminal   1
+        }
+        Branch {
+          Points        [515, 845]
+          Branch {
+            DstComponent  "Product4"
+            DstTerminal   2
+          }
+          Branch {
+            Points        [515, 855]
+            DstComponent  "Product4"
+            DstTerminal   3
+          }
+        }
+      }
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Sum"
+      SrcTerminal   1
+      Points        [470, 460; 470, 570; 525, 570]
+      Branch {
+        DstComponent  "Mux"
+        DstTerminal   2
+      }
+      Branch {
+        Points        [525, 735]
+        Branch {
+          DstComponent  "Trigonometric\nFunction"
+          DstTerminal   3
+        }
+        Branch {
+          Points        [525, 790]
+          Branch {
+            DstComponent  "Product3"
+            DstTerminal   2
+          }
+          Branch {
+            Points        [525, 800]
+            DstComponent  "Product3"
+            DstTerminal   3
+          }
+        }
+      }
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Trigonometric\nFunction"
+      SrcTerminal   2
+      Points        [640, 730; 640, 715]
+      DstComponent  "Set angle"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Product3"
+      SrcTerminal   1
+      DstComponent  "Sum4"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Product4"
+      SrcTerminal   1
+      DstComponent  "Sum4"
       DstTerminal   3
     }
     Connection {
       Type          Signal
-      SrcComponent  "Demux1"
-      SrcTerminal   3
-      Points        [350, 760]
-      DstComponent  "Sum3"
-      DstTerminal   3
+      SrcComponent  "Sum4"
+      SrcTerminal   1
+      DstComponent  "Math"
+      DstTerminal   2
     }
     Connection {
       Type          Signal
       SrcComponent  "3ph->RRF1"
       SrcTerminal   2
-      Points        [1845, 140]
+      Points        [1860, 140]
       Branch {
         DstComponent  "DQ current"
         DstTerminal   1
       }
       Branch {
-        Points        [1845, 85; 2105, 85; 2105, 755]
+        Points        [1860, 95; 2080, 95; 2080, 755]
         DstComponent  "Demux1"
         DstTerminal   1
       }
     }
   }
 }
-DemoSignature "DsVDuU5U1Dv75tdr7wxoYi6DDgavXtQuIZK4k4qEmfk="
