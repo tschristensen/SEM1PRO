@@ -105,3 +105,60 @@ R_a = \frac{R_{AB} + R_{AC} - R_{BC}}{2}
 This gives a bit uneven armature resistances ranging from 5.2 to 6.9 $m\Omega$. This is about half the resistance listed by the manufacturer -- indicating, that they likely mean the resistance between two terminals is 13 $m\Omega$. However, since the motor is a Wye connection, it makes much more sense to know the resistance between a terminal and the star-point when modeling the motor 
 
 \subsubsection{Armature Inductance}\label{sub:L_A-measurements}
+In order to measure the winding inductance of the motor, a full bridge driver is used to generate a squarewave voltage at different frequencies. The voltage is applied to the A and C terminals of the motor, so any measured voltage must be reduced by the armature resistance calculated in table~\ref{tab:armature_resistance} times the current. The motor is not moving, so there is no back-EMF. The driver can only handle 3 Amps continuously, so the test has to be done rather quickly. Current and voltage has been plotted in figure~\ref{fig:20kHz_squarewave}. Note that at 20 kHz, the current ripple is about 7 A \todo{this is peak-peak.}.
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width = 10cm]{graphics/inductance_measured_v_i}
+		\label{fig:20kHz_squarewave}
+		\caption{20 kHz squarewave voltage and the resulting current}
+	\end{center}
+\end{figure}
+
+These waveforms have been measured at 5 kHz, 10 kHz, 20 kHz and 30 kHz. For this project, 20 kHz will be used, so only those plots will be shown. Due to the high sampling rate of the oscilloscope and low bit resolution, differentiating the current will yield very large spikes for short periods of time. Therefore, the current, time and voltage measurements will be periodically averaged and downsampled by a factor of 70. The derivative of the current is then calculated by:
+
+\begin{equation}
+di\_ dt[n] = \frac{i[n]-i[n-1]}{t[n]-t[n-1]}
+\end{equation}
+
+This is then the derivative of the current at the point immediately between two samples, so to synchronize the time and voltage arrays, each two samples are added and multiplied by 0.5. The resulting waveforms are plotted in figure~\ref{fig:20kHz_squarewave_di}
+
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width = 12cm]{graphics/20kHz_v_di}
+		\caption{20 kHz squarewave voltage and derivative of the resulting current}
+		\label{fig:20kHz_squarewave_di}
+	\end{center}
+\end{figure}
+
+It appears, that there is some proportionality between the derivative of the current, and the voltage across this inductor. This has been plotted in figure~\ref{fig:20kHz_inductance}: 
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width = 10cm]{graphics/20kHz_inductance}
+		\caption{Inductance at 20 kHz}
+		\label{fig:20kHz_inductance}
+	\end{center}
+\end{figure}
+
+The calculated inductance would become very large when the derivative current goes close to zero, so the plot has been limited to between 0 and 0.5 mH. The inductance inductance generally is lower than the terminal-to-terminal inductance provided by the manufacturer of 0.1 mH. The average inductance varies a bit with different frequencies, and 20 kHz is actually the lowest.
+
+\begin{table}[H]
+	\begin{center}
+	\begin{tabular}{r | c | c}
+		Frequency [Hz] 	& 	Average inductance [mH] & 	Current ripple [A] \\
+		\hline
+		5 kHz			&	0.946					&	16.83 \\
+		\hline
+		10 kHz			&	0.844					&	12.1 \\
+		\hline
+		20 kHz			&	0.632					&	7.13 \\
+		\hline
+		30 kHz 			&	0.879					&	5.25 
+	\end{tabular}
+	\label{tab:inductance_and_current_ripple}
+	\caption{Averaged of measured inductance, and measured current ripple at different frequencies}
+	\end{center}
+\end{table}
+
+This is the inductance from one terminal to another, so the per-phase inductance will be half, similarly to the armature resistance. The inductance determines the phase shift on the sinusoidal voltages and currents driving the motor at up to 267 Hz, and the current ripple at 20 kHz. So when modeling the motor, one must settle on a value of $L_d$ and $L_q$ that is close to the the low frequency inductance of 0.475 mH, and the higher frequency inductance of 0.315 mH. For modeling the motor, an inductance of 0.4 mH will be used for both $L_d$ and $L_q$. 
