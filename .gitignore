@@ -9,3 +9,7 @@
 *.out
 *.soc
 *.log
+
+#Eagle
+*.s#*
+*.b#*
