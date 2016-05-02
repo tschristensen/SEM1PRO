@@ -32,11 +32,11 @@
                 <CurrentAxis> 0 350</CurrentAxis>
                 <TemperatureAxis> 25 50 75 100 125</TemperatureAxis>
                 <VoltageDrop scale="1">
-                    <Temperature> 0 0</Temperature>
-                    <Temperature> 0 0.058</Temperature>
-                    <Temperature> 0 0.126</Temperature>
-                    <Temperature> 0 0.201</Temperature>
-                    <Temperature> 0 0.284</Temperature>
+                    <Temperature> 0 0.35</Temperature>
+                    <Temperature> 0 0.41</Temperature>
+                    <Temperature> 0 0.48</Temperature>
+                    <Temperature> 0 0.55</Temperature>
+                    <Temperature> 0 0.64</Temperature>
                 </VoltageDrop>
             </ConductionLoss>
         </SemiconductorData>
