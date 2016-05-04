@@ -1,1 +1,21 @@
-\section{Simulation}
+\section{Simulation}\label{sec:Simulations}
+
+Simulation tools have been a great help, not only understanding the electromechanical system, and design a controller from it, but estimating requirements for the electric components. Primarily, Simscape has been used, but Plecs has also been used specifically to simulate the inverter. This section will explain how the model has been build, starting with the mechanical system, then the motor model, the transformation and control part, and finally the three-phase switching pole. 
+
+\subsection{Mechanical System}\label{sub:Simulations_mec}
+The mechanical system consists of a mass of the gokart with driver, turbulent air resistance, wheels and a gear. While there are a lot of interesting blocks in the Simscape -> SimDriveline library, we will stick with the mechanical library, because this is detailed enough, and more easy to port to Plecs.
+
+\begin{figure}[H]
+	\includegraphics[width=15cm]{graphics/simulations_mechanical_full.png}
+	\caption{Block diagram of the mechanical system}
+	\label{fig:mechanical_full}
+\end{figure}
+
+Figure~\ref{fig:mechanical_full} shows the block diagram of the mechanical part, that the motor will drive. Starting from the left, the Permanent Magnet Synchronous Motor is the motor and the Ideal Rotational Motion Sensor is used for the Clarke-Park transformations. The first inertia block contains both the inertia of the motor, which is 0.0052, and the motor-side gear. It is possible to add inertias that are connected to the same mechanical rod. The inertia of the gear depends on its size. Assuming, that the gear is a disc, the mass is calculated by equation~\ref{eq:mass of disc}:
+
+\begin{equation}
+m_{G1} = \rho \pi r^2 \cdot h
+\label{eq:mass of disc}
+\end{equation}
+
+where rho is the mass density of iron of $7870 \dfrac{kg}{m^3}$, r is the radius, and h is the thickness of 7 mm. Radius is defined by the number of teeth, G1, of the gear and the pitch, which is the distance between two adjacent teeth, which is 12.5 mm. Inertia of a disc depends on mass and radius of
