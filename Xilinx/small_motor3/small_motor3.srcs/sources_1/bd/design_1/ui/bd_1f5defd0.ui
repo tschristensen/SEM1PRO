@@ -1,0 +1,56 @@
+{
+   guistr: "# # String gsaved with Nlview 6.5.5  2015-06-26 bk=1.3371 VDI=38 GEI=35 GUI=JA:1.8
+#  -string -flagsOSRD
+preplace port DDR -pg 1 -y 70 -defaultsOSRD
+preplace port leds_4bits -pg 1 -y 800 -defaultsOSRD
+preplace port RM28MD_clock -pg 1 -y 470 -defaultsOSRD
+preplace port FIXED_IO -pg 1 -y 90 -defaultsOSRD
+preplace port Vaux6 -pg 1 -y 190 -defaultsOSRD -right
+preplace port RM28MD_data -pg 1 -y 390 -defaultsOSRD -right
+preplace port Vaux14 -pg 1 -y 220 -defaultsOSRD -right
+preplace port Vaux7 -pg 1 -y 260 -defaultsOSRD -right
+preplace port Vaux15 -pg 1 -y 280 -defaultsOSRD -right
+preplace portBus b_pwm -pg 1 -y 610 -defaultsOSRD
+preplace portBus enable_out -pg 1 -y 650 -defaultsOSRD
+preplace portBus c_pwm -pg 1 -y 630 -defaultsOSRD
+preplace portBus timing_outpin -pg 1 -y 670 -defaultsOSRD
+preplace portBus a_pwm -pg 1 -y 590 -defaultsOSRD
+preplace inst rst_processing_system7_0_100M -pg 1 -lvl 1 -y 420 -defaultsOSRD
+preplace inst xadc_wiz_0 -pg 1 -lvl 2 -y 280 -defaultsOSRD
+preplace inst axi_gpio_0 -pg 1 -lvl 3 -y 800 -defaultsOSRD
+preplace inst encoder_rm28md_0 -pg 1 -lvl 3 -y 470 -defaultsOSRD
+preplace inst three_phase_pwm_0 -pg 1 -lvl 3 -y 640 -defaultsOSRD
+preplace inst processing_system7_0_axi_periph -pg 1 -lvl 2 -y 630 -defaultsOSRD
+preplace inst processing_system7_0 -pg 1 -lvl 1 -y 150 -defaultsOSRD
+preplace netloc Vaux6_1 1 1 3 NJ 150 NJ 150 NJ
+preplace netloc processing_system7_0_DDR 1 1 3 NJ 60 NJ 60 NJ
+preplace netloc encoder_rm28md_0_ssi_clk_o 1 3 1 NJ
+preplace netloc three_phase_pwm_0_enable_out 1 3 1 NJ
+preplace netloc three_phase_pwm_0_b_pwm 1 3 1 NJ
+preplace netloc RM28MD_data_1 1 2 2 850 390 NJ
+preplace netloc processing_system7_0_axi_periph_M03_AXI 1 1 2 490 130 800
+preplace netloc processing_system7_0_axi_periph_M00_AXI 1 2 1 820
+preplace netloc three_phase_pwm_0_c_pwm 1 3 1 NJ
+preplace netloc Vaux7_1 1 1 3 NJ 410 NJ 260 NJ
+preplace netloc processing_system7_0_M_AXI_GP0 1 1 1 460
+preplace netloc processing_system7_0_FCLK_RESET0_N 1 0 2 30 300 430
+preplace netloc three_phase_pwm_0_top_out 1 1 3 470 100 NJ 100 1310
+preplace netloc processing_system7_0_axi_periph_M02_AXI 1 2 1 810
+preplace netloc three_phase_pwm_0_a_pwm 1 3 1 NJ
+preplace netloc rst_processing_system7_0_100M_peripheral_aresetn 1 1 2 450 430 840
+preplace netloc three_phase_pwm_0_timing_outpin 1 3 1 NJ
+preplace netloc Vaux14_1 1 1 3 NJ 420 NJ 220 NJ
+preplace netloc processing_system7_0_FIXED_IO 1 1 3 NJ 80 NJ 80 NJ
+preplace netloc axi_gpio_0_GPIO 1 3 1 NJ
+preplace netloc rst_processing_system7_0_100M_interconnect_aresetn 1 1 1 430
+preplace netloc processing_system7_0_FCLK_CLK0 1 0 3 20 290 440 450 830
+preplace netloc Vaux15_1 1 1 3 NJ 120 NJ 120 NJ
+preplace netloc processing_system7_0_axi_periph_M01_AXI 1 2 1 N
+levelinfo -pg 1 0 230 650 1080 1350 -top -10 -bot 870
+",
+}
+{
+   da_axi4_cnt: "6",
+   da_board_cnt: "1",
+   da_ps7_cnt: "1",
+}
