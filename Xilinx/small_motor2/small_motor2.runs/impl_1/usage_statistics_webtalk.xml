@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<webTalkData  fileName='usage_statistics_webtalk.xml'  majorVersion='1' minorVersion='0' timeStamp='Fri Apr 22 11:22:56 2016'>
+<webTalkData  fileName='usage_statistics_webtalk.xml'  majorVersion='1' minorVersion='0' timeStamp='Thu Apr 28 09:46:17 2016'>
 <section name="__ROOT__" level="0" order="1" description="">
  <section name="software_version_and_target_device" level="1" order="1" description="">
   <keyValuePair key="beta" value="FALSE" description="" />
-  <keyValuePair key="build_version" value="1412921" description="" />
-  <keyValuePair key="date_generated" value="Fri Apr 22 11:22:56 2016" description="" />
-  <keyValuePair key="os_platform" value="LIN64" description="" />
-  <keyValuePair key="product_version" value="Vivado v2015.4 (64-bit)" description="" />
+  <keyValuePair key="build_version" value="1494164" description="" />
+  <keyValuePair key="date_generated" value="Thu Apr 28 09:46:17 2016" description="" />
+  <keyValuePair key="os_platform" value="WIN64" description="" />
+  <keyValuePair key="product_version" value="Vivado v2015.4.2 (64-bit)" description="" />
   <keyValuePair key="project_id" value="3c4926ab978a4aebafe66c0b5177747c" description="" />
-  <keyValuePair key="project_iteration" value="1" description="" />
-  <keyValuePair key="random_id" value="fc812aed09655de29c82fe6dc98307ac" description="" />
-  <keyValuePair key="registration_id" value="210779069_174157381_210622961_845" description="" />
+  <keyValuePair key="project_iteration" value="2" description="" />
+  <keyValuePair key="random_id" value="b536f93fa1365841b9e7ec52269c67be" description="" />
+  <keyValuePair key="registration_id" value="210779069_174157381_210622543_560" description="" />
   <keyValuePair key="route_design" value="TRUE" description="" />
   <keyValuePair key="target_device" value="xc7z010" description="" />
   <keyValuePair key="target_family" value="zynq" description="" />
@@ -19,10 +19,10 @@
   <keyValuePair key="tool_flow" value="Vivado" description="" />
  </section>
  <section name="user_environment" level="1" order="2" description="">
-  <keyValuePair key="cpu_name" value="Intel(R) Core(TM) i7 CPU       M 620  @ 2.67GHz" description="" />
-  <keyValuePair key="cpu_speed" value="2661.000 MHz" description="" />
-  <keyValuePair key="os_name" value="Ubuntu" description="" />
-  <keyValuePair key="os_release" value="Ubuntu 15.10" description="" />
+  <keyValuePair key="cpu_name" value="Intel(R) Core(TM) i5-3337U CPU @ 1.80GHz" description="" />
+  <keyValuePair key="cpu_speed" value="1796 MHz" description="" />
+  <keyValuePair key="os_name" value="Microsoft Windows 8 or later , 64-bit" description="" />
+  <keyValuePair key="os_release" value="major release  (build 9200)" description="" />
   <keyValuePair key="system_ram" value="3.000 GB" description="" />
   <keyValuePair key="total_processors" value="1" description="" />
  </section>
@@ -875,9 +875,9 @@
    <keyValuePair key="output_load" value="5.000000" description="" />
    <keyValuePair key="output_toggle" value="12.500000" description="" />
    <keyValuePair key="package" value="clg400" description="" />
-   <keyValuePair key="pct_clock_constrained" value="4.350000" description="" />
+   <keyValuePair key="pct_clock_constrained" value="8.000000" description="" />
    <keyValuePair key="pct_inputs_defined" value="0" description="" />
-   <keyValuePair key="platform" value="lin64" description="" />
+   <keyValuePair key="platform" value="nt64" description="" />
    <keyValuePair key="process" value="typical" description="" />
    <keyValuePair key="ps7" value="1.556416" description="" />
    <keyValuePair key="ram_enable" value="50.000000" description="" />
@@ -966,7 +966,7 @@
    <keyValuePair key="vccpll_static_current" value="0.003000" description="" />
    <keyValuePair key="vccpll_total_current" value="0.016749" description="" />
    <keyValuePair key="vccpll_voltage" value="1.800000" description="" />
-   <keyValuePair key="version" value="2015.4" description="" />
+   <keyValuePair key="version" value="2015.4.2" description="" />
   </section>
  </section>
  <section name="report_utilization" level="1" order="5" description="">
@@ -1167,16 +1167,16 @@
    <keyValuePair key="unique_control_sets_used" value="87" description="" />
    <keyValuePair key="using_o5_and_o6_fixed" value="" description="" />
    <keyValuePair key="using_o5_and_o6_fixed" value="" description="" />
-   <keyValuePair key="using_o5_and_o6_used" value="2" description="" />
    <keyValuePair key="using_o5_and_o6_used" value="290" description="" />
+   <keyValuePair key="using_o5_and_o6_used" value="2" description="" />
    <keyValuePair key="using_o5_output_only_fixed" value="" description="" />
    <keyValuePair key="using_o5_output_only_fixed" value="" description="" />
    <keyValuePair key="using_o5_output_only_used" value="0" description="" />
    <keyValuePair key="using_o5_output_only_used" value="0" description="" />
    <keyValuePair key="using_o6_output_only_fixed" value="" description="" />
    <keyValuePair key="using_o6_output_only_fixed" value="" description="" />
-   <keyValuePair key="using_o6_output_only_used" value="66" description="" />
    <keyValuePair key="using_o6_output_only_used" value="4874" description="" />
+   <keyValuePair key="using_o6_output_only_used" value="66" description="" />
   </section>
   <section name="specific_feature" level="2" order="7" description="">
    <keyValuePair key="bscane2_available" value="4" description="" />
@@ -1216,7 +1216,7 @@
  <section name="router" level="1" order="6" description="">
   <section name="usage" level="2" order="1" description="">
    <keyValuePair key="actual_expansions" value="3717753" description="" />
-   <keyValuePair key="bogomips" value="5320" description="" />
+   <keyValuePair key="bogomips" value="0" description="" />
    <keyValuePair key="bram18" value="0" description="" />
    <keyValuePair key="bram36" value="0" description="" />
    <keyValuePair key="bufg" value="0" description="" />
@@ -1235,9 +1235,9 @@
    <keyValuePair key="nets" value="32731" description="" />
    <keyValuePair key="pins" value="110372" description="" />
    <keyValuePair key="pll" value="0" description="" />
-   <keyValuePair key="router_runtime" value="27.990000" description="" />
+   <keyValuePair key="router_runtime" value="57.046000" description="" />
    <keyValuePair key="router_timing_driven" value="1" description="" />
-   <keyValuePair key="threads" value="4" description="" />
+   <keyValuePair key="threads" value="2" description="" />
    <keyValuePair key="timing_constraints_exist" value="1" description="" />
   </section>
  </section>
@@ -1268,10 +1268,10 @@
    <keyValuePair key="-verilog_define" value="default::[not_specified]" description="" />
   </section>
   <section name="usage" level="2" order="2" description="">
-   <keyValuePair key="elapsed" value="00:04:18s" description="" />
+   <keyValuePair key="elapsed" value="00:08:44s" description="" />
    <keyValuePair key="hls_ip" value="0" description="" />
-   <keyValuePair key="memory_gain" value="782.801MB" description="" />
-   <keyValuePair key="memory_peak" value="1778.031MB" description="" />
+   <keyValuePair key="memory_gain" value="732.652MB" description="" />
+   <keyValuePair key="memory_peak" value="1038.973MB" description="" />
   </section>
  </section>
  <section name="unisim_transformation" level="1" order="8" description="">
@@ -1320,7 +1320,7 @@
  </section>
  <section name="vivado_usage" level="1" order="9" description="">
   <section name="other_data" level="2" order="1" description="">
-   <keyValuePair key="guimode" value="5" description="" />
+   <keyValuePair key="guimode" value="10" description="" />
   </section>
   <section name="project_data" level="2" order="2" description="">
    <keyValuePair key="board" value="Zybo" description="" />

@@ -1,5 +1,5 @@
-set_property SRC_FILE_INFO {cfile:/home/mikkeljaedicke/Zynq_Book/small_motor2/small_motor2.srcs/sources_1/bd/design_1/ip/design_1_processing_system7_0_0/design_1_processing_system7_0_0.xdc rfile:../../../small_motor2.srcs/sources_1/bd/design_1/ip/design_1_processing_system7_0_0/design_1_processing_system7_0_0.xdc id:1 order:EARLY scoped_inst:design_1_i/processing_system7_0/inst} [current_design]
-set_property SRC_FILE_INFO {cfile:/home/mikkeljaedicke/Zynq_Book/small_motor2/small_motor2.srcs/constrs_1/new/constraints.xdc rfile:../../../small_motor2.srcs/constrs_1/new/constraints.xdc id:2} [current_design]
+set_property SRC_FILE_INFO {cfile:{c:/Uni_SDU/1. Semester Project - Gokart/Xilinx/small_motor2/small_motor2.srcs/sources_1/bd/design_1/ip/design_1_processing_system7_0_0/design_1_processing_system7_0_0.xdc} rfile:../../../small_motor2.srcs/sources_1/bd/design_1/ip/design_1_processing_system7_0_0/design_1_processing_system7_0_0.xdc id:1 order:EARLY scoped_inst:design_1_i/processing_system7_0/inst} [current_design]
+set_property SRC_FILE_INFO {cfile:{C:/Uni_SDU/1. Semester Project - Gokart/Xilinx/small_motor2/small_motor2.srcs/constrs_1/new/constraints.xdc} rfile:../../../small_motor2.srcs/constrs_1/new/constraints.xdc id:2} [current_design]
 set_property src_info {type:SCOPED_XDC file:1 line:21 export:INPUT save:INPUT read:READ} [current_design]
 set_input_jitter clk_fpga_0 0.3
 set_property src_info {type:SCOPED_XDC file:1 line:31 export:INPUT save:INPUT read:READ} [current_design]
