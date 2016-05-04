@@ -1,8 +1,8 @@
 Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------------------
-| Tool Version     : Vivado v.2015.4 (lin64) Build 1412921 Wed Nov 18 09:44:32 MST 2015
-| Date             : Fri Apr 22 11:22:30 2016
-| Host             : mikkel running 64-bit Ubuntu 15.10
+| Tool Version     : Vivado v.2015.4.2 (win64) Build 1494164 Fri Feb 26 04:18:56 MST 2016
+| Date             : Thu Apr 28 09:45:24 2016
+| Host             : Morten-Laptop running 64-bit major release  (build 9200)
 | Command          : report_power -file design_1_wrapper_power_routed.rpt -pb design_1_wrapper_power_summary_routed.pb
 | Design           : design_1_wrapper
 | Device           : xc7z010clg400-1
