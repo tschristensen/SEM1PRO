@@ -27,8 +27,4 @@ phase_c=cos(x+pi/2+2*pi/3);
 phase_3=-1/6*cos(3*(x+pi/2));
 
 % Simulation parameters
-ts=1/20000;             % Sampling time for discrete subsystems
-wc_differential = 100;  % Filter coefficient for differentiator
-d_P = .5;                 % gains for parallel PID for d
-d_I = 1;
-d_D = .01;
+T=1/5e3;
