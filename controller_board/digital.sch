@@ -3508,6 +3508,11 @@ W = angled&lt;p&gt;
 <wire x1="-68.58" y1="43.18" x2="-66.04" y2="43.18" width="0.1524" layer="91"/>
 <label x="-66.04" y="43.18" size="1.778" layer="95"/>
 </segment>
+<segment>
+<wire x1="170.18" y1="104.14" x2="172.72" y2="104.14" width="0.1524" layer="91"/>
+<label x="172.72" y="104.14" size="1.778" layer="95"/>
+<pinref part="U$81" gate="G$1" pin="O"/>
+</segment>
 </net>
 <net name="ADC_M1" class="0">
 <segment>
@@ -3883,13 +3888,6 @@ W = angled&lt;p&gt;
 <pinref part="U$49" gate="G$1" pin="-"/>
 <pinref part="U$59" gate="G$1" pin="D"/>
 <pinref part="U$1" gate="G$1" pin="A"/>
-</segment>
-</net>
-<net name="ENABLE_GATE" class="0">
-<segment>
-<wire x1="170.18" y1="104.14" x2="172.72" y2="104.14" width="0.1524" layer="91"/>
-<label x="172.72" y="104.14" size="1.778" layer="95"/>
-<pinref part="U$81" gate="G$1" pin="O"/>
 </segment>
 </net>
 <net name="-15V" class="0">
