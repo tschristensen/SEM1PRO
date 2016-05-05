@@ -39,7 +39,7 @@ Plecs {
   Schematic {
     Location      [0, 38; 1920, 993]
     ZoomFactor    1.33333
-    SliderPosition [-1, -1]
+    SliderPosition [-1, 361]
     ShowBrowser   off
     BrowserWidth  100
     Component {
@@ -465,7 +465,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "K"
-        Value         "2e-1"
+        Value         "1"
         Show          off
       }
       Parameter {
@@ -501,7 +501,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "K"
-        Value         "2e-3"
+        Value         "1e-3"
         Show          off
       }
       Parameter {
@@ -588,7 +588,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "K"
-        Value         "1e-1"
+        Value         "1"
         Show          off
       }
       Parameter {
@@ -655,7 +655,7 @@ Plecs {
       Type          Constant
       Name          "Constant"
       Show          off
-      Position      [115, 500]
+      Position      [115, 480]
       Direction     right
       Flipped       off
       Frame         [-10, -10; 10, 10]
@@ -663,39 +663,6 @@ Plecs {
       LabelAlign    up
       Parameter {
         Variable      "Value"
-        Value         "0"
-        Show          off
-      }
-    }
-    Component {
-      Type          PulseGenerator
-      Name          "Pulse\nGenerator"
-      Show          off
-      Position      [205, 600]
-      Direction     right
-      Flipped       off
-      Parameter {
-        Variable      "Hi"
-        Value         "300"
-        Show          off
-      }
-      Parameter {
-        Variable      "Lo"
-        Value         "30"
-        Show          off
-      }
-      Parameter {
-        Variable      "f"
-        Value         ".1"
-        Show          off
-      }
-      Parameter {
-        Variable      "DutyCycle"
-        Value         "0.4"
-        Show          off
-      }
-      Parameter {
-        Variable      "Delay"
         Value         "0"
         Show          off
       }
@@ -717,8 +684,8 @@ Plecs {
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAigAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABhAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
+"AAZAAAAAEAAABkAAAAxQAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABhAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAABkAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
@@ -903,8 +870,8 @@ Plecs {
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAA2AAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAAB0AAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAABkAAAAAQAAAAA="
+"AAZAAAAAEAAABkAAAAnQAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAAB0AAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
@@ -1069,11 +1036,11 @@ Plecs {
       Position      [275, 165]
       Direction     up
       Flipped       off
-      Location      [0, 29; 1920, 1005]
+      Location      [0, 38; 1914, 1014]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
 "G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
 "///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB4AAAAOxAAAA"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3oAAAOxAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
@@ -1175,56 +1142,6 @@ Plecs {
       }
     }
     Component {
-      Type          Reference
-      SrcComponent  "Components/Control/Sources/Ramp"
-      Name          "Ramp"
-      Show          off
-      Position      [205, 655]
-      Direction     up
-      Flipped       off
-      Frame         [-15, -15; 15, 15]
-      LabelPosition [0, 18]
-      LabelAlign    up
-      Parameter {
-        Variable      "slope"
-        Value         "5"
-        Show          off
-      }
-      Parameter {
-        Variable      "start"
-        Value         "0"
-        Show          off
-      }
-      Parameter {
-        Variable      "X0"
-        Value         "0"
-        Show          off
-      }
-      Parameter {
-        Variable      "XFinal"
-        Value         "1"
-        Show          off
-      }
-      Terminal {
-        Type          Output
-        Position      [19, 0]
-        Direction     right
-      }
-    }
-    Component {
-      Type          Product
-      Name          "Product2"
-      Show          off
-      Position      [295, 640]
-      Direction     up
-      Flipped       off
-      Parameter {
-        Variable      "Inputs"
-        Value         "3"
-        Show          off
-      }
-    }
-    Component {
       Type          HeatFlowMeter
       Name          "Wm"
       Show          on
@@ -1239,11 +1156,11 @@ Plecs {
       Position      [1415, 40]
       Direction     down
       Flipped       on
-      Location      [0, 38; 1916, 1014]
+      Location      [0, 38; 1914, 1014]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
 "G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
 "///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3wAAAOxAAAA"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3oAAAOxAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
@@ -1417,8 +1334,8 @@ Plecs {
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAiAAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABfAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
+"AAZAAAAAEAAABkAAAAwwAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABfAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAABkAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
@@ -1668,7 +1585,7 @@ Plecs {
       TimeRange     "0.0"
       ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "1"
+      Open          "0"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
@@ -1742,7 +1659,7 @@ Plecs {
       TimeRange     "0.0"
       ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "1"
+      Open          "0"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
@@ -2066,7 +1983,7 @@ Plecs {
       TimeRange     "0.0"
       ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "1"
+      Open          "0"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
@@ -2113,11 +2030,11 @@ Plecs {
       Position      [825, 340]
       Direction     up
       Flipped       off
-      Location      [961, 38; 1919, 1004]
+      Location      [0, 29; 1920, 1005]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
 "G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
 "///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAA74AAAOnAAAA"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB4AAAAOxAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
@@ -2183,43 +2100,6 @@ Plecs {
         Variable      "theta0"
         Value         ""
         Show          off
-      }
-    }
-    Component {
-      Type          Reference
-      SrcComponent  "Components/Control/Sources/Ramp"
-      Name          "Ramp1"
-      Show          off
-      Position      [205, 720]
-      Direction     up
-      Flipped       off
-      Frame         [-15, -15; 15, 15]
-      LabelPosition [0, 18]
-      LabelAlign    up
-      Parameter {
-        Variable      "slope"
-        Value         "-.2/1.75"
-        Show          off
-      }
-      Parameter {
-        Variable      "start"
-        Value         "2.25"
-        Show          off
-      }
-      Parameter {
-        Variable      "X0"
-        Value         "1"
-        Show          off
-      }
-      Parameter {
-        Variable      "XFinal"
-        Value         "0.8"
-        Show          off
-      }
-      Terminal {
-        Type          Output
-        Position      [19, 0]
-        Direction     right
       }
     }
     Component {
@@ -2461,24 +2341,24 @@ Plecs {
       Position      [515, 405]
       Direction     up
       Flipped       off
-      Location      [0, 38; 1916, 1014]
+      Location      [0, 38; 1914, 1014]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
 "G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
-"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3wAAAOxAAAA"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAd6AAAAevw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQBAAAAAAAAB3oAAABbAP///wAAB3oAAAMyAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
-      HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
-"QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAvQAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABZAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAABkAAAAAQAAAAA="
+      HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL+AIAAAAGAAAAC"
+"QAAAGQAAAAHAAAAZAAAAAYAAABkAAAABQAAAGQAAAAEAAAAZAAAAAMAAABkAAAHegAAAAsBAAABAA"
+"AAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAYAAABZAAAAAQAAAAAAAADIAAAAAgAAAAAAAAAAAAA"
+"ABQAAAAAAAABkAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAX1AAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
       ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "1"
+      Open          "0"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
@@ -2507,6 +2387,229 @@ Plecs {
           Untangle      0
           KeepBaseline  off
           BaselineValue 0
+        }
+      }
+    }
+    Component {
+      Type          Subsystem
+      Name          "Signal Builder"
+      Show          on
+      Position      [235, 625]
+      Direction     up
+      Flipped       off
+      Frame         [-50, -20; 50, 20]
+      LabelPosition [0, 0]
+      SampleTime    "-1"
+      MaskIconFrame on
+      MaskIconOpaque off
+      MaskIconRotates on
+      Terminal {
+        Type          Output
+        Position      [54, 0]
+        Direction     right
+      }
+      Schematic {
+        Location      [30, 227; 616, 634]
+        ZoomFactor    1
+        SliderPosition [0, 0]
+        ShowBrowser   off
+        BrowserWidth  100
+        Component {
+          Type          Reference
+          SrcComponent  "Components/Control/Sources/Ramp"
+          Name          "Rise"
+          Show          on
+          Position      [60, 110]
+          Direction     up
+          Flipped       off
+          Frame         [-15, -15; 15, 15]
+          LabelPosition [0, 18]
+          LabelAlign    up
+          Parameter {
+            Variable      "slope"
+            Value         "2"
+            Show          off
+          }
+          Parameter {
+            Variable      "start"
+            Value         "0"
+            Show          off
+          }
+          Parameter {
+            Variable      "X0"
+            Value         "0"
+            Show          off
+          }
+          Parameter {
+            Variable      "XFinal"
+            Value         "1"
+            Show          off
+          }
+          Terminal {
+            Type          Output
+            Position      [19, 0]
+            Direction     right
+          }
+        }
+        Component {
+          Type          Product
+          Name          "Product2"
+          Show          off
+          Position      [160, 110]
+          Direction     up
+          Flipped       off
+          Parameter {
+            Variable      "Inputs"
+            Value         "3"
+            Show          off
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Components/Control/Sources/Ramp"
+          Name          "Drop"
+          Show          on
+          Position      [60, 165]
+          Direction     up
+          Flipped       off
+          Frame         [-15, -15; 15, 15]
+          LabelPosition [0, 18]
+          LabelAlign    up
+          Parameter {
+            Variable      "slope"
+            Value         "-(30/1.1)/33"
+            Show          off
+          }
+          Parameter {
+            Variable      "start"
+            Value         "2.7"
+            Show          off
+          }
+          Parameter {
+            Variable      "X0"
+            Value         "1"
+            Show          off
+          }
+          Parameter {
+            Variable      "XFinal"
+            Value         "3/33"
+            Show          off
+          }
+          Terminal {
+            Type          Output
+            Position      [19, 0]
+            Direction     right
+          }
+        }
+        Component {
+          Type          Output
+          Name          "1"
+          Show          on
+          Position      [280, 110]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Index"
+            Value         "1"
+            Show          on
+          }
+          Parameter {
+            Variable      "Width"
+            Value         "-1"
+            Show          off
+          }
+        }
+        Component {
+          Type          Reference
+          SrcComponent  "Components/Control/Sources/Ramp"
+          Name          "Steady"
+          Show          on
+          Position      [60, 45]
+          Direction     up
+          Flipped       off
+          Frame         [-15, -15; 15, 15]
+          LabelPosition [0, 18]
+          LabelAlign    up
+          Parameter {
+            Variable      "slope"
+            Value         "-1/(10-3.8)"
+            Show          off
+          }
+          Parameter {
+            Variable      "start"
+            Value         "3.8"
+            Show          off
+          }
+          Parameter {
+            Variable      "X0"
+            Value         "1"
+            Show          off
+          }
+          Parameter {
+            Variable      "XFinal"
+            Value         "0"
+            Show          off
+          }
+          Terminal {
+            Type          Output
+            Position      [19, 0]
+            Direction     right
+          }
+        }
+        Component {
+          Type          Gain
+          Name          "Gain"
+          Show          on
+          Position      [215, 110]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "K"
+            Value         "300"
+            Show          off
+          }
+          Parameter {
+            Variable      "Multiplication"
+            Value         "1"
+            Show          off
+          }
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Rise"
+          SrcTerminal   1
+          DstComponent  "Product2"
+          DstTerminal   3
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Drop"
+          SrcTerminal   1
+          Points        [110, 165; 110, 120]
+          DstComponent  "Product2"
+          DstTerminal   4
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Steady"
+          SrcTerminal   1
+          Points        [100, 45; 100, 100]
+          DstComponent  "Product2"
+          DstTerminal   2
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Product2"
+          SrcTerminal   1
+          DstComponent  "Gain"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Gain"
+          SrcTerminal   2
+          DstComponent  "1"
+          DstTerminal   1
         }
       }
     }
@@ -2817,7 +2920,6 @@ Plecs {
       Type          Signal
       SrcComponent  "Constant"
       SrcTerminal   1
-      Points        [140, 500; 140, 480]
       DstComponent  "Sum1"
       DstTerminal   2
     }
@@ -2883,25 +2985,8 @@ Plecs {
     }
     Connection {
       Type          Signal
-      SrcComponent  "Pulse\nGenerator"
+      SrcComponent  "Signal Builder"
       SrcTerminal   1
-      Points        [235, 600; 235, 630]
-      DstComponent  "Product2"
-      DstTerminal   2
-    }
-    Connection {
-      Type          Signal
-      SrcComponent  "Ramp"
-      SrcTerminal   1
-      Points        [230, 655; 230, 640]
-      DstComponent  "Product2"
-      DstTerminal   3
-    }
-    Connection {
-      Type          Signal
-      SrcComponent  "Product2"
-      SrcTerminal   1
-      Points        [320, 640; 320, 625]
       DstComponent  "Sum3"
       DstTerminal   2
     }
@@ -3259,14 +3344,6 @@ Plecs {
     }
     Connection {
       Type          Signal
-      SrcComponent  "Ramp1"
-      SrcTerminal   1
-      Points        [245, 720; 245, 650]
-      DstComponent  "Product2"
-      DstTerminal   4
-    }
-    Connection {
-      Type          Signal
       SrcComponent  "RRF->SRF"
       SrcTerminal   2
       DstComponent  "Space Vector PWM"
@@ -3351,7 +3428,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Demux"
       SrcTerminal   2
-      Points        [765, 555; 765, 500; 780, 500; 780, 475; 545, 475; 545, 320]
+      Points        [765, 555; 765, 475; 545, 475; 545, 320]
       Branch {
         DstComponent  "Logical\nOperator"
         DstTerminal   2
