@@ -18,4 +18,16 @@ m_{G1} = \rho \pi r^2 \cdot h
 \label{eq:mass of disc}
 \end{equation}
 
-where rho is the mass density of iron of $7870 \dfrac{kg}{m^3}$, r is the radius, and h is the thickness of 7 mm. Radius is defined by the number of teeth, G1, of the gear and the pitch, which is the distance between two adjacent teeth, which is 12.5 mm. Inertia of a disc depends on mass and radius of
+where rho is the mass density of iron of $7870 \dfrac{kg}{m^3}$, r is the radius, and h is the thickness of 7 mm. Radius is defined by the number of teeth, G1, of the gear and the pitch, which is the distance between two adjacent teeth, which is 12.5 mm. Hence the radius can be calculated by equation. Inertia of a disc depends on mass and radius of the disc.
+
+\begin{equation}
+	r=\frac{G \cdot pitch}{2 \pi}
+	\label{eq:radius_from_G}
+\end{equation}
+
+\begin{equation}
+J_G = \frac{mr^2}{2} = \frac{\rho \pi r^2 \cdot h \cdot r^2}{2} = G^4 \frac{\rho \pi \frac{pitch}{2 \pi} \cdot h}{2} \approx 1.36 \cdot 10^{-9} G^4
+\label{eq:inertia_of_disc}
+\end{equation}
+
+This equation is used to dertermine the inertia of the two cogs, the motor-side cog, G1, has 12 teeth, and the wheel-side cog has 50 teeth. 
