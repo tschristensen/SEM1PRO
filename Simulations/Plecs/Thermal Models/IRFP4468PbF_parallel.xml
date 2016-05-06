@@ -21,7 +21,7 @@
                 <CurrentAxis> -66 0 50 100 150 200 300 360</CurrentAxis>
                 <VoltageAxis> 20 50 80</VoltageAxis>
                 <TemperatureAxis> 25</TemperatureAxis>
-                <Energy scale="1">
+                <Energy scale="0.001">
                     <Temperature>
                         <Voltage> 1.048 0.0004 0.672 2.76 6.376 10.34 23.14 33.47</Voltage>
                         <Voltage> 1.292 0.0004 0.88 2.984 6.4 10.8 23.84 33.6</Voltage>

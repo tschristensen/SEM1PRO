@@ -6,7 +6,7 @@ G1 = 12;            % Number of teeth on motor-side cog
 G2 = 50;            % Number of teeth on wheel-side cog
 J_G1 = 1.35554e-9*G1^4; %Inertia of motor-side cog
 J_G2 = 1.35554e-9*G2^4; %Inertia of wheel-side cog 
-c_drag = -1/2*1.3*.804*.6; %Drag coefficient. 
+c_drag = -1/2*1.225*.804*.6; %Drag coefficient. 
 c_drag_pro= c_drag*G1.^3*r.^3/G2.^3;
 
 % Motor parameters
@@ -27,8 +27,4 @@ phase_c=cos(x+pi/2+2*pi/3);
 phase_3=-1/6*cos(3*(x+pi/2));
 
 % Simulation parameters
-ts=1/20000;             % Sampling time for discrete subsystems
-wc_differential = 100;  % Filter coefficient for differentiator
-d_P = .5;                 % gains for parallel PID for d
-d_I = 1;
-d_D = .01;
+T=1/5e3;
