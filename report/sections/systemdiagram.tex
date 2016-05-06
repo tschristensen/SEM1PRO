@@ -1,5 +1,12 @@
 \section{System Overview}
-To get an overview of the system connections and all the major components needed to make the kart run, a system diagram is made. Figure \ref{fig:blockdiagram1} shows the general wiring of the system. The highlighted green component is the zynq board controller.  
+To get an overview of the system connections and all the major components needed to make the kart run, a system diagram is made. Figure \ref{fig:blockdiagram1} shows the general wiring of the system. \newline
+
+The highlighted green component is the zynq board controller. To the right of the control board is the PMAC motor and the driver and inverter to power it. The two blocks nexto the motor are the LEM current sensors. Two of these is enough because the third current can be calculated by using KCL.
+Beyond the motor is the encoder producing motor positional data for the control. We might not need all three of the encoder signals but they will be routed to the control board anyway just in case. \newline
+
+On the left side of the Zynq board is the different precautions and emergency switches at the top. These will ensure that starting, stopping and emergency procedures are completed safely without any capaictors or MOSFETS burning.
+Below these switches is the undervoltage protection circuit which ensures that the kart is only driving when sufficient power is supplied. The final parts to the left are the torque pedal or speeder for the kart, and the battery supply.
+
 
 \begin{figure}[!h]
 	\centering
@@ -7,6 +14,8 @@ To get an overview of the system connections and all the major components needed
 	\caption{Wiring diagram with zybo}
 	\label{fig:blockdiagram1}
 \end{figure}
+
+
 
 
 \begin{figure}[!h]

@@ -25,9 +25,27 @@ This battery pack will be providing all he required power for the Go-kart, inclu
 \subsection{PMAC Motor}
 
 \subsection{Torque Pedal}
-The torque pedal or "speeder" is provided as well. It consists of a levered variable resistor with the following equivalent diagram:
+The torque pedal or "speeder" is provided as well. It consists of a levered variable resistor with the equivalent diagram seen on figure \ref{fig:Torque_pedal_diagram}.
 
-The torque pedal will be used to control the speed by increasing or lowering the resistance, resulting in a change of voltage on the return wires.
+The torque pedal will be used to control the speed by increasing or lowering the resistance, resulting in a change of voltage on the return wires. Measuring the pedal, it is found to have a variable resistance of 0k to 7.5k. It is also found to be inaccurate while holding a position, meaning some kind of filter will be necessary.
+
+\begin{figure}[!h]
+	\begin{subfigure}[t]{.35\linewidth}
+			\centering
+			\includegraphics[width=\textwidth]{graphics/torque_pedal_diagram}
+			\caption{Diagram of the torque pedal}
+			\label{fig:Torque_pedal_diagram}
+	\end{subfigure}
+	\hspace{2cm}
+	\begin{subfigure}[t]{.35\linewidth}
+		\includegraphics[width=\textwidth]{graphics/torque_pedal_picture}
+		\caption{Picture of the actual torque pedal}
+		\label{fig:Torque_pedal_picture}
+	\end{subfigure}
+	\caption{Diagram and picture of the torque pedal}
+	\label{fig:Torque_pedal_diagram}
+\end{figure}
+\todo{align pictures, maybe cut out the background of the pedal}
 
 
 \subsection{Switches and Wireing}
