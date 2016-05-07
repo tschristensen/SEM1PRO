@@ -4,7 +4,7 @@
         <SemiconductorData type="MOSFET">
             <TurnOnLoss>
                 <CurrentAxis> -66 0 50 100 150 200 300 360</CurrentAxis>
-                <VoltageAxis> 30 50 80</VoltageAxis>
+                <VoltageAxis> 20 50 80</VoltageAxis>
                 <TemperatureAxis> 25</TemperatureAxis>
                 <Energy scale="0.001">
                     <Temperature>
@@ -39,8 +39,7 @@
             </ConductionLoss>
         </SemiconductorData>
         <ThermalModel>
-            <Branch type="Cauer"/>
-            <Branch>
+            <Branch type="Cauer">
                 <RCElement R="0.145" C="1e-06"/>
             </Branch>
         </ThermalModel>

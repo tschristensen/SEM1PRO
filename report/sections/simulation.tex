@@ -119,3 +119,15 @@ The Permanent Magnet Synchronous Motor is found in Simscape $\rightarrow$ SimPow
 
 One thing to note in both cases is, that the flux linkage is divided by the number of pole pairs. The reason for this is likely a matter of definitions, and the relation has been deduced using simulations. Armature resistance and inductances are per-phase, and the values used are found in section~\ref{sub:1117_param}.
 
+\subsection{Electrical Network and control}\label{sub:sim_electrical}
+This is where, the Simulink and Plecs block diagram differ a lot. The purpose of using Simulink is that it's quick and easy to change multiple parameters in order to develop and test a controller. The advantage in Plecs its ability to simulate switchmode power electronics, where there's a vast ratio between the minimum timestep defined by the switching frequencies, and the duration of the simulation. The sparse electrical network along with the discrete controller and modulation blocks have been shown in figure~\ref{fig:simulations_electrical}.
+
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=16cm]{graphics/simulations_electrical.png}
+	\caption{Block diagram of the Simulink electrical network and modulation}
+	\label{fig:simulations_electrical}
+	\end{center}
+\end{figure}
+
+The motor block has an external connection to ground, which the real motor doesn't have. 
