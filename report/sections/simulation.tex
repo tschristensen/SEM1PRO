@@ -97,7 +97,7 @@ The mechanical diagram is reduced to figure ~\ref{fig:reduced_mechanical_system}
 His can be ported to Plecs, where all the used mechanical parts exist. Only difference is, that the inertia block is placed inline with the wire, and not as an appendage.
 
 \subsection{Motor Model}\label{sub:motor_model_simscape}
-The Permanent Magnet Synchronous Motor is found in Simscape $\rightarrow$ SimPowerSystem $\rightarrow$ Simscape Components $\rightarrow$ Machines $\rightarrow$ Permanent Magnet Rotor. This is a quite simple model, with only four parameters: Number of pole pairs, flux linkage of the magnet, inductance and armature resistance. The parameters can be seen on figure~\ref{fig:pmsm_parameters_simscape}. A similar block can be found in Plecs under Electrical $\rightarrow$ Machines. This model has the same parameters as in simscape, but also inertia and friction.
+The Permanent Magnet Synchronous Motor is found in Simscape $\rightarrow$ SimPowerSystem $\rightarrow$ Simscape Components $\rightarrow$ Machines $\rightarrow$ Permanent Magnet Rotor. This is a quite simple model, with only four parameters: Number of pole pairs, flux linkage of the magnet, inductance and armature resistance. The parameters can be seen on figure~\ref{fig:pmsm_parameters_simscape}. A similar block can be found in Plecs under Electrical $\rightarrow$ Machines. This model has the same parameters as in Simscape, but also inertia and friction.
 
 \begin{figure}[H]
 	\centering
@@ -125,9 +125,17 @@ This is where, the Simulink and Plecs block diagram differ a lot. The purpose of
 \begin{figure}[h]
 	\begin{center}
 	\includegraphics[width=16cm]{graphics/simulations_electrical.png}
-	\caption{Block diagram of the Simulink electrical network and modulation}
+	\caption{Block diagram of the Simulink electrical network and modulation. Red indicates fixed time steps.}
 	\label{fig:simulations_electrical}
 	\end{center}
 \end{figure}
 
-The motor block has an external connection to ground, which the real motor doesn't have. 
+The motor block has an external connection to neutral, which the real motor doesn't have. This neutral seems to need a dc path to ground, and so does the controlled voltage sources. Since the external ground cannot be connected to the internal star point of the motor, the connection is made with a very large resistor of $1 G\Omega$. The lighter blue wire going into the "~" port of the PMSM block is a three phase electrical cable, which is used throughout the SimPowerSystem sublibrary, and the Splitter collects three wires into a cable. 
+
+Current is sensed on wires A and B, and used to calculate $I_C$ in the upper part of the block diagram. The signal goes to a Clarke-Park transformation block outside figure~\ref{fig:simulations_electrical}, and returns as $I_d$ and $I_q$ on the bottom left part of the picture. 
+
+The angular position is measured with an ideal position sensor, and then multiplied by the number of pole pairs to get the electrical position. in order to model the low resolution of the encoder, a quantizer block was placed after the "ps--s" block, but this causes stiffness to the point where the simulations almost stall. Instead this has been achieved with look-up-tables inside the controller described in section~\ref{sub:sim_controller}
+
+After the controller block, there are four blocks manipulating the dq signals. The controller outputs a vector\todo{vector in this case is matlabs way of saying array. footnote?} of length 3. Values range from -1.15 to 1.15, corresponding with the "duty cycle". This is transformed from dq0 to abc, then overmodulated with third harmonic injection, and multiplied with half the battery voltage. This means, a value of 1 from the overmodulation block corresponds to 26.4 and a value of -1 is -26.4, which in turn means, that the only current going through the "very large resistor" is cased by the third harmonic. Finally the output is saturated to -26.4 and 26.4 to ensure the voltage does not exceed what the battery can generate. 
+
+The setpoint value for the controller's q current is defined in the signal builder block. The signal builder is a in torque, which is converted to current by dividing with $K_T \tfrac{3}{2}$. 
