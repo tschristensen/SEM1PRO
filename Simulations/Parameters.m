@@ -17,16 +17,16 @@ Kt=.07329;          % Kt (real version)
 J_M = 52e-4;        % Internal torque of the motor
 J_pro = (m*r^2+J_G2)*(G1/G2)^2 + J_G1;% Projected inertia
 
-n=1:256;
-ad = cos(8*pi/256*n);
-bd = cos(8*pi/256*n-2/3*pi);
-cd = cos(8*pi/256*n+2/3*pi);
-aq = -sin(8*pi/256*n);
-bq = -sin(8*pi/256*n-2/3*pi);
-cq = -sin(8*pi/256*n+2/3*pi);
+n1=0:255;
+ad = cos(8*pi/256*n1);
+bd = cos(8*pi/256*n1-2/3*pi);
+cd = cos(8*pi/256*n1+2/3*pi);
+aq = -sin(8*pi/256*n1);
+bq = -sin(8*pi/256*n1-2/3*pi);
+cq = -sin(8*pi/256*n1+2/3*pi);
 
-n=-1:.01:1;
-third_phase = sin(3*asin(n));
+n2=-1:.01:1;
+third_phase = sin(3*asin(n2));
 
 % Simulation parameters
-T=1/5e3;
+T=1/5000;
