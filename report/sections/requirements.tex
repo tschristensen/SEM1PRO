@@ -1,15 +1,22 @@
 \section{Requirements}
-The project requirements have been defined by the supervisors. 
-
-Project requirement:
+The project requirements have been defined by the supervisors. They are defined to utilize the given hardware, and to limit the project in scope.\newline
+The requirements are as follows:
 \begin{itemize}
-\item The solution must use a Zynq FPGA and a self‐designed 3‐phase inverter to control the PMAC motor. 
+\item Design and implement a motor controller to replace the current Sevcon gen4 motor controller used in the SDU electric kart.
 
-\item It should be possible to set and get relevant parameters through a communication interface by a computer. Note: It is possible to use the UART interface on the Zybo board as communication interface.    
+\item The new controller must use the same connection types for easy replacement of the control and driver solutions.
 
-\item It is not allowed to change any mechanical or electrical parts on the kart, except replacing the Sevcon gen4 controller
+\item The motor controller should only be able to control the PMAC motor in forward direction.
+
+\item The solution must use a Zynq FPGA and a self-designed 3-phase inverter to control the PMAC motor.
+
+\item It must be possible to set and get relevant parameters through a communication interface by a computer.
+
+\item All sensors and switches available on the kart must be interfaced and usable to their desired effect.
+
+\item It is not allowed to change any mechanical or electrical parts on the kart, except replacing the Sevcon gen4 controller.
 \end{itemize}
 
-
+These requirements will be the base of the solution presented in this report.
 
 \clearpage

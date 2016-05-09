@@ -3,7 +3,7 @@
 Simulation tools have been a great help, not only understanding the electromechanical system, and design a controller from it, but estimating requirements for the electric components. Primarily, Simscape has been used, but Plecs has also been used specifically to simulate the inverter. This section will explain how the model has been build, starting with the mechanical system, then the motor model, the transformation and control part, and finally the three-phase switching pole. 
 
 \subsection{Mechanical System}\label{sub:Simulations_mec}
-The mechanical system consists of a mass of the gokart with driver, turbulent air resistance, wheels and a gear. While there are a lot of interesting blocks in the Simscape -> SimDriveline library, we will stick with the mechanical library, because this is detailed enough, and more easy to port to Plecs.
+The mechanical system consists of a mass of the gokart with driver, turbulent air resistance, wheels and a gear. While there are a lot of interesting blocks in the Simscape $\rightarrow$ SimDriveline library, we will stick with the mechanical library, because this is detailed enough, and more easy to port to Plecs. The simulations do not take into account for wheel spin.
 
 \begin{figure}[H]
 	\includegraphics[width=15cm]{graphics/simulations_mechanical_full.png}
@@ -30,4 +30,112 @@ J_G = \frac{mr^2}{2} = \frac{\rho \pi r^2 \cdot h \cdot r^2}{2} = G^4 \frac{\rho
 \label{eq:inertia_of_disc}
 \end{equation}
 
-This equation is used to dertermine the inertia of the two cogs, the motor-side cog, G1, has 12 teeth, and the wheel-side cog has 50 teeth. 
+This equation is used to dertermine the inertia of the two cogs, the motor-side cog, G1, has 12 teeth, and the wheel-side cog, G2, has 50 teeth. This ratio, G2/G1 is put into the block "Wheel and Axle".
+
+The mass is set to 200 -- 250 kg, depending on the driver, and this includes the mass of the car. This is a high estimate. A lower value could make the controller less stable, but a higher value will heat up the inverter more. 
+
+Turbulent friction caused by the wind resistance is calculated by equation~\ref{eq:wind_resistance}.
+
+\begin{equation}
+F=-\frac{1}{2} \rho A c v^2
+\label{eq:win_resistance}
+\end{equation}
+
+where $\rho$ is the density of air, A is the frontal area, c is the drag coefficient and v is the speed. The frontal area has been approximated to two boxes with the combined area of $0.6 m^2$\todo{add a picture of a go kart with two boxes across it, the lower one being 1 m wide, and 0.4 m high, and the second one being 0.5 m wide an 0.4 m high.}. The density of air is approximately $1.225 \frac{kg}{m^3}$, and the constant c is approximately 0.8, according to a paper about air resistance found online. The constants are multiplied into one constant called c\_drag, as shown in equation~\ref{eq:cdrag}
+%"http://www.torvergata-karting.it/filemanager/download/191/The%20evaluation%20of%20aerodynamic%20drag%20of%20go-karts%20by%20means%20of%20coast%20down%20test%20and%20CFD%20analysis.pdf"
+These constants are put into the gain block, "Drag coefficient", and multiplied by the square of the speed. The result is put into an ideal force source. 
+
+\begin{equation}
+F=-c_{drag} v^2 = -0.296 v^2
+\label{eq:cdrag}
+\end{equation}
+
+This system can be simplified, so that all inertia an mass become one block and the gear and wheel can be removed. This is done by a set of rules that apply for this mechanical circuit: The gear box reduces the speed, and increases torque. Torque is force times radius, and speed is angular velocity times radius.
+To turn the mass, m, into a inertia, assume a cylindrical shell with radius r, and mass m. Inertia is then calculated by:
+
+\begin{equation}
+J=mr^2
+\end{equation}
+
+This inertia can then be added to the inertia J\_G2. Same rules apply for a gear as for a transformer when reflecting a load from one side to the other, as shown in equation~\ref{eq:inertia_reflect}
+
+\begin{equation}
+J_{ref} = \frac{G1^2}{G2^2} J
+\label{eq:inertia_reflect}
+\end{equation}
+
+This inertia is then added to the inertia of the motor and J\_G1:
+
+\begin{equation}
+J = (mr^2+J_{G2}) \cdot \big(\tfrac{G1}{G2}\big)^2 + J_{G1}+J_M
+\end{equation}
+
+For a mass of 250 kg, this comes to $0.282 kg m^2$.
+
+In equation~\ref{eq:win_resistance}, speed can be replaced with angular velocity and a gain, and force can be replaced by torque and a gain. So the equation becomes this:
+
+\begin{equation}
+\frac{T G2}{r G1} = c_{drag} \big(\omega r \tfrac{G1}{G2}\big)^2
+\end{equation}
+
+isolating T, and putting $\omega$ by it self, we get:
+
+\begin{equation}
+T= c_{drag} \Big(\frac{G1 r}{G2}\Big)^3 \omega^2 \approx -11.1\cdot 10^{-6} \omega^2
+\end{equation}
+
+The mechanical diagram is reduced to figure ~\ref{fig:reduced_mechanical_system}
+
+\begin{figure}[H]
+	\begin{center}
+	\includegraphics[width=12cm]{graphics/simulations_mechanical_simplified.png}
+	\caption{Block diagram of the reduced mechanical system}
+	\label{fig:reduce_mechanical_system}
+	\end{center}
+\end{figure}
+
+His can be ported to Plecs, where all the used mechanical parts exist. Only difference is, that the inertia block is placed inline with the wire, and not as an appendage.
+
+\subsection{Motor Model}\label{sub:motor_model_simscape}
+The Permanent Magnet Synchronous Motor is found in Simscape $\rightarrow$ SimPowerSystem $\rightarrow$ Simscape Components $\rightarrow$ Machines $\rightarrow$ Permanent Magnet Rotor. This is a quite simple model, with only four parameters: Number of pole pairs, flux linkage of the magnet, inductance and armature resistance. The parameters can be seen on figure~\ref{fig:pmsm_parameters_simscape}. A similar block can be found in Plecs under Electrical $\rightarrow$ Machines. This model has the same parameters as in Simscape, but also inertia and friction.
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{.49\linewidth}
+		\centering
+		\includegraphics[width=\textwidth]{graphics/PMSM_simulink.png}
+		\label{fig:pmsm_parameters_simscape}
+		\caption{Simscape PMSM parameters.}
+	\end{subfigure}
+	\begin{subfigure}[t]{.39\linewidth}
+		\centering
+		\includegraphics[width=\textwidth]{graphics/PMSM_Plecs.png}
+		\label{fig:pmsm_parameters_Plecs}
+		\caption{Plecs PMSM parameters.}
+	\end{subfigure}
+	\label{fig:pmsm_parameters_plecs_simscape}
+	\caption{Comparison of Simscape and Plecs models of the Permanent Magnet Synchronous Motor.}
+\end{figure} 
+
+One thing to note in both cases is, that the flux linkage is divided by the number of pole pairs. The reason for this is likely a matter of definitions, and the relation has been deduced using simulations. Armature resistance and inductances are per-phase, and the values used are found in section~\ref{sub:1117_param}.
+
+\subsection{Electrical Network and control}\label{sub:sim_electrical}
+This is where, the Simulink and Plecs block diagram differ a lot. The purpose of using Simulink is that it's quick and easy to change multiple parameters in order to develop and test a controller. The advantage in Plecs its ability to simulate switchmode power electronics, where there's a vast ratio between the minimum timestep defined by the switching frequencies, and the duration of the simulation. The sparse electrical network along with the discrete controller and modulation blocks have been shown in figure~\ref{fig:simulations_electrical}.
+
+\begin{figure}[h]
+	\begin{center}
+	\includegraphics[width=16cm]{graphics/simulations_electrical.png}
+	\caption{Block diagram of the Simulink electrical network and modulation. Red indicates fixed time steps.}
+	\label{fig:simulations_electrical}
+	\end{center}
+\end{figure}
+
+The motor block has an external connection to neutral, which the real motor doesn't have. This neutral seems to need a dc path to ground, and so does the controlled voltage sources. Since the external ground cannot be connected to the internal star point of the motor, the connection is made with a very large resistor of $1 G\Omega$. The lighter blue wire going into the "~" port of the PMSM block is a three phase electrical cable, which is used throughout the SimPowerSystem sublibrary, and the Splitter collects three wires into a cable. 
+
+Current is sensed on wires A and B, and used to calculate $I_C$ in the upper part of the block diagram. The signal goes to a Clarke-Park transformation block outside figure~\ref{fig:simulations_electrical}, and returns as $I_d$ and $I_q$ on the bottom left part of the picture. 
+
+The angular position is measured with an ideal position sensor, and then multiplied by the number of pole pairs to get the electrical position. in order to model the low resolution of the encoder, a quantizer block was placed after the "ps--s" block, but this causes stiffness to the point where the simulations almost stall. Instead this has been achieved with look-up-tables inside the controller described in section~\ref{sub:sim_controller}
+
+After the controller block, there are four blocks manipulating the dq signals. The controller outputs a vector\todo{vector in this case is matlabs way of saying array. footnote?} of length 3. Values range from -1.15 to 1.15, corresponding with the "duty cycle". This is transformed from dq0 to abc, then overmodulated with third harmonic injection, and multiplied with half the battery voltage. This means, a value of 1 from the overmodulation block corresponds to 26.4 and a value of -1 is -26.4, which in turn means, that the only current going through the "very large resistor" is cased by the third harmonic. Finally the output is saturated to -26.4 and 26.4 to ensure the voltage does not exceed what the battery can generate. 
+
+The setpoint value for the controller's q current is defined in the signal builder block. The signal builder is a in torque, which is converted to current by dividing with $K_T \tfrac{3}{2}$. 

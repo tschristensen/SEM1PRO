@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SemiconductorLibrary xmlns="http://www.plexim.com/xml/semiconductors/" version="1.1">
+<SemiconductorLibrary xmlns="http://www.plexim.com/xml/semiconductors/" version="1.0">
     <Package class="MOSFET" vendor="International Rectifier" partnumber="IRFP4468PbF_parallel">
-        <Variables/>
         <SemiconductorData type="MOSFET">
             <TurnOnLoss>
-                <ComputationMethod>Table only</ComputationMethod>
                 <CurrentAxis> -66 0 50 100 150 200 300 360</CurrentAxis>
-                <VoltageAxis> 30 50 80</VoltageAxis>
+                <VoltageAxis> 20 50 80</VoltageAxis>
                 <TemperatureAxis> 25</TemperatureAxis>
                 <Energy scale="0.001">
                     <Temperature>
@@ -17,8 +15,7 @@
                 </Energy>
             </TurnOnLoss>
             <TurnOffLoss>
-                <ComputationMethod>Table only</ComputationMethod>
-                <CurrentAxis> -66 0 50 100 150 200 300 360</CurrentAxis>
+               <CurrentAxis> -66 0 50 100 150 200 300 360</CurrentAxis>
                 <VoltageAxis> 20 50 80</VoltageAxis>
                 <TemperatureAxis> 25</TemperatureAxis>
                 <Energy scale="0.001">
@@ -30,7 +27,6 @@
                 </Energy>
             </TurnOffLoss>
             <ConductionLoss>
-                <ComputationMethod>Table only</ComputationMethod>
                 <CurrentAxis> -350 0 350</CurrentAxis>
                 <TemperatureAxis> 25 50 75 100 125</TemperatureAxis>
                 <VoltageDrop scale="1">

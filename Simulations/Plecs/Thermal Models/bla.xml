@@ -1,37 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SemiconductorLibrary xmlns="http://www.plexim.com/xml/semiconductors/" version="1.0">
-    <Package class="MOSFET" vendor="asdfaf" partnumber="">
+    <Package class="MOSFET" vendor="International Rectifier" partnumber="IRFP4468PbF_parallel">
         <SemiconductorData type="MOSFET">
             <TurnOnLoss>
-                <CurrentAxis> 0</CurrentAxis>
-                <VoltageAxis> 0</VoltageAxis>
+                <CurrentAxis> -66 0 50 100 150 200 300 360</CurrentAxis>
+                <VoltageAxis> 30 50 80</VoltageAxis>
                 <TemperatureAxis> 25</TemperatureAxis>
-                <Energy scale="1">
+                <Energy scale="0.001">
                     <Temperature>
-                        <Voltage> 0</Voltage>
+                        <Voltage> 1.048 0.0004 0.672 2.76 6.376 10.34 23.14 33.47</Voltage>
+                        <Voltage> 1.292 0.0004 0.88 2.984 6.4 10.8 23.84 33.6</Voltage>
+                        <Voltage> 1.116 0.0004 0.928 3.1 6.72 11.04 23.96 34.6</Voltage>
                     </Temperature>
                 </Energy>
             </TurnOnLoss>
             <TurnOffLoss>
-                <CurrentAxis> 0</CurrentAxis>
-                <VoltageAxis> 0</VoltageAxis>
+               <CurrentAxis> -66 0 50 100 150 200 300 360</CurrentAxis>
+                <VoltageAxis> 20 50 80</VoltageAxis>
                 <TemperatureAxis> 25</TemperatureAxis>
-                <Energy scale="1">
+                <Energy scale="0.001">
                     <Temperature>
-                        <Voltage> 0</Voltage>
+                        <Voltage> 1.048 0.0004 0.672 2.76 6.376 10.34 23.14 33.47</Voltage>
+                        <Voltage> 1.292 0.0004 0.88 2.984 6.4 10.8 23.84 33.6</Voltage>
+                        <Voltage> 1.116 0.0004 0.928 3.1 6.72 11.04 23.96 34.6</Voltage>
                     </Temperature>
                 </Energy>
             </TurnOffLoss>
             <ConductionLoss>
-                <CurrentAxis> 0</CurrentAxis>
-                <TemperatureAxis> 25</TemperatureAxis>
+                <CurrentAxis> -350 0 350</CurrentAxis>
+                <TemperatureAxis> 25 50 75 100 125</TemperatureAxis>
                 <VoltageDrop scale="1">
-                    <Temperature> 0</Temperature>
+                    <Temperature> 0 0 0</Temperature>
+                    <Temperature> 0.06 0 0.06</Temperature>
+                    <Temperature> 0.13 0 0.13</Temperature>
+                    <Temperature> 0.2 0 0.2</Temperature>
+                    <Temperature> 0.29 0 0.29</Temperature>
                 </VoltageDrop>
             </ConductionLoss>
         </SemiconductorData>
         <ThermalModel>
             <Branch type="Cauer"/>
+            <Branch>
+                <RCElement R="0.145" C="1e-06"/>
+            </Branch>
         </ThermalModel>
         <Comment>
             <Line></Line>
