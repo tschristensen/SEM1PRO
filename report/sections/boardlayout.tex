@@ -1,0 +1,162 @@
+\section{Board Layout}
+This section is dedicated to describing the electronics designed throughout this report.
+This includes an analog, a digital and a power board.
+Each of these boards, the choice of components and the layout will be discussed in appropriate detail in the following sections.
+
+\subsection{Analog Board}
+The analog board houses, as the name implies, all of the analog signal processing.
+Mainly the over-current protection, but also the torque pedal scaling is present on this board.
+
+\subsubsection{Over-current Protection}
+In order to protect the system, it is necessary to create some form of over-current protection, OCP.
+Three choices immediately present themselves:
+\begin{enumerate}
+	\item The DRV8301 is equipped with current sensing circuitry that allows the chip to automatically shut down the drivers when an over-current event, OCE, occurs.
+	This requires the use of external shunt resistors to divert some of the current through the mosfets to the current sensors.
+	\item Since the LF 205-S current transducers are used to measure the current through each of the phases, these measurements could be scaled such that they fulfil the role of the shunt resistors, still utilizing the built-in OCP of the DRV8301.
+	\item Build circuitry that, based on the measurements done by the current transducers, detects an OCE and turns off the drive signals. 
+\end{enumerate}
+Initially 2 seemed like a sensible choice, however it was not possible to deduce the functionality of the OCP in the DRV8301 based on the datasheet.
+Therefore it was decided to use 3 since the function will be well known and can be easily adjusted to meet any altered requirements, should the need arise.\\
+
+Since only two phases are measured directly it is necessary to calculate the third.
+This is done using a non-inverting summing amplifier.
+See figure \ref{fig:sumamp}.
+The output of this amplifier is given by:
+\begin{equation}
+	V_{out} = \left(1+\frac{R_4}{R_3}\right)\left(V_1\frac{R_2}{R_1+R_2}+V_2\frac{R_1}{R_2+R_1}\right)
+\end{equation}
+No amplification of the signals is wanted, thus the resistances are all set to $R=20k\Omega$. \todo{Thomas:Need correct values from Klaus/Martin}
+With all three phase signals available it is possible to process them to detect any OCE's. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth, trim=0cm 6cm 0cm 6cm]{graphics/ocp_phase}
+	\caption{One phase of the over-current protection circuit.}
+	\label{fig:ocpcircuit}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth, trim=0cm 8cm 0cm 8cm]{graphics/sumamp}
+	\caption{The non-inverting summing amplifier used to calculate the current in the third phase.}
+	\label{fig:sumamp}
+\end{figure}
+
+The entire protection circuit for one phase can be seen in figure \ref{fig:ocpcircuit}.
+Here the circuit has been split in accordance with the functionality of its four main parts: ADC isolation, full wave rectifier, thresholding circuit and an inverter.
+Each part will be explained in appropriate detail in the following paragraphs.
+
+\paragraph{ADC Isolation}~\\
+The current measured in each phase is used in the control of the motor and as such it is important to maintain the integrity of the signal.
+Therefore, after routing the signal to the ADC it is applied to the OCP circuit through a voltage follower.
+Since the op amp has extremely high input resistance ($10^12\Omega$ in the case of the LF353 used in this circuit) what happens on the output-side of the voltage follower has no meaningful impact on the input-side.
+
+\paragraph{Full Wave Rectifier}~\\
+The phase signals are sinusoids with an expected peak amplitude of $\pm0.5V$.
+In order to only needing to detect a positive OCE the signal is rectified.
+Due to the small magnitude of the signals it is necessary to use a precision full wave rectifier.
+The rectifier used here can be divided into two subcircuits; a half-wave rectifier and a summing amplifier.
+In order to show the functionality of the rectifier, three test points are marked on the circuit, $V_i,$, $V_r$, and $V_o$.
+$V_i$ is the input voltage, $V_r$ is the rectification stage and $V_o$ is the rectified signal.
+Figure \ref{fig:rectifier} shows the voltages at these points.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{graphics/rectifier}
+	\caption{The condition of the signal at points $V_i$, $V_r$ and $V_o$ in the full wave rectifier.}
+	\label{fig:rectifier}
+\end{figure}
+
+
+
+\paragraph{Thresholding}~\\
+As explained in section \ref{sec:lemsensor}, the input signal to the OCP circuit is dimensioned such that the maximum current in either of the phases will result in a voltage of 0.5$V$.
+Also mentioned in this section is the desire to leave some headroom in case of an OCE.
+This is due to the response time of the system.
+50$mV$ is estimated to be sufficient.
+An OCE is therefore defined as a time where the voltage exceeds 0.45$V$.
+In order to avoid repeatedly switching the signal on and off, it was decided to use a Schmitt trigger.
+Determining the component values is done using the following equations:
+
+\begin{align}
+	\frac{V_{cc}-V_h}{R_{7}}&=\frac{V_h}{R_8}+\frac{V_h-V_{ref}}{R_6} \label{eq:vhigh}\\
+	\frac{V_{dd}-V_l}{R_{7}}&=\frac{V_l}{R_8}+\frac{V_l-V_{ref}}{R_6} \label{eq:vlow}
+\end{align}
+
+Where $V_{ref}=2.5V$ as set by the LM4040\footnote{Precision 2.5$V$ voltage reference}, the supply voltage $V_{cc}=15V$.
+The desired hysteresis voltages $V_h$ and $V_l$ are $0.475V$ and $0.25V$ respectively.
+This ensures that the enable signal will be pulled low when the current through any of the phases exceeds 285$A$, and will not return until the current is below 150$A$.
+The LM4040 supplies a voltage in, effectively the same manner as a linear voltage supply.
+It is therefore desirable to draw as little current from the component, that is, through $R_6$, as possible.
+As per the datasheet it can operate from 60$\mu A\rightarrow15mA$.
+It was decided to set the maximum current through $R_6$, $\frac{V_{ref}-V_l}{R_6} = I_{R_6}=100\mu A$.
+This sets $R_6 = 22.5k\Omega$.
+$R_7$ and $R_8$ can now be isolated using \ref{eq:vhigh} and \ref{eq:vlow}:
+
+\begin{align}
+	R_7 &= \frac{(V_{cc}V_l-V_{dd}V_h)(V_l-V_{ref})}{I_{R_6}(V_h-V_l)V_{ref}}\label{eq:r7}\\
+	R_8 &= \frac{(V_{cc}V_l-V_{dd}V_h)(V_l-V_{ref})}{I_{R_6}(V_{cc}(V_l-V_{ref})-V_{dd}(V_h-V_{ref})+(V_h-V_l)V_{ref})}\label{eq:r8}
+\end{align}
+
+Resulting in $R_7 = 150k\Omega$ and $R_8 = 2542.37\Omega$.
+Since 2542.37$\Omega$ is hardly a standard value, the nearest standard value is chosen such that $R_8=2550\Omega$.
+
+\paragraph{Inverter}~\\
+Due to the NOR-stage described in section \ref{sec:nor}, it is necessary to invert the signal.
+A simple comparator is used to achieve this effect.
+The input voltage to this stage is either $V_{cc}$ or $GNDD$, the voltage on the non-inverting terminal is therefore not critical.
+Setting $R_9=R_{10}=10k\Omega$ is sufficient.
+
+\subsubsection{Current Transducer - LF 205-S}
+\label{sec:lemsensor}
+While these current sensors are not strictly part of the analog board, the circuitry related to them is and therefore it was chosen to include their description here.
+The LF 205-S utilises the Hall effect in order to measure the current flowing through a wire.
+Figure \ref{fig:lf205function} depicts an equivalent circuit of the functionality of the transducer.
+As can be seen, the LF 205-S functions like a transformer.
+As per the datasheet this transformer has a 1:2000 turns ratio, therefore the secondary current, $I_S$ can be found as:
+\begin{equation}
+	\frac{I_S}{I_P}=\frac{N_P}{N_S} \quad \Rightarrow \quad I_S = \frac{I_P}{N_S}
+\end{equation}
+Essentially, the LF 205-S generates a current proportional to the current flowing through the device, the primary current; $I_P$.
+By changing the value of the resistor $R_m$, the resulting voltage drop can be dictated.
+
+In section \todo[inline]{Thomas: Section documenting the maximum current to be expected in each phase.} the maximum current to be expected in each phase is found to be 300$A$.
+As described in section \todo[inline]{Thomas: section on the zybo adc}, the ADC on the Zynq chip can work on signals in the ranges 0$V$-1$V$ or $\pm0.5V$.
+Since the current is sinusoidal it can be negative.
+Choosing the range $\pm0.5V$ therefore simplifies the circuitry needed to read the value correctly.
+Consequently $R_m$ needs to be set such that the maximum expected current results in the maximum allowed voltage.
+However, it is desirable to leave some headroom in case of an OCE, 50$mV$ should be sufficient.
+Thus:
+\begin{equation}
+	R_m = \frac{0.45}{I_{Pmax}/N_S} = 3\Omega
+\end{equation}
+
+\subsubsection{Torque Pedal Downscale}
+The torque pedal is simply a variable resistor, $R_{tp}=7.5k\Omega$. \todo[inline]{Thomas: Verify resistor value on final system}
+As the pedal is actuated the resistance changes.
+Figure \ref{fig:torquepedaldownscale} is a depiction of the circuit used to read the position of the torque pedal.
+$R_1$ and PEDAL form a variable voltage divider of the $15V$ rail.
+The analog input of the ADC in the FPGA, however, is limited to 0-1$V$.
+Therefore it is necessary to downscale the voltage.
+Intuitively this could be done using simply a voltage divider, but since the torque pedal functions as a voltage divider, the varying resistance distribution of the torque pedal would influence the voltage divider.
+For this reason a voltage follower is used to isolate the two circuits.
+In addition, a 5.1$V$ zener diode is clamping the signal to ground in order to protect the ADC of the FPGA.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=.75\linewidth]{graphics/torque_pedal_downscale}
+	\caption{Circuit used to scale the voltage from the torque pedal from $0V\rightarrow5V$ to $0V\rightarrow1V$.}
+	\label{fig:torquepedaldownscale}
+\end{figure}
+
+\subsection{Digital Board}
+The digital board is used mostly as an interconnection board between the various electronic components in the system.
+The logic levels of the different systems are managed here along with the enable signal for the DRV8301.
+
+
+\subsubsection{Driver Enable Signal}
+\subsubsection{Logic-Level Shifters}
+
+
+
