@@ -18,12 +18,13 @@ J_M = 52e-4;        % Internal torque of the motor
 J_pro = (m*r^2+J_G2)*(G1/G2)^2 + J_G1;% Projected inertia
 
 n1=0:255;
-ad = cos(8*pi/256*n1);
-bd = cos(8*pi/256*n1-2/3*pi);
-cd = cos(8*pi/256*n1+2/3*pi);
-aq = -sin(8*pi/256*n1);
-bq = -sin(8*pi/256*n1-2/3*pi);
-cq = -sin(8*pi/256*n1+2/3*pi);
+offset = 0;
+ad = cos(8*pi/256*n1+offset);
+bd = cos(8*pi/256*n1+offset-2/3*pi);
+cd = cos(8*pi/256*n1+offset+2/3*pi);
+aq = -sin(8*pi/256*n1+offset);
+bq = -sin(8*pi/256*n1+offset-2/3*pi);
+cq = -sin(8*pi/256*n1+offset+2/3*pi);
 
 n2=-1:.01:1;
 third_phase = sin(3*asin(n2));
