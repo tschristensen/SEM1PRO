@@ -150,6 +150,28 @@ In addition, a 5.1$V$ zener diode is clamping the signal to ground in order to p
 	\label{fig:torquepedaldownscale}
 \end{figure}
 
+The resistance of the pedal changes linearly, which means the voltage division does not. Voltage at the point TP as a function of pedal is:
+
+\begin{equation}
+V_{TP}(PEDAL) = V_{CC} \frac{PEDAL}{R1 + PEDAL} \frac{R3}{R3 + R2}
+\label{eq:pedal_voltage}
+\end{equation}
+
+By isolating PEDAL, it's possible to calculate what its resistance is. The resistance of PEDAL varies from $0$ to $7.5 k\Omega$, as the pedal is pressed down. Hence, equation~\ref{eq:pedal_back_calc} will give a value proportional to the torque requested by the driver
+
+\begin{equation}
+PEDAL = \frac{R1 V_{TP}}{V_{CC}-V}
+\label{eq:pedal_back_calc}
+\end{equation}
+
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=10cm]{graphics/pedal_voltage.pdf}
+		\label{fig:pedal_voltage}
+		\caption{Voltage as a function of the pedal resistance.}
+	\end{center}
+\end{figure}
+
 \subsection{Digital Board}
 The digital board is used mostly as an interconnection board between the various electronic components in the system.
 The logic levels of the different systems are managed here along with the enable signal for the DRV8301.
