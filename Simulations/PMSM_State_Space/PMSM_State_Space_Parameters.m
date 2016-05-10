@@ -33,8 +33,13 @@ third_phase = sin(3*asin(n2));
 T=1/5000;
 
 % Added parameters (Morten)
-TS=L/R          %Electromagnetic time constant
-Pb=8            %number of poles
-Ff=0.1
+TS=L/R  ;        %Electromagnetic time constant
+Pb=8   ;         %number of poles
+Ff=0.1;
+
+% Transfer function of state space:
+Num=[3*Kt];
+Den=[2*J_pro*L 2*J_pro*R 3*Kt^2];
+Gs=tf(Num,Den)
 
 
