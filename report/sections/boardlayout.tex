@@ -1,4 +1,9 @@
+%!TEX root = ../main.tex
+
 \section{Board Layout}
+
+\todo[inline]{We should have a very broad introduction somewhere. With diagrams of all the electric board. We should write somewhere that we chose the 3-phase driver and why.  - Mikkel.}
+
 This section is dedicated to describing the electronics designed throughout this report.
 This includes an analog, a digital and a power board.
 Each of these boards, the choice of components and the layout will be discussed in appropriate detail in the following sections.
@@ -26,6 +31,9 @@ The output of this amplifier is given by:
 \begin{equation}
 	V_{out} = \left(1+\frac{R_4}{R_3}\right)\left(V_1\frac{R_2}{R_1+R_2}+V_2\frac{R_1}{R_2+R_1}\right)
 \end{equation}
+
+\todo[inline]{You need to explain this to me - Mikkel.}
+
 No amplification of the signals is wanted, thus the resistances are all set to $R=20k\Omega$. \todo{Thomas:Need correct values from Klaus/Martin}
 With all three phase signals available it is possible to process them to detect any OCE's. 
 
@@ -44,6 +52,7 @@ With all three phase signals available it is possible to process them to detect 
 \end{figure}
 
 The entire protection circuit for one phase can be seen in figure \ref{fig:ocpcircuit}.
+\todo[inline]{Maybe switch the order of the two figures- Mikkel.}
 Here the circuit has been split in accordance with the functionality of its four main parts: ADC isolation, full wave rectifier, thresholding circuit and an inverter.
 Each part will be explained in appropriate detail in the following paragraphs.
 
@@ -51,13 +60,15 @@ Each part will be explained in appropriate detail in the following paragraphs.
 The current measured in each phase is used in the control of the motor and as such it is important to maintain the integrity of the signal.
 Therefore, after routing the signal to the ADC it is applied to the OCP circuit through a voltage follower.
 Since the op amp has extremely high input resistance ($10^12\Omega$ in the case of the LF353 used in this circuit) what happens on the output-side of the voltage follower has no meaningful impact on the input-side.
+\todo[inline]{10 to the 12.? - Mikkel.}
+
 
 \paragraph{Full Wave Rectifier}~\\
 The phase signals are sinusoids with an expected peak amplitude of $\pm0.5V$.
 In order to only needing to detect a positive OCE the signal is rectified.
 Due to the small magnitude of the signals it is necessary to use a precision full wave rectifier.
 The rectifier used here can be divided into two subcircuits; a half-wave rectifier and a summing amplifier.
-In order to show the functionality of the rectifier, three test points are marked on the circuit, $V_i,$, $V_r$, and $V_o$.
+In order to show the functionality of the rectifier, three test points are marked on the circuit, $V_i$, $V_r$, and $V_o$.
 $V_i$ is the input voltage, $V_r$ is the rectification stage and $V_o$ is the rectified signal.
 Figure \ref{fig:rectifier} shows the voltages at these points.
 
@@ -87,6 +98,7 @@ Determining the component values is done using the following equations:
 Where $V_{ref}=2.5V$ as set by the LM4040\footnote{Precision 2.5$V$ voltage reference}, the supply voltage $V_{cc}=15V$.
 The desired hysteresis voltages $V_h$ and $V_l$ are $0.475V$ and $0.25V$ respectively.
 This ensures that the enable signal will be pulled low when the current through any of the phases exceeds 285$A$, and will not return until the current is below 150$A$.
+\todo[inline]{150A = 0.25v? - Mikkel.}
 The LM4040 supplies a voltage in, effectively the same manner as a linear voltage supply.
 It is therefore desirable to draw as little current from the component, that is, through $R_6$, as possible.
 As per the datasheet it can operate from 60$\mu A\rightarrow15mA$.
@@ -158,6 +170,7 @@ V_{TP}(PEDAL) = V_{CC} \frac{PEDAL}{R1 + PEDAL} \frac{R3}{R3 + R2}
 \end{equation}
 
 By isolating PEDAL, it's possible to calculate what its resistance is. The resistance of PEDAL varies from $0$ to $7.5 k\Omega$, as the pedal is pressed down. Hence, equation~\ref{eq:pedal_back_calc} will give a value proportional to the torque requested by the driver
+\todo[inline]{I have some questions - Mikkel.}
 
 \begin{equation}
 PEDAL = \frac{R1 V_{TP}}{V_{CC}-V}
