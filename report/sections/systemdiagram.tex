@@ -1,16 +1,18 @@
+%!TEX root = ../main.tex
+
 \section{System Overview}
-To get an overview of the system connections and all the major components needed to make the kart run, a system diagram is made based on the wiring diagram seen in figure \ref{fig:Kart_wiring_diagram}. Figure \ref{fig:blockdiagram1} shows a simplified diagram of the wiring, where the Zynq board has replaced the Sevcon Gen4 controller. \newline
+To get an overview of the system connections and all the major components needed to make the kart run, a system diagram is made based on the wiring diagram seen in figure \ref{fig:Kart_wiring_diagram}. Figure \ref{fig:blockdiagram1} shows a simplified diagram of the wiring, where the Zybo board has replaced the Sevcon Gen4 controller. \newline
 
-The highlighted green component is the zynq board controller. To the right of the control board is the PMAC motor and the driver and inverter to power it. Both the driver and inverter are parts that must be developed as they were previously part of the Sevcon Gen4 controller. The two blocks next to the motor are the LEM current sensors. Two of these is enough because the third current can be calculated by using KCL.
-Beyond the motor is the encoder producing motor positional data for the controller. We might not need all three of the encoder signals but they will be routed to the control board anyway just in case. \newline
+The highlighted green component is the Zybo board. To the right of the control board is the PMAC motor and the driver and inverter to power it. Both the driver and inverter are parts that must be developed as they were previously part of the Sevcon Gen4 controller. The two blocks next to the motor are the LEM current sensors. Two of these is enough because the third current can be calculated by using KCL.
+Beyond the motor is the encoder producing motor positional data for the controller. All three encoder signals might not be needed but they will be routed to have the opportunity to do so. \newline
 
-On the left side of the Zynq board is the different precautions and emergency switches at the top. These will ensure that starting, stopping and emergency procedures are completed safely without any capaictors or MOSFETS burning.
+On the left side of the Zybo board is the different precautions and emergency switches at the top. These will ensure that starting, stopping and emergency procedures are completed safely without any capacitors or MOSFETS burning.
 Below these switches is the undervoltage protection circuit which ensures that the kart is only driving when sufficient power is supplied. The final parts to the left are the torque pedal or speeder for the kart, and the battery supply.
 
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=.85\linewidth]{graphics/wiringdiagram}
-	\caption{Wiring diagram with zybo}
+	\caption{Wiring diagram with the Zybo board.}
 	\label{fig:blockdiagram1}
 \end{figure}
 
@@ -23,3 +25,4 @@ Based on the simplified wiring diagram a more technical diagram of the control p
 	\label{fig:blockdiagram2}
 \end{figure}
 \todo{maybe add color to the diagram? The inverse clark park  and clark park blocks are wrong, the names should be reversed.}
+\todo[inline]{Should be fixed now - Mikkel.}

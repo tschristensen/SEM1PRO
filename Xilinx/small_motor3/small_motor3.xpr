@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Product Version: Vivado v2015.4 (64-bit)              -->
+<!-- Product Version: Vivado v2015.4.2 (64-bit)              -->
 <!--                                                         -->
 <!-- Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="10" Path="/home/mikkeljaedicke/Zynq_Book/small_motor3/small_motor3.xpr">
+<Project Version="7" Minor="10" Path="C:/Uni_SDU/1. Semester Project - Gokart/Xilinx/small_motor3/small_motor3.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="056bd6417a3547d792435a1c6c951bb7"/>
@@ -98,6 +98,9 @@
     </Simulator>
     <Simulator Name="Riviera">
       <Option Name="Description" Val="Riviera-PRO Simulator"/>
+    </Simulator>
+    <Simulator Name="ActiveHDL">
+      <Option Name="Description" Val="Active-HDL Simulator"/>
     </Simulator>
   </Simulators>
   <Runs Version="1" Minor="10">
