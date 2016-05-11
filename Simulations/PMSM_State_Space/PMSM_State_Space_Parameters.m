@@ -36,10 +36,16 @@ T=1/5000;
 TS=L/R  ;        %Electromagnetic time constant
 Pb=8   ;         %number of poles
 Ff=0.1;
+Kv=0.001;        %Viscous friction.
 
 % Transfer function of state space:
 Num=[3*Kt];
 Den=[2*J_pro*L 2*J_pro*R 3*Kt^2];
 Gs=tf(Num,Den)
+
+
+Num1=[2*J_pro 2*Kv*L];
+Den1=[2*J_pro*L 2*Kv*L+2*J_pro*R 3*Kt^2+2*Kv*R];
+Ds=tf(Num1,Den1)
 
 
