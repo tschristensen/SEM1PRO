@@ -35,7 +35,7 @@ T=1/5000;
 % Added parameters (Morten)
 TS=L/R  ;        %Electromagnetic time constant
 Pb=8   ;         %number of poles
-Ff=0.1;
+%Ff=0.1;
 Kv=0.001;
 
 % Transfer function of state space:
@@ -49,11 +49,8 @@ Num1=[2*J_pro 2*Kv*L];
 Den1=[2*J_pro*L 2*Kv*L+2*J_pro*R 3*Kt^2+2*Kv*R];
 Ds=tf(Num1,Den1)
 
-% Transfer function of current and PI controller in fw path.
-%Num2=[Kp/L ((Ki/L)+((Kp*Kv)/J_pro)) (Ki*Kv)/J_pro]
-%Den2=[1 (R/(2*L)+Kv/J_pro+Kp/L) ((3*Kt^2)/(2*J_pro*L)+(Kv*R)/(J_pro*L)+Ki/L+(Kp*Kv)/2*J_pro) (Ki*Kv)/J_pro]
-%Hs=tf(Num2,Den2)
 
+% Finding the KP and KI values. Done by hand using settling time formula:
 Tset=0.1
 
 alpha=(1.5*(1+3))/Tset
@@ -61,9 +58,13 @@ Kp=(3*alpha-Kv/J_pro-(R/(2*L)))*L
 Ki=(3*alpha^2-((Kp*Kv)/(2*J_pro)-(Kv*R)/(J_pro*L)-(3*Kt^2)/(2*J_pro*L)))*L
 
 
+% Transfer function with current output and PI controller in forward path.
+Num2=[Kp/L ((Ki/L)+((Kp*Kv)/J_pro)) (Ki*Kv)/J_pro]
+Den2=[1 (R/(2*L)+Kv/J_pro+Kp/L) ((3*Kt^2)/(2*J_pro*L)+(Kv*R)/(J_pro*L)+Ki/L+(Kp*Kv)/2*J_pro) (Ki*Kv)/J_pro]
+Hs=tf(Num2,Den2)
+
 
 % Transfer function with KP/Ki
-
 
 % IP Values:
 %b0=(R/L)+(J_pro)
