@@ -5,12 +5,12 @@ Plecs {
   StartTime     "0.0"
   StopTime      "10.0"
   Solver        "radau"
-  MaxStep       "1e-3"
+  MaxStep       "1e-4"
   InitStep      "-1"
   FixedStep     ".25e-5"
   Refine        "1"
   ZCStepSize    "1e-9"
-  RelTol        "1e-3"
+  RelTol        "1e-2"
   AbsTol        "-1"
   TurnOnThreshold "0"
   SyncFixedStepTasks "2"
@@ -37,7 +37,7 @@ Plecs {
   ExtendedMatrixPrecision "1"
   MatrixSignificanceCheck "2"
   Schematic {
-    Location      [0, 29; 1920, 984]
+    Location      [0, 38; 1920, 993]
     ZoomFactor    0.999997
     SliderPosition [425, 0]
     ShowBrowser   off
@@ -1086,62 +1086,6 @@ Plecs {
       }
     }
     Component {
-      Type          Scope
-      Name          "Phase Voltage"
-      Show          on
-      Position      [1885, 230]
-      Direction     up
-      Flipped       off
-      Location      [0, 38; 1914, 1014]
-      State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
-"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
-"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3oAAAOxAAAA"
-"BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
-"AAAAA=="
-      SavedViews    "AAAAAgAAAAA="
-      HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
-"QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAsgAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAACJAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
-      PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-      Axes          "1"
-      TimeRange     "0.0"
-      ScrollingMode "1"
-      SingleTimeAxis "1"
-      Open          "0"
-      Ts            "-1"
-      SampleLimit   "0"
-      XAxisLabel    ""
-      Axis {
-        Name          ""
-        AutoScale     1
-        MinValue      0
-        MaxValue      1
-        Signals       {}
-        SignalTypes   [ ]
-        Untangle      0
-        KeepBaseline  off
-        BaselineValue 0
-      }
-      Fourier {
-        SingleXAxis   on
-        AxisLabel     "Frequency"
-        Scaling       0
-        PhaseDisplay  0
-        Axis {
-          Name          ""
-          AutoScale     1
-          MinValue      0
-          MaxValue      1
-          Signals       {}
-          Untangle      0
-          KeepBaseline  off
-          BaselineValue 0
-        }
-      }
-    }
-    Component {
       Type          HeatFlowMeter
       Name          "Wm"
       Show          on
@@ -1214,7 +1158,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "Ron"
-        Value         "1e-3"
+        Value         "0"
         Show          off
       }
       Parameter {
@@ -1242,7 +1186,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "Ron"
-        Value         "1e-3"
+        Value         "0"
         Show          off
       }
       Parameter {
@@ -1270,7 +1214,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "Ron"
-        Value         "1e-3"
+        Value         "0"
         Show          off
       }
       Parameter {
@@ -1298,7 +1242,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "Ron"
-        Value         "1e-3"
+        Value         "0"
         Show          off
       }
       Parameter {
@@ -1451,7 +1395,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "Ron"
-        Value         "1e-2"
+        Value         "0"
         Show          off
       }
       Parameter {
@@ -1559,7 +1503,7 @@ Plecs {
       Flipped       off
       Parameter {
         Variable      "Ron"
-        Value         "1e-3"
+        Value         "0"
         Show          off
       }
       Parameter {
@@ -1747,32 +1691,6 @@ Plecs {
       }
     }
     Component {
-      Type          TransferFunction
-      Name          "Transfer Fcn"
-      Show          on
-      Position      [1800, 230]
-      Direction     right
-      Flipped       off
-      Frame         [-30, -15; 30, 15]
-      LabelPosition [0, 18]
-      LabelAlign    up
-      Parameter {
-        Variable      "Numerator"
-        Value         "[130]"
-        Show          off
-      }
-      Parameter {
-        Variable      "Denominator"
-        Value         "[1 130]"
-        Show          off
-      }
-      Parameter {
-        Variable      "X0"
-        Value         "0"
-        Show          off
-      }
-    }
-    Component {
       Type          Math
       Name          "Math"
       Show          on
@@ -1809,7 +1727,7 @@ Plecs {
       TimeRange     "0.0"
       ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "1"
+      Open          "0"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
@@ -2254,11 +2172,11 @@ Plecs {
       Position      [1015, 380]
       Direction     up
       Flipped       off
-      Location      [0, 29; 1920, 1005]
+      Location      [0, 38; 1914, 1014]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
 "G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
 "///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB4AAAAOxAAAA"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3oAAAOxAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
@@ -2704,7 +2622,7 @@ Plecs {
           Flipped       off
           Parameter {
             Variable      "K"
-            Value         "400"
+            Value         "300"
             Show          off
           }
           Parameter {
@@ -3347,6 +3265,134 @@ Plecs {
         Show          off
       }
     }
+    Component {
+      Type          HeatFlowMeter
+      Name          "Wm1"
+      Show          on
+      Position      [990, 310]
+      Direction     up
+      Flipped       on
+    }
+    Component {
+      Type          Scope
+      Name          "Lowside power loss"
+      Show          on
+      Position      [1045, 310]
+      Direction     up
+      Flipped       off
+      Location      [0, 38; 1914, 1014]
+      State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
+"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3oAAAOxAAAA"
+"BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
+"AAAAA=="
+      SavedViews    "AAAAAgAAAAA="
+      HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
+"QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
+"AAZAAAAAEAAABkAAAAwQAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABdAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAABkAAAAAQAAAAA="
+      PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      Axes          "1"
+      TimeRange     "0.0"
+      ScrollingMode "1"
+      SingleTimeAxis "1"
+      Open          "0"
+      Ts            "-1"
+      SampleLimit   "0"
+      XAxisLabel    ""
+      Axis {
+        Name          ""
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Fourier {
+        SingleXAxis   on
+        AxisLabel     "Frequency"
+        Scaling       0
+        PhaseDisplay  0
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+      }
+    }
+    Component {
+      Type          PlecsProbe
+      Name          "Probe"
+      Show          on
+      Position      [1185, 470]
+      Direction     right
+      Flipped       off
+    }
+    Component {
+      Type          Scope
+      Name          "AL losses\nand temperature"
+      Show          on
+      Position      [1240, 470]
+      Direction     up
+      Flipped       off
+      Location      [0, 38; 1914, 1014]
+      State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
+"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAd6AAAAavw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQBAAAAAAAAB3oAAABbAP///wAAB3oAAANCAAAA"
+"BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
+"AAAAA=="
+      SavedViews    "AAAAAgAAAAA="
+      HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
+"QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
+"AAZAAAAAEAAABkAAAHegAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAADCAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAAa4AAAAAQAAAAA="
+      PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      Axes          "1"
+      TimeRange     "0.0"
+      ScrollingMode "1"
+      SingleTimeAxis "1"
+      Open          "0"
+      Ts            "-1"
+      SampleLimit   "0"
+      XAxisLabel    ""
+      Axis {
+        Name          ""
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Fourier {
+        SingleXAxis   on
+        AxisLabel     "Frequency"
+        Scaling       0
+        PhaseDisplay  0
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+      }
+    }
     Connection {
       Type          Wire
       SrcComponent  "FET4"
@@ -3862,21 +3908,6 @@ Plecs {
     }
     Connection {
       Type          Signal
-      SrcComponent  "3ph Meter"
-      SrcTerminal   7
-      Points        [1730, 230]
-      DstComponent  "Transfer Fcn"
-      DstTerminal   1
-    }
-    Connection {
-      Type          Signal
-      SrcComponent  "Transfer Fcn"
-      SrcTerminal   2
-      DstComponent  "Phase Voltage"
-      DstTerminal   1
-    }
-    Connection {
-      Type          Signal
       SrcComponent  "Math"
       SrcTerminal   1
       DstComponent  "Magnitude"
@@ -3971,8 +4002,7 @@ Plecs {
           Branch {
             Points        [990, 170; 990, 210]
             Branch {
-              Points        [990, 335]
-              DstComponent  "Rth2"
+              DstComponent  "Wm1"
               DstTerminal   2
             }
             Branch {
@@ -4354,6 +4384,37 @@ Plecs {
       SrcTerminal   2
       DstComponent  "3-Phase\nOvermodulation"
       DstTerminal   2
+    }
+    Connection {
+      Type          HeatPipe
+      SrcComponent  "Wm1"
+      SrcTerminal   1
+      Points        [990, 335]
+      DstComponent  "Rth2"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Wm1"
+      SrcTerminal   3
+      DstComponent  "Lowside power loss"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Probe"
+      SrcTerminal   1
+      DstComponent  "AL losses\nand temperature"
+      DstTerminal   1
+    }
+  }
+  ProbeBlock {
+    Tag           "Switching_power_loss/Probe"
+    Probe {
+      Component     "FET3"
+      Path          ""
+      Signals       {"MOSFET junction temp", "MOSFET conduction loss", "MOSFET"
+" switching loss"}
     }
   }
 }

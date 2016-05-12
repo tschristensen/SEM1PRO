@@ -175,4 +175,28 @@ The calculated inductance would become very large when the derivative current go
 This is the inductance from one terminal to another, so the per-phase inductance will be half, similarly to the armature resistance. The inductance determines the phase shift on the sinusoidal voltages and currents driving the motor at up to 267 Hz, and the current ripple at 20 kHz. So when modeling the motor, one must settle on a value of $L_d$ and $L_q$ that is close to the the low frequency inductance of 0.475 mH, and the higher frequency inductance of 0.315 mH. For modeling the motor, an inductance of 0.4 mH will be used for both $L_d$ and $L_q$. 
 
 \subsection{Parking Test}\label{sub:parking_test}
-The encoder is positioned on the axis of the motor in an unknown angle. Since this is not bound to change, a one time Parking test will be performed, where a low current will be passed into terminal A and out of terminals B and C. This will be done with a DC power supply with current limit. The motor should position itself at one of four mechanical angles spaced 90 degrees apart. This error (the lowest one) will be subtracted from any angular readings used in Clark and inverse Clarke transformations. 
+The encoder is positioned on the axis of the motor in an unknown angle. Since this is not bound to change, a one time parking test will be performed, where a current will be passed into one terminal and out of the other two. This will be done with a DC power supply with current limit. The motor should position itself at one of four mechanical angles spaced 90 degrees apart. This offset will be subtracted from any angular readings used in Clark and inverse Clarke transformations. \\
+
+The motor is parked with 30 A. Even with this current it's still possible to  The test is repeated to determine all 4 parking spots for each phase, and the angles are shown in table~\ref{tab:parking_angles}. The phases A, B and C correspond to the terminals with the names M1, M2 and M3 etched into the case of motor. 
+
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{|r | c | c | c|}
+			\hline
+			Quadrant & Phase A [deg] & Phase B [deg] & Phase C [deg] \\
+			\hline
+			First & 43.6 & 75.9 & 16.9 \\
+			\hline
+			Second & 132.2 & 167.3 & 101.3 \\
+			\hline
+			Third & 223.6 & 257.3 & 194.1 \\
+			\hline
+			Fourth & 312.2 & 348.8 & 279.8 \\
+			\hline
+		\end{tabular}
+		\label{tab:parking_angles}
+		\caption{Parking angles for the encoder.}
+	\end{center}
+\end{table}
+
+The angles should be spaced 90 degrees apart vertically, 30 degrees apart horizontally. This holds true for phases A and B, but phase C is very inconsistent. However, phases A and B gives significant results for this test. The four parking angles are wrapped to the first quadrant by subtracting 90, 180 and 270 degrees. The average angle is then calculated for phases A and B:

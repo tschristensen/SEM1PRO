@@ -1,4 +1,4 @@
-clear all;clc;
+%clear all;clc;
 % Mechanical constants
 m = 250;            % Total mass of the car with driver
 r = 11*.0254/2;     % Radius of driving wheels
@@ -30,4 +30,22 @@ n2=-1:.01:1;
 third_phase = sin(3*asin(n2));
 
 % Simulation parameters
-T=1/5000;
+T=1/10000;
+
+%control parameters
+TS=L/R  ;        %Electromagnetic time constant
+Pb=8   ;         %number of poles
+Ff=0.1;
+Kv=0.001;
+
+% Transfer function of model with current as output:
+Num1=[2*J_pro 2*Kv*L];
+Den1=[2*J_pro*L 2*Kv*L+2*J_pro*R 3*Kt^2+2*Kv*R];
+Ds=tf(Num1,Den1);
+
+Tset=0.05;
+
+alpha=(1.5*(1+3))/Tset;
+Kp=(3*alpha-Kv/J_pro-(R/(2*L)))*L;
+Ki=(3*alpha^2-((Kp*Kv)/(2*J_pro)-(Kv*R)/(J_pro*L)-(3*Kt^2)/(2*J_pro*L)))*L;
+
