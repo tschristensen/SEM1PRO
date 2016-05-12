@@ -1,12 +1,26 @@
 %!TEX root = ../main.tex
 
-\section{Board Layout}
+\section{Electronics Design}
 
 \todo[inline]{We should have a very broad introduction somewhere. With diagrams of all the electric board. We should write somewhere that we chose the 3-phase driver and why.  - Mikkel.}
 
 This section is dedicated to describing the electronics designed throughout this report.
-This includes an analog, a digital and a power board.
+This includes an analog, a digital and a power board, as well as a driver board.
 Each of these boards, the choice of components and the layout will be discussed in appropriate detail in the following sections.
+One aspect of the layout specifically is important; the grounding layout.
+As this discussion provides a convenient means of giving an overview of the various components, the grounding will be discussed initially:
+
+\subsection{Electronics Components and Ground Layout}
+\todo{Thomas: Someone needs to verify/elaborate on my claims about noise below}
+As previously mentioned, there are four boards in this design.
+Across these four boards are three different ground planes: digital ground (GNDD), analog ground (GNDA) and power ground (GNDP).
+Keeping these seperate is done mainly to avoid noise propagating throughout the circuits.
+For instance, GNDP is used as the return path of the high currents flowing through the motor.
+The voltage on this rail is likely to be fluctuating significantly.
+This will surely compromise the integrity of more crucial signals such as the current measurements used to determine the position of the rotor.
+GNDD will also carry significant noise from the digital circuitry and should also be kept separate from GNDA.
+Since all of the control is done digitally, obviously, there has to be a coupling between GNDD and GNDA at some point.
+In order to minimize noise propagation there will be only one such point
 
 \subsection{Analog Board}
 The analog board houses, as the name implies, all of the analog signal processing.
@@ -32,36 +46,31 @@ The output of this amplifier is given by:
 	V_{out} = \left(1+\frac{R_4}{R_3}\right)\left(V_1\frac{R_2}{R_1+R_2}+V_2\frac{R_1}{R_2+R_1}\right)
 \end{equation}
 
-\todo[inline]{You need to explain this to me - Mikkel.}
-
 No amplification of the signals is wanted, thus the resistances are all set to $R=20k\Omega$. \todo{Thomas:Need correct values from Klaus/Martin}
 With all three phase signals available it is possible to process them to detect any OCE's. 
 
 \begin{figure}
 	\centering
-	\includegraphics[width=\linewidth, trim=0cm 6cm 0cm 6cm]{graphics/ocp_phase}
-	\caption{One phase of the over-current protection circuit.}
-	\label{fig:ocpcircuit}
-\end{figure}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=\linewidth, trim=0cm 8cm 0cm 8cm]{graphics/sumamp}
+	\noindent\makebox[\textwidth]{\includegraphics[width=2\linewidth, trim=0cm 9cm 0cm 8cm]{graphics/sumamp}}
 	\caption{The non-inverting summing amplifier used to calculate the current in the third phase.}
 	\label{fig:sumamp}
 \end{figure}
 
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth, trim=0cm 6cm 0cm 5cm]{graphics/ocp_phase}
+	\caption{One phase of the over-current protection circuit.}
+	\label{fig:ocpcircuit}
+\end{figure}
+
 The entire protection circuit for one phase can be seen in figure \ref{fig:ocpcircuit}.
-\todo[inline]{Maybe switch the order of the two figures- Mikkel.}
 Here the circuit has been split in accordance with the functionality of its four main parts: ADC isolation, full wave rectifier, thresholding circuit and an inverter.
 Each part will be explained in appropriate detail in the following paragraphs.
 
 \paragraph{ADC Isolation}~\\
 The current measured in each phase is used in the control of the motor and as such it is important to maintain the integrity of the signal.
 Therefore, after routing the signal to the ADC it is applied to the OCP circuit through a voltage follower.
-Since the op amp has extremely high input resistance ($10^12\Omega$ in the case of the LF353 used in this circuit) what happens on the output-side of the voltage follower has no meaningful impact on the input-side.
-\todo[inline]{10 to the 12.? - Mikkel.}
-
+Since the op amp has extremely high input resistance ($10^{12}\Omega$ in the case of the LF353 used in this circuit) what happens on the output-side of the voltage follower has no meaningful impact on the input-side.
 
 \paragraph{Full Wave Rectifier}~\\
 The phase signals are sinusoids with an expected peak amplitude of $\pm0.5V$.
@@ -98,7 +107,6 @@ Determining the component values is done using the following equations:
 Where $V_{ref}=2.5V$ as set by the LM4040\footnote{Precision 2.5$V$ voltage reference}, the supply voltage $V_{cc}=15V$.
 The desired hysteresis voltages $V_h$ and $V_l$ are $0.475V$ and $0.25V$ respectively.
 This ensures that the enable signal will be pulled low when the current through any of the phases exceeds 285$A$, and will not return until the current is below 150$A$.
-\todo[inline]{150A = 0.25v? - Mikkel.}
 The LM4040 supplies a voltage in, effectively the same manner as a linear voltage supply.
 It is therefore desirable to draw as little current from the component, that is, through $R_6$, as possible.
 As per the datasheet it can operate from 60$\mu A\rightarrow15mA$.
@@ -154,7 +162,7 @@ Therefore it is necessary to downscale the voltage.
 Intuitively this could be done using simply a voltage divider, but since the torque pedal functions as a voltage divider, the varying resistance distribution of the torque pedal would influence the voltage divider.
 For this reason a voltage follower is used to isolate the two circuits.
 In addition, a 5.1$V$ zener diode is clamping the signal to ground in order to protect the ADC of the FPGA.
-
+\todo{capacitor for noise}
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=.75\linewidth]{graphics/torque_pedal_downscale}
@@ -169,13 +177,17 @@ V_{TP}(PEDAL) = V_{CC} \frac{PEDAL}{R1 + PEDAL} \frac{R3}{R3 + R2}
 \label{eq:pedal_voltage}
 \end{equation}
 
-By isolating PEDAL, it's possible to calculate what its resistance is. The resistance of PEDAL varies from $0$ to $7.5 k\Omega$, as the pedal is pressed down. Hence, equation~\ref{eq:pedal_back_calc} will give a value proportional to the torque requested by the driver
-\todo[inline]{I have some questions - Mikkel.}
+By isolating PEDAL, it's possible to calculate what its resistance is. 
+The resistance of PEDAL varies from $0$ to $7.5 k\Omega$, as the pedal is pressed down. 
+Hence, equation~\ref{eq:pedal_back_calc} will give a value proportional to the torque requested by the driver
 
 \begin{equation}
 PEDAL = \frac{R1 V_{TP}}{V_{CC}-V}
 \label{eq:pedal_back_calc}
 \end{equation}
+
+Finally, due to the mechanical nature of the torque pedal, this signal is likely to be noisy.
+C$_1$ is placed in order to filter this noise.
 
 \begin{figure}[H]
 	\begin{center}
@@ -189,9 +201,29 @@ PEDAL = \frac{R1 V_{TP}}{V_{CC}-V}
 The digital board is used mostly as an interconnection board between the various electronic components in the system.
 The logic levels of the different systems are managed here along with the enable signal for the DRV8301.
 
-
-\subsubsection{Driver Enable Signal}
+\subsubsection{Drive Enable Signal}
+This signal is produced by the torque pedal.
+When the user actuates the pedal a switch is connected to ground. 
+By reading the drive enable signal it is therefore possible to determine when the controller should be running, allowing a means for avoiding integral windup.
+Since this signal is left floating when the pedal is not active, it can be routed directly to the Zybo, using the internal pull-up resistors.
+\todo[inline]{Thomas: Is the torque pedal active low or active high? Correct two places above to reflect the correct case}
+\subsubsection{Driver Enable Circuit}
+\todo{Thomas: Naming is not a mistake, this is the circuit that compares the temperature, current and zybo enable signals}
 \subsubsection{Logic-Level Shifters}
+Tracking the angular position of the rotor is done using an encoder mounted on the motor.
+Upon receiving a clock signal the encoder will return the current position of the rotor.
+The encoder module is an AM256 which, according to the datasheet, requires at least 3.5$V$ for digital high input.
+However, the Zybo uses 3.3$V$ and the clock signal therefore needs to be shifted to the correct voltage level, 5$V$. 
+A, B, Z and Data generated by the AM256 all need to be shifted down to 3.3$V$ in order to protect the Zybo.
+The circuit for these four signals can be seen in figure \ref{fig:lls}.
+The buffer used for these signals is, as can be seen from the figure, the 74AHC125 which is a quad-buffer.
+$V_{out}$ of this device is equal to $V_{cc}$, while $V_{in}$ can be any voltage from $0\rightarrow 5V$, by supplying it from the 3.3$V$ rail it will therefore act as a logic level shifter.
 
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=.5\linewidth,trim=0cm 1cm 0cm 1cm]{graphics/lls}
+	\caption[Logic level shifter circuit.]{The 74AHC125 quad-buffer used to shift the logic level of the encoder from 5$V$ down to the $3.3V$ required by the Zybo. Due to an oversight, a buffer with an enable on each port was bought. This feature is unnecessary and they are always enabled.}
+	\label{fig:lls}
+\end{figure}
 
-
+\subsection{Driver Board}
