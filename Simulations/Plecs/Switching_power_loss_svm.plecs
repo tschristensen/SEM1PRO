@@ -38,8 +38,8 @@ Plecs {
   MatrixSignificanceCheck "2"
   Schematic {
     Location      [0, 38; 1920, 993]
-    ZoomFactor    1.77777
-    SliderPosition [841, 608]
+    ZoomFactor    1.33333
+    SliderPosition [1147, -1]
     ShowBrowser   off
     BrowserWidth  100
     Component {
@@ -140,7 +140,7 @@ Plecs {
     Component {
       Type          LogicalOperator
       Name          "Logical\nOperator"
-      Show          on
+      Show          off
       Position      [750, 320]
       Direction     up
       Flipped       off
@@ -158,7 +158,7 @@ Plecs {
     Component {
       Type          LogicalOperator
       Name          "Logical\nOperator1"
-      Show          on
+      Show          off
       Position      [1105, 325]
       Direction     up
       Flipped       off
@@ -176,7 +176,7 @@ Plecs {
     Component {
       Type          LogicalOperator
       Name          "Logical\nOperator2"
-      Show          on
+      Show          off
       Position      [1395, 320]
       Direction     up
       Flipped       off
@@ -195,7 +195,7 @@ Plecs {
       Type          AngleSensor
       Name          "Angle\nSensor"
       Show          on
-      Position      [1845, 330]
+      Position      [1880, 330]
       Direction     right
       Flipped       on
       Parameter {
@@ -213,7 +213,7 @@ Plecs {
       Type          RotationalReference
       Name          "Rotational\nFrame"
       Show          on
-      Position      [1845, 400]
+      Position      [1880, 400]
       Direction     up
       Flipped       off
     }
@@ -304,7 +304,7 @@ Plecs {
       Type          SignalMux
       Name          "Mux"
       Show          off
-      Position      [600, 575]
+      Position      [855, 510]
       Direction     right
       Flipped       off
       Parameter {
@@ -317,7 +317,7 @@ Plecs {
       Type          Gain
       Name          "Gain1"
       Show          on
-      Position      [1510, 625]
+      Position      [1510, 575]
       Direction     left
       Flipped       off
       Parameter {
@@ -348,7 +348,7 @@ Plecs {
       Type          TorqueSensor
       Name          "Torque\nSensor"
       Show          on
-      Position      [1890, 280]
+      Position      [1925, 280]
       Direction     down
       Flipped       on
       Parameter {
@@ -359,9 +359,9 @@ Plecs {
     }
     Component {
       Type          ThermalResistor
-      Name          "Rth"
+      Name          "Heatsink\nThermal\nResistance"
       Show          on
-      Position      [1700, 25]
+      Position      [1705, 15]
       Direction     right
       Flipped       on
       Parameter {
@@ -372,10 +372,10 @@ Plecs {
     }
     Component {
       Type          ConstantTemperatureGnd
-      Name          "TconstG"
+      Name          "Ambient"
       Show          on
-      Position      [1765, 25]
-      Direction     right
+      Position      [1740, 85]
+      Direction     down
       Flipped       on
       Parameter {
         Variable      "T"
@@ -386,8 +386,8 @@ Plecs {
     Component {
       Type          ThermometerGnd
       Name          "ThmG"
-      Show          on
-      Position      [1520, 25]
+      Show          off
+      Position      [1520, 35]
       Direction     down
       Flipped       on
     }
@@ -396,7 +396,7 @@ Plecs {
       SrcComponent  "Components/Control/Transformations/3ph->RRF"
       Name          "3ph->RRF1"
       Show          on
-      Position      [1875, 80]
+      Position      [1925, 80]
       Direction     up
       Flipped       off
       Frame         [-15, -15; 15, 15]
@@ -422,7 +422,7 @@ Plecs {
       Type          Integrator
       Name          "Integrator"
       Show          off
-      Position      [275, 490]
+      Position      [530, 475]
       Direction     right
       Flipped       off
       Parameter {
@@ -460,7 +460,7 @@ Plecs {
       Type          Gain
       Name          "Gain2"
       Show          off
-      Position      [220, 490]
+      Position      [475, 475]
       Direction     right
       Flipped       off
       Parameter {
@@ -478,7 +478,7 @@ Plecs {
       Type          Sum
       Name          "Sum"
       Show          off
-      Position      [315, 470]
+      Position      [570, 455]
       Direction     up
       Flipped       off
       Parameter {
@@ -496,7 +496,7 @@ Plecs {
       Type          Gain
       Name          "Gain3"
       Show          off
-      Position      [240, 440]
+      Position      [495, 425]
       Direction     right
       Flipped       off
       Parameter {
@@ -514,7 +514,7 @@ Plecs {
       Type          Sum
       Name          "Sum1"
       Show          off
-      Position      [170, 490]
+      Position      [425, 475]
       Direction     up
       Flipped       off
       Parameter {
@@ -532,7 +532,7 @@ Plecs {
       Type          SignalDemux
       Name          "Demux1"
       Show          off
-      Position      [420, 765]
+      Position      [675, 625]
       Direction     right
       Flipped       off
       Parameter {
@@ -545,7 +545,7 @@ Plecs {
       Type          Integrator
       Name          "Integrator1"
       Show          off
-      Position      [460, 645]
+      Position      [715, 580]
       Direction     right
       Flipped       off
       Parameter {
@@ -583,7 +583,7 @@ Plecs {
       Type          Gain
       Name          "Gain4"
       Show          off
-      Position      [405, 645]
+      Position      [660, 580]
       Direction     right
       Flipped       off
       Parameter {
@@ -601,7 +601,7 @@ Plecs {
       Type          Sum
       Name          "Sum2"
       Show          off
-      Position      [490, 615]
+      Position      [745, 550]
       Direction     up
       Flipped       off
       Parameter {
@@ -619,7 +619,7 @@ Plecs {
       Type          Gain
       Name          "Gain5"
       Show          off
-      Position      [415, 585]
+      Position      [670, 520]
       Direction     right
       Flipped       off
       Parameter {
@@ -637,7 +637,7 @@ Plecs {
       Type          Sum
       Name          "Sum3"
       Show          off
-      Position      [345, 635]
+      Position      [600, 570]
       Direction     up
       Flipped       off
       Parameter {
@@ -655,7 +655,7 @@ Plecs {
       Type          Constant
       Name          "Constant"
       Show          off
-      Position      [110, 490]
+      Position      [365, 475]
       Direction     right
       Flipped       off
       Frame         [-10, -10; 10, 10]
@@ -745,7 +745,7 @@ Plecs {
       Type          Scope
       Name          "Torque Produced"
       Show          on
-      Position      [1940, 200]
+      Position      [1975, 200]
       Direction     up
       Flipped       off
       Location      [0, 38; 1916, 1014]
@@ -855,9 +855,9 @@ Plecs {
     }
     Component {
       Type          Scope
-      Name          "PWM A"
+      Name          "PWM"
       Show          on
-      Position      [940, 655]
+      Position      [1205, 540]
       Direction     up
       Flipped       off
       Location      [0, 38; 1914, 1014]
@@ -913,7 +913,7 @@ Plecs {
       Type          Scope
       Name          "Heatsink Temperature"
       Show          on
-      Position      [1465, 20]
+      Position      [1460, 35]
       Direction     down
       Flipped       on
       Location      [0, 38; 1916, 1014]
@@ -977,7 +977,7 @@ Plecs {
       Type          Scope
       Name          "Phase Current"
       Show          on
-      Position      [1925, 40]
+      Position      [1975, 40]
       Direction     up
       Flipped       off
       Location      [0, 38; 1914, 1014]
@@ -1086,65 +1086,9 @@ Plecs {
       }
     }
     Component {
-      Type          Scope
-      Name          "Phase Voltage"
-      Show          on
-      Position      [1865, 190]
-      Direction     up
-      Flipped       off
-      Location      [0, 38; 1916, 1014]
-      State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
-"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
-"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3wAAAOxAAAA"
-"BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
-"AAAAA=="
-      SavedViews    "AAAAAgAAAAA="
-      HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
-"QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAsgAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAACJAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
-      PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-      Axes          "1"
-      TimeRange     "0.0"
-      ScrollingMode "1"
-      SingleTimeAxis "1"
-      Open          "0"
-      Ts            "-1"
-      SampleLimit   "0"
-      XAxisLabel    ""
-      Axis {
-        Name          ""
-        AutoScale     1
-        MinValue      0
-        MaxValue      1
-        Signals       {}
-        SignalTypes   [ ]
-        Untangle      0
-        KeepBaseline  off
-        BaselineValue 0
-      }
-      Fourier {
-        SingleXAxis   on
-        AxisLabel     "Frequency"
-        Scaling       0
-        PhaseDisplay  0
-        Axis {
-          Name          ""
-          AutoScale     1
-          MinValue      0
-          MaxValue      1
-          Signals       {}
-          Untangle      0
-          KeepBaseline  off
-          BaselineValue 0
-        }
-      }
-    }
-    Component {
       Type          HeatFlowMeter
       Name          "Wm"
-      Show          on
+      Show          off
       Position      [1645, 130]
       Direction     left
       Flipped       off
@@ -1208,13 +1152,13 @@ Plecs {
     Component {
       Type          Mosfet
       Name          "FET2"
-      Show          on
+      Show          off
       Position      [820, 190]
       Direction     up
       Flipped       off
       Parameter {
         Variable      "Ron"
-        Value         "1e-3"
+        Value         "0"
         Show          off
       }
       Parameter {
@@ -1236,13 +1180,13 @@ Plecs {
     Component {
       Type          Mosfet
       Name          "FET4"
-      Show          on
+      Show          off
       Position      [1470, 190]
       Direction     up
       Flipped       off
       Parameter {
         Variable      "Ron"
-        Value         "1e-3"
+        Value         "0"
         Show          off
       }
       Parameter {
@@ -1264,13 +1208,13 @@ Plecs {
     Component {
       Type          Mosfet
       Name          "FET5"
-      Show          on
+      Show          off
       Position      [1470, 320]
       Direction     up
       Flipped       off
       Parameter {
         Variable      "Ron"
-        Value         "1e-3"
+        Value         "0"
         Show          off
       }
       Parameter {
@@ -1292,13 +1236,13 @@ Plecs {
     Component {
       Type          Mosfet
       Name          "FET6"
-      Show          on
+      Show          off
       Position      [1160, 325]
       Direction     up
       Flipped       off
       Parameter {
         Variable      "Ron"
-        Value         "1e-3"
+        Value         "0"
         Show          off
       }
       Parameter {
@@ -1321,7 +1265,7 @@ Plecs {
       Type          Scope
       Name          "DQ duty"
       Show          on
-      Position      [770, 670]
+      Position      [815, 1020]
       Direction     up
       Flipped       off
       Location      [0, 38; 1914, 1014]
@@ -1377,7 +1321,7 @@ Plecs {
       Type          SignalDemux
       Name          "Demux"
       Show          off
-      Position      [920, 565]
+      Position      [1175, 500]
       Direction     right
       Flipped       on
       Parameter {
@@ -1389,13 +1333,13 @@ Plecs {
     Component {
       Type          Mosfet
       Name          "FET7"
-      Show          on
+      Show          off
       Position      [1165, 190]
       Direction     up
       Flipped       off
       Parameter {
         Variable      "Ron"
-        Value         "1e-3"
+        Value         "0"
         Show          off
       }
       Parameter {
@@ -1417,7 +1361,7 @@ Plecs {
     Component {
       Type          HeatSink
       Name          "Heat Sink"
-      Show          on
+      Show          off
       Position      [815, 190]
       Direction     right
       Flipped       off
@@ -1440,9 +1384,9 @@ Plecs {
     }
     Component {
       Type          Scope
-      Name          "PWM A1"
+      Name          "PWM AL"
       Show          on
-      Position      [830, 430]
+      Position      [830, 400]
       Direction     up
       Flipped       off
       Location      [0, 38; 1914, 1014]
@@ -1497,13 +1441,13 @@ Plecs {
     Component {
       Type          Mosfet
       Name          "FET3"
-      Show          on
+      Show          off
       Position      [820, 320]
       Direction     up
       Flipped       off
       Parameter {
         Variable      "Ron"
-        Value         "1e-3"
+        Value         "0"
         Show          off
       }
       Parameter {
@@ -1523,36 +1467,10 @@ Plecs {
       }
     }
     Component {
-      Type          TransferFunction
-      Name          "Transfer Fcn"
-      Show          on
-      Position      [1780, 190]
-      Direction     right
-      Flipped       off
-      Frame         [-30, -15; 30, 15]
-      LabelPosition [0, 18]
-      LabelAlign    up
-      Parameter {
-        Variable      "Numerator"
-        Value         "[130]"
-        Show          off
-      }
-      Parameter {
-        Variable      "Denominator"
-        Value         "[1 130]"
-        Show          off
-      }
-      Parameter {
-        Variable      "X0"
-        Value         "0"
-        Show          off
-      }
-    }
-    Component {
       Type          Math
       Name          "Math"
       Show          off
-      Position      [855, 830]
+      Position      [860, 905]
       Direction     up
       Flipped       off
       Parameter {
@@ -1565,7 +1483,7 @@ Plecs {
       Type          Scope
       Name          "Magnitude"
       Show          on
-      Position      [940, 830]
+      Position      [945, 905]
       Direction     up
       Flipped       off
       Location      [489, 362; 1477, 795]
@@ -1621,7 +1539,7 @@ Plecs {
       Type          Trigonometry
       Name          "Trigonometric\nFunction"
       Show          off
-      Position      [775, 730]
+      Position      [820, 1080]
       Direction     right
       Flipped       off
       Parameter {
@@ -1639,7 +1557,7 @@ Plecs {
       Type          Scope
       Name          "Set angle"
       Show          on
-      Position      [855, 715]
+      Position      [900, 1065]
       Direction     up
       Flipped       off
       Location      [489, 362; 843, 593]
@@ -1695,7 +1613,7 @@ Plecs {
       Type          Product
       Name          "Product3"
       Show          off
-      Position      [755, 795]
+      Position      [760, 820]
       Direction     up
       Flipped       off
       Parameter {
@@ -1708,7 +1626,7 @@ Plecs {
       Type          Product
       Name          "Product4"
       Show          off
-      Position      [755, 850]
+      Position      [760, 925]
       Direction     up
       Flipped       off
       Parameter {
@@ -1721,7 +1639,7 @@ Plecs {
       Type          Sum
       Name          "Sum4"
       Show          off
-      Position      [805, 830]
+      Position      [810, 905]
       Direction     up
       Flipped       off
       Parameter {
@@ -1738,7 +1656,7 @@ Plecs {
     Component {
       Type          ThermalResistor
       Name          "Rth1"
-      Show          on
+      Show          off
       Position      [910, 170]
       Direction     right
       Flipped       on
@@ -1750,7 +1668,7 @@ Plecs {
     }
     Component {
       Type          ThermalCapacitorGnd
-      Name          "CthG"
+      Name          "Heatsink\nThermal\nCap"
       Show          on
       Position      [1675, 165]
       Direction     down
@@ -1769,7 +1687,7 @@ Plecs {
     Component {
       Type          HeatSink
       Name          "Heat Sink1"
-      Show          on
+      Show          off
       Position      [820, 315]
       Direction     right
       Flipped       off
@@ -1793,7 +1711,7 @@ Plecs {
     Component {
       Type          ThermalResistor
       Name          "Rth2"
-      Show          on
+      Show          off
       Position      [915, 295]
       Direction     right
       Flipped       on
@@ -1806,7 +1724,7 @@ Plecs {
     Component {
       Type          HeatSink
       Name          "Heat Sink2"
-      Show          on
+      Show          off
       Position      [1170, 315]
       Direction     right
       Flipped       off
@@ -1830,7 +1748,7 @@ Plecs {
     Component {
       Type          ThermalResistor
       Name          "Rth3"
-      Show          on
+      Show          off
       Position      [1265, 295]
       Direction     right
       Flipped       on
@@ -1843,7 +1761,7 @@ Plecs {
     Component {
       Type          HeatSink
       Name          "Heat Sink3"
-      Show          on
+      Show          off
       Position      [1175, 180]
       Direction     right
       Flipped       off
@@ -1867,7 +1785,7 @@ Plecs {
     Component {
       Type          ThermalResistor
       Name          "Rth4"
-      Show          on
+      Show          off
       Position      [1260, 160]
       Direction     right
       Flipped       on
@@ -1880,7 +1798,7 @@ Plecs {
     Component {
       Type          HeatSink
       Name          "Heat Sink4"
-      Show          on
+      Show          off
       Position      [1465, 180]
       Direction     right
       Flipped       off
@@ -1904,7 +1822,7 @@ Plecs {
     Component {
       Type          ThermalResistor
       Name          "Rth5"
-      Show          on
+      Show          off
       Position      [1560, 160]
       Direction     right
       Flipped       on
@@ -1917,7 +1835,7 @@ Plecs {
     Component {
       Type          HeatSink
       Name          "Heat Sink5"
-      Show          on
+      Show          off
       Position      [1470, 315]
       Direction     right
       Flipped       off
@@ -1941,7 +1859,7 @@ Plecs {
     Component {
       Type          ThermalResistor
       Name          "Rth6"
-      Show          on
+      Show          off
       Position      [1565, 295]
       Direction     right
       Flipped       on
@@ -1954,7 +1872,7 @@ Plecs {
     Component {
       Type          ThermometerGnd
       Name          "ThmG1"
-      Show          on
+      Show          off
       Position      [885, 60]
       Direction     up
       Flipped       on
@@ -2018,7 +1936,7 @@ Plecs {
     Component {
       Type          ThermometerGnd
       Name          "ThmG2"
-      Show          on
+      Show          off
       Position      [895, 355]
       Direction     up
       Flipped       off
@@ -2083,7 +2001,7 @@ Plecs {
       Type          Inertia
       Name          "Inertia"
       Show          on
-      Position      [1960, 280]
+      Position      [1995, 280]
       Direction     up
       Flipped       off
       Parameter {
@@ -2105,9 +2023,9 @@ Plecs {
     Component {
       Type          Reference
       SrcComponent  "Components/Control/Modulators/Space Vector PWM"
-      Name          "Space Vector PWM"
+      Name          "Space Vector\nPWM"
       Show          on
-      Position      [860, 565]
+      Position      [1115, 500]
       Direction     up
       Flipped       off
       Frame         [-20, -20; 20, 20]
@@ -2149,7 +2067,7 @@ Plecs {
       SrcComponent  "Components/Control/Transformations/RRF->SRF"
       Name          "RRF->SRF"
       Show          off
-      Position      [775, 575]
+      Position      [1030, 510]
       Direction     up
       Flipped       off
       Frame         [-15, -15; 15, 15]
@@ -2175,7 +2093,7 @@ Plecs {
       Type          Constant
       Name          "Constant1"
       Show          off
-      Position      [740, 520]
+      Position      [1055, 475]
       Direction     right
       Flipped       off
       Frame         [-10, -10; 10, 10]
@@ -2234,7 +2152,7 @@ Plecs {
     Component {
       Type          Voltmeter
       Name          "Vm1"
-      Show          on
+      Show          off
       Position      [690, 155]
       Direction     up
       Flipped       off
@@ -2298,7 +2216,7 @@ Plecs {
     Component {
       Type          Ammeter
       Name          "Am2"
-      Show          on
+      Show          off
       Position      [590, 345]
       Direction     up
       Flipped       on
@@ -2363,7 +2281,7 @@ Plecs {
       Type          Subsystem
       Name          "Signal Builder"
       Show          on
-      Position      [230, 635]
+      Position      [485, 570]
       Direction     up
       Flipped       off
       Frame         [-50, -20; 50, 20]
@@ -2586,7 +2504,7 @@ Plecs {
       Type          Subsystem
       Name          "dq Saturation"
       Show          on
-      Position      [670, 580]
+      Position      [925, 515]
       Direction     up
       Flipped       off
       Frame         [-30, -20; 30, 20]
@@ -2866,7 +2784,7 @@ Plecs {
     Component {
       Type          ThermometerGnd
       Name          "ThmG3"
-      Show          on
+      Show          off
       Position      [1245, 335]
       Direction     up
       Flipped       off
@@ -2922,7 +2840,7 @@ Plecs {
     Component {
       Type          ThermometerGnd
       Name          "ThmG4"
-      Show          on
+      Show          off
       Position      [1545, 340]
       Direction     up
       Flipped       off
@@ -2978,7 +2896,7 @@ Plecs {
     Component {
       Type          ThermometerGnd
       Name          "ThmG5"
-      Show          on
+      Show          off
       Position      [1240, 60]
       Direction     up
       Flipped       on
@@ -3034,7 +2952,7 @@ Plecs {
     Component {
       Type          ThermometerGnd
       Name          "ThmG6"
-      Show          on
+      Show          off
       Position      [1530, 95]
       Direction     up
       Flipped       on
@@ -3134,6 +3052,118 @@ Plecs {
         Variable      "v_init"
         Value         "13.2*4"
         Show          off
+      }
+    }
+    Component {
+      Type          HeatFlowMeter
+      Name          "Wm3"
+      Show          on
+      Position      [970, 270]
+      Direction     up
+      Flipped       on
+    }
+    Component {
+      Type          Scope
+      Name          "Lowside power"
+      Show          on
+      Position      [1025, 270]
+      Direction     up
+      Flipped       off
+      Location      [0, 0; 0, 0]
+      State         ""
+      SavedViews    ""
+      HeaderState   ""
+      PlotPalettes  ""
+      Axes          "1"
+      TimeRange     "0.0"
+      ScrollingMode "1"
+      SingleTimeAxis "1"
+      Open          "0"
+      Ts            "-1"
+      SampleLimit   "0"
+      XAxisLabel    ""
+      Axis {
+        Name          ""
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Fourier {
+        SingleXAxis   on
+        AxisLabel     "Frequency"
+        Scaling       0
+        PhaseDisplay  0
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+      }
+    }
+    Component {
+      Type          PlecsProbe
+      Name          "Probe"
+      Show          on
+      Position      [1430, 405]
+      Direction     right
+      Flipped       off
+    }
+    Component {
+      Type          Scope
+      Name          "AL losses\nand temperature"
+      Show          on
+      Position      [1485, 405]
+      Direction     up
+      Flipped       off
+      Location      [0, 0; 0, 0]
+      State         ""
+      SavedViews    ""
+      HeaderState   ""
+      PlotPalettes  ""
+      Axes          "1"
+      TimeRange     "0.0"
+      ScrollingMode "1"
+      SingleTimeAxis "1"
+      Open          "0"
+      Ts            "-1"
+      SampleLimit   "0"
+      XAxisLabel    ""
+      Axis {
+        Name          ""
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Fourier {
+        SingleXAxis   on
+        AxisLabel     "Frequency"
+        Scaling       0
+        PhaseDisplay  0
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
       }
     }
     Connection {
@@ -3290,7 +3320,7 @@ Plecs {
       SrcTerminal   3
       Points        [2025, 390]
       Branch {
-        Points        [1845, 390]
+        Points        [1880, 390]
         Branch {
           DstComponent  "Rotational\nFrame"
           DstTerminal   1
@@ -3347,7 +3377,7 @@ Plecs {
       Type          Rotational
       SrcComponent  "Angle\nSensor"
       SrcTerminal   1
-      Points        [1845, 280]
+      Points        [1880, 280]
       Branch {
         DstComponent  "Perm.-Magnet SM"
         DstTerminal   4
@@ -3410,7 +3440,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Angle\nSensor"
       SrcTerminal   2
-      Points        [1700, 330; 1700, 625]
+      Points        [1815, 330; 1815, 575]
       DstComponent  "Gain1"
       DstTerminal   1
     }
@@ -3418,7 +3448,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Gain3"
       SrcTerminal   2
-      Points        [315, 440]
+      Points        [570, 425]
       DstComponent  "Sum"
       DstTerminal   2
     }
@@ -3426,7 +3456,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Gain5"
       SrcTerminal   2
-      Points        [490, 585]
+      Points        [745, 520]
       DstComponent  "Sum2"
       DstTerminal   2
     }
@@ -3434,14 +3464,14 @@ Plecs {
       Type          Signal
       SrcComponent  "Sum3"
       SrcTerminal   1
-      Points        [370, 635]
+      Points        [625, 570]
       Branch {
-        Points        [370, 645]
+        Points        [625, 580]
         DstComponent  "Gain4"
         DstTerminal   1
       }
       Branch {
-        Points        [370, 585]
+        Points        [625, 520]
         DstComponent  "Gain5"
         DstTerminal   1
       }
@@ -3464,14 +3494,14 @@ Plecs {
       Type          Signal
       SrcComponent  "Gain1"
       SrcTerminal   2
-      Points        [1420, 625]
+      Points        [1420, 575]
       Branch {
-        Points        [745, 625]
+        Points        [1000, 575]
         DstComponent  "RRF->SRF"
         DstTerminal   3
       }
       Branch {
-        Points        [1420, 485; 1730, 485; 1730, 85]
+        Points        [1420, 670; 2210, 670; 2210, 140; 1895, 140]
         DstComponent  "3ph->RRF1"
         DstTerminal   3
       }
@@ -3480,7 +3510,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Torque\nSensor"
       SrcTerminal   2
-      Points        [1890, 200]
+      Points        [1925, 200]
       DstComponent  "Torque Produced"
       DstTerminal   1
     }
@@ -3488,15 +3518,15 @@ Plecs {
       Type          Signal
       SrcComponent  "ThmG"
       SrcTerminal   2
-      Points        [1505, 20]
       DstComponent  "Heatsink Temperature"
       DstTerminal   1
     }
     Connection {
       Type          HeatPipe
-      SrcComponent  "TconstG"
+      SrcComponent  "Ambient"
       SrcTerminal   1
-      DstComponent  "Rth"
+      Points        [1740, 15]
+      DstComponent  "Heatsink\nThermal\nResistance"
       DstTerminal   2
     }
     Connection {
@@ -3524,14 +3554,14 @@ Plecs {
       Type          Signal
       SrcComponent  "Mux"
       SrcTerminal   1
-      Points        [610, 575]
+      Points        [865, 510]
       Branch {
-        Points        [610, 670]
+        Points        [865, 1020]
         DstComponent  "DQ duty"
         DstTerminal   1
       }
       Branch {
-        Points        [610, 570]
+        Points        [865, 505]
         DstComponent  "dq Saturation"
         DstTerminal   1
       }
@@ -3540,7 +3570,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Demux1"
       SrcTerminal   2
-      Points        [170, 760]
+      Points        [425, 620]
       DstComponent  "Sum1"
       DstTerminal   3
     }
@@ -3548,28 +3578,28 @@ Plecs {
       Type          Signal
       SrcComponent  "Demux1"
       SrcTerminal   3
-      Points        [345, 770]
+      Points        [600, 630]
       DstComponent  "Sum3"
       DstTerminal   3
     }
     Connection {
       Type          HeatPipe
-      SrcComponent  "ThmG"
-      SrcTerminal   1
-      Points        [1675, 5; 1675, 25]
+      SrcComponent  "Wm"
+      SrcTerminal   2
+      Points        [1675, 130]
       Branch {
-        Points        [1675, 130]
+        Points        [1675, 15]
         Branch {
-          DstComponent  "Wm"
-          DstTerminal   2
+          DstComponent  "ThmG"
+          DstTerminal   1
         }
         Branch {
-          DstComponent  "CthG"
+          DstComponent  "Heatsink\nThermal\nResistance"
           DstTerminal   1
         }
       }
       Branch {
-        DstComponent  "Rth"
+        DstComponent  "Heatsink\nThermal\nCap"
         DstTerminal   1
       }
     }
@@ -3584,28 +3614,28 @@ Plecs {
       Type          Signal
       SrcComponent  "Sum"
       SrcTerminal   1
-      Points        [585, 470; 585, 570]
+      Points        [840, 455; 840, 505]
       Branch {
         DstComponent  "Mux"
         DstTerminal   2
       }
       Branch {
-        Points        [585, 735]
+        Points        [840, 815; 730, 815]
         Branch {
-          DstComponent  "Trigonometric\nFunction"
-          DstTerminal   3
-        }
-        Branch {
-          Points        [585, 790]
+          Points        [585, 815; 585, 825]
           Branch {
-            DstComponent  "Product3"
-            DstTerminal   2
+            Points        [585, 1085]
+            DstComponent  "Trigonometric\nFunction"
+            DstTerminal   3
           }
           Branch {
-            Points        [585, 800]
             DstComponent  "Product3"
             DstTerminal   3
           }
+        }
+        Branch {
+          DstComponent  "Product3"
+          DstTerminal   2
         }
       }
     }
@@ -3613,7 +3643,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Trigonometric\nFunction"
       SrcTerminal   2
-      Points        [810, 730; 810, 715]
+      Points        [855, 1080; 855, 1065]
       DstComponent  "Set angle"
       DstTerminal   1
     }
@@ -3662,8 +3692,8 @@ Plecs {
         DstTerminal   3
       }
       Branch {
-        Points        [775, 430]
-        DstComponent  "PWM A1"
+        Points        [775, 400]
+        DstComponent  "PWM AL"
         DstTerminal   1
       }
     }
@@ -3683,12 +3713,11 @@ Plecs {
           Branch {
             Points        [970, 130; 970, 170]
             Branch {
-              Points        [970, 295]
-              DstComponent  "Rth2"
+              DstComponent  "Rth1"
               DstTerminal   2
             }
             Branch {
-              DstComponent  "Rth1"
+              DstComponent  "Wm3"
               DstTerminal   2
             }
           }
@@ -3758,7 +3787,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Integrator1"
       SrcTerminal   2
-      Points        [490, 645]
+      Points        [745, 580]
       DstComponent  "Sum2"
       DstTerminal   3
     }
@@ -3766,7 +3795,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Integrator"
       SrcTerminal   2
-      Points        [315, 490]
+      Points        [570, 475]
       DstComponent  "Sum"
       DstTerminal   3
     }
@@ -3781,9 +3810,9 @@ Plecs {
       Type          Signal
       SrcComponent  "Sum1"
       SrcTerminal   1
-      Points        [190, 490]
+      Points        [445, 475]
       Branch {
-        Points        [195, 490; 195, 440]
+        Points        [450, 475; 450, 425]
         DstComponent  "Gain3"
         DstTerminal   1
       }
@@ -3810,29 +3839,14 @@ Plecs {
       Type          Signal
       SrcComponent  "RRF->SRF"
       SrcTerminal   2
-      DstComponent  "Space Vector PWM"
+      DstComponent  "Space Vector\nPWM"
       DstTerminal   3
     }
     Connection {
       Type          Signal
       SrcComponent  "Demux"
-      SrcTerminal   3
-      Points        [1070, 565; 1070, 325]
-      Branch {
-        Points        [1070, 230; 1085, 230; 1085, 190]
-        DstComponent  "FET7"
-        DstTerminal   3
-      }
-      Branch {
-        DstComponent  "Logical\nOperator1"
-        DstTerminal   2
-      }
-    }
-    Connection {
-      Type          Signal
-      SrcComponent  "Demux"
       SrcTerminal   4
-      Points        [1365, 575; 1365, 320]
+      Points        [1365, 510; 1365, 320]
       Branch {
         DstComponent  "Logical\nOperator2"
         DstTerminal   2
@@ -3845,16 +3859,16 @@ Plecs {
     }
     Connection {
       Type          Signal
-      SrcComponent  "Space Vector PWM"
+      SrcComponent  "Space Vector\nPWM"
       SrcTerminal   1
-      Points        [895, 565]
+      Points        [1150, 500]
       Branch {
         DstComponent  "Demux"
         DstTerminal   1
       }
       Branch {
-        Points        [895, 655]
-        DstComponent  "PWM A"
+        Points        [1150, 540]
+        DstComponent  "PWM"
         DstTerminal   1
       }
     }
@@ -3862,8 +3876,8 @@ Plecs {
       Type          Signal
       SrcComponent  "Constant1"
       SrcTerminal   1
-      Points        [790, 520; 790, 555]
-      DstComponent  "Space Vector PWM"
+      Points        [1070, 490]
+      DstComponent  "Space Vector\nPWM"
       DstTerminal   2
     }
     Connection {
@@ -3885,7 +3899,7 @@ Plecs {
       Type          Signal
       SrcComponent  "Demux"
       SrcTerminal   2
-      Points        [935, 555; 935, 475; 715, 475; 715, 320]
+      Points        [1185, 490; 1185, 450; 715, 450; 715, 320]
       Branch {
         DstComponent  "Logical\nOperator"
         DstTerminal   2
@@ -3914,26 +3928,11 @@ Plecs {
     }
     Connection {
       Type          Signal
-      SrcComponent  "3ph Meter"
-      SrcTerminal   8
-      Points        [1720, 75; 1830, 75]
-      Branch {
-        Points        [1830, 40]
-        DstComponent  "Phase Current"
-        DstTerminal   1
-      }
-      Branch {
-        DstComponent  "3ph->RRF1"
-        DstTerminal   1
-      }
-    }
-    Connection {
-      Type          Signal
       SrcComponent  "3ph->RRF1"
       SrcTerminal   2
       Points        [2030, 80]
       Branch {
-        Points        [2030, 95; 2250, 95; 2250, 765]
+        Points        [2030, 95; 2250, 95; 2250, 625]
         DstComponent  "Demux1"
         DstTerminal   1
       }
@@ -3945,46 +3944,31 @@ Plecs {
     }
     Connection {
       Type          Signal
-      SrcComponent  "3ph Meter"
-      SrcTerminal   7
-      Points        [1710, 190]
-      DstComponent  "Transfer Fcn"
-      DstTerminal   1
-    }
-    Connection {
-      Type          Signal
-      SrcComponent  "Transfer Fcn"
-      SrcTerminal   2
-      DstComponent  "Phase Voltage"
-      DstTerminal   1
-    }
-    Connection {
-      Type          Signal
       SrcComponent  "Sum2"
       SrcTerminal   1
-      Points        [575, 615]
+      Points        [830, 550]
       Branch {
-        Points        [575, 580]
+        Points        [830, 515]
         DstComponent  "Mux"
         DstTerminal   3
       }
       Branch {
-        Points        [575, 725]
+        Points        [830, 920; 730, 920]
         Branch {
-          DstComponent  "Trigonometric\nFunction"
-          DstTerminal   1
-        }
-        Branch {
-          Points        [575, 845]
+          Points        [575, 920; 575, 930]
           Branch {
-            DstComponent  "Product4"
-            DstTerminal   2
-          }
-          Branch {
-            Points        [575, 855]
             DstComponent  "Product4"
             DstTerminal   3
           }
+          Branch {
+            Points        [575, 1075]
+            DstComponent  "Trigonometric\nFunction"
+            DstTerminal   1
+          }
+        }
+        Branch {
+          DstComponent  "Product4"
+          DstTerminal   2
         }
       }
     }
@@ -4115,6 +4099,58 @@ Plecs {
       }
       Branch {
         DstComponent  "Bank ESR"
+        DstTerminal   1
+      }
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Wm3"
+      SrcTerminal   3
+      DstComponent  "Lowside power"
+      DstTerminal   1
+    }
+    Connection {
+      Type          HeatPipe
+      SrcComponent  "Wm3"
+      SrcTerminal   1
+      Points        [970, 295]
+      DstComponent  "Rth2"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Probe"
+      SrcTerminal   1
+      DstComponent  "AL losses\nand temperature"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Demux"
+      SrcTerminal   3
+      Points        [1205, 500; 1205, 425; 1070, 425; 1070, 325]
+      Branch {
+        DstComponent  "Logical\nOperator1"
+        DstTerminal   2
+      }
+      Branch {
+        Points        [1070, 230; 1085, 230; 1085, 190]
+        DstComponent  "FET7"
+        DstTerminal   3
+      }
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "3ph Meter"
+      SrcTerminal   8
+      Points        [1720, 120; 1865, 120; 1865, 75; 1890, 75]
+      Branch {
+        DstComponent  "3ph->RRF1"
+        DstTerminal   1
+      }
+      Branch {
+        Points        [1890, 40]
+        DstComponent  "Phase Current"
         DstTerminal   1
       }
     }

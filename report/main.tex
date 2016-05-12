@@ -8,6 +8,7 @@
 \usepackage{caption}
 \usepackage{hyperref}
 \usepackage{float}
+\usepackage[procnames]{listings}
 \usepackage{epstopdf} %Convert EPS files to PDF format
 \usepackage{pdfpages} %Utility to include pdf documents into the report, used to include datasheets in appendices.
 
@@ -29,6 +30,18 @@
     linkcolor={red!50!black},
     citecolor={blue!50!black},
     urlcolor={blue!80!black}
+}
+
+\definecolor{MATLABpurple}{RGB}{160,32,240}
+\definecolor{MATLABgreen}{RGB}{34,139,34}
+
+\lstdefinestyle{customMATLAB}{
+	basicstyle=\footnotesize\ttfamily,
+	language=MATLAB,
+	stringstyle=\color{purple},
+	commentstyle=\color{MATLABgreen},
+	keywordstyle=\color{black},
+	escapechar=&
 }
 
 \setlength{\parindent}{0pt}
