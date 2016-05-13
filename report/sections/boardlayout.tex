@@ -19,8 +19,8 @@ For instance, GNDP is used as the return path of the high currents flowing throu
 The voltage on this rail is likely to be fluctuating significantly.
 This will surely compromise the integrity of more crucial signals such as the current measurements used to determine the position of the rotor.
 GNDD will also carry significant noise from the digital circuitry and should also be kept separate from GNDA.
-Since all of the control is done digitally, obviously, there has to be a coupling between GNDD and GNDA at some point.
-In order to minimize noise propagation there will be only one such point
+Since there is some communication between the analog and the digital parts however, it is necessary to allow for some crossover.
+
 
 \subsection{Analog Board}
 The analog board houses, as the name implies, all of the analog signal processing.
@@ -67,12 +67,12 @@ The entire protection circuit for one phase can be seen in figure \ref{fig:ocpci
 Here the circuit has been split in accordance with the functionality of its four main parts: ADC isolation, full wave rectifier, thresholding circuit and an inverter.
 Each part will be explained in appropriate detail in the following paragraphs.
 
-\paragraph{ADC Isolation}~\\
+\paragraph{ADC Isolation:}
 The current measured in each phase is used in the control of the motor and as such it is important to maintain the integrity of the signal.
 Therefore, after routing the signal to the ADC it is applied to the OCP circuit through a voltage follower.
 Since the op amp has extremely high input resistance ($10^{12}\Omega$ in the case of the LF353 used in this circuit) what happens on the output-side of the voltage follower has no meaningful impact on the input-side.
 
-\paragraph{Full Wave Rectifier}~\\
+\paragraph{Full Wave Rectifier:}
 The phase signals are sinusoids with an expected peak amplitude of $\pm0.5V$.
 In order to only needing to detect a positive OCE the signal is rectified.
 Due to the small magnitude of the signals it is necessary to use a precision full wave rectifier.
@@ -90,7 +90,7 @@ Figure \ref{fig:rectifier} shows the voltages at these points.
 
 
 
-\paragraph{Thresholding}~\\
+\paragraph{Thresholding:}
 As explained in section \ref{sec:lemsensor}, the input signal to the OCP circuit is dimensioned such that the maximum current in either of the phases will result in a voltage of 0.5$V$.
 Also mentioned in this section is the desire to leave some headroom in case of an OCE.
 This is due to the response time of the system.
@@ -122,11 +122,14 @@ $R_7$ and $R_8$ can now be isolated using \ref{eq:vhigh} and \ref{eq:vlow}:
 Resulting in $R_7 = 150k\Omega$ and $R_8 = 2542.37\Omega$.
 Since 2542.37$\Omega$ is hardly a standard value, the nearest standard value is chosen such that $R_8=2550\Omega$.
 
-\paragraph{Inverter}~\\
+\paragraph{Inverter:}
 Due to the NOR-stage described in section \ref{sec:nor}, it is necessary to invert the signal.
 A simple comparator is used to achieve this effect.
 The input voltage to this stage is either $V_{cc}$ or $GNDD$, the voltage on the non-inverting terminal is therefore not critical.
 Setting $R_9=R_{10}=10k\Omega$ is sufficient.
+
+The circuitry discussed above will ensure that in case of an OCE, a signal is sent to the digital board where it will be used to safely handle the event.
+This is discussed in further detail in later sections. 
 
 \subsubsection{Current Transducer - LF 205-S}
 \label{sec:lemsensor}
@@ -208,7 +211,20 @@ By reading the drive enable signal it is therefore possible to determine when th
 Since this signal is left floating when the pedal is not active, it can be routed directly to the Zybo, using the internal pull-up resistors.
 \todo[inline]{Thomas: Is the torque pedal active low or active high? Correct two places above to reflect the correct case}
 \subsubsection{Driver Enable Circuit}
-\todo{Thomas: Naming is not a mistake, this is the circuit that compares the temperature, current and zybo enable signals}
+The DRV8301DCA is equipped with a pin called \texttt{EN\_GATE}.
+If, while running, this pin is pulled low, the drive signals are immediately shut down.
+This feature allows for fast and reliable shut down of the motor in case of any detected faults.
+There are two different types of faults detected within the system, the aforementioned OCE and an over-temperature event, OTE.
+In addition to these two a signal is routed from the Zybo which enables the digital part of the system to disable/enable the motor, should the need arise.
+As there are three different signals that all need to connect to the same pin, they are all NOR'ed, as seen in figure \ref{fig:driveenablesignal}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth,trim=0cm 3cm 0cm 3cm]{graphics/driver_enable_signal}
+	\caption{A very good caption}
+	\label{fig:driveenablesignal}
+\end{figure}
+
 \subsubsection{Logic-Level Shifters}
 Tracking the angular position of the rotor is done using an encoder mounted on the motor.
 Upon receiving a clock signal the encoder will return the current position of the rotor.

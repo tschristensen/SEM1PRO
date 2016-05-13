@@ -1,0 +1,65 @@
+\newpage
+\section{Motor Modelling}
+-Section for the state space model and finding kp / Ki values. And for tuning them.
+
+\subsection{State Space Model}
+A state space model is derived from the physical representation of a motor, consisting of an electrical part on the left and a mechanical part on the right side of the model. The model is
+
+
+State space model of the pmsm motor: \ref{fig:State_space_model1}
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=.95\linewidth]{graphics/State_space_model1}
+	\caption{PMSM motor state space model.}
+	\label{fig:State_space_model1}
+\end{figure}
+
+Reducing to transfer functions: \ref{fig:State_space_model2}
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=.95\linewidth]{graphics/State_space_model2}
+	\caption{PMSM motor model simplified with tranfer functions.}
+	\label{fig:State_space_model2}
+\end{figure}
+
+Removing torque load, friction and wind resistance: \ref{fig:State_space_model3}
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=.95\linewidth]{graphics/State_space_model3}
+	\caption{PMSM motor model without torque load, friction and wind resistance.}
+	\label{fig:State_space_model3}
+\end{figure}
+
+
+\subsection{Controlling Current}
+
+Adding current control: \ref{fig:State_space_model4}
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=.95\linewidth]{graphics/State_space_model4}
+	\caption{PMSM motor model with a current control loop.}
+	\label{fig:State_space_model4}
+\end{figure}
+
+
+\subsection{Transfer Function}
+
+Rearrange to simplify transfer function: \ref{fig:State_space_model5}
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=.95\linewidth]{graphics/State_space_model5}
+	\caption{PMSM motor model rearranged to simplify the transfer function.}
+	\label{fig:State_space_model5}
+\end{figure}
+
+
+\subsection{Controller Values}
+
+Finding controller values using Dodd's Settling time formula 5%.
+
+\clearpage
