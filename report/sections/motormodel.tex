@@ -1,42 +1,50 @@
 \newpage
 \section{Motor Modelling}
-Section for the state space model and finding kp / Ki values. And for tuning them.
+To model the PMSM motor an equivalent circuit of the motor will be used. Figure \ref{fig:PMSM_Equivalent} shows this circuit.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.95\linewidth]{graphics/PMSM_Equivalent}
+	\caption{PMSM motor equivalent circuit, source:  }
+	\label{fig:PMSM_Equivalent}
+\end{figure}
+
+\todo{Morten: find better picture of this, or make it. source of this pic: MORTEN}
 
 \subsection{State Space Model}
+A state space model is derived from the physical representation of a PMSM motor, figure \ref{fig:State_space_model1}, consisting of an electrical part on the left and a mechanical part on the right side of the model. The model is made in MatLab Simulink. The model is very similar to that of a DC motor when interpreted like this.
 
-State space model of the pmsm motor: \ref{fig:State_space_model1}
-
-\begin{figure}[!h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=.95\linewidth]{graphics/State_space_model1}
 	\caption{PMSM motor state space model.}
 	\label{fig:State_space_model1}
 \end{figure}
 
-Reducing to transfer functions: \ref{fig:State_space_model2}
+Reducing this model to use transfer functions for the electrical and mechanical parts results in a more simple model, figure \ref{fig:State_space_model2}. A wind resistance has been added to show how it affects the torque of the motor. The value of the wind resistance is the rotational speed squared multiplied by a drag value. This value will be a negative number, which is then added to the torque output to slow down the motor. The drag can be approximated by looking at the gearings of the kart and the motors own drag coefficient.
 
-\begin{figure}[!h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=.95\linewidth]{graphics/State_space_model2}
 	\caption{PMSM motor model simplified with tranfer functions.}
 	\label{fig:State_space_model2}
 \end{figure}
 
-Removing torque load, friction and wind resistance: \ref{fig:State_space_model3}
+An even further reduced model is derived to further simplify the system. This model removes torque load, friction and wind resistance. It is shows on figure \ref{fig:State_space_model3}. This model can be used to find controller values if the torque load, viscous friction and wind resistance are all seen as disturbances. The controller should be able to handle the about of disturbance that can be found in these values.
 
-\begin{figure}[!h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=.95\linewidth]{graphics/State_space_model3}
 	\caption{PMSM motor model without torque load, friction and wind resistance.}
 	\label{fig:State_space_model3}
 \end{figure}
 
-
 \subsection{Controlling Current}
+The motor must be current controlled in order to limit the torque. If the motor was speed controlled, as is often used in motor control, it could demand a much higher current than possible by the circuit, requiring a limiter on the current input instead, or otherwise it could result in destroying the drive circuit. A current control also means that the speeder pedal will be a current reference, translating into a torque reference, resulting in an even motor speed even if the kart is driving on a uneven plane such as a hill.
 
-Adding current control: \ref{fig:State_space_model4}
+A control loop is added to the model, figure \ref{fig:State_space_model4}. It must be current controlled to control the torque. This means that a feedback loop is added from inside the motor back to the controller. 
 
-\begin{figure}[!h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=.95\linewidth]{graphics/State_space_model4}
 	\caption{PMSM motor model with a current control loop.}
@@ -45,19 +53,81 @@ Adding current control: \ref{fig:State_space_model4}
 
 
 \subsection{Transfer Function}
+The model of figure \ref{fig:State_space_model4} can be rearranged to simplify the transfer function. This rearrangement can be seen on figure \ref{fig:State_space_model5}. Here the current is the output, a current reference is the input, and the mechanical part of the motor is all placed into a feedback loop.
 
-Rearrange to simplify transfer function: \ref{fig:State_space_model5}
-
-\begin{figure}[!h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=.95\linewidth]{graphics/State_space_model5}
 	\caption{PMSM motor model rearranged to simplify the transfer function.}
 	\label{fig:State_space_model5}
 \end{figure}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.95\linewidth]{graphics/State_space_model6}
+	\caption{PMSM motor model as a plant with PI control}
+	\label{fig:State_space_model6}
+\end{figure}
+
+Using masons rule \todo{Morten: dodds book reference to masons} the transfer function can be derived. Seeing the control loop as a controller and a plant the following equation is achieved. Equation \ref{eq:plant_masons}.
+
+\begin{equation}
+\frac{I_m}{I_{ref}}= \frac{(K_p+K_i\frac{1}{s})G(s)}{1-(K_p+K_i \frac{1}{s})G(s)}
+\label{eq:plant_masons}
+\end{equation}
+
+Replacing $G(s)$ and rearranging to get the form of a characteristics equation the transfer function is equation \ref{eq:transfer_function_full}.
+\begin{equation}
+\frac{I_m}{I_{ref}}=\frac{s^2\frac{K_p}{L}+s(\frac{K_i}{L}+\frac{K_pK_v}{J})+\frac{K_iK_v}{J_r}}{s^3+s^2(\frac{R}{2L}+\frac{K_v}{J}+\frac{K_p}{L})+s(\frac{3K_t^2}{2JL}+\frac{K_vR}{JL}+\frac{K_i}{L}+\frac{K_pK_v}{2J})+\frac{K_iK_v}{J}}
+\label{eq:transfer_function_full}
+\end{equation}
+
+This third order transfer function will be used to derive the controller values.
 
 \subsection{Controller Values}
+To find the controller values the Stephen Dodds Settling Time Formula for $5\%$ settling time is used. The desired characteristics polynomial of a transfer function for the settling time formula to work is
 
-Finding controller values using Dodd's Settling time formula 5%.
+\begin{equation}
+s^n+d_{n-1}s^{n-1}+\cdot \cdot \cdot +d_1s+d_0
+\end{equation}
 
-\newpage
+The d's of a given order can be looked up in Stephen J. Dodds' book \todo{cite book} on page 850.
+
+This yields the following third order equation for a third order system.
+
+\begin{equation}
+s^3 + 3\alpha s^2+3\alpha^2s+\alpha^3
+\end{equation}
+
+Based on the transfer function in equation ref and a settling time of 0.1 seconds, alpha will be defined by the following equation. This value is used to find the Kp and Ki values for the controller.
+
+\begin{equation}
+\alpha=\frac{1.5(1+n)}{T_s^{5\%}}=\frac{6}{0.1}=60
+\label{eq:Dodds_settlingtime}
+\end{equation}
+
+Finding the controller values.
+
+\begin{equation}
+3 \alpha= \frac{R}{2L}+ \frac{K_v}{J}+ \frac{K_p}{L} \rightarrow K_p=(3 \alpha - \frac{K_v}{J}- \frac{R}{2L})L
+\end{equation}
+\begin{equation}
+3 \alpha^2= \frac{2K_t^2}{2JL}+ \frac{K_vR}{JL}+ \frac{K_i}{L}+ \frac{K_pK_v}{2J} \rightarrow K_i=(3 \alpha^2- \frac{K_pK_v}{2J}- \frac{K_vR}{JL}- \frac{3K_t^2}{2JL})L
+\end{equation}
+
+These equations yield the following controller values, equation \ref{eq:Kpvalue} and \ref{eq:Kivalue}.
+\begin{equation}
+K_p=0.0039
+\label{eq:Kpvalue}
+\end{equation}
+\begin{equation}
+K_i=0.4606
+\label{eq:Kivalue}
+\end{equation}
+
+\subsection{Simulation}
+Testing the $K_p$ and $K_i$ values should result in a stable current output from the electrical part of the motor, which is desired to control the torque. This simulation will add the $K_p$ and $K_i$ values to the control loop and review the outcome.
+
+
+
+\clearpage
