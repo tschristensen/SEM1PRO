@@ -318,6 +318,15 @@ INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/block_diagram.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/block_diagram.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/boardlayout.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/boardlayout.tex
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/ground_plane.eps
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/ground_plane.eps
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/ground_plane.eps
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/ground_plane-eps-converted-to.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/ground_plane-eps-converted-to.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/ground_plane.eps
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/ground_plane-eps-converted-to.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/ground_plane-eps-converted-to.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/ground_plane-eps-converted-to.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/sumamp.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/sumamp.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/sumamp.pdf
@@ -354,8 +363,6 @@ INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/driver_enable_signa
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/lls.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/lls.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/lls.pdf
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/controllerboard.tex
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/controllerboard.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/zybo.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/zybo.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/TaskDiagram.pdf
@@ -413,6 +420,9 @@ INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/20kHz_inductance.pd
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/20kHz_inductance.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/motormodel.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/motormodel.tex
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/PMSM_Equivalent.png
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/PMSM_Equivalent.png
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/PMSM_Equivalent.png
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/State_space_model1.JPG
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/State_space_model1.JPG
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/State_space_model1.JPG
@@ -428,6 +438,9 @@ INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/State_space_model4.
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/State_space_model5.JPG
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/State_space_model5.JPG
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/State_space_model5.JPG
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/State_space_model6.JPG
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/State_space_model6.JPG
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/State_space_model6.JPG
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/simulation.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/simulation.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/simulations_mechanical_full.png
