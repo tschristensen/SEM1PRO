@@ -3,7 +3,7 @@
 Simulation tools have been a great help, not only understanding the electromechanical system, and design a controller from it, but estimating requirements for the electric components. Primarily, Simscape has been used, but Plecs has also been used specifically to simulate the inverter. This section will explain how the model has been build, starting with the mechanical system, then the motor model, the transformation and control part, and finally the three-phase switching pole. 
 
 \subsection{Mechanical System}\label{sub:Simulations_mec}
-The mechanical system consists of a mass of the gokart with driver, turbulent air resistance, wheels and a gear. While there are a lot of interesting blocks in the Simscape $\rightarrow$ SimDriveline library, we will stick with the mechanical library, because this is detailed enough, and more easy to port to Plecs. The simulations do not take into account for wheel spin.
+The mechanical system consists of a mass of the gokart with driver, turbulent air resistance, wheels and a gear. While there are a lot of interesting blocks in the Simscape $\rightarrow$ SimDriveline library, we will stick with the mechanical library, because this is detailed enough, and more easy to port to Plecs. 
 
 \begin{figure}[H]
 	\includegraphics[width=15cm]{graphics/simulations_mechanical_full.png}
