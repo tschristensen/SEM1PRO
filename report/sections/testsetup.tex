@@ -1,1 +1,22 @@
+%!TEX root = ../main.tex
 \section{System Implementation and Testing}
+This section will describe how the system was implemented and tested on both a test setup and the real go-kart setup. 
+
+\subsection{Test Setup}
+In order to test subparts of the complete system a test setup was introduced.
+It consists of a permanent magnet motor of the type PM5113 with a RMB28MD encoder module mounted with a small distance to the end of the shaft.
+The setup furthermore consits of a 74HCT14 level shift interface board and a ?? dual H-bridge and can be seen in figure \ref{fig:small_motor_setup}.
+The setup was made and soldered by the supervisors of the project.
+The full setup with H-bridge can be used to test the functionality of the Embedded System.
+The motor and encoder can be used to test the full system.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.8\linewidth]{graphics/small_motor_setup}
+	\caption[Test setup.]{Test setup with PM5113 motor.}
+	\label{fig:small_motor_setup}
+\end{figure}
+
+\todo[inline]{The figure is wrong!! signal should go two times in the level shifter - Mikkel}
+
+\subsection{Test of Embedded System}

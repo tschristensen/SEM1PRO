@@ -392,10 +392,6 @@ INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/controller_task.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/pwm_task.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/pwm_task.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/pwm_task.pdf
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/encoder.tex
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/encoder.tex
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/motordriver.tex
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/motordriver.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/threephaseinverter.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/threephaseinverter.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/PMACmotor.tex
@@ -461,10 +457,11 @@ INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/simulations_electri
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/Plecs_electrical.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/Plecs_electrical.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/Plecs_electrical.pdf
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/switchmode.tex
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/switchmode.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/testsetup.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/testsetup.tex
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/small_motor_setup.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/small_motor_setup.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/small_motor_setup.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/conclusion.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/conclusion.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/bib.tex
