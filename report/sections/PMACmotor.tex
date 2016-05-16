@@ -87,7 +87,7 @@ The peak-peak voltage and the corresponding frequency is noted in the table belo
 \begin{table}[h]
 \begin{center}
 \begin{tabular}{S|S}
-	{Voltage } [V$_{\text{pp}}$]  & {Frequency }[\si{hertz}] \\
+	{Voltage } [\si{\volt}$_{\text{pp}}$]  & {Frequency }[\si{\hertz}] \\
 	\hline
 	28.3 & 72.13 \\
 	15.3 & 38.32\\
@@ -101,17 +101,29 @@ The peak-peak voltage and the corresponding frequency is noted in the table belo
 \caption{Measured line-line voltage at electric frequencies}
 \label{tab:KE_measurements}
 \end{table}
-The phase amplitude of the voltage is calculated by dividing the voltages in table~\ref*{tab:KE_measurements} with $2\sqrt{3}$. The mechanical angular velocity is calculated by multiplying the frequency in table~\ref*{tab:KE_measurements} with $2\pi$, and dividing with $4$ pole pairs. The resultant voltages and velocities are divided to calculate $K_E$, and the average is calculated for these. The result is:
+\todo[inline]{Thomas: Swap voltage and frequency, order smallest to largest}
+The phase amplitude of the voltage is calculated by dividing the voltages in table~\ref*{tab:KE_measurements} with $2\sqrt{3}$. The mechanical angular velocity is calculated by multiplying the frequency in table~\ref*{tab:KE_measurements} with $2\pi$, and dividing with $4$ pole pairs. 
+The resultant voltages and velocities are divided to calculate $K_E$, and the average is calculated for these. 
+The result is:
 
 \begin{equation}\label{eq:K_E}
-K_E = K_T = 0.0733 \si[per-mode = fraction]{\volt\second\per\radian}
+K_E = K_T = 0.0733 \si{\volt\second\per\radian}
 \end{equation}
 
-with a spread of 1.3 percent. 
+with a spread of 1.3\%. 
 
-According to the datasheet, $K_T$ is 0.13. This is 1.77 times higher than the measured $K_E$, and there are two potential reasons for this. One is, that the manufacturer uses line-to-line current instead of phase current, since the difference is close to $\sqrt{3}$. Another possible reason is, that the manufacturer defines $K_T$ as the torque produced with the given q-current, in which case $K_T = 1.5K_E$, and the measured $K_T$ is about 15\% below the manufacturer's datasheet. Either way, equation~\ref{eq:K_E} will be considered true from now on. 
+According to the datasheet, $K_T$ is 0.13. 
+This is 1.77 times higher than the measured $K_E$. 
+There are two potential reasons for this.
+One is, that the manufacturer uses line-to-line current instead of phase current, since the difference is close to $\sqrt{3}$. 
+Another possible reason is, that the manufacturer defines $K_T$ as the torque produced with the given q-current, in which case $K_T = 1.5K_E$, and the measured $K_T$ is about 15\% below the manufacturer's datasheet. 
+Either way, equation~\ref{eq:K_E} will be considered true from now on. 
 
-To confirm, that $K_E$ and $K_T$ are indeed the same, consider an ideal motor producing some torque, T, and running at a constant angular velocity, $\omega$. Losses in the Armature resistance and friction are omitted. The motor is driven by a quadrature current, I, and a quadrature voltage V. Currents and voltages along the d-axis are 0. The electrical power going into the machine must be equal to the mechanical power going out:
+To confirm, that $K_E$ and $K_T$ are indeed the same, consider an ideal motor producing some torque, T, and running at a constant angular velocity, $\omega$. 
+Losses in the Armature resistance and friction are omitted. 
+The motor is driven by a quadrature current, I, and a quadrature voltage V. 
+Currents and voltages along the d-axis are 0. 
+The electrical power going into the machine must be equal to the mechanical power going out:
 
 \begin{equation}
 P_m = P_e
