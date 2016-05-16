@@ -19,8 +19,24 @@ For instance, GNDP is used as the return path of the high currents flowing throu
 The voltage on this rail is likely to be fluctuating significantly.
 This will surely compromise the integrity of more crucial signals such as the current measurements used to determine the position of the rotor.
 GNDD will also carry significant noise from the digital circuitry and should also be kept separate from GNDA.
-Since there is some communication between the analog and the digital parts however, it is necessary to allow for some crossover.
+The only crossover between the GNDD and GNDA will happen in the DRV8301DCA and in the NOR circuitry described in section \ref{sec:nor}.
+The latter occurs at the over-current event signal which is generated on the analog board but used in the digital system.
+An analog signal is fed to the SN74LVC1G17, a buffer with built-in Schmitt-trigger circuitry which is supplied from the digital 3.3$V$ rail.\\
+A simplified overview of the grounding planes can be seen on figure \ref{fig:groundplanes}.
 
+\begin{figure}[!h]
+	\centering
+	\includegraphics{graphics/ground_plane}
+	\caption{Simplified view of the electronics with the ground planes marked.}
+	\label{fig:groundplanes}
+\end{figure}
+
+As it is undesirable to have the potentially noisy GNDP present on the boards, it is constrained to one corner of the digital board.
+Here it is used to supply the TEN20-4823WIN and the TVN5-4811WI isolated dc-dc converters that generate the $\pm15V$ and $5V$ rails respectively.
+The previously mentioned 3.3$V$ rail is generated on the Zybo board.
+The driver chip (The DRV8301DCA is discussed in more detail in section \ref{sec:driverboard}), is also supplied from the power rail, and as such GNDP is extended to a corner of the driver board.
+Limiting the extent of GNDP is also the reasoning behind generating the $\pm15V$ rail on the digital board, even though it is used exclusively on the analog board.
+An extended discussion of the grounding planes as well as the actual layout can be found in appendix
 
 \subsection{Analog Board}
 The analog board houses, as the name implies, all of the analog signal processing.
@@ -211,6 +227,7 @@ By reading the drive enable signal it is therefore possible to determine when th
 Since this signal is left floating when the pedal is not active, it can be routed directly to the Zybo, using the internal pull-up resistors.
 \todo[inline]{Thomas: Is the torque pedal active low or active high? Correct two places above to reflect the correct case}
 \subsubsection{Driver Enable Circuit}
+\label{sec:nor}
 The DRV8301DCA is equipped with a pin called \texttt{EN\_GATE}.
 If, while running, this pin is pulled low, the drive signals are immediately shut down.
 This feature allows for fast and reliable shut down of the motor in case of any detected faults.
@@ -218,12 +235,20 @@ There are two different types of faults detected within the system, the aforemen
 In addition to these two a signal is routed from the Zybo which enables the digital part of the system to disable/enable the motor, should the need arise.
 As there are three different signals that all need to connect to the same pin, they are all NOR'ed, as seen in figure \ref{fig:driveenablesignal}.
 
-\begin{figure}
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width=\linewidth,trim=0cm 3cm 0cm 3cm]{graphics/driver_enable_signal}
-	\caption{A very good caption}
+	\caption{The NOR circuit that compares the three enable signals to determine whether the drive signals should be on.}
 	\label{fig:driveenablesignal}
 \end{figure}
+
+The observant reader will notice that two 2-input NOR gates was used rather than one 3-input gate.
+Reason for this is that the OTE protection was not implemented until after the components were ordered.
+In order then to not need additional components it was decided to cascade the available component.
+This cascading however does mean that it is necessary to invert the logic level of the signals OCE, and OTE.
+OCE is inverted on the analog board while OTE is used to pull the signal to ground.
+The two signals are both routed to the Zybo.
+This is done such that it is possible to discern which event has triggered when the motor halts.
 
 \subsubsection{Logic-Level Shifters}
 Tracking the angular position of the rotor is done using an encoder mounted on the motor.
@@ -243,3 +268,4 @@ $V_{out}$ of this device is equal to $V_{cc}$, while $V_{in}$ can be any voltage
 \end{figure}
 
 \subsection{Driver Board}
+\label{sec:driverboard}
