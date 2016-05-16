@@ -225,4 +225,12 @@ The motor is parked with 30 A. Even with this current it's still possible to  Th
 \end{table}
 
 The angles should be spaced 90 degrees apart vertically, 30 degrees apart horizontally. 
-This holds true for phases A and B, but phase C is very inconsistent. However, phases A and B gives significant results for this test. The four parking angles are wrapped to the first quadrant by subtracting 90, 180 and 270 degrees. The average angle is then calculated for phases A and B: 
+This does not hold true for all values -- both columns A and B are spaced 90 degrees apart within the precision of the encoder, but horizontally, they are spaced 34.45 degrees apart. Column C varies from 84 to 97 degrees between them, however they are on average spaced 30 degrees from Column A. This should definitely not be the case, but it's unknown why. For the controller, the Phase A readings will be considered true. The angles are then wrapped down to the first quadrant by subtracting 90, 180 and 270 degrees from second, third and fourth quadrant respectively, and the average is calculated to be $42.9 ^\circ$, corresponding to a value of 30.5 from the encoder. Whenever the rotor position is then read, 30.5 will be subtracted before anything else is done. 
+
+It should also be noted, that the order of the phases is A, B and C, which is the opposite order of the one described in section~\ref{sub:motor_descrpition}. This means, that the encoder measures a negative speed when the go-kart is moving forward. So the electrical angle of the rotor is calculated by:
+
+\begin{equation}
+\Phi_e = -(u-30.5)\cdot \frac{2 \pi}{256} \cdot 4
+\end{equation}
+
+where u is the value sent out by the encoder. The fraction converts the value into mechanical radians, and multiplying by 4 converts mechanical to electrical.

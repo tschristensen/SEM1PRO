@@ -1,6 +1,6 @@
-%clear all;clc;
+clear all;clc;
 % Mechanical constants
-m = 250;            % Total mass of the car with driver
+m = 180;            % Total mass of the car with driver
 weight_distribution = 0.6; %how large a percentage of the mass is on the rear wheels.
 r = 11*.0254/2;     % Radius of driving wheels
 G1 = 12;            % Number of teeth on motor-side cog
@@ -21,9 +21,9 @@ J_pro = (m*r^2+J_G2)*(G1/G2)^2 + J_G1;% Projected inertia
 J_pro1 = J_G2*(G1/G2)^2 + J_G1 + J_M;
 J_pro2 = m*r^2*(G1/G2)^2;
 F_N = 9.8*m*weight_distribution;
-static = 0.9;
-dynamic = 0.6;
-viscous = 6e-4;
+static = 1.1;
+dynamic = 0.75;
+viscous = 8e-4;
 
 n1=0:255;
 offset = 0;

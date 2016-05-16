@@ -19,7 +19,7 @@ For instance, GNDP is used as the return path of the high currents flowing throu
 The voltage on this rail is likely to be fluctuating significantly.
 This will surely compromise the integrity of more crucial signals such as the current measurements used to determine the position of the rotor.
 GNDD will also carry significant noise from the digital circuitry and should also be kept separate from GNDA.
-The only crossover between the GNDD and GNDA will happen in the DRV8301DCA and in the NOR circuitry described in section \ref{sec:nor}.
+The only crossover between the GNDD and GNDA will happen in the DRV8301DCA (see section \ref{sec:driverboard}) and in the NOR circuitry described in section \ref{sec:nor}.
 The latter occurs at the over-current event signal which is generated on the analog board but used in the digital system.
 An analog signal is fed to the SN74LVC1G17, a buffer with built-in Schmitt-trigger circuitry which is supplied from the digital 3.3$V$ rail.\\
 A simplified overview of the grounding planes can be seen on figure \ref{fig:groundplanes}.
