@@ -1,7 +1,6 @@
 %!TEX root = ../main.tex
 
 \section{System Analysis}
-\todo[inline]{Thomas: Describe dq}
 To get an overview of the system connections and all the major components needed to make the kart run, a system diagram is made based on the wiring diagram seen in figure \ref{fig:Kart_wiring_diagram}. Figure \ref{fig:blockdiagram1} shows a simplified diagram of the wiring, where the Zybo board has replaced the Sevcon Gen4 controller. \newline
 
 The highlighted green component is the Zybo board. To the right of the control board is the PMAC motor and the driver and inverter to power it. Both the driver and inverter are parts that must be developed as they were previously part of the Sevcon Gen4 controller. The two blocks next to the motor are the LEM current sensors. Two of these is enough because the third current can be calculated by using KCL.
