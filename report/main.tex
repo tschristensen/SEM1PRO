@@ -1,5 +1,6 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8]{inputenc}
+\setcounter{tocdepth}{2}
 \usepackage{blindtext}
 \usepackage{subfiles}
 \usepackage{amsmath}
@@ -54,6 +55,7 @@
 \input{sections/titlepage.tex}
 
 \newpage
+\pagenumbering{Roman}
 \input{sections/abstract}
 \newpage
 \tableofcontents
@@ -63,6 +65,7 @@
 \listoftodos
 \clearpage
 \newpage
+\pagenumbering{arabic}
 \input{sections/introduction}
 \input{sections/requirements}
 \input{sections/systemdescription}
@@ -71,13 +74,10 @@
 %\input{sections/currentsensor}
 \input{sections/boardlayout}
 \input{sections/zybo}
-\input{sections/encoder}
-\input{sections/motordriver}
 \input{sections/threephaseinverter}
 \input{sections/PMACmotor}
 \input{sections/motormodel}
 \input{sections/simulation}
-\input{sections/switchmode}
 \input{sections/testsetup}
 \input{sections/conclusion}
 \newpage
