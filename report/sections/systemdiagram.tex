@@ -10,21 +10,80 @@ Beyond the motor is the encoder producing motor positional data for the controll
 On the left side of the Zybo board is the different precautions and emergency switches at the top. These will ensure that starting, stopping and emergency procedures are completed safely without any capacitors or MOSFETS burning.
 Below these switches is the undervoltage protection circuit which ensures that the kart is only driving when sufficient power is supplied. The final parts to the left are the torque pedal or speeder for the kart, and the battery supply.
 
-\begin{figure}[!h]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=.85\linewidth, trim=0cm 4cm 0cm 3cm]{graphics/wiringdiagram}
 	\caption{Wiring diagram with the Zybo board.}
 	\label{fig:blockdiagram1}
 \end{figure}
 
-Based on the simplified wiring diagram a more technical diagram of the control process can be created. This can be seen on figure \ref{fig:blockdiagram2}. 
+Based on the simplified wiring diagram a more technical diagram of the drive control process can be created. This can be seen on figure \ref{fig:blockdiagram2}.
+This diagram shows that the input to the controller will be d and q values gained from performing a dq transform, also known as the "Clark Park Transform". These are calculations done from a three phase AC voltage that turns them into two DC voltage phases and a zero phase. 
+dq is used to control the motor speed because it allows for simplified calculations compared to using the three AC signals. \newline
 
-\begin{figure}[!h]
+When the calculations have been performed an inverse transformation back to three AC phases is performed, and the PWM will function using these new values. The position value from the encoder is also required for these transforms and for the PWM generator, this is also shown in the diagram. \newline
+
+
+\begin{figure}[H]
 	\centering
-	\includegraphics[width=.85\linewidth]{graphics/block_diagram}
-	\caption{Block diagram}
+	\includegraphics[width=.85\linewidth, trim=0cm 4cm 0cm 3cm]{graphics/block_diagram}
+	\caption{Diagram of the drive control system}
 	\label{fig:blockdiagram2}
 \end{figure}
-\todo{maybe add color to the diagram? The inverse clark park  and clark park blocks are wrong, the names should be reversed.}
-\todo[inline]{Should be fixed now - Mikkel.}
-\todo{Thomas: "Block diagram", while technically correct, is not sufficient as a caption.}
+
+Based on the two diagrams, figure \ref{fig:blockdiagram1} and \ref{fig:blockdiagram2} an analysis of each section will be performed. 
+
+\subsection{Electronics}
+The electronics include the physical circuit board(s) that must be produced to carry the electrical circuits. The boards must carry the functions of the following points.
+
+\begin{itemize}
+\item The battery undervoltage protection circuit / Overcurrent protection.
+\item Power supplies. The battery voltage must be converted to much lower values for the Zybo board, the LEM sensors and the rest of the circuit to function.
+\item Current transducer. The transducer itself will be placed on the power wires to the motor however the circuitry is required here.
+\item Torque pedal downscale. The torque pedal output must be scaled to not destroy they Zybo board ADC.
+\item Drive enable circuit.
+\item Logic level shifters.
+\item Driver circuit.
+\end{itemize}
+
+These points will possibly require more than one circuit board to be produced. This will be further explored in a later section.
+
+\subsection{Embedded}
+The embedded part of the project is made on the Zybo board using the Zynq chip with a dual core 64-bit Arm processor. The Zynq chip includes an FPGA area usable for generating the PWM signals needed by the power electronics to regulate the PMAC motor. The Zybo board will need to carry the functionality of the following points.
+
+\begin{itemize}
+\item Produce a three phase PWM signal.
+\item Controller regulation of the PWM.
+\item Perform Clark Park and inverse Clark Park transforms.
+\item Interface for the switches, LED's, Enables and fault signals.
+\item ADC input from the LEM current sensor and pedal.
+\item Input from the encoder.
+\item Interface to a PC to change any errors or update controller values.
+\end{itemize}
+
+The Zybo board is comparably a very powerful board in its size and should have no problems with these functions. The overall software design and development will be further explained in a later section.
+
+\subsection{Power Electronics}
+The power electronics include the three phase driver and inverter. The functionality of these is to convert the DC voltage from the batteries into a three phase AC to power the PMAC motor. 
+The complication in this part is to choose components able to handle the current.
+Taking all aspects such as switching losses and heat dissipation into account and still producing a capable drive signal, will one of the hard parts of this section.
+
+Listing the functionality of the power electronics:
+\begin{itemize}
+\item Produce a Three phase AC signal from a DC source.
+\item Don't burn or fail.
+\end{itemize} 
+\todo[inline]{Morten: Any more?}
+
+The power electronics will be designed in a later section.
+
+
+\subsection{PMAC Motor}
+The functionality of the motor block is very straight forward. It must drive the kart forwards. 
+However it does have an encoder attached that must be interfaced correctly and it must have two LEM sensors attached to the power inputs.
+The PMAC motor itself must be further explored since a very limited data sheet is available. Values such as the motor constant, resistance and inductance must be found to develop a controller that can  stabilize the input current. \newline
+
+This concludes the overview of the different parts of the system, the design of each part will be described in their individual sections.
+\clearpage
+
+
