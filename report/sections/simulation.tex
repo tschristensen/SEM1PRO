@@ -181,7 +181,7 @@ This can be seen on figure~\ref{fig:simulations_zybo}.
 
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width = 12cm]{graphics/simulations_zybo.png}
+		\includegraphics[width = 12cm]{graphics/simulations_zybo}
 		\caption{Block diagram describing the digital part of the system}
 		\label{fig:simulations_zybo}
 	\end{center}
@@ -190,15 +190,27 @@ This can be seen on figure~\ref{fig:simulations_zybo}.
 The Clarke-Park and PWM generation blocks are running in variable time steps, and the Discrete controller runs with a fixed step of 0.1 ms.
 The Signal builder block is used to shape the torque requested by the pedal.
 This torque is converted into the current used in the controller by multiplying with $\tfrac{3}{2 KT_T}$. 
-The Clarke-Park block converts $\mathrm{I_{AB}}$ to $\mathrm{I_{dq}}$. Since the encoder only gives 64 different angles, it is possible to do this 
+The Clarke-Park block converts $\mathrm{I_{AB}}$ to $\mathrm{I_{dq}}$. 
 
 \begin{equation}
 \left[ \begin{array}{c}
 	I_d \\ I_q
 \end{array} \right]
 =
-
+\frac{2}{3}
+\begin{bmatrix}
+\cos (\Phi) & \cos(\Phi - \gamma) & \cos( \Phi + \gamma) \\
+-\sin (\Phi) & -\sin(\Phi - \gamma) & -\sin( \Phi + \gamma)
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+I_A \\
+I_B \\
+I_C
+\end{bmatrix}
 \end{equation}
+
+where $\gamma = \tfrac{2 \pi}{3}$. Since the encoder only gives 64 different angles, it is possible to do this with six lookup tables, without any loss of precision. The same lookup tables are used in the PWM generator block
 
 \subsection{Plecs model}\label{sub:sim_plecs_electrical}
 As said, the Plecs model differs vastly from the Simulink model in the electrical network, as it more closely resemble the real analog circuit. It is presented on figure~\ref{fig:plecs_electrical}.
