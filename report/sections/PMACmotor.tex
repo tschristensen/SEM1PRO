@@ -111,7 +111,6 @@ K_E = K_T = 0.0733 \si{\volt\second\per\radian}
 \end{equation}
 
 with a spread of 1.3\%. 
-
 According to the datasheet, $K_T$ is 0.13. 
 This is 1.77 times higher than the measured $K_E$. 
 There are two potential reasons for this.
@@ -151,60 +150,82 @@ P_m = \Big( \frac{V}{K_E} \Big) \cdot \big( 1.5 I \cdot K_T \big)
 \label{eq:mechanical_power_from_electrical}
 \end{equation}
 
-Equations~\ref{eq:power_electrical_RMS}~and~\ref{eq:mechanical_power_from_electrical} must be the same, in which case, $K_E$ and $K_T$ must be the same. However it would be understandable to consider $K_T$ as 1.5 times larger than $K_E$ to incorporate the constant of 1.5
-
+Equations~\ref{eq:power_electrical_RMS}~and~\ref{eq:mechanical_power_from_electrical} must be the same, in which case, $K_E$ and $K_T$ must be the same. 
+However it would be understandable to consider $K_T$ as 1.5 times larger than $K_E$ to incorporate the constant of 1.5.
+\todo[inline]{Thomas: I'm not quite sure I understand the finishing remark?}
 \subsubsection{Armature Resistance}\label{sub:R_a-measurements}
-
-To test the armature resistance, a high DC current is driven through one terminal to the other. The voltage at the terminal is measured, since the large current causes a significant voltage loss in the wires leading from the power supply to the motor. The resistance can then be calculated between two terminals, the results are shown in the table below:
+To test the armature resistance, a high DC current is driven through one terminal to the other. 
+The voltage at the terminal is measured.
+The large current causes a significant voltage drop in the wires leading from the power supply to the motor. 
+Based on the measured voltages and currents the resistance between the two terminals can be calculated.
+The results are shown in the table below:
 
 \begin{table}[h]
 	\begin{center}
 	\begin{tabular}{r | c | c | c}
-		\textbf{Terminals} 	& \textbf{V}	& \textbf{I}	& \textbf{R} \\
+		{Terminals} 	& {V} [\si{\volt}]	& {I} [\si{\ampere}]	& {R} [\si{\milli\ohm}] \\
 		\hline
-		\textbf{AB} 		& 0.217 V		& 17.93 A		& 12.10 $m\Omega$ \\
+		{AB} 		& 0.217 		& 17.93 		& 12.10  \\
 		\hline
-		\textbf{AC}			& 0.235 V		& 17.93 A 		& 13.11 $m\Omega$ \\
+		{AC}			& 0.235 		& 17.93  		& 13.11  \\
 		\hline
-		\textbf{BC}			& 0.206 V 		& 17.96 A		& 11.47 $m\Omega$
+		{BC}			& 0.206  		& 17.96 		& 11.47
 	\end{tabular}
 	\end{center}
+	\caption{Measured DC resistance across terminal-pairs.}
 	\label{tab:armature_resistance}
-	\caption{Measured DC resistance from across terminals}
 \end{table}
 
-It is desired to know the resistance from one terminal to the common star point. That can be calculated by equation~\ref{eq:resistance_converter}
+It is desirable to know the resistance from one terminal to the common star point. 
+That can be calculated by equation~\ref{eq:resistance_converter}
 
 \begin{equation}
 R_a = \frac{R_{AB} + R_{AC} - R_{BC}}{2}
 \label{eq:resistance_converter}
 \end{equation}
 
-This gives a bit uneven armature resistances ranging from 5.2 to 6.9 $m\Omega$. This is about half the line-to-line resistance listed by the manufacturer at 13$m\Omega$. However, since the motor is a Wye connection, it makes much more sense to know the resistance between a terminal and the star-point when modeling the motor 
+This gives a bit uneven armature resistances ranging from 5.2 to 6.9 $m\Omega$. 
+\todo[inline]{Thomas: "a bit uneven"? Different formulation please}
+This is about half the line-to-line resistance listed by the manufacturer at 13$m\Omega$. 
+However, since the motor is a wye connection, knowing the resistance between a terminal and the star-point is more helpful when modelling the motor.
 
 \subsubsection{Armature Inductance}\label{sub:L_A-measurements}
-In order to measure the winding inductance of the motor, a full bridge driver is used to generate a squarewave voltage at different frequencies. The voltage is applied to the A and C terminals of the motor, so any measured voltage must be reduced by the armature resistance calculated in table~\ref{tab:armature_resistance} times the current. The motor is not moving, so there is no back-EMF. The driver can only handle 3 Amps continuously, so the test has to be done rather quickly. Current and voltage has been plotted in figure~\ref{fig:20kHz_squarewave}. Note that at 20 kHz, the current ripple is about 7 A \todo{this is peak-peak.}.
+In order to measure the winding inductance of the motor, a full bridge driver is used to generate a square wave at different frequencies. 
+The voltage is applied to the A and C terminals of the motor, so any measured voltage must be reduced by the armature resistance calculated in table~\ref{tab:armature_resistance} times the current.
+\todo{Thomas: I'm not really sure about this formulation? What are you measuring and where? Is it "reduced by"?}
+The motor is not moving, so there is no back-EMF. 
+The driver can only handle 3 Amps continuously, the test has to be done quickly.
+\todo{Thomas: At this point there is no evidence that the 3 amps continuous is an issue, why would you need to do it quickly? I think our expectation needs to be explained.} 
+Current and voltage has been plotted in figure~\ref{fig:20kHz_squarewave}. 
+Note that at 20 kHz, the current ripple is about 7\si{\ampere} \todo{this is peak-peak.}.
+\todo{Thomas: find proper ripple value}
 
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width = 10cm]{graphics/inductance_measured_v_i}
-		\caption{20 kHz squarewave voltage and the resulting current}
+		\caption{20 kHz square wave voltage and the resulting current.}
 		\label{fig:20kHz_squarewave}
 	\end{center}
 \end{figure}
 
-These waveforms have been measured at 5 kHz, 10 kHz, 20 kHz and 30 kHz. For this project, 20 kHz will be used, so only those plots will be shown. Due to the high sampling rate of the oscilloscope and low bit resolution, differentiating the current will yield very large spikes for short periods of time. Therefore, the current, time and voltage measurements will be periodically averaged and downsampled by a factor of 70. The derivative of the current is then calculated by:
+
+These waveforms have been measured at 5 kHz, 10 kHz, 20 kHz and 30 kHz. 
+For this project a switching frequency of 20 kHz will be used, so only those plots will be shown. 
+Due to the high sampling rate of the oscilloscope and low bit resolution \todo{Thomas: So the oscilloscope has poor resolution?}, differentiating the current will yield very large spikes for short periods of time. 
+Therefore, the current, time and voltage measurements will be periodically averaged and downsampled by a factor of 70. 
+The derivative of the current is then calculated by:
 
 \begin{equation}
 di\_ dt[n] = \frac{i[n]-i[n-1]}{t[n]-t[n-1]}
 \end{equation}
 
-This is then the derivative of the current at the point immediately between two samples, so to synchronize the time and voltage arrays, each two samples are added and multiplied by 0.5. The resulting waveforms are plotted in figure~\ref{fig:20kHz_squarewave_di}
+This is then the derivative of the current at the point immediately between two samples, so to synchronize the time and voltage arrays, each two samples are added and multiplied by 0.5. 
+The resulting waveforms are plotted in figure~\ref{fig:20kHz_squarewave_di}
 
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width = 12cm]{graphics/20kHz_v_di}
-		\caption{20 kHz squarewave voltage and derivative of the resulting current}
+		\caption{20 kHz square wave voltage and derivative of the resulting current.}
 		\label{fig:20kHz_squarewave_di}
 	\end{center}
 \end{figure}
@@ -219,60 +240,81 @@ It appears, that there is some proportionality between the derivative of the cur
 	\end{center}
 \end{figure}
 
-The calculated inductance would become very large when the derivative current goes close to zero, so the plot has been limited to between 0 and 0.5 mH. The inductance inductance generally is lower than the terminal-to-terminal inductance provided by the manufacturer of 0.1 mH. The average inductance varies a bit with different frequencies, and 20 kHz is actually the lowest.
+The calculated inductance would become very large when the derivative current goes close to zero, so the plot has been limited to between 0 and 0.5 \si{\milli\henry}. 
+The inductance inductance generally is lower than the terminal-to-terminal inductance provided by the manufacturer of 0.1 \si{\milli\henry}. 
+The average inductance varies a bit with different frequencies, and 20 kHz is actually the lowest.
 
 \begin{table}[H]
 	\begin{center}
-	\begin{tabular}{r | c | c}
-		Frequency [Hz] 	& 	Average inductance [mH] & 	Current ripple [A] \\
+	\begin{tabular}{S | S | S}
+		{Frequency} [\si{\kilo\hertz}] 	& 	{Average inductance} [\si{\milli\henry}] & 	{Current ripple} [\si{\ampere}] \\
 		\hline
-		5 kHz			&	0.946					&	16.83 \\
+		5			&	0.946					&	16.83 \\
 		\hline
-		10 kHz			&	0.844					&	12.1 \\
+		10	    	&	0.844					&	12.10 \\
 		\hline
-		20 kHz			&	0.632					&	7.13 \\
+		20			&	0.632					&	7.13 \\
 		\hline
-		30 kHz 			&	0.879					&	5.25 
+		30 			&	0.879					&	5.25 
 	\end{tabular}
-	\label{tab:inductance_and_current_ripple}
-	\caption{Averaged of measured inductance, and measured current ripple at different frequencies}
+	\caption{Average of measured inductance and current ripple at different frequencies.}	\label{tab:inductance_and_current_ripple}
 	\end{center}
 \end{table}
 
-This is the inductance from one terminal to another, so the per-phase inductance will be half, similarly to the armature resistance. The inductance determines the phase shift on the sinusoidal voltages and currents driving the motor at up to 267 Hz, and the current ripple at 20 kHz. So when modeling the motor, one must settle on a value of $L_d$ and $L_q$ that is close to the the low frequency inductance of 0.475 mH, and the higher frequency inductance of 0.315 mH. For modeling the motor, an inductance of 0.4 mH will be used for both $L_d$ and $L_q$. 
+This \todo{Thomas: What is? It is in reference to the table?} is the inductance from one terminal to another, so the per-phase inductance will be half, similarly to the armature resistance. 
+The inductance determines the phase shift on the sinusoidal voltages and currents driving the motor at up to 267 \si{\hertz}\todo{Thomas: Some random value that suddenly appeared out of nowhere, seemingly without explanation.}, and the current ripple at 20 kHz. 
+So when modelling the motor, one must settle on a value of $L_d$ and $L_q$ that is close to the the low frequency inductance of 0.475 \si{\milli\henry}, and the higher frequency inductance of 0.315 \si{\milli\henry}. 
+For modeling the motor, an inductance of 0.4 \si{\milli\henry} will be used for both $L_d$ and $L_q$. 
 
+\todo[inline]{Thomas: In general there are many things in this section that I do not understand, this may be due to my idiocy but generally, if there is something that is not easily understood it means that the information is not clear - perhaps we could sit down and have a look at it at some point?}
 \subsection{Parking Test}\label{sub:parking_test}
-The encoder is positioned on the axis of the motor in an unknown angle. Since this is not bound to change, a one time parking test will be performed, where a current will be passed into one terminal and out of the other two. This will be done with a DC power supply with current limit. The motor should position itself at one of four mechanical angles spaced 90 degrees apart. This offset will be subtracted from any angular readings used in Clark and inverse Clarke transformations. \\
+The encoder is positioned on the axis of the motor at an unknown angle. 
+Since this will not change, a one time parking test will be performed, where a current will be passed into one terminal and out of the other two. 
+This will be done with a DC power supply with current limit. 
+The motor should position itself at one of four mechanical angles spaced 90\si{\degree} apart. 
+This offset will be subtracted from any angular readings used in the Clark and inverse Clarke transformations. \\
 
-The motor is parked with 30 A. Even with this current it's still possible to  The test is repeated to determine all 4 parking spots for each phase, and the angles are shown in table~\ref{tab:parking_angles}. The phases A, B and C correspond to the terminals with the names M1, M2 and M3 etched into the case of motor. 
+The motor is parked with 30\si{\ampere}. 
+Even with this current it is still possible to  \todo{Thomas: what?}
+The test is repeated to determine all four parking spots for each phase, and the angles are shown in table~\ref{tab:parking_angles}. 
+The phases A, B and C correspond to the terminals with the names M1, M2 and M3 etched into the case of motor. 
 
 \begin{table}[H]
-	\begin{center}
-		\begin{tabular}{|r | c | c | c|}
-			\hline
-			Quadrant & Phase A [deg] & Phase B [deg] & Phase C [deg] \\
-			\hline
-			First & 43.6 & 75.9 & 16.9 \\
-			\hline
-			Second & 132.2 & 167.3 & 101.3 \\
-			\hline
-			Third & 223.6 & 257.3 & 194.1 \\
-			\hline
-			Fourth & 312.2 & 348.8 & 279.8 \\
-			\hline
-		\end{tabular}
-		\label{tab:parking_angles}
-		\caption{Parking angles for the encoder.}
-	\end{center}
+	\caption{Parking angles for the encoder.}
+	\label{tab:parking_angles}
+	\centering
+	\sisetup{table-space-text-post=\si{\degree}}
+	\begin{tabular}{|S | S | S | S|}
+		\hline
+		{Quadrant} & {Phase A [Deg\si{\degree}]} & {Phase B [Deg\si{\degree}]} & {Phase C [Deg\si{\degree}]} \\
+		\hline
+		{First} & 43.6 & 75.9 & 16.9 \\
+		\hline
+		{Second} & 132.2 & 167.3 & 101.3 \\
+		\hline
+		{Third} & 223.6 & 257.3 & 194.1 \\
+		\hline
+		{Fourth} & 312.2 & 348.8 & 279.8 \\
+		\hline
+	\end{tabular}
 \end{table}
 
-The angles should be spaced 90 degrees apart vertically, 30 degrees apart horizontally. 
-This does not hold true for all values -- both columns A and B are spaced 90 degrees apart within the precision of the encoder, but horizontally, they are spaced 34.45 degrees apart. Column C varies from 84 to 97 degrees between them, however they are on average spaced 30 degrees from Column A. This should definitely not be the case, but it's unknown why. For the controller, the Phase A readings will be considered true. The angles are then wrapped down to the first quadrant by subtracting 90, 180 and 270 degrees from second, third and fourth quadrant respectively, and the average is calculated to be $42.9 ^\circ$, corresponding to a value of 30.5 from the encoder. Whenever the rotor position is then read, 30.5 will be subtracted before anything else is done. 
+The angles should be spaced 90 degrees apart vertically, 30 degrees apart horizontally.
+\todo{Thomas: You will have to explain this to me? What is the difference between vertical and horizontal spacing?}
+This does not hold true for all values - both columns A and B are spaced 90\si{\degree} apart within the precision of the encoder but horizontally, they are spaced 34.45\si{\degree} apart.
+Column C varies from 84\si{\degree} to 97\si{\degree} between them, however they are on average spaced 30\si{\degree} from Column A. 
+This should definitely not be the case, but  the reason is currently unknown. 
+For the controller, the Phase A readings will be considered true. 
+The angles are then wrapped\todo{Thomas: wrapped?} down to the first quadrant by subtracting 90, 180 and 270 degrees from second, third and fourth quadrant respectively, and the average is calculated to be 42.9\si{\degree}, corresponding to a value of 30.5\si{\degree} from the encoder. 
+Whenever the rotor position is read, 30.5 will be subtracted from the value. 
 
-It should also be noted, that the order of the phases is A, B and C, which is the opposite order of the one described in section~\ref{sub:motor_descrpition}. This means, that the encoder measures a negative speed when the go-kart is moving forward. So the electrical angle of the rotor is calculated by:
+It should also be noted, that the order of the phases is A, B and C, which is the opposite order of the one described in section~\ref{sub:motor_descrpition}. 
+This means, that the encoder measures a negative speed when the go-kart is moving forward. 
+So the electrical angle of the rotor is calculated by:
 
 \begin{equation}
 \Phi_e = -(u-30.5)\cdot \frac{2 \pi}{256} \cdot 4
 \end{equation}
 
-where u is the value sent out by the encoder. The fraction converts the value into mechanical radians, and multiplying by 4 converts mechanical to electrical.
+Where $u$ is the value sent out by the encoder. 
+The fraction converts the value into mechanical angle, and multiplying by 4 converts from mechanical to electrical angle.

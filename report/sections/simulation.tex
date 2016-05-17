@@ -1,7 +1,7 @@
 %!TEX root = ../main.tex
 \section{Simulation}\label{sec:Simulations}
-
-Simulation tools have been a great help, not only understanding the electromechanical system, and design a controller from it, but estimating requirements for the electric components. Both Simscape and Plecs Standalone have been used, as they excel at different purposes. Simscape is used to test the controller on a system with as much realism as possible to make sure the gokart works intuitively, whereas Plecs is used to simulate the inverter to determine how hot it's going to get.
+Simulation tools have been a great help, not only in understanding the electromechanical system, and design a controller from it, but also in estimating requirements for the electric components.
+Both Simscape and Plecs Standalone have been used, as they excel at different purposes. Simscape is used to test the controller on a system with as much realism as possible to make sure the gokart works intuitively, whereas Plecs is used to simulate the inverter to determine how hot it's going to get.
 
 Simscape will be used to simulate how the controller handles certain events;
 
@@ -180,13 +180,13 @@ The Zybo generates duty cycles for each phase ranging from -1 to 1. This value i
 The Zybo block consists of three other subsystems, corresponding with some of the blocks on the actual Zybo; Clarke-Park, Discrete controller and PWM generation.
 This can be seen on figure~\ref{fig:simulations_zybo}.
 
-%\begin{figure}[H]
-%	\begin{center}
-%		\includegraphics[width = 12cm]{graphics/simulations_zybo.png}
-%		\caption{Block diagram describing the digital part of the system}
-%		\label{fig:simulations_zybo}
-%	\end{center}
-%\end{figure}
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width = 12cm]{graphics/simulations_zybo}
+		\caption{Block diagram describing the digital part of the system}
+		\label{fig:simulations_zybo}
+	\end{center}
+\end{figure}
 
 The Clarke-Park and PWM generation blocks are running in variable time steps, and the Discrete controller runs with a fixed step of 0.1 ms.
 The Signal builder block is used to shape the torque requested by the pedal.
