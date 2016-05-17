@@ -13,10 +13,28 @@ The motor and encoder can be used to test the full system.
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=0.8\linewidth]{graphics/small_motor_setup}
-	\caption[Test setup.]{Test setup with PM5113 motor.}
+	\caption[Block diagram of test setup.]{Block diagram of test setup with PM5113 motor.}
 	\label{fig:small_motor_setup}
 \end{figure}
 
 \todo[inline]{The figure is wrong!! signal should go two times in the level shifter - Mikkel}
 
-\subsection{Test of Embedded System}
+\subsection{PWM generating}
+To test whether or not the Clarke Park transformation and the PWM generating on the Zybo board was working correctly a test was conducted.
+The test setup, described in the previous section, was used.
+The three legs of the H-bridge was connected to the control pins for the upper MOSFETS for phase a, b and c.
+A constant value for q was chosen and d was set to zero. 
+The angle of the rotor was measured and used to do the Clarke Park transformation. 
+No current measurements were done, meaning that the only feedback was the angle.
+Each of the signals from the output pins of the Zybo board were, in addition to the H-bridge, connected to an electric lowpass filter consisting of a 10 \si{\kilo\ohm} resistor and a 22 \si{\nano\farad} capacitor. 
+The voltage across the capacatior was measured by an oscilloscope as the power supply for the H-bridge was turned on.
+The measured phase voltages can be seen in figure \ref{fig:small_motor_phases}.
+It can be seen that the three phase voltages are created correctly by the Zybo board.
+It can also be seen that the rotor is accelerated within a fraction of an electrical revolution, which is expected as there is no torque load. 
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=1\linewidth]{graphics/small_motor_phases}
+	\caption[Phase voltages.]{Phase voltages measured through a lowpass filter.}
+	\label{fig:small_motor_phases}
+\end{figure}
