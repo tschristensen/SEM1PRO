@@ -61,8 +61,8 @@ The PWM generator is made to have an adjustable frequency and dutycycle.
 It was choosen to make a center aligned PWM generator as this introduces less harmonic distortion than edge aligned PWM \cite{power_switching_converters}. 
 Furthermore center aligned PWM also produces a symmetrical PWM signal, with a defined midpoint in the PWM-wave where the current can be sampled correctly.
 The high limit for the counter can to be calculated for a given frequency, $f$, by the following:
-$$Limit_H = Limit_L + \frac{f_{Zybo}}{f\cdot 2}$$
-Where $f_{zybo}$ is the clock frequency of the Zynq-7010. 
+$$H = L + \frac{f_{Zybo}}{f\cdot 2}$$
+Where H is the high limit, L is the low limit and $f_{zybo}$ is the clock frequency of the Zynq-7010. 
 The PWM counter system can be seen in figure \ref{fig:pwm_counter}.
 The counter block will count up or down depending on the input. 
 The output from the counter value will go into to two compare blocks along with the high and low limits.
@@ -78,9 +78,10 @@ The counter out signal can be seen in figure \ref{fig:pwm_graph}.
 The counter signal is then fed into a PWM mechanism shown in figure \ref{fig:pwm}. 
 The dutycycle is given to the PWM generator in the datatype u32, an integer type and therefore the dutycycle is given in a range of 0 to 1000, giving a resolution of 0.1\%.
 The switching limit will be calculated from the following:
-$$limit_{switching} = (1 - \frac{duty_{thousand}}{1000}) \cdot range_{counter}$$
+$$l = (1 - \frac{d}{1000}) \cdot r$$
+Where l is switching limit, d is the dutycycle in the range 0 - 1000 and is the counter range.
 A register will then make sure that the switching limit is only passed on when the counter is at its lowest.
-\todo[inline]{Thomas: explanation as to why it is important to only switch the switching limit while the counter is low}
+It is important to do so as otherwise the dutycycle can be corrupted.
 The compare block will make the PWM signal by comparing the switcing limit to the counter value.
 The counter signal and output of the PWM generator can be seen in figure \ref{fig:pwm_graph}.
 As the PWM generator should be able to do three independent PWM signal there are three of the systems shown in figure \ref{fig:pwm}, one for each phase.
@@ -164,9 +165,14 @@ The top signal from the PWM generator will start the sampling and therefore it w
 As the PWM frequency is 20 \si{\kilo\hertz} the PWM frequency will be so as well.
 \todo[inline]{Will all channels be sampled on rising edge on CONVST pin? - Mikkel}
 
+\subsection{Encoder}
+The Zybo board needs to interface the RMB28MD encoder that is mounted on the motor.
+The RMB28MD is an absolute encoder with sine/cosine, SSI and incremental output. 
+It was choosen to use the SSI output as an IP core reading the position by SSI communication was made available by the supervisors of the group.
+Reading the position throug SSI yields a resolution of 8bit per mechanical revolution. 
+The IP core outputs a clock to the RMB28MD chip and reads data from a datapin. 
+It then makes the data available on the AXI4LITE bus, where it can be read from software. 
+
 \subsection{TEST or whatever}
 
-
-
-%\subsection{Analysis}
 %\subsection{Conclusion}
