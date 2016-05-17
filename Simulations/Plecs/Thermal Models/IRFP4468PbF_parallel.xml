@@ -6,13 +6,13 @@
             <TurnOnLoss>
                 <ComputationMethod>Table only</ComputationMethod>
                 <CurrentAxis> 0 50 100 150 200 300 360</CurrentAxis>
-                <VoltageAxis> 30 50 80</VoltageAxis>
+                <VoltageAxis> 20 50 80</VoltageAxis>
                 <TemperatureAxis> 25</TemperatureAxis>
                 <Energy scale="0.001">
                     <Temperature>
-                        <Voltage> 0 0.23 0.46 0.69 0.91 1.37 1.64</Voltage>
-                        <Voltage> 0 0.38 0.76 1.14 1.52 2.28 2.74</Voltage>
-                        <Voltage> 0 0.61 1.22 1.83 2.44 3.65 4.38</Voltage>
+                        <Voltage> 0 0.145 0.29 0.435 0.58 0.87 1.044</Voltage>
+                        <Voltage> 0 0.3625 0.725 1.0875 1.45 2.175 2.61</Voltage>
+                        <Voltage> 0 0.58 1.16 1.74 2.32 3.48 4.176</Voltage>
                     </Temperature>
                 </Energy>
             </TurnOnLoss>
@@ -23,9 +23,9 @@
                 <TemperatureAxis> 25</TemperatureAxis>
                 <Energy scale="0.001">
                     <Temperature>
-                        <Voltage> 0 0.23 0.47 0.7 0.93 1.4 1.68</Voltage>
-                        <Voltage> 0 0.39 0.78 1.16 1.55 2.33 2.79</Voltage>
-                        <Voltage> 0 0.62 1.24 1.86 2.48 3.72 4.47</Voltage>
+                        <Voltage> 0 0.23 0.46 0.69 0.91 1.37 1.64</Voltage>
+                        <Voltage> 0 0.38 0.76 1.14 1.52 2.28 2.74</Voltage>
+                        <Voltage> 0 0.61 1.22 1.83 2.44 3.65 4.38</Voltage>
                     </Temperature>
                 </Energy>
             </TurnOffLoss>
