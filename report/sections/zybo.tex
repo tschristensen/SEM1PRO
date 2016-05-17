@@ -2,15 +2,12 @@
 \section{Embedded Design}
 \todo[inline]{Thomas: Describe why the zybo is used!}
 \todo[inline]{Thomas: Describe the encoders of the motor.}
-The Zybo board is used in this project as it was one of the requirements for the project. 
+An embedded system is needed to handle a wide range array. 
+It is a requirement for the project that the Zybo board should be used as the embedded system in the project.
 The board features a Zynq Z-7010 chip from Xilinx, which has an integrated dual-core ARM Cortex-A9 processor and a Xilinx 7-series field programmable gate array (FPGA).
 The Zybo board itself consists among other of several buttons, switches, LEDs and connections for USB, Ethernet, HDMI and several PMOD connectors.
 
 \subsection{Functionality}
-\todo[inline]{Thomas: What sections are these? I don't remember reading about this.}
-As described in the previous sections the Zybo board is required to handle a wide range of tasks.
-This section will describe the different functionalities that has to be implemented.
-
 An analysis of the complete system yielded the functionalities listed below for the Zybo board. 
 
 \begin{itemize}
@@ -33,7 +30,7 @@ In order to utilize that some tasks needs to be run at lower frequencies it was 
 \todo[inline]{Thomas: Are there any papers on khaOS that we could reference?}
 Using an RTCS makes it easy to schedule tasks to run at different frequencies. 
 As an RTCS has no way to preempt tasks it leaves much responsibility to the programmer in order to preserve the real time performance of the system.
-\todo[inline]{Thomas: This is true, but it almost seems misplaced or is at least begging for elaboration. Are we taking steps to test/verify run times? Perhaps some testing would merit this discussion.}
+When the software is finished tests should be performed to ensure  the real time performance.
 khaOS was chosen before other RTCS as the group had knowledge about the system from an Embedded Systems course.
 
 \subsection{Architecture}
@@ -104,6 +101,24 @@ As the PWM generator should be able to do three independent PWM signal there are
 	\end{center}
 \end{figure}
 
+\subsubsection{PWM task}
+The PWM tasks basic functionality can be seen in the block diagram of figure \ref{fig:pwm_task}.
+The PWM task is a seperate task from the controller task as it might be preferrable to have the two tasks run at different frequencies.
+It is responsible for performing inverse Clarke Park transformation using $V_{sd}$, $V_{sq}$ and $\theta$. 
+Afterwards the calculated dutycycles will be written to the PWM generator in the FPGA if the enable signal is high.
+
+\begin{figure}[!h]
+	\centering
+		\includegraphics[width=0.7\linewidth]{graphics/pwm_task}
+	\caption[Block diagram of PWM task.]{Block diagram showing the functionality of the PWM task.}
+	\label{fig:pwm_task}
+\end{figure}
+
+\todo[inline]{Smaller figure and less whitespace and change the order of vsd and vsq? -MIkkel}
+\todo[inline]{Where should we talk about the concept of dq and the meaning of it? -MIkkel}
+\todo[inline]{Third harmonic injection and why? -MIkkel}
+
+
 \subsubsection{Interface task}
 The interface task is the task that has to read external signals, output digital signals and control the other tasks.
 The UART tasks will be controlled through two buffers, while the controller and PWM task will have to read the enable variable updated by the interface task.
@@ -131,27 +146,23 @@ $I_d$ is controlled with reference $0$ and $I_q$ is controlled with the pedal as
 	\label{fig:controller_task}
 \end{figure}
 
-
-
-\subsubsection{PWM task}
-The PWM tasks basic functionality can be seen in the block diagram of figure \ref{fig:pwm_task}.
-The PWM task is a seperate task from the controller task as it might be preferrable to have the two tasks run at different frequencies.
-It is responsible for performing inverse Clarke Park transformation using $V_{sd}$, $V_{sq}$ and $\theta$. 
-Afterwards the calculated dutycycles will be written to the PWM generator in the FPGA if the enable signal is high.
-
-\begin{figure}[!h]
-	\centering
-		\includegraphics[width=0.7\linewidth]{graphics/pwm_task}
-	\caption[Block diagram of PWM task.]{Block diagram showing the functionality of the PWM task.}
-	\label{fig:pwm_task}
-\end{figure}
-
-\todo[inline]{Smaller figure and less whitespace and change the order of vsd and vsq? -MIkkel}
-\todo[inline]{Where should we talk about the concept of dq and the meaning of it? -MIkkel}
-\todo[inline]{Third harmonic injection and why? -MIkkel}
-
 \subsubsection{ADC}
-Something here...
+The Zynq chip contains a dual 12-bit, 1 Mega sample per second (MSPS) Analog-to-Digital Converter (ADC) \cite{adc}.
+The ADC is utilized through the XADC Wizard in Vivado. 
+The ADC measures the difference between differential analog input pins $V_p$ and $V_n$.
+The IP core is configured to use AXI4LITE connection, simultaneous selection, unipolar mode and event mode.
+Simultaneous selection mode is used as it allows simultaneous sampling on the dual ADC. 
+When using simultaneous sampling the phase relationship is preserved.
+When unipolar mode is enabled the input range between $V_p$ and $V_n$ is 1 \si{\volt} and the input voltage must always be positive.
+Setting the ADC in event mode, means that the ADC will only sample when there is a rising edge on its CONVST pin. 
+The CONVST pin is connected to the top signal of the PWM generator meaning that the ADC will sample in the center of the PWM pulse.
+This is done to avoid sampling any current spikes. 
+Channels 6 and 14 are paired together in simultaneous mode, meaning that they will be sampled simultaneous.
+Therefore the outputs from the two LEM sensors will be connected to these. 
+The torque pedal signal will be routed to channel 7 which will be sampled after channel 6 and 14.
+The top signal from the PWM generator will start the sampling and therefore it will also set the sampling frequency.
+As the PWM frequency is 20 \si{\kilo\hertz} the PWM frequency will be so as well.
+\todo[inline]{Will all channels be sampled on rising edge on CONVST pin? - Mikkel}
 
 \subsection{TEST or whatever}
 
