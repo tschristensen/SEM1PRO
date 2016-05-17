@@ -1,12 +1,16 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8]{inputenc}
-\setcounter{tocdepth}{2}
-\usepackage{blindtext}
-\usepackage{subfiles}
+\setcounter{tocdepth}{2} %Only show sections and subsections in toc.
+
+\usepackage{siunitx} %Package for SI units
+\sisetup{per-mode=fraction}
+
 \usepackage{amsmath}
 \usepackage{graphicx}
-\usepackage{subcaption}
+
 \usepackage{caption}
+\usepackage{subcaption}
+
 \usepackage{hyperref}
 \usepackage{float}
 \usepackage[procnames]{listings}
@@ -71,11 +75,9 @@
 \input{sections/systemdescription}
 \input{sections/systemdiagram}
 %\input{sections/supply}
-%\input{sections/currentsensor}
-\input{sections/boardlayout}
 \input{sections/zybo}
 \input{sections/threephaseinverter}
-\input{sections/PMACmotor}
+%\input{sections/PMACmotor}
 \input{sections/motormodel}
 \input{sections/simulation}
 \input{sections/testsetup}
