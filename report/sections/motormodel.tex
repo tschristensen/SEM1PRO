@@ -1,16 +1,46 @@
 \newpage
 \section{Controller Design}
-\todo[inline]{Thomas: Describe reason for dq}
-To model the PMSM motor an equivalent circuit of the motor will be used. Figure \ref{fig:PMSM_Equivalent} shows this circuit.
+Controlling the PMSM motor will be done using the principles of vector control, where the controller produces a change to the PWM inverter input. This is done by monitoring the two of the three current inputs to the motor and transforming them using the dq0 transform. This transform yields a d and q DC value and a zero, which are respectively referred to a torque demand and a flux demand. \newline
+
+The requirement for this project outlines that the motor must be torque controlled, hence the flux demand will be a zero while the torque demand will be defined by the speeder pedal. After the dq values have been compared to the reference/demand values the error is fed to a PID controller which will adjust the output accordingly. This output is transformed using the inverse dq0 transform, which yields a three phase AC signal that can be fed into the inverter and yield a new motor speed. \newline
+
+Ilustrating this, the block diagram presented in section 4 can be retrieved. Figure \ref{fig:control_process_sec8}. This shows how the ABC three phase AC values are retrived from the motor input, transformed to dq0 and then compared to reference values. The $i_d$ value will be zero as it is the flux reference, while the $i_q$ value will be set by the speeder pedal as a torque reference. The controller acts upon these and the dq values are transformed back to ABC three phase AC and fed to the inverter.
+
+In reality it is not a torque value that must be a reference for the controller, but a current value, as the current determines the torque. Taking this into account will be part of creating a functional model of the motor.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\linewidth]{graphics/PMSM_Equivalent}
-	\caption{PMSM motor equivalent circuit, source:  }
-	\label{fig:PMSM_Equivalent}
+	\includegraphics[width=.95\linewidth,trim=0cm 4cm 0cm 2cm]{graphics/block_diagram}
+	\caption{The control process as illustrated in the system overview section}
+	\label{fig:control_process_sec8}
 \end{figure}
 
-\todo{Morten: find better picture of this, or make it. source of this pic: MORTEN}
+\todo[inline]{MORTEN: have to change picture to have the correct signs and values compared to the stuff below. must be a little more scientific than it is now. Ask me! - will do it myself! i got le visio installed}
+
+To properly control this, a model of the PMSM motor is required to derive controller values for the two PID controllers. To model the PMSM motor an equivalent circuit of the motor will be used. Figures \ref{fig:PMSM_Equivalent_d_axis} and \ref{fig:PMSM_Equivalent_q_axis} shows these circuits for the d and q axes. These equivalent circuits are based on the motor presented in section 7 and use dq0 to represent the two DC phases that are controlled. \newline
+
+The figures show that there are common component values between the two circuits which are the values directly from the motor. The other equivalent values are of less concern which is apparent from the next diagram, figure \ref{fig:State_space_model1}.
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{.45\linewidth}
+		\includegraphics[width=\textwidth]{graphics/d_axis_equivalent}
+		\caption{PMSM motor equivalent circuit, d-axis}
+		\label{fig:PMSM_Equivalent_d_axis}
+	\end{subfigure}
+	\hspace{1cm}
+	\begin{subfigure}[t]{.28\linewidth}
+		\includegraphics[width=\textwidth]{graphics/q_axis_equivalent}
+		\caption{PMSM motor equivalent circuit, q-axis}
+		\label{fig:PMSM_Equivalent_q_axis}
+	\end{subfigure}
+	\caption{Source: http://goo.gl/EM8LoN}
+\end{figure}
+
+\todo{Morten: add source to cites}
+
+
+
 
 \subsection{State Space Model}
 A state space model is derived from the physical representation of a PMSM motor, figure \ref{fig:State_space_model1}, consisting of an electrical part on the left and a mechanical part on the right side of the model. The model is made in MatLab Simulink. The model is very similar to that of a DC motor when interpreted like this.
