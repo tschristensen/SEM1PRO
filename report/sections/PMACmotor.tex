@@ -4,19 +4,24 @@
 %\subsection{Analysis}
 %\subsection{Conclusion}
 \todo[inline]{Thomas: This should be more of an introduction to what the reader can expect to find throughout the section.}
+This chapter focuses the motor used for this project.
+Initially the functionality motor will be described, then certain motor parameters will be tested, as the online product description isn't all that clear.
+Lastly a parking test will be performed to determine the angle of the encoder mounted on the motor. 
 The motor used to drive the go-kart is an 8-pole non-salient permanent magnet synchronous motor. 
 Physically there is no difference between brushless DC motors, permanent magnet AC motors, and permanent magnet synchronous motors. 
 The motor will be driven as an AC or synchronous motor (since these are the same) to produce a more consistent torque.
 
 \subsection{Motor description}\label{sub:motor_descrpition}
-The motor used is a 3-phase Wye-connected, 8-pole permanent magnet AC motor, the Motenergy ME1117.
+The motor used is a 3-phase Wye-connected, 8-pole non-salient permanent magnet AC motor, the Motenergy ME1117.
+Although there are many different types of PMAC motors, there is no physical difference between brushless DC motors (BLDC), permanent magnet AC motors (PMAC), and permanent magnet synchronous motors (PMSM). 
+The motor will be driven as an AC or synchronous motor (since these are the same) to produce a more consistent torque.
 This means that the rotor consists of four pairs of magnets - one with the north side facing outward towards the stator and one with the north side facing inward to the ferromagnetic core of the rotor. 
-The stator consists of 24 solenoids fixed inward on a ferromagnetic outer ring. 
-\todo[inline]{Thomas: What does it mean to be "fixed inward"?}
-Looking at the motor from the axis side, a counter clockwise rotoration results in the go-kart going forward. 
-\todo[inline]{Thomas: "From the axis side", axis = rotor?}
-The solenoids are placed so that the four phase A solenoids are placed along the horizontal and vertical axis - this is not necessarily true, but rather a convention and a way of, and what's really important is what we measure, which will be explained further in section~\ref{sub:parking_test}.
-\todo[inline]{Thomas: Is that a "we"?! Hnnghhnenngg... Also, it is unclear why you mention a convention that somehow isn't true anyways?}
+The stator consists of 24 solenoids mounted inward on a ferromagnetic outer ring. 
+\todo[inline]{Thomas: What does it mean to be "fixed inward"? Martin: switched fixed to mounted}
+Looking at the motor from the axle side, a counter clockwise rotoration results in the go-kart going forward. See figure~\ref{fig:motor_24p}.
+\todo[inline]{Thomas: "From the axis side", axis = rotor? Martin: Axle.}
+The solenoids are placed so that the four phase A solenoids are placed along the horizontal and vertical axes - this is not necessarily true, but rather a convention and a way of, and what's really important is what we measure, which will be explained further in section~\ref{sub:parking_test}.
+\todo[inline]{Thomas: Is that a "we"?! Hnnghhnenngg... Also, it is unclear why you mention a convention that somehow isn't true anyways? Martin: Short of cutting the motor in half, there is no way of knowing if the A solenoids are actually placed along the horizontal and vertical axes. In the end, it doesn't matter either, as long as we perform the parking test.}
 The order of the other solenoids, when going counter-clockwise is then $\bar{B}$, $C$, $\bar{A}$, $B$ and $\bar{C}$, as shown on figure~\ref{fig:motor_24p}. 
 The solenoids $A$ correspond to terminal M1, solenoids $B$ correspond to M2, and solenoids $C$ correspond to M3. 
 A current going into terminal M1, will then pass through all the $A$ and $\bar{A}$ solenoids in series, before reaching the star point, and continuing through $B$ and $\bar{B}$ and/or $C$ and $\bar{C}$.
@@ -29,8 +34,8 @@ A current going into terminal M1, will then pass through all the $A$ and $\bar{A
 	\end{center}
 \end{figure}
 
-According to the manufacturer, the motor is rated for 48 VDC and up to 300 A for a minute. This corresponds well with its 19 hp rating, which means, this DC voltage is the input voltage when driving it as a brushless DC motor, and thus a DC supply voltage of 52.8 V does not overload the motor. Through simulations, it has been noted, that the power peaks at 14 hp, at the point where the controller starts saturating.
-\todo[inline]{Thomas: At 14hp? does this mean that the datasheet is wrong? Is the simulation wrong? what is going on here?}
+According to the manufacturer, the motor is rated for 48 VDC and up to 300 A for a minute. This corresponds well with its 19 hp rating, which means, this DC voltage is the input voltage when driving it as a brushless DC motor, and thus a DC supply voltage of 52.8 V does not overload the motor. Through simulations, it has been noted, that the power peaks at 14 hp, at the point where the controller is saturated by the voltage of the battery.
+\todo[inline]{Thomas: At 14hp? does this mean that the datasheet is wrong? Is the simulation wrong? what is going on here? Martin: }
 
 For controlling the motor it can be considered a 2-pole motor, which means that there are only two magnetic fields; the rotor magnetic field generated by the permanent magnets, and the stator field generated by the solenoids. 
 This is achieved by converting the measured mechanical angle of the rotor to electrical angle, and then doing all calculations in this domain.
