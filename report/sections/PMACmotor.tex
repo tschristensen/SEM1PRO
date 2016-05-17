@@ -4,19 +4,24 @@
 %\subsection{Analysis}
 %\subsection{Conclusion}
 \todo[inline]{Thomas: This should be more of an introduction to what the reader can expect to find throughout the section.}
+This chapter focuses the motor used for this project.
+Initially the functionality motor will be described, then certain motor parameters will be tested, as the online product description isn't all that clear.
+Lastly a parking test will be performed to determine the angle of the encoder mounted on the motor. 
 The motor used to drive the go-kart is an 8-pole non-salient permanent magnet synchronous motor. 
 Physically there is no difference between brushless DC motors, permanent magnet AC motors, and permanent magnet synchronous motors. 
 The motor will be driven as an AC or synchronous motor (since these are the same) to produce a more consistent torque.
 
 \subsection{Motor description}\label{sub:motor_descrpition}
-The motor used is a 3-phase Wye-connected, 8-pole permanent magnet AC motor, the Motenergy ME1117.
+The motor used is a 3-phase Wye-connected, 8-pole non-salient permanent magnet AC motor, the Motenergy ME1117.
+Although there are many different types of PMAC motors, there is no physical difference between brushless DC motors (BLDC), permanent magnet AC motors (PMAC), and permanent magnet synchronous motors (PMSM). 
+The motor will be driven as an AC or synchronous motor (since these are the same) to produce a more consistent torque.
 This means that the rotor consists of four pairs of magnets - one with the north side facing outward towards the stator and one with the north side facing inward to the ferromagnetic core of the rotor. 
-The stator consists of 24 solenoids fixed inward on a ferromagnetic outer ring. 
-\todo[inline]{Thomas: What does it mean to be "fixed inward"?}
-Looking at the motor from the axis side, a counter clockwise rotoration results in the go-kart going forward. 
-\todo[inline]{Thomas: "From the axis side", axis = rotor?}
-The solenoids are placed so that the four phase A solenoids are placed along the horizontal and vertical axis - this is not necessarily true, but rather a convention and a way of, and what's really important is what we measure, which will be explained further in section~\ref{sub:parking_test}.
-\todo[inline]{Thomas: Is that a "we"?! Hnnghhnenngg... Also, it is unclear why you mention a convention that somehow isn't true anyways?}
+The stator consists of 24 solenoids mounted inward on a ferromagnetic outer ring. 
+\todo[inline]{Thomas: What does it mean to be "fixed inward"? Martin: switched fixed to mounted}
+Looking at the motor from the axle side, a counter clockwise rotoration results in the go-kart going forward. See figure~\ref{fig:motor_24p}.
+\todo[inline]{Thomas: "From the axis side", axis = rotor? Martin: Axle.}
+The solenoids are placed so that the four phase A solenoids are placed along the horizontal and vertical axes - this is not necessarily true, but rather a convention and a way of, and what's really important is what we measure, which will be explained further in section~\ref{sub:parking_test}.
+\todo[inline]{Thomas: Is that a "we"?! Hnnghhnenngg... Also, it is unclear why you mention a convention that somehow isn't true anyways? Martin: Short of cutting the motor in half, there is no way of knowing if the A solenoids are actually placed along the horizontal and vertical axes. In the end, it doesn't matter either, as long as we perform the parking test.}
 The order of the other solenoids, when going counter-clockwise is then $\bar{B}$, $C$, $\bar{A}$, $B$ and $\bar{C}$, as shown on figure~\ref{fig:motor_24p}. 
 The solenoids $A$ correspond to terminal M1, solenoids $B$ correspond to M2, and solenoids $C$ correspond to M3. 
 A current going into terminal M1, will then pass through all the $A$ and $\bar{A}$ solenoids in series, before reaching the star point, and continuing through $B$ and $\bar{B}$ and/or $C$ and $\bar{C}$.
@@ -29,8 +34,17 @@ A current going into terminal M1, will then pass through all the $A$ and $\bar{A
 	\end{center}
 \end{figure}
 
-According to the manufacturer, the motor is rated for 48 VDC and up to 300 A for a minute. This corresponds well with its 19 hp rating, which means, this DC voltage is the input voltage when driving it as a brushless DC motor, and thus a DC supply voltage of 52.8 V does not overload the motor. Through simulations, it has been noted, that the power peaks at 14 hp, at the point where the controller starts saturating.
-\todo[inline]{Thomas: At 14hp? does this mean that the datasheet is wrong? Is the simulation wrong? what is going on here?}
+According to the manufacturer, the motor is rated for 48 VDC and up to 300 A for a minute. This corresponds well with its 19 hp rating, which means, this DC voltage is the input voltage when driving it as a brushless DC motor, and thus a DC supply voltage of 52.8 V does not overload the motor.
+Through simulations, it has been noted, that the power peaks at 14.7 hp, at the point where the controller is saturated by the voltage of the battery.
+This happens when equation~\ref{eq:max_power_velocity} is true.
+
+\begin{equation}
+V_{BEMF} = \frac{V_{bat}}{2} - I_{max} \cdot R_a
+\label{eq:max_power_velocity}
+\end{equation}
+
+Using $\mathrm{K_E}$ as defined in equation~\ref{eq:KE_definition} to convert the back EMF voltage into a velocity, the maximum power is reached at 3186 RPM
+\todo[inline]{Thomas: At 14hp? does this mean that the datasheet is wrong? Is the simulation wrong? what is going on here? Martin: 19 hp is true when running the motor as bldc at 300 A and 48 V. Peak power is reached at the transition between full current and full voltage.}
 
 For controlling the motor it can be considered a 2-pole motor, which means that there are only two magnetic fields; the rotor magnetic field generated by the permanent magnets, and the stator field generated by the solenoids. 
 This is achieved by converting the measured mechanical angle of the rotor to electrical angle, and then doing all calculations in this domain.
@@ -45,40 +59,74 @@ This is achieved by converting the measured mechanical angle of the rotor to ele
 
 The electric positions of figures~\ref{fig:motor_24p} and~\ref{fig:motor_6p} are the same, and the stator field is set 90 degrees ahead. 
 In figure~\ref{fig:motor_6p}, the rotor magnet will always try to line up with the magnetic field lines. 
-In the real motor, this will cause the magnetic circuits to become shorter, as the rotor turns lines up the permanent magnet poles with the opposite pole of the solenoids. 
+In the real motor, this will cause the magnetic path to become shorter, as the rotor lines up the permanent magnet poles with the opposite pole of the solenoids. 
 \todo[inline]{Thomas: Above sentence does not make sense.}
-By constantly placing the stator field 90 degrees ahead of the rotor, the motor will start moving.
+By constantly placing the stator field ahead of the rotor, the motor will start moving.
 \todo[inline]{Thomas: The motor will start moving even at 40 degrees, perhaps it is worth noting that max torque is exerted on 90 degrees}
-This has been compared to the classical cartoon of a carrot on a stick, tied to the back of a donkey, see figure~\ref{fig:silly_picture}.
-\todo[inline]{Thomas: Ahemm...}
-
-\begin{figure}[H]
-	\begin{center}
-		\includegraphics[width = 6cm]{graphics/carrot_stick_donkey}
-		\caption{A childlike, but brilliant analogy of how to get the motor going}
-		\label{fig:silly_picture}
-	\end{center}
-\end{figure}
-
 Thus it is necessary to know the position of the rotor in order to determine the angle of the stator field.
+For that measurement, we will use an encoder
 
 \subsection{Motor parameterization}\label{sub:1117_param}
 Due to the sparse information available from the manufacturer of the motor, it is necessary to measure some of the parameters of the motor. 
-It will also be necessary to define exactly what these parameters define, since the manufacturer has not defined certain things such as what current measurement is related to torque through $K_T$.
+It will also be necessary to determine exactly what these parameters define, since the manufacturer has not defined certain things such as what current measurement is related to torque through $K_T$.
 \todo[inline]{Thomas: I defined your definitions so you can define while you... w/e}
 Parameters to determine are the back-EMF constant, $K_E$, the armature resistance $R_a$ and the armature inductance $L_a$.
 Each of the following sections describe the procedure used to find each of these parameters. 
 
 \subsubsection{Back-EMF and torque constant}\label{sub:KE-KT}
-The parameters $K_E$ and $K_T$ must be the same for a PMSM\todo{Thomas: PMAC or PMSM, make a choice and stick to it.} motor, since they are dependent on the flux produced in the permanent magnet of the rotor. 
-Another proof\todo{Thomas: Perhaps reason is a better word - proof is such a strong word...}, that they are the same is, that the motor converts electrical energy to mechanical energy, and electrical energy is the product of current and voltage, and (rotational) mechanical energy is the product of torque and angular velocity. 
-A mismatch between $K_E$ and $K_T$ could imply, that the motor creates energy from nothing. 
+The parameters $K_E$ and $K_T$ must be the same for a PMAC motor, since they are dependent on the flux produced in the permanent magnet of the rotor. 
+Another evidence\todo{Thomas: Perhaps reason is a better word - proof is such a strong word...}, that they are the same is, that the motor converts electrical energy to mechanical energy, and electrical energy is the product of current and voltage, and (rotational) mechanical energy is the product of torque and angular velocity. 
+A mismatch between $K_E$ and $K_T$ could imply, that power appears or disappears, which cannot happen. 
 
-The Back-EMF constant\todo{Thomas: Does this constant have a name? I'm not really familiar with this "back-emf constant"} is defined as the amplitude of each phase-voltage divided with the mechanical angular velocity.
-The torque constant is defined as the peak-phase current divided by the peak-torque produced by that phase. 
+The Back-EMF constant, $\mathrm{K_T}$,\todo{Thomas: Does this constant have a name? I'm not really familiar with this "back-emf constant"} is defined as the amplitude of each phase-voltage divided with the mechanical angular velocity.
+
+\begin{equation}
+K_E = \frac{V_{BEMF}}{\omega _m}
+\label{eq:KE_definition}
+\end{equation}
+The torque constant is defined as the phase current amplitude divided by the torque amplitude produced by that phase. 
 \todo[inline]{Thomas: I think this merits an equation, just for clarification}
-This means that $K_E$ and $K_T$ are the same, and the torque produced is the q-current multiplied by $K_T$ and 1.5 \todo{More on this later, I have proof in simulink}. 
-The torque constant will not be tested, because there is not a proper test bench for it.
+The mathematical reasoning behind is explained in equations~\ref{eq:current_q} through~\ref{eq:total_torque_contribution}. \\
+Assume a motor with with an optimal controller, so the d-current is zero, and the q-current is I. 
+The phase current is then calculated by:
+
+\begin{equation}
+\begin{bmatrix}
+I_a \\ I_b \\ I_c
+\end{bmatrix}
+=
+\begin{bmatrix}
+-I \cdot \sin(\Phi) \\ -I \cdot \sin(\Phi - \gamma) \\ -I \cdot \sin(\Phi + \gamma)
+\end{bmatrix}
+\label{eq:current_q}
+\end{equation}
+
+where $\mathrm{\Phi}$ is the electrical angle of the rotor, and $\mathrm{\gamma} = \tfrac{2 \pi}{3}$. \\
+Each of the three phases then contribute to the total torque, depending on the angle between the rotor and the phase, calculated by:
+
+\begin{equation}
+\begin{bmatrix}
+T_a \\ T_b \\ T_c
+\end{bmatrix}
+=
+\begin{bmatrix}
+-I_a \cdot K_T \cdot \sin(\Phi) \\ -I_b \cdot K_T \cdot \sin(\Phi - \gamma) \\ -I_c \cdot K_T \cdot \sin(\Phi + \gamma)
+\end{bmatrix}
+\label{eq:torque_contributions}
+\end{equation}
+
+This has been verified using Simulink -- The motor was supplied with three DC currents, and the rotor was locked to the rotational reference.\\
+
+The total torque is then the sum of the torque contribution of each phase: 
+
+\begin{equation}
+T = T_a + T_b + T_c = \frac{3}{2} K_T \cdot I
+\label{eq:total_torque_contribution}
+\end{equation}
+
+Equation~\ref{eq:total_torque_contribution} is true for any real value of $\mathrm{\Phi}$. \\
+This means that $K_E$ and $K_T$ are the same, and the torque produced is the q-current multiplied by $K_T$ and 1.5.
+The torque constant could be tested on a test bench 
 \todo[inline]{Thomas: While this conclusion is correct we could explain the procedure of determining the torque constant. It would seem less "defeatist"..}
 To test the back-EMF constant, a hand-held power drill is used to rotate the motor at a constant speed. 
 An oscilloscope with a differential probe is used to measure the voltage between two of the phases. 
@@ -87,15 +135,15 @@ The peak-peak voltage and the corresponding frequency is noted in the table belo
 \begin{table}[h]
 \begin{center}
 \begin{tabular}{S|S}
-	{Voltage } [\si{\volt}$_{\text{pp}}$]  & {Frequency }[\si{\hertz}] \\
+	{Frequency }[\si{\hertz}]  & {Voltage } [\si{\volt}$_{\text{pp}}$] \\
 	\hline
-	28.3 & 72.13 \\
-	15.3 & 38.32\\
-	16.5 & 40.97\\
-	17.7 & 44.9\\
-	9.7 & 23.49\\
-	21.8 & 54.7\\
-	24.2 & 61.81
+	23.49 & 9.7  \\
+	38.32 & 15.3\\
+	40.97 & 16.5\\
+	44.9 & 17.7\\
+	54.7 & 21.8\\
+	61.81 & 24.2\\
+	72.13 & 28.3
 \end{tabular}
 \end{center}
 \caption{Measured line-line voltage at electric frequencies}
@@ -111,13 +159,12 @@ K_E = K_T = 0.0733 \si{\volt\second\per\radian}
 \end{equation}
 
 with a spread of 1.3\%. 
-
 According to the datasheet, $K_T$ is 0.13. 
 This is 1.77 times higher than the measured $K_E$. 
 There are two potential reasons for this.
 One is, that the manufacturer uses line-to-line current instead of phase current, since the difference is close to $\sqrt{3}$. 
 Another possible reason is, that the manufacturer defines $K_T$ as the torque produced with the given q-current, in which case $K_T = 1.5K_E$, and the measured $K_T$ is about 15\% below the manufacturer's datasheet. 
-Either way, equation~\ref{eq:K_E} will be considered true from now on. 
+Either way, equation~\ref{eq:K_E} will be considered true from now on. \\
 
 To confirm, that $K_E$ and $K_T$ are indeed the same, consider an ideal motor producing some torque, T, and running at a constant angular velocity, $\omega$. 
 Losses in the Armature resistance and friction are omitted. 
@@ -151,60 +198,89 @@ P_m = \Big( \frac{V}{K_E} \Big) \cdot \big( 1.5 I \cdot K_T \big)
 \label{eq:mechanical_power_from_electrical}
 \end{equation}
 
-Equations~\ref{eq:power_electrical_RMS}~and~\ref{eq:mechanical_power_from_electrical} must be the same, in which case, $K_E$ and $K_T$ must be the same. However it would be understandable to consider $K_T$ as 1.5 times larger than $K_E$ to incorporate the constant of 1.5
+Equations~\ref{eq:power_electrical_RMS}~and~\ref{eq:mechanical_power_from_electrical} must be the same, in which case, $K_E$ and $K_T$ must be the same. \\
+
+This means, the maximum speed and torque can be calculated:
+
+\begin{equation}
+\omega _{max} = \frac{V_{bat}}{2 K_E} = 360 \si{\radian \per \s} 
+\label{eq:max_rotational_speed}
+\end{equation}
+
+\begin{equation}
+T_{max} = I_max \cdot \frac{3}{2} K_T = 33 Nm
+\label{eq:max_torque}
+\end{equation}
 
 \subsubsection{Armature Resistance}\label{sub:R_a-measurements}
-
-To test the armature resistance, a high DC current is driven through one terminal to the other. The voltage at the terminal is measured, since the large current causes a significant voltage loss in the wires leading from the power supply to the motor. The resistance can then be calculated between two terminals, the results are shown in the table below:
+To test the armature resistance, a high DC current is driven through one terminal to the other. 
+The voltage at the terminal is measured.
+The large current causes a significant voltage drop in the wires leading from the power supply to the motor. 
+Based on the measured voltages and currents the resistance between the two terminals can be calculated.
+The results are shown in the table below:
 
 \begin{table}[h]
 	\begin{center}
 	\begin{tabular}{r | c | c | c}
-		\textbf{Terminals} 	& \textbf{V}	& \textbf{I}	& \textbf{R} \\
+		{Terminals} 	& {V} [\si{\volt}]	& {I} [\si{\ampere}]	& {R} [\si{\milli\ohm}] \\
 		\hline
-		\textbf{AB} 		& 0.217 V		& 17.93 A		& 12.10 $m\Omega$ \\
+		{AB} 			& 0.217 		& 17.93 		& 12.10  \\
 		\hline
-		\textbf{AC}			& 0.235 V		& 17.93 A 		& 13.11 $m\Omega$ \\
+		{AC}			& 0.206  		& 17.96 		& 11.47  \\
 		\hline
-		\textbf{BC}			& 0.206 V 		& 17.96 A		& 11.47 $m\Omega$
+		{BC}			& 0.235 		& 17.93  		& 13.11
 	\end{tabular}
 	\end{center}
+	\caption{Measured DC resistance across terminal-pairs.}
 	\label{tab:armature_resistance}
-	\caption{Measured DC resistance from across terminals}
 \end{table}
 
-It is desired to know the resistance from one terminal to the common star point. That can be calculated by equation~\ref{eq:resistance_converter}
+It is desirable to know the resistance from one terminal to the common star point. 
+That can be calculated by equation~\ref{eq:resistance_converter}
 
 \begin{equation}
 R_a = \frac{R_{AB} + R_{AC} - R_{BC}}{2}
 \label{eq:resistance_converter}
 \end{equation}
 
-This gives a bit uneven armature resistances ranging from 5.2 to 6.9 $m\Omega$. This is about half the line-to-line resistance listed by the manufacturer at 13$m\Omega$. However, since the motor is a Wye connection, it makes much more sense to know the resistance between a terminal and the star-point when modeling the motor 
+This gives different armature resistances for different phases ranging from 5.2 to 6.9 $m\Omega$. 
+This is about half the line-to-line resistance listed by the manufacturer at 13$m\Omega$. 
+However, since the motor is a wye connection, knowing the resistance between a terminal and the star-point is more helpful when modeling the motor.
 
 \subsubsection{Armature Inductance}\label{sub:L_A-measurements}
-In order to measure the winding inductance of the motor, a full bridge driver is used to generate a squarewave voltage at different frequencies. The voltage is applied to the A and C terminals of the motor, so any measured voltage must be reduced by the armature resistance calculated in table~\ref{tab:armature_resistance} times the current. The motor is not moving, so there is no back-EMF. The driver can only handle 3 Amps continuously, so the test has to be done rather quickly. Current and voltage has been plotted in figure~\ref{fig:20kHz_squarewave}. Note that at 20 kHz, the current ripple is about 7 A \todo{this is peak-peak.}.
+In order to measure the winding inductance of the motor, a full bridge driver is used to generate a square wave at different frequencies. 
+The two terminals of a full bridge driver is connected to terminals B and C, and voltage and current are measured.
+The motor is not moving, so there is no back-EMF. 
+The resistor voltage is subtracted by from the voltage measurements, and what remains is the inductor voltage. 
+Current and voltage has been plotted in figure~\ref{fig:20kHz_squarewave}. 
+Note that at 20 kHz, the current ripple is 7.25\si{\ampere} 
 
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width = 10cm]{graphics/inductance_measured_v_i}
-		\caption{20 kHz squarewave voltage and the resulting current}
+		\caption{20 kHz square wave voltage and the resulting current.}
 		\label{fig:20kHz_squarewave}
 	\end{center}
 \end{figure}
 
-These waveforms have been measured at 5 kHz, 10 kHz, 20 kHz and 30 kHz. For this project, 20 kHz will be used, so only those plots will be shown. Due to the high sampling rate of the oscilloscope and low bit resolution, differentiating the current will yield very large spikes for short periods of time. Therefore, the current, time and voltage measurements will be periodically averaged and downsampled by a factor of 70. The derivative of the current is then calculated by:
+
+These waveforms have been measured at 5 kHz, 10 kHz, 20 kHz and 30 kHz. 
+For this project a switching frequency of 20 kHz will be used, so only those plots will be shown. 
+Due to the high sampling rate of the oscilloscope and low bit resolution \todo{Thomas: So the oscilloscope has poor resolution? Martin: Yes, 8 bit is horrible.}, differentiating the current will yield very large spikes for short periods of time. 
+Therefore, the current, time and voltage measurements will be periodically averaged and downsampled by a factor of 70. 
+The derivative of the current is then calculated by:
 
 \begin{equation}
 di\_ dt[n] = \frac{i[n]-i[n-1]}{t[n]-t[n-1]}
 \end{equation}
 
-This is then the derivative of the current at the point immediately between two samples, so to synchronize the time and voltage arrays, each two samples are added and multiplied by 0.5. The resulting waveforms are plotted in figure~\ref{fig:20kHz_squarewave_di}
+This is then the derivative of the current at the point immediately between two samples, so to synchronize the time and voltage arrays, each two consecutive samples are averaged. 
+The resulting waveforms are plotted in figure~\ref{fig:20kHz_squarewave_di}
 
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width = 12cm]{graphics/20kHz_v_di}
-		\caption{20 kHz squarewave voltage and derivative of the resulting current}
+		\caption{20 kHz square wave voltage and derivative of the resulting current.}
 		\label{fig:20kHz_squarewave_di}
 	\end{center}
 \end{figure}
@@ -219,60 +295,83 @@ It appears, that there is some proportionality between the derivative of the cur
 	\end{center}
 \end{figure}
 
-The calculated inductance would become very large when the derivative current goes close to zero, so the plot has been limited to between 0 and 0.5 mH. The inductance inductance generally is lower than the terminal-to-terminal inductance provided by the manufacturer of 0.1 mH. The average inductance varies a bit with different frequencies, and 20 kHz is actually the lowest.
+The calculated inductance would become very large when the derivative current goes close to zero, so the plot has been limited to between 0 and 0.5 \si{\milli\henry}. 
+The inductance inductance generally is lower than the terminal-to-terminal inductance provided by the manufacturer of 0.1 \si{\milli\henry}. 
+The average inductance varies a bit with different frequencies, and 20 kHz is actually the lowest.
 
 \begin{table}[H]
 	\begin{center}
-	\begin{tabular}{r | c | c}
-		Frequency [Hz] 	& 	Average inductance [mH] & 	Current ripple [A] \\
+	\begin{tabular}{S | S | S}
+		{Frequency} [\si{\kilo\hertz}] 	& 	{Average inductance} [\si{\milli\henry}] & 	{Current ripple} [\si{\ampere}] \\
 		\hline
-		5 kHz			&	0.946					&	16.83 \\
+		5			&	0.946					&	16.83 \\
 		\hline
-		10 kHz			&	0.844					&	12.1 \\
+		10	    	&	0.844					&	12.10 \\
 		\hline
-		20 kHz			&	0.632					&	7.13 \\
+		20			&	0.632					&	7.13 \\
 		\hline
-		30 kHz 			&	0.879					&	5.25 
+		30 			&	0.879					&	5.25 
 	\end{tabular}
+	\caption{Average of measured inductance and current ripple at different frequencies.}
 	\label{tab:inductance_and_current_ripple}
-	\caption{Averaged of measured inductance, and measured current ripple at different frequencies}
 	\end{center}
 \end{table}
 
-This is the inductance from one terminal to another, so the per-phase inductance will be half, similarly to the armature resistance. The inductance determines the phase shift on the sinusoidal voltages and currents driving the motor at up to 267 Hz, and the current ripple at 20 kHz. So when modeling the motor, one must settle on a value of $L_d$ and $L_q$ that is close to the the low frequency inductance of 0.475 mH, and the higher frequency inductance of 0.315 mH. For modeling the motor, an inductance of 0.4 mH will be used for both $L_d$ and $L_q$. 
+The inductances in table~\ref{tab:inductance_and_current_ripple} is the inductance from one terminal to another, so the per-phase inductance will be half, similarly to the armature resistance. 
+The inductance determines the phase shift on the sinusoidal voltages and currents driving the motor, and the current ripple at the switching frequency.
+The maximum frequency of these are determined by the maximum rotational speed of the motor calculated in equation~\ref{eq:max_rotational_speed}, which equals 229 \si{\hertz}
+So when modeling the motor, one must settle on a value of $L_d$ and $L_q$ that is close to the the low frequency inductance of 0.473 \si{\milli\henry}, and the higher frequency inductance of 0.316 \si{\milli\henry}. 
+For modeling the motor, an inductance of 0.4 \si{\milli\henry} will be used for both $L_d$ and $L_q$. 
 
+\todo[inline]{Thomas: In general there are many things in this section that I do not understand, this may be due to my idiocy but generally, if there is something that is not easily understood it means that the information is not clear - perhaps we could sit down and have a look at it at some point? Martin: We definitely should, but maybe as a group, as it the whole report should be understood by all.}
 \subsection{Parking Test}\label{sub:parking_test}
-The encoder is positioned on the axis of the motor in an unknown angle. Since this is not bound to change, a one time parking test will be performed, where a current will be passed into one terminal and out of the other two. This will be done with a DC power supply with current limit. The motor should position itself at one of four mechanical angles spaced 90 degrees apart. This offset will be subtracted from any angular readings used in Clark and inverse Clarke transformations. \\
+The encoder is positioned on the axis of the motor at an unknown angle. 
+Since this will not change, a one time parking test will be performed, where a current will be passed into one terminal and out of the other two. 
+This will be done with a DC power supply with current limit. 
+The motor should position itself at one of four mechanical angles spaced 90\si{\degree} apart. 
+This offset will be subtracted from any angular readings used in the Clark and inverse Clarke transformations. \\
 
-The motor is parked with 30 A. Even with this current it's still possible to  The test is repeated to determine all 4 parking spots for each phase, and the angles are shown in table~\ref{tab:parking_angles}. The phases A, B and C correspond to the terminals with the names M1, M2 and M3 etched into the case of motor. 
+The motor is parked with 30\si{\ampere}. 
+Even with this current it is still possible to  \todo{Thomas: what?}
+The test is repeated to determine all four parking spots for each phase, and the angles are shown in table~\ref{tab:parking_angles}. 
+The phases A, B and C correspond to the terminals with the names M1, M2 and M3 etched into the case of motor. 
 
 \begin{table}[H]
-	\begin{center}
-		\begin{tabular}{|r | c | c | c|}
-			\hline
-			Quadrant & Phase A [deg] & Phase B [deg] & Phase C [deg] \\
-			\hline
-			First & 43.6 & 75.9 & 16.9 \\
-			\hline
-			Second & 132.2 & 167.3 & 101.3 \\
-			\hline
-			Third & 223.6 & 257.3 & 194.1 \\
-			\hline
-			Fourth & 312.2 & 348.8 & 279.8 \\
-			\hline
-		\end{tabular}
-		\label{tab:parking_angles}
-		\caption{Parking angles for the encoder.}
-	\end{center}
+	\caption{Parking angles for the encoder.}
+	\label{tab:parking_angles}
+	\centering
+	\sisetup{table-space-text-post=\si{\degree}}
+	\begin{tabular}{|S | S | S | S|}
+		\hline
+		{Quadrant} & {Phase A } & {Phase B } & {Phase C } \\
+		\hline
+		{First} & 43.6\si{\degree} & 75.9\si{\degree} & 16.9\si{\degree} \\
+		\hline
+		{Second} & 132.2\si{\degree} & 167.3\si{\degree} & 101.3\si{\degree} \\
+		\hline
+		{Third} & 223.6\si{\degree} & 257.3\si{\degree} & 194.1\si{\degree} \\
+		\hline
+		{Fourth} & 312.2\si{\degree} & 348.8\si{\degree} & 279.8\si{\degree} \\
+		\hline
+	\end{tabular}
 \end{table}
 
-The angles should be spaced 90 degrees apart vertically, 30 degrees apart horizontally. 
-This does not hold true for all values -- both columns A and B are spaced 90 degrees apart within the precision of the encoder, but horizontally, they are spaced 34.45 degrees apart. Column C varies from 84 to 97 degrees between them, however they are on average spaced 30 degrees from Column A. This should definitely not be the case, but it's unknown why. For the controller, the Phase A readings will be considered true. The angles are then wrapped down to the first quadrant by subtracting 90, 180 and 270 degrees from second, third and fourth quadrant respectively, and the average is calculated to be $42.9 ^\circ$, corresponding to a value of 30.5 from the encoder. Whenever the rotor position is then read, 30.5 will be subtracted before anything else is done. 
+The angles should be spaced 90 degrees apart vertically, 30 degrees apart horizontally.
+\todo{Thomas: You will have to explain this to me? What is the difference between vertical and horizontal spacing?}
+This does not hold true for all values - both columns A and B are spaced 90\si{\degree} apart within the precision of the encoder but horizontally, they are spaced 34.45\si{\degree} apart.
+Column C varies from 84\si{\degree} to 97\si{\degree} between them, however they are on average spaced 30\si{\degree} from Column A. 
+This should definitely not be the case, but  the reason is currently unknown. 
+For the controller, the Phase A readings will be considered true. 
+The angles are then wrapped\todo{Thomas: wrapped?} down to the first quadrant by subtracting 90, 180 and 270 degrees from second, third and fourth quadrant respectively, and the average is calculated to be 42.9\si{\degree}, corresponding to a value of 30.5\si{\degree} from the encoder. 
+Whenever the rotor position is read, 30.5 will be subtracted from the value. 
 
-It should also be noted, that the order of the phases is A, B and C, which is the opposite order of the one described in section~\ref{sub:motor_descrpition}. This means, that the encoder measures a negative speed when the go-kart is moving forward. So the electrical angle of the rotor is calculated by:
+It should also be noted, that the order of the phases is A, B and C, which is the opposite order of the one described in section~\ref{sub:motor_descrpition}. 
+This means, that the encoder measures a negative speed when the go-kart is moving forward. 
+So the electrical angle of the rotor is calculated by:
 
 \begin{equation}
 \Phi_e = -(u-30.5)\cdot \frac{2 \pi}{256} \cdot 4
 \end{equation}
 
-where u is the value sent out by the encoder. The fraction converts the value into mechanical radians, and multiplying by 4 converts mechanical to electrical.
+Where $u$ is the value sent out by the encoder. 
+The fraction converts the value into mechanical angle, and multiplying by 4 converts from mechanical to electrical angle.
