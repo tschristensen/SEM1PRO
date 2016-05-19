@@ -7,32 +7,32 @@ Simscape is used to test the controller on a system with as much realism as poss
 Simscape will be used to simulate how the controller handles certain events:
 
 \begin{itemize}
-	\item What happens when the throttle is pressed?
-	\item What happens when the voltage is saturated?
-	\item What happens if the throttle is released quickly?
-	\item What happens if when braking, and when the wheel is locked?
-	\item What happens if the forward force exceeds the normal force on the tyres?
+	\item Actuation of torque pedal.
+	\item Speed limiting due to voltage limit
+	\item Release of torque pedal.
+	\item Actuation of brake pedal - with and without wheel lock
+	\item Wheelspin
 \end{itemize}
-\todo[inline]{Thomas: These are events and should be written as such: "Actuation of the torque pedal, Saruration of supply voltage" and so on. Short and precise.}
 
+In all cases, the controller should ensure that the motor produces the requested torque.
+The kart does not have regenerative braking, so negative torque would be a problem.
 The Plecs simulations do not need these details, but the mechanical system still needs a representation of mass of the car, the gear, the wheel and wind resistance. 
 
 \subsection{Mechanical System}\label{sub:Simulations_mec}
 The mechanical system consists of a mass of the go-kart with driver, turbulent air resistance, wheels and a gear.
-There are a lot of interesting blocks in the Simscape $\rightarrow$ SimDriveline library, which we do not have access to, so we will stick with the mechanical library, because this is detailed enough, and more easy to port to Plecs. 
-\todo[inline]{Thomas: Our interest in tools we do not have access to is irrellevant, suffice it to say that the mechanical library is used. Also.. Another two "we"'s?!?!}
+
 \begin{figure}[H]
+	\centering
 	\includegraphics[width=15cm]{graphics/simulations_mechanical_full.png}
 	\caption{Block diagram of the mechanical system}
 	\label{fig:mechanical_full}
 \end{figure}
 
 Figure~\ref{fig:mechanical_full} shows the block diagram of the mechanical part, that the motor will drive.
-\todo{Thomas: So, a model of the kart?}
+\todo{Thomas: So, a model of the kart? Martin: Yeah a very simple one.}
 Starting from the left, the Permanent Magnet Synchronous Motor is the motor and the Ideal Rotational Motion Sensor is used for the Clarke-Park transformations. 
 The first inertia block contains both the inertia of the motor, which is 0.0052, and the motor-side gear. 
-It is possible to add inertias that are connected to the same mechanical rod. 
-\todo{Thomas: Okay, that's cool but.. Do we care?}
+Inertias on the same rod can be added together, so instead of having an inertia for the motor, and one for the motor-side gear, one inertia is enough
 The inertia of the gear depends on its size. 
 Assuming, that the gear is a disc, the mass is calculated by:
 
@@ -42,30 +42,31 @@ m_{G1} = \rho \pi r^2 \cdot h
 \end{equation}
 
 where $\rho$ is the mass density of iron of $7870 \dfrac{kg}{m^3}$, r is the radius, and h is the thickness of 7 mm.
-Radius is defined by the number of teeth of the gear, G1, and the pitch, which is the distance between two adjacent teeth, which is 12.5 mm.
-Hence the radius can be calculated by equation \todo{Thomas: What equation?}.
-Inertia of a disc depends on mass and radius of the disc.
+Radius is defined by the number of teeth of the gear, G, and the pitch, which is the distance between two adjacent teeth, which is 12.5 mm.
+Hence the radius can be calculated by equation~\ref{eq:radius_from_G}
 \todo[inline]{Thomas: Is G=G1? Also, assign a variable to pitch, text in an equation is not pretty.}
 \begin{equation}
-	r=\frac{G \cdot pitch}{2 \pi}
+	r=\frac{G \cdot d_p}{2 \pi}
 	\label{eq:radius_from_G}
 \end{equation}
+
+where $\mathrm{d_p}$ is the pitch, and G is the number of teeth of the gear. \\
+
+Inertia of a disc depends on mass and radius of the disc according to equation~\ref{eq:inertia_of_disc}.
 
 \begin{equation}
 J_G = \frac{mr^2}{2} = \frac{\rho \pi r^2 \cdot h \cdot r^2}{2} = G^4 \frac{\rho \pi \frac{pitch}{2 \pi} \cdot h}{2} \approx 1.36 \cdot 10^{-9} G^4
 \label{eq:inertia_of_disc}
 \end{equation}
-\todo[inline]{Thomas: I believe the last sentence in the above paragraph references this equation but it is unclear. Also, is G\^4 = pow(G,4)?}
+
 This equation is used to dertermine the inertia of the two cogs, the motor-side cog, G1, has 12 teeth, and the wheel-side cog, G2, has 50 teeth. 
-This ratio, G2/G1 is put into the block "Wheel and Axle".
+This ratio, G2/G1 is put into the block "Gear Box". \\
 
-The mass is set to 200 - 250 kg, depending on the driver, and this includes the mass of the car.
-This is a high estimate. 
-A lower value could make the controller less stable, but a higher value will heat up the inverter more.
-\todo[inline]{Thomas: This is probably true but i would like more of a discussion about why you chose a high estimate, knowing full well that this would put higher thermal stress on the inverter?}
+The mass is set to 150 - 250 kg, depending on the driver, and this includes the mass of the car.
+This is done to test different situations -- a high mass would have more stable speeds, but also cause more power loss in the inverter, whereas a lower mass would be more prone to wheel spin.\\
 
-\todo[inline]{Thomas: A short introduction to the following would be reasonable: "Also the friction caused by the wind resistance is simulated. This can be done...."}
-Turbulent friction caused by the wind resistance is calculated by equation~\ref{eq:wind_resistance}.
+Win resistance has a significant effect on the speed of the kart, especially at higher speeds.
+Wind resistance is of a gokart is primarily turbulent, and can be calculated by equation~\ref{eq:wind_resistance}.
 
 \begin{equation}
 \label{eq:wind_resistance}
@@ -73,16 +74,16 @@ F=-\frac{1}{2} \rho A c v^2
 \end{equation}
 
 where $\rho$ is the density of air, $A$ is the frontal area, $c$ is the drag coefficient and $v$ is the speed. 
-The frontal area has been approximated to two boxes with the combined area of 0.6\si{\metre\squared}\todo{add a picture of a go kart with two boxes across it, the lower one being 1 m wide, and 0.4 m high, and the second one being 0.5 m wide an 0.4 m high. mba.}. 
-The density of air is approximately 1.225 \si{\kilo\gram\per\metre\cubed}, $c$ is approximately 0.8, according to a paper about air resistance found online. \todo[inline]{Thomas: Ofcourse you have a reference to this paper? If not, find one and add it to the bib.tex file.}
+The frontal area has been approximated to two boxes with the combined area of 0.6\si{\metre\squared}\todo[inline]{Martin: add a picture of a go kart with two boxes across it, the lower one being 1 m wide, and 0.4 m high, and the second one being 0.5 m wide an 0.4 m high.}. 
+The density of air is approximately 1.225 \si{\kilogram\per\metre\cubed}, $c$ is approximately 0.8, according to a paper about air resistance found online. \todo[inline]{Thomas: Ofcourse you have a reference to this paper? If not, find one and add it to the bib.tex file. Martin: Yes, but it's a long address, I don't know where I'd put it because we literally only use one number: http://www.torvergata-karting.it/filemanager/download/191/The\%20evaluation\%20of\%20aerodynamic\%20drag\%20of\%20go-karts\%20by\%20means\%20of\%20coast\%20down\%20test\%20and\%20CFD\%20analysis.pdf}
 The constants are multiplied into one constant called $c\_drag$, as shown in equation~\ref{eq:cdrag}
-%"http://www.torvergata-karting.it/filemanager/download/191/The%20evaluation%20of%20aerodynamic%20drag%20of%20go-karts%20by%20means%20of%20coast%20down%20test%20and%20CFD%20analysis.pdf"
+
 These constants are put into the gain block, "Drag coefficient", and multiplied by the square of the speed. \todo{Thomas: It has been a while since you discussed the block diagram, i think you should mention the figure again, just for good measure.}
 The result is put into an ideal force source. 
 
 \begin{equation}
 \label{eq:cdrag}
-F=-c_{drag} v^2 = -0.296 v^2
+F=c_{drag} v^2 = -0.296 v^2
 \end{equation}
 
 This system can be simplified, so that all inertia is combined in one block and the gear and wheel can be removed. 
