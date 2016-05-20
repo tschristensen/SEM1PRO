@@ -44,7 +44,6 @@ m_{G1} = \rho \pi r^2 \cdot h
 where $\rho$ is the mass density of iron of $7870 \dfrac{kg}{m^3}$, r is the radius, and h is the thickness of 7 mm.
 Radius is defined by the number of teeth of the gear, G, and the pitch, which is the distance between two adjacent teeth, which is 12.5 mm.
 Hence the radius can be calculated by equation~\ref{eq:radius_from_G}
-\todo[inline]{Thomas: Is G=G1? Also, assign a variable to pitch, text in an equation is not pretty.}
 \begin{equation}
 	r=\frac{G \cdot d_p}{2 \pi}
 	\label{eq:radius_from_G}
@@ -74,22 +73,22 @@ F=-\frac{1}{2} \rho A c v^2
 \end{equation}
 
 where $\rho$ is the density of air, $A$ is the frontal area, $c$ is the drag coefficient and $v$ is the speed. 
-The frontal area has been approximated to two boxes with the combined area of 0.6\si{\metre\squared}\todo[inline]{Martin: add a picture of a go kart with two boxes across it, the lower one being 1 m wide, and 0.4 m high, and the second one being 0.5 m wide an 0.4 m high.}. 
+The frontal area has been approximated to two boxes with the combined area of 0.6\si{\metre\squared}.\todo[inline]{Martin: add a picture of a go kart with two boxes across it, the lower one being 1 m wide, and 0.4 m high, and the second one being 0.5 m wide an 0.4 m high.} 
 The density of air is approximately 1.225 \si{\kilogram\per\metre\cubed}, $c$ is approximately 0.8, according to a paper about air resistance found online. \todo[inline]{Thomas: Ofcourse you have a reference to this paper? If not, find one and add it to the bib.tex file. Martin: Yes, but it's a long address, I don't know where I'd put it because we literally only use one number: http://www.torvergata-karting.it/filemanager/download/191/The\%20evaluation\%20of\%20aerodynamic\%20drag\%20of\%20go-karts\%20by\%20means\%20of\%20coast\%20down\%20test\%20and\%20CFD\%20analysis.pdf}
 The constants are multiplied into one constant called $c\_drag$, as shown in equation~\ref{eq:cdrag}
 
-These constants are put into the gain block, "Drag coefficient", and multiplied by the square of the speed. \todo{Thomas: It has been a while since you discussed the block diagram, i think you should mention the figure again, just for good measure.}
-The result is put into an ideal force source. 
-
 \begin{equation}
-\label{eq:cdrag}
 F=c_{drag} v^2 = -0.296 v^2
+\label{eq:cdrag}
 \end{equation}
 
-This system can be simplified, so that all inertia is combined in one block and the gear and wheel can be removed. 
-This is done by a set of rules that apply for this mechanical circuit: The gear box reduces the speed, and increases torque. 
-Torque is force times radius, and speed is angular velocity times radius.
-To turn the mass, m, into a inertia, assume a cylindrical shell with radius r, and mass m. Inertia is then calculated by:
+These constants are put into the gain block, "Drag coefficient", and multiplied by the square of the speed. 
+The result is put into an ideal force source as seen on figure~\ref{fig:mechanical_full}. 
+
+This system can be simplified, so that all inertia and mass is combined in one block and the gear and wheel can be removed. 
+This is done by a set of rules that apply for this mechanical circuit: This gear box reduces the speed, and increases torque, much like a transformer reduces voltage and increases current.. 
+When converting from linear to rotational mechanics, torque is force times radius of the wheel, and speed is angular velocity times radius.
+To turn the mass, m, into an inertia, assume a cylindrical shell with radius r, and mass m. Inertia is then calculated by:
 
 \begin{equation}
 J=mr^2
@@ -102,22 +101,22 @@ This inertia can then be added to the inertia $J\_G2$. Same rules apply for a ge
 J_{ref} = \frac{G1^2}{G2^2} J
 \end{equation}
 
-This inertia is then added to the inertia of the motor and $J\_G1$:
+This inertia is then added to the inertia of the motor and $\mathrm{J_{G1}}$:
 
 \begin{equation}
 J = (mr^2+J_{G2}) \cdot \big(\tfrac{G1}{G2}\big)^2 + J_{G1}+J_M
 \end{equation}
 
-For a mass of 250 kg, this comes to 0.282\si{\kilo\gram\metre\squared}.
+For a mass of 250 kg, this comes to 0.282\si{\kilogram\metre\squared}.
 
-In equation~\ref{eq:wind_resistance}, speed can be replaced with angular velocity and a gain, and force can be replaced by torque and a gain. So the equation becomes this:
+In equation~\ref{eq:cdrag}, speed can be replaced with angular velocity and a gain, and force can be replaced by torque and a gain. So the equation becomes this:
 
 \begin{equation}
 \frac{T G2}{r G1} = c_{drag} \big(\omega r \tfrac{G1}{G2}\big)^2
 \end{equation}
 
-Isolating $T$, and putting $\omega$ by itself, we get:
-\todo{Thomas: Poor omega :'(}
+Isolating $T$, we get:
+\todo{Thomas: Poor omega :'(. Martin: I like your humor}
 \begin{equation}
 T= c_{drag} \Big(\frac{G1 r}{G2}\Big)^3 \omega^2 \approx -11.1\cdot 10^{-6} \omega^2
 \end{equation}
@@ -134,7 +133,7 @@ The mechanical diagram is reduced to figure ~\ref{fig:reduced_mechanical_system}
 
 This can be ported to Plecs, where all the used mechanical parts exist. 
 Only difference is, that the inertia block is placed inline with the wire, and not as an appendage.
-\todo{Thomas: These are technical details that are completely irrelevant in relation to the simulations.}
+\todo{Thomas: These are technical details that are completely irrelevant in relation to the simulations. Martin: Yeah but it does look different.}
 Finally, for the Simscape model, the tire is modelled by a friction block in series with the rotor, and the brake is modelled in a subsystem, as seen on figure~\ref{fig:simulations_mechanical_simscape}.
 
 \begin{figure}[H]
@@ -145,42 +144,40 @@ Finally, for the Simscape model, the tire is modelled by a friction block in ser
 	\end{center}
 \end{figure}
 
-The tire block consists of static, dynamic and viscous friction. 
-This is a simplification of how tires actually work, \todo{Thomas: Enlighten me? How do they actually work?} but for this project it is sufficiently accurate. 
-The brake subsystem is an ideal torque source, which will produce a torque in the opposite sign of the angular frequency input. 
-If the speed is reduced to below some threshold, the torque will be reduced linearly towards 0. 
-This will ensure, that the brake block cannot accelerate the vehicle in reverse.
-Lastly the inertia is split into the real world inertia of the motor and gears, and the inertia due to the mass of the car.
-\todo[inline]{Thomas: And this is not a real world thing?}
-Since the brake block is still connected directly to the rod of the motor, a gain block is used to scale down the torque accordingly. 
+The tire block consists of static and dynamic.
+Tyre slip is a comprehensive area of study, so the rotational friction block isn't necessarily accurate. 
+However, it does enable sudden changes in motor speed and load, similar to spinning and locking the wheels
+The brake subsystem is a PI controlled ideal torque source, which will attempt to bring the go kart to a halt when the brake is pressed.
+Without a PI controller, there is a strong possibility that the brake would suddenly make the motor go backwards.
+Lastly the inertia is split into the inertia of the motor and gears on the left of the tyre, and the inertia due to the mass of the car on the right.
+Since the brake block is still connected directly to the rod of the motor, a gain block is used to scale down the torque through the gear. 
 
 \subsection{Motor Model}\label{sub:motor_model_simscape}
 The Permanent Magnet Synchronous Motor is found in Simscape $\rightarrow$ SimPowerSystem $\rightarrow$ Simscape Components $\rightarrow$ Machines $\rightarrow$ Permanent Magnet Rotor. 
 \todo[inline]{Thomas: Irrelevant}
 This is a quite simple model, with only four parameters: Number of pole pairs, flux linkage of the magnet, inductance and armature resistance. 
-The parameters can be seen on figure~\ref{fig:pmsm_parameters_simscape}.
-\todo[inline]{Thomas: I would prefer a table.} 
 A similar block can be found in Plecs under Electrical $\rightarrow$ Machines. 
 \todo[inline]{Thomas: Again, Irrelevant}
 This model has the same parameters as in Simscape, but also inertia and friction.
 
-\begin{figure}[H]
+\begin{table}[h]
 	\centering
-	\begin{subfigure}[t]{.49\linewidth}
-		\centering
-		\includegraphics[width=\textwidth]{graphics/PMSM_simulink.png}
-		\caption{Simscape PMSM parameters.}
-		\label{fig:pmsm_parameters_simscape}
-	\end{subfigure}
-	\begin{subfigure}[t]{.39\linewidth}
-		\centering
-		\includegraphics[width=\textwidth]{graphics/PMSM_Plecs.png}
-		\caption{Plecs PMSM parameters.}
-		\label{fig:pmsm_parameters_Plecs}
-	\end{subfigure}
-	\caption{Comparison of Simscape and Plecs models of the Permanent Magnet Synchronous Motor.}
-	\label{fig:pmsm_parameters_plecs_simscape}
-\end{figure} 
+	\begin{tabular}{| S | S | S |}
+		\hline
+		{Simscape parameters} & {Plecs parameters} & {Value} \\
+		\hline
+		{Permanent magnet flux linkage} & {Flux induced by magnet Phi} & {1.83225e-2} \\
+		\hline
+		{Stator Inductance, Ld, Lq, L0} & {Stator inductance Ld Lq} & {4e-5}\\
+		\hline
+		{Stator resistance per Phase, Rs} & {Stator resistance R} & {6.5e-3}\\
+		\hline
+		{Number of pole pairs} & {Number of pole pairs p} & {4}\\
+		\hline
+	\end{tabular}
+	\caption{Parameters used in simulations.}
+	\label{tab:motor_parameters_in_simulations}
+\end{table}
 
 One thing to note in both cases is that the flux linkage is divided by the number of pole pairs.
 The reason for this is likely a matter of definitions, and the relation has been deduced using simulations. 
@@ -189,7 +186,7 @@ Armature resistance and inductances are per-phase, and the values used are found
 \subsection{Electrical Network and control}\label{sub:sim_electrical}
 This is where the Simulink and Plecs block diagram differ a lot. 
 The purpose of using Simulink is that it is quick and easy to change multiple parameters in order to develop and test a controller. 
-The advantage in Plecs is its ability to simulate switch mode power electronics, where there is a vast ratio between the minimum timestep defined by the switching frequencies, and the duration of the simulation. \todo[inline]{I am not sure i understand why this ratio is important?}
+The advantage in Plecs is its ability to simulate switch mode power electronics, where there is a vast ratio between the minimum timestep defined by the switching frequencies, and the duration of the simulation. \todo[inline]{I am not sure i understand why this ratio is important? Martin: Different simulators have different methods. Plecs simulates right before and right after a switching event, that means 4 time steps per period per switch. Highside and lowside transistors switch at the same time, so a three phase inverter at 20 kHz means the whole circuit needs to be solved (at least) 240.000 times per second. Simulink does not solve switches as easy, so the number is significantly higher.}
 The sparse electrical network along with the discrete controller and modulation blocks have been shown in figure~\ref{fig:simulations_electrical}.
 
 \begin{figure}[h]
