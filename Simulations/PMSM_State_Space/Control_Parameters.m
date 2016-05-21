@@ -37,6 +37,7 @@ TS=L/R  ;        %Electromagnetic time constant
 Pb=8   ;         %number of poles
 %Ff=0.1;
 Kv=0.001;
+T_L=0.001
 
 % Transfer function of state space:
 Num=[3*Kt];
@@ -75,7 +76,7 @@ Hs=tf(Num2,Den2)
 %Kp=((3*Alpha^2)-b1)/a0
 
 
-%%%%%%%%%%%%%%% NEW 25/05-16 values.
+%%%%%%%%%%%%%%% NEW 20/05-16 values.
 n1=2 % order of transfer function
 Tset1=0.1 % settling time 5% formula
 Alpha1=(1.5*(1+n1))/Tset1
@@ -89,5 +90,7 @@ KPNEW=(d_1-a_1)/b_1
 KINEW=(d_0-a_0)/b_0
 
 
-
+%%%%%%%%%%%%%%%%% New kp and ki try again. d. 21/05-16
+Ki_v2=((alpha^3)*J_pro)/Kv
+Kp_v2=((3*alpha^2)-(Ki_v2/2)-((Kv*R)/(J_pro*L))-((3*Kt^2)/(2*J_pro*L)))*2*J_pro
 

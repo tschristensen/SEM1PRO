@@ -40,12 +40,12 @@ The figures show that the PMSM motor can be represented as an electrical diagram
 
 The components shows are: the mutual inductance $l_s$, $L_md$ and $L_mq$. Armature resistance $R_s$ and flux leakage for both d and q axes.
 
-What can be learned from this electrical equivalent diagram is that the magnet on the rotor side, on the d-axis diagram figure \ref{fig:PMSM_Equivalent_d_axis}, can be seen as a current source $i_m$. A change in flux of this magnet will induce a force resulting in current in the magnet. This is shown with the $R_m$ resistor.
-\todo[inline]{Morten: Explain further? need to read more to go from here to math-model below, might need help to explain it properly and correctly.}
+What can be learned from this electrical equivalent diagram is that the magnet on the rotor side, on the d-axis diagram figure \ref{fig:PMSM_Equivalent_d_axis}, can be seen as a current source $i_m$. A change in flux of this magnet will induce a force resulting in current in the magnet. This is shown with the $R_m$ resistor. Through this it is apparent that the d-axis is the flux part of the motor, while q is the current.
 
+To current control the motor, the model and controller will be developed for the q-axis of this equivalent diagram. The q-axis by itself resembles the equivalent circuit of a DC motor very much and this can be used to design a mathematical model of the motor.
 
 \subsection{State Space Model}
-A state space model is derived from the physical representation of a PMSM motor, figure \ref{fig:State_space_model1}, consisting of an electrical part on the left and a mechanical part on the right side of the model. The model is made in MatLab Simulink. The model is very similar to that of a DC motor when interpreted like this. A wind resistance has been added to show how it affects the torque of the motor. The value of the wind resistance is the rotational speed squared multiplied by a drag value. This value will be a negative number, which is then added to the torque output to slow down the motor. The drag can be approximated by looking at the gearings of the kart and the motors own drag coefficient. 
+A state space model is derived from the physical representation of a PMSM motor, figure \ref{fig:State_space_model1}, consisting of an electrical part on the left and a mechanical part on the right side of the model. The model is made in MatLab Simulink. The model is very similar to that of a DC motor when interpreted like this. A wind resistance has been added to show how it affects the torque of the motor. The value of the wind resistance is the rotational speed squared multiplied by a drag value. This value will be a negative number, which is then added to the torque output to slow down the motor. The drag can be approximated by looking at the gearings of the kart and the motors own drag coefficient.
 
 \begin{figure}[H]
 	\centering
@@ -54,7 +54,7 @@ A state space model is derived from the physical representation of a PMSM motor,
 	\label{fig:State_space_model1}
 \end{figure}
 
-Reducing this model to use transfer functions for the electrical and mechanical parts results in a more simple model with fewer loops. This model removes torque load, friction and wind resistance. It is shown on figure \ref{fig:State_space_model3}. It can be used to find controller values if the torque load, viscous friction and wind resistance are all seen as outside disturbances. The controller should be able to handle the amount of disturbance that can be found in these values. The wind resistance will get proportionally larger the faster the kart is moving, but for this first model it will not be taken into account. 
+Reducing this model to use transfer functions for the electrical and mechanical parts results in a more simple model with fewer loops. This model removes torque load, friction and wind resistance. It is shown on figure \ref{fig:State_space_model3}. It can be used to find controller values if the torque load, viscous friction and wind resistance are all seen as outside disturbances. The controller should be able to handle the amount of disturbance that can be found in these values. The wind resistance will get proportionally larger the faster the kart is moving, but for this first model it will not be taken into account. In the electric part of the circuit a new value $TS$ has been added to the denominator of the transfer function, this value is the electromagnetic time constant of the stator, defined as $TS=L/R$. The constant defined $J_{pro}$ is the projected inertia of the kart, based on the expected weight with a driver and also adding the inertia of each gearing cog.
 
 \begin{figure}[H]
 	\centering
@@ -103,14 +103,15 @@ Using masons rule \todo{Morten: dodds book reference to masons} the transfer fun
 Replacing $G(s)$ and rearranging to get the form of a characteristics equation the transfer function is equation \ref{eq:transfer_function_full}.
 
 %old equation. please leave (Morten)
-%\begin{equation}
-%\frac{I_m}{I_{ref}}=\frac{s^2\frac{K_p}{L}+s(\frac{K_i}{L}+\frac{K_pK_v}{J})+\frac{K_iK_v}{J_r}}{s^3+s^2(\frac{R}{2L}+\frac{K_v}{J}+\frac{K_p}{L})+s(\frac{3K_t^2}{2JL}+\frac{K_vR}{JL}+\frac{K_i}{L}+\frac{K_pK_v}{2J})+\frac{K_iK_v}{J}}
-%\label{eq:transfer_function_full}
-%\end{equation}
-
 \begin{equation}
-\dfrac{I_m}{I_{ref}}=\dfrac{L_a(K_i+K_p+s)}{s^2+s(\frac{R_a}{L_a}+\frac{1}{L_a}K_p)+\frac{1}{L_a}K_i+\frac{3K_t^2}{2JL_a}}
+\frac{I_m}{I_{ref}}=\frac{s^2\frac{K_p}{L}+s(\frac{K_i}{L}+\frac{K_pK_v}{J})+\frac{K_iK_v}{J_r}}{s^3+s^2(\frac{R}{2L}+\frac{K_v}{J}+\frac{K_p}{L})+s(\frac{3K_t^2}{2JL}+\frac{K_vR}{JL}+\frac{K_i}{L}+\frac{K_pK_v}{2J})+\frac{K_iK_v}{J}}
 \label{eq:transfer_function_full}
+\end{equation}
+
+%2nd order transfer function: dont delete
+\begin{equation}
+\dfrac{I_m}{I_{ref}}=\dfrac{L_a(K_i+K_ps)}{s^2+s(\frac{R_a}{L_a}+\frac{1}{L_a}K_p)+\frac{1}{L_a}K_i+\frac{3K_t^2}{2JL_a}}
+\label{eq:transfer_function_full2}
 \end{equation}
 
 This second order transfer function will be used to derive the controller values.
@@ -127,13 +128,13 @@ The d's of a given order can be looked up in Stephen J. Dodds' book \todo{cite b
 This yields the following second order equation for a second order system.
 
 \begin{equation}
-s^3+3\alpha^3s^2+3\alpha^2s+\alpha^3
+s^3+3\alpha s^2+3\alpha^2s+\alpha^3
 \end{equation}
 
 Based on the transfer function in equation ref and a settling time of 0.1 seconds, alpha will be defined by the following equation. This value is used to find the Kp and Ki values for the controller.
 
 \begin{equation}
-\alpha=\frac{1.5(1+n)}{T_s^{5\%}}=\frac{4.5}{0.1}=45
+\alpha=\frac{1.5(1+n)}{T_s^{5\%}}=\frac{6}{0.1}=60
 \label{eq:Dodds_settlingtime}
 \end{equation}
 
