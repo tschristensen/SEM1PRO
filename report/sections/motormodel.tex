@@ -140,12 +140,19 @@ Based on the transfer function in equation ref and a settling time of 0.1 second
 Finding the controller values.
 
 \begin{equation}
-3 \alpha= \frac{R}{2L}+ \frac{K_v}{J}+ \frac{K_p}{L} \rightarrow K_p=(3 \alpha - \frac{K_v}{J}- \frac{R}{2L})L
+
+
 \end{equation}
-\begin{equation}
-3 \alpha^2= \frac{2K_t^2}{2JL}+ \frac{K_vR}{JL}+ \frac{K_i}{L}+ \frac{K_pK_v}{2J} \rightarrow K_i=(3 \alpha^2- \frac{K_pK_v}{2J}- \frac{K_vR}{JL}- \frac{3K_t^2}{2JL})L
-\end{equation}
-\todo[inline]{Morten: The equations are wrong. the values are right.}
+
+
+
+%\begin{equation}
+%3 \alpha= \frac{R}{2L}+ \frac{K_v}{J}+ \frac{K_p}{L} \rightarrow K_p=(3 \alpha - \frac{K_v}{J}- \frac{R}{2L})L
+%\end{equation}
+%\begin{equation}
+%3 \alpha^2= \frac{2K_t^2}{2JL}+ \frac{K_vR}{JL}+ \frac{K_i}{L}+ \frac{K_pK_v}{2J} \rightarrow K_i=(3 \alpha^2- \frac{K_pK_v}{2J}- \frac{K_vR}{JL}- \frac{3K_t^2}{2JL})L
+%\end{equation}
+%\todo[inline]{Morten: The equations are wrong. the values are right.}
 
 These equations yield the following controller values, equation \ref{eq:Kpvalue} and \ref{eq:Kivalue}.
 \begin{equation}
@@ -160,6 +167,6 @@ K_i=0.4606
 \subsection{Simulation}
 Testing the $K_p$ and $K_i$ values should result in a stable current output from the electrical part of the motor, which is desired to control the torque. This simulation will add the $K_p$ and $K_i$ values to the control loop and review the outcome.
 
-
+\todo{Morten: Have to ask jacob about something before writing the rest of this. There are some issues with the third order derivation of KP and KI.}
 
 \clearpage

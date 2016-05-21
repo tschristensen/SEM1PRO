@@ -75,5 +75,19 @@ Hs=tf(Num2,Den2)
 %Kp=((3*Alpha^2)-b1)/a0
 
 
+%%%%%%%%%%%%%%% NEW 25/05-16 values.
+n1=2 % order of transfer function
+Tset1=0.1 % settling time 5% formula
+Alpha1=(1.5*(1+n1))/Tset1
+d_1=2*Alpha1
+d_0=Alpha1^2
+a_1=R/L
+b_1=1/L
+a_0=(3*Kt^2)/(2*J_pro*L)
+b_0=1/L
+KPNEW=(d_1-a_1)/b_1
+KINEW=(d_0-a_0)/b_0
+
+
 
 
