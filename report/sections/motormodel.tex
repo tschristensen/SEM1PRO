@@ -127,7 +127,7 @@ The d's of a given order can be looked up in Stephen J. Dodds' book \todo{cite b
 This yields the following second order equation for a second order system.
 
 \begin{equation}
-s^2+3\alpha^2s+\alpha^3
+s^3+3\alpha^3s^2+3\alpha^2s+\alpha^3
 \end{equation}
 
 Based on the transfer function in equation ref and a settling time of 0.1 seconds, alpha will be defined by the following equation. This value is used to find the Kp and Ki values for the controller.
@@ -140,19 +140,11 @@ Based on the transfer function in equation ref and a settling time of 0.1 second
 Finding the controller values.
 
 \begin{equation}
-
-
+3 \alpha= \frac{R}{2L}+ \frac{K_v}{J}+ \frac{K_p}{L} \rightarrow K_p=(3 \alpha - \frac{K_v}{J}- \frac{R}{2L})L
 \end{equation}
-
-
-
-%\begin{equation}
-%3 \alpha= \frac{R}{2L}+ \frac{K_v}{J}+ \frac{K_p}{L} \rightarrow K_p=(3 \alpha - \frac{K_v}{J}- \frac{R}{2L})L
-%\end{equation}
-%\begin{equation}
-%3 \alpha^2= \frac{2K_t^2}{2JL}+ \frac{K_vR}{JL}+ \frac{K_i}{L}+ \frac{K_pK_v}{2J} \rightarrow K_i=(3 \alpha^2- \frac{K_pK_v}{2J}- \frac{K_vR}{JL}- \frac{3K_t^2}{2JL})L
-%\end{equation}
-%\todo[inline]{Morten: The equations are wrong. the values are right.}
+\begin{equation}
+3 \alpha^2= \frac{2K_t^2}{2JL}+ \frac{K_vR}{JL}+ \frac{K_i}{L}+ \frac{K_pK_v}{2J} \rightarrow K_i=(3 \alpha^2- \frac{K_pK_v}{2J}- \frac{K_vR}{JL}- \frac{3K_t^2}{2JL})L
+\end{equation}
 
 These equations yield the following controller values, equation \ref{eq:Kpvalue} and \ref{eq:Kivalue}.
 \begin{equation}
