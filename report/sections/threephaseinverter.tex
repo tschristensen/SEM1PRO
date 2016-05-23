@@ -1,10 +1,187 @@
-\section{Power Electronics Design}
 
-
-\subsection{Three Phase Inverter}
+\section{Three phase inverter}
 
 
 
-%\subsection{Requirements}
-%\subsection{Analysis}
-%\subsection{Conclusion}
+\subsection{Choosing the MOSFETs}
+
+Before choosing the MOSFETs one will have to keep in mind the application parameters.
+Firstly the battery voltage of the Super-B(SB12V20P-FC)\todo{Erlingur - Super B datasheet} will on full charge have nominal voltage of 52.8V and a maximum end of charge voltage at 60.8V. 
+The MOSFETs will therefor need to be able to handle a minimum drain to source voltage, $V_{DSS}$, of 60.8V. 
+Secondly, the current drawn by the motor can reach a maximum peak of 300A.
+Thirdly, the motor driver(DRV8301)\todo{Erlingur - DRV8301 datasheet} will supply a gate voltage, $V_{GS}$, of 9.5V to 11.5V. 
+The MOSFETs will therefor need to be fully operating at $V_{GS} = 9.5V$ and be able to handle the driver supplied range.
+The three main requirements are listed in table \ref{tab:req1}\\
+
+\begin{table}[h!]
+	\caption{Three main requirements as a starting point for choosing the MOSFETs}
+	\centering
+	\begin{tabular}{clr}
+		  & Requirement\\
+		  \hline
+		1 & Can handle minimum voltage of & 60.8V\\
+		2 & Can handle minimum current of & 300A\\
+		3 & Operating at $V_{GS}$ of  & 9.5V \\
+		\hline
+	\end{tabular}
+	\label{tab:req1}
+\end{table}
+
+Do to high currents through the MOSFETs, the heat dissipation is assumed to be high as well. 
+To prevent overheating and burning out the MOSFETs they will be mounted on to a heat sink. 
+Therefore a through hole package will be suitable for this application. The chosen package is the TO-247. And the MOSFET IRFP4468PBF is chosen\todo{Erlingur - why this package and MOSFET?}.
+
+\begin{table}[h!]
+	\centering
+	\caption{Some important parameters from the IRFP4468PBF MOSFET datasheet... missing citation. all parameters are found at junction temperature $T_J = 25^{\circ}$C}
+\begin{tabular}{|l|l|c|c|c|c|}
+	\hline
+	\multicolumn{1}{|c|}{Symbol} & \multicolumn{1}{|c|}{Parameter} & Min. & Typ. &
+	 Max. & Units\\
+	\hline
+	$I_D$ & Continuous Drain Current (Silicon Limited) & - & - & 290 & A\\
+	\hline
+	$I_D$ & Continuous Drain Current (Package Limited) & - & - & 195 & A\\
+	\hline
+	$V_{GS}$ & Gate to Source Voltage & - & - & $\pm$20 & V\\
+	\hline
+	 $V_{GS(th)}$ & Gate Threshold Voltage & 2.0 & - & 4.0 & V\\
+	 \hline
+	 $V_{(BR}DSS$ & Drain to Source Breakdown Voltage & 100 & - & - & V\\
+	 \hline
+	 $R_{DS(on)}$ & Static Drain to Source On Resistance & - & 2.0 & 2.6 & m$\Omega$\\
+	 \hline
+	 
+\end{tabular}
+\label{tab:MOSdata}
+\end{table}
+
+The MOSFET parameters in table~\ref{tab:MOSdata} seems to add up to all the requirements in table~\ref{tab:req1}. 
+However the TO-247 package has a continuous drain current limit of 195A that is only around two third of the minimum current requirement. 
+This problem will be solved using two MOSFETs in parallel. 
+Using the parallel setup, the two MOSFETs will share the current equally so that each will have a maximum peak current of 150A.
+As will be later discussed, the setup will also decrease the conduction losses but increase the switching losses\todo{Erlingur - How will it increase the switching loss}.
+
+
+\subsection{Power Losses}
+
+To estimate the temperature, the power loss must be estimated. 
+The total power loss, $P_{loss}$ of a switching device can be estimated using equation~\ref{eq:p_loss} where $P_C$ and $P_{SW}$ are conduction- and switching losses respectively.  
+
+\begin{equation}
+P_{loss} = P_{C} + P_{SW}
+\label{eq:p_loss}
+\end{equation}
+
+Conduction loss of a single MOSFET can be calculated using equation~\ref{eq:p_c} and the switching loss with equation~\ref{eq:P_sw}
+
+\begin{equation}
+P_{C} = R_{DS(on)} I_{D,rms}^2
+\label{eq:p_c}
+\end{equation}
+
+\begin{equation}
+P_{SW} = \dfrac{1}{2} V I t f_{SW}
+\label{eq:P_sw}
+\end{equation}
+
+For simplicity the power loss will be estimated from a single phase of the inverter circuit seen in figure~\ref{fig:single_phase}. 
+The Current $I_{out}$ is drawn by some load $R_{load}$ that will absorb the load power $P_{load}$ which is given by equation\ref{eq:p_load}. 
+Since there are two switches, the load power must be delivered equally from both. Thus the output power, $P_{Q}$, of each switch is given by equation~\ref{eq:P_Q}  
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale = 0.6]{graphics/single_phase}
+	\caption{Single phase}
+	\label{fig:single_phase}
+\end{figure}
+
+
+\begin{equation}
+P_{load} = R_{load} I_{out,rms}^2
+\label{eq:p_load}
+\end{equation}
+
+\begin{equation}
+P_{Q} = \dfrac{P_{load}}{2} = R_{load} I_{Q,rms}^2
+\label{eq:P_Q}
+\end{equation}
+
+With insertion of equation~\ref{eq:p_load} into~\ref*{eq:P_Q} and solving for $I_{Q,rms}$, equation~\ref{eq:I_qrms} is formed.
+
+\begin{equation}
+\dfrac{R_{load} I_{out,rms}^2}{2} = R_{load} I_{Q,rms}^2 \rightarrow I_{Q,rms} = \dfrac{I_{out,rms}}{\sqrt{2}} 
+\label{eq:I_qrms}
+\end{equation}
+Which then again can be expressed as
+
+\begin{equation}
+I_{Q,rms} = \dfrac{I_{out,rms}}{\sqrt{2}} = \dfrac{I_{out}}{\sqrt{2}\sqrt{2}} = \dfrac{I_{out}}{2}
+\end{equation}
+As mentioned earlier each switch will consist of two MOSFETs. Therefor the Drain current of each MOSFET becomes
+
+\begin{equation}
+I_{Qi,rms}=\dfrac{I_{Q,rms}}{2} = \dfrac{I_{out}}{4}
+\label{I_Qi}
+\end{equation}
+
+Although listed in the datasheet, the drain to source resistance $R_{DS(on)}$ only applies to the  $T_J = 25^{\circ}$C condition. 
+The resistance will vary with the junction temperature $T_J$. 
+The relation between $T_J$ and $R_{DS(on)}$ can be seen in figure~\ref{fig:tj_rds} from where the multiplication factor can be estimated\todo{Erlingur-put the eq in}.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale =0.7]{graphics/T_n_R_compare}
+	\caption{The $R_{DS(on)}$ and $T_J$ relation at $I_D = 180A$ and $V_{GS} = 10V$}
+	\label{fig:tj_rds}
+\end{figure}
+
+If assumed that the junction temperature will be around $100^{\circ}C$ one can estimate the factor being somewhere close to 1.6. 
+Then $R_{DS(on),@100^{\circ}C}$ will have the value
+
+\begin{equation*}
+R_{DS(on),@100^{\circ}C} =  1.6 R_{DS(on),@25^{\circ}C}
+\end{equation*}
+
+then the conduction loss can be estimated using~\ref{eq:p_c} and \ref{I_Qi}
+
+\begin{equation*}
+P_{C} = R_{DS(on),@100^{\circ}C} I_{Qi,rms}^2
+\end{equation*}
+
+\subsection{Switching loss}
+The switching loss happens when the MOSFETs go from the on state to the off state and vice versa. This loss can be found with experiments. 
+When determining the switching loss only from calculations, some assumptions have to be made.
+We assume that the gate to source capacitance $C_{GS}$ is the same for on and off time. 
+The gate to source current is defined by equation~\ref{I_gs}. 
+
+
+\begin{equation}
+I = C\dfrac{dV}{dt}
+\label{I_gs}
+\end{equation}
+
+However, the gate to source current is known. the driver supports up to 2.3A sink and 1.7A source current. 
+
+\begin{figure}
+	\centering
+	\includegraphics[scale = 0.7]{graphics/sw_time_wavef}
+	\caption{Switching Time Waveforms}
+	\label{sw_time_wavef}
+\end{figure}
+
+\begin{table}
+	\centering
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		Symbol & Parameter & Typ. & Units\\
+		\hline
+		$t_r$ & Rise Time & 230 & ns\\
+		$t_f$ & Fall Time & 260 & ns\\
+		\hline
+	\end{tabular}
+\end{table}
+
+\pagebreak
