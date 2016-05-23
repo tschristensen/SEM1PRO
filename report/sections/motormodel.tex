@@ -54,30 +54,70 @@ A state space model is derived from the physical representation of a PMSM motor,
 	\label{fig:State_space_model1}
 \end{figure}
 
-Reducing this model to use transfer functions for the electrical and mechanical parts results in a more simple model with fewer loops. This model removes torque load, friction and wind resistance. It is shown on figure \ref{fig:State_space_model3}. It can be used to find controller values if the torque load, viscous friction and wind resistance are all seen as outside disturbances. The controller should be able to handle the amount of disturbance that can be found in these values. The wind resistance will get proportionally larger the faster the kart is moving, but for this first model it will not be taken into account. In the electric part of the circuit a new value $TS$ has been added to the denominator of the transfer function, this value is the electromagnetic time constant of the stator, defined as $TS=L/R$. The constant defined $J_{pro}$ is the projected inertia of the kart, based on the expected weight with a driver and also adding the inertia of each gearing cog.
+Reducing this model to use transfer functions for the electrical and mechanical parts results in a more simple model with fewer loops. This model removes torque load and wind resistance. It is shown on figure \ref{fig:State_space_model3}. It can be used to find controller values if the torque load and wind resistance are seen as outside disturbances. The controller should be able to handle the amount of disturbance that can be found in these values. The wind resistance will get proportionally larger the faster the kart is moving, but for this first model it will not be taken into account. In the electric part of the circuit a new value $TS$ has been added to the denominator of the transfer function, this value is the electromagnetic time constant of the stator, defined as $TS=L_a/R_a$. The constant defined $J_{pro}$ is the projected inertia of the kart, based on the expected weight with a driver and also adding the inertia of each gearing cog.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.95\linewidth]{graphics/State_space_model3}
-	\caption{PMSM motor model without torque load, friction and wind resistance.}
+	\caption{PMSM motor model without torque load and wind resistance.}
 	\label{fig:State_space_model3}
 \end{figure}
+
+The model from figure \ref{fig:State_space_model1} can also be reduced by removing the inductance completely, this yields a model of reduced order. Reducing the order results in a model that can be easier to derive a controller for, because it removes a pole from the system. The assumption here is that the inductor and integrators result in a very fast pole, that will be too fast to really affect the system. 
+Whether this is a correct assumption will be tested with a simulation of either model. This reduced order model is seen on figure \ref{fig:State_space_model_reduced_order}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.95\linewidth]{graphics/State_space_reduced_order}
+	\caption{Reduced order PMSM motor model.}
+	\label{fig:State_space_model_reduced_order}
+\end{figure}
+
+A pole-zero map of both models will be used to see whether the pole is as expected. Figure \ref{fig:PZmap_full} and \ref{fig:PZmap_Reduced} show this. 
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{.45\linewidth}
+		\includegraphics[width=\textwidth]{graphics/PZmap_FullOrder}
+		\caption{PZ map of full order model}
+		\label{fig:PZmap_full}
+	\end{subfigure}
+	\hspace{0.5cm}
+	\begin{subfigure}[t]{.45\linewidth}
+		\includegraphics[width=\textwidth]{graphics/PZmap_ReducedOrder}
+		\caption{PZ map of reduced order model}
+		\label{fig:PZmap_Reduced}
+	\end{subfigure}
+	\caption{Matlab Simulink PZ Map of each model}
+\end{figure}
+
+The simulation shows that the assumption about the inductor is correct with regards to the fast pole. The next simulation will show if the model has a similar output as the full order model. \newline
+
+
+The two state space models can also be simulated with MatLab Simulink to see how much the system is affected by the removal of the inductor and integrator. This will be shown by applying a constant voltage of $26.2V$ and then monitoring the results in both current output and angular velocity. The following figures show these simulations. \todo{ref here}
+
+
+
+\todo{Morten:Simulation pic of model with and without inductor here}
+
+
+ Hence the model of reduced order can be used to adequately simulate the motor, and for deriving a controller.
 
 \subsection{Controlling Current}
 The motor must be current controlled in order to limit the torque. If the motor was speed controlled, as is often used in motor control, it could demand a much higher current than possible by the circuit, requiring a limiter on the current input instead, or otherwise it could result in destroying the drive circuit. A current control also means that the speeder pedal will be a current reference, translating into a torque reference, resulting in an even motor speed even if the kart is driving on a uneven plane such as a hill.
 
-A control loop is added to the model, figure \ref{fig:State_space_model4}. It must be current controlled to control the torque. This means that a feedback loop is added from inside the motor back to the controller. 
+A control loop is added to the model, figure \ref{fig:State_space_model4}. It must be current controlled to control the torque. This means that a feedback loop is added from inside the motor model and fed back to the controller. On this figure it is shown with the full order system.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.95\linewidth]{graphics/State_space_model4}
-	\caption{PMSM motor model with a current control loop.}
+	\caption{Full PMSM motor model with a current control loop.}
 	\label{fig:State_space_model4}
 \end{figure}
 
 
 \subsection{Transfer Function}
-The model of figure \ref{fig:State_space_model4} can be rearranged to simplify the transfer function. This rearrangement can be seen on figure \ref{fig:State_space_model5}. Here the current is the output, a current reference is the input, and the mechanical part of the motor is all placed into a feedback loop. This reduces the complexity of the overall transfer function to only be plant model with a PI controller added as shown in figure \ref{fig:state_space_model6}.
+The model of figure \ref{fig:State_space_model4} can be rearranged to simplify the transfer function. This rearrangement can be seen on figure \ref{fig:State_space_model5}. Here the current is the output, a current reference is the input, and the mechanical part of the motor is all placed into a feedback loop. This reduces the complexity of the overall transfer function to only be a plant model with a PI controller added as shown in figure \ref{fig:State_space_model6}.
 
 \begin{figure}[H]
 	\centering
@@ -100,21 +140,34 @@ Using masons rule \todo{Morten: dodds book reference to masons} the transfer fun
 \label{eq:plant_masons}
 \end{equation}
 
+From \ref{fig:State_space_model1} and \ref{fig:State_space_model_reduced_order} the transfer models for full and reduced order models can be derived as well. Using Masons Rule this yields equation ref for full order and equation ref for reduced order.
+
+\begin{equation}
+\frac{4\, J\, \mathrm{Kv}\, L\, s}{3\, {\mathrm{Kt}}^2 + 2\, J\, L\, s^2 + 2\, J\, R\, s + 2\, \mathrm{Kv}\, L + 2\, \mathrm{Kv}\, R}
+\end{equation}
+
+\begin{equation}
+\frac{I_m}{I_{ref}}=\frac{2Js}{R(3K_t^2+2K_v+2Js)}
+\end{equation}
+
+
+
+
 Replacing $G(s)$ and rearranging to get the form of a characteristics equation the transfer function is equation \ref{eq:transfer_function_full}.
 
 %old equation. please leave (Morten)
 \begin{equation}
-\frac{I_m}{I_{ref}}=\frac{s^2\frac{K_p}{L}+s(\frac{K_i}{L}+\frac{K_pK_v}{J})+\frac{K_iK_v}{J_r}}{s^3+s^2(\frac{R}{2L}+\frac{K_v}{J}+\frac{K_p}{L})+s(\frac{3K_t^2}{2JL}+\frac{K_vR}{JL}+\frac{K_i}{L}+\frac{K_pK_v}{2J})+\frac{K_iK_v}{J}}
+\frac{I_m}{I_{ref}}=\frac{s^2\frac{K_p}{L}+s(\frac{K_i}{L}+\frac{K_pK_v}{J})+\frac{K_iK_v}{J_r}}{s^3+s^2(\frac{R}{2L}+\frac{K_v}{J}+\frac{K_p}{L})+s(\frac{3K_t^2}{2JL}+\frac{K_vR}{JL}+\frac{K_i}{L}+\frac{K_pK_v}{JL})+\frac{K_iK_v}{JL}}
 \label{eq:transfer_function_full}
 \end{equation}
 
 %2nd order transfer function: dont delete
-\begin{equation}
-\dfrac{I_m}{I_{ref}}=\dfrac{L_a(K_i+K_ps)}{s^2+s(\frac{R_a}{L_a}+\frac{1}{L_a}K_p)+\frac{1}{L_a}K_i+\frac{3K_t^2}{2JL_a}}
-\label{eq:transfer_function_full2}
-\end{equation}
+%\begin{equation}
+%\dfrac{I_m}{I_{ref}}=\dfrac{L_a(K_i+K_ps)}{s^2+s(\frac{R_a}{L_a}+\frac{1}{L_a}K_p)+\frac{1}{L_a}K_i+\frac{3K_t^2}{2JL_a}}
+%\label{eq:transfer_function_full2}
+%\end{equation}
 
-This second order transfer function will be used to derive the controller values.
+This third order transfer function will be used to derive the controller values.
 
 \subsection{Controller Values}
 To find the controller values the Stephen Dodds Settling Time Formula for $5\%$ settling time is used. The desired characteristics polynomial of a transfer function for the settling time formula to work is
@@ -123,9 +176,9 @@ To find the controller values the Stephen Dodds Settling Time Formula for $5\%$ 
 s^n+d_{n-1}s^{n-1}+\cdot \cdot \cdot +d_1s+d_0
 \end{equation}
 
-The d's of a given order can be looked up in Stephen J. Dodds' book \todo{cite book} on page 850.
-
-This yields the following second order equation for a second order system.
+The d's of a given order can be looked up in Stephen J. Dodds' book \todo{cite book} on page 850. They can also be derived by solving $(s+d)^n$ 
+for the given order of the characteristics equation.
+This yields the following third order equation for a third order system.
 
 \begin{equation}
 s^3+3\alpha s^2+3\alpha^2s+\alpha^3
@@ -138,14 +191,51 @@ Based on the transfer function in equation ref and a settling time of 0.1 second
 \label{eq:Dodds_settlingtime}
 \end{equation}
 
-Finding the controller values.
+Finding the controller values using the characteristics equation:
+\begin{equation}
+s^3+s^2\left(\frac{R}{2L}+\frac{K_v}{J}+\frac{K_p}{L}\right)+s\left( \frac{3K_t^2}{2JL}+\frac{K_vR}{JL}+\frac{K_i}{L}+\frac{K_pK_v}{JL}\right)+\frac{K_iK_v}{JL}
+\end{equation}
+
+Rewriting this to a normal form:
 
 \begin{equation}
-3 \alpha= \frac{R}{2L}+ \frac{K_v}{J}+ \frac{K_p}{L} \rightarrow K_p=(3 \alpha - \frac{K_v}{J}- \frac{R}{2L})L
+s^3+s^2(a_2+b_2K_p)+s(a_1+b_1K_i)+a_0+b_0
+\end{equation}
+
+Setting this equation equal to the one from Dodd's Settling Time Formula:
+
+\begin{equation}
+s^3+s^2(a_2+b_2K_p)+s(a_1+b_1K_i)+a_0+b_0 = s^3+d_2s^2+d_1s+d_0
+\label{eq:doddsnormaleq}
+\end{equation}
+
+From the characteristics equation the values of a and b can be found:
+\begin{equation}
+a_2=\frac{K_v}{J_m}+\frac{R_a}{L_a} \quad \quad b_2=\frac{1}{L_a}
 \end{equation}
 \begin{equation}
-3 \alpha^2= \frac{2K_t^2}{2JL}+ \frac{K_vR}{JL}+ \frac{K_i}{L}+ \frac{K_pK_v}{2J} \rightarrow K_i=(3 \alpha^2- \frac{K_pK_v}{2J}- \frac{K_vR}{JL}- \frac{3K_t^2}{2JL})L
+a_1=\frac{K_vR_a}{J_mL_a}+\frac{3}{2}\frac{K_t^2}{J_mL_a}+\frac{K_pK_v}{J_mL_a} \quad \quad b_1=\frac{1}{L_a}
 \end{equation}
+\begin{equation}
+a_0=0 \quad \quad b_0=\frac{K_v}{J_mL_a}
+\end{equation}
+
+From equation \ref{eq:doddsnormaleq}, the following equations can be made:
+\begin{equation}
+a_2+b_2K_p=d_2 \rightarrow K_p\frac{d_2-a_2}{b_2}
+\end{equation}
+
+\begin{equation}
+a_1+b_1K_i=d_1 \rightarrow K_i\frac{d_1-a_1}{b_1}
+\end{equation}
+
+%Old calculations of kp=0.0039 and Ki=0.4606. please leave it.
+%\begin{equation}
+%3 \alpha= \frac{R}{2L}+ \frac{K_v}{J}+ \frac{K_p}{L} \rightarrow K_p=(3 \alpha - \frac{K_v}{J}- \frac{R}{2L})L
+%\end{equation}
+%\begin{equation}
+%3 \alpha^2= \frac{2K_t^2}{2JL}+ \frac{K_vR}{JL}+ \frac{K_i}{L}+ \frac{K_pK_v}{2J} \rightarrow K_i=(3 \alpha^2- \frac{K_pK_v}{2J}- \frac{K_vR}{JL}- \frac{3K_t^2}{2JL})L
+%\end{equation}
 
 These equations yield the following controller values, equation \ref{eq:Kpvalue} and \ref{eq:Kivalue}.
 \begin{equation}
