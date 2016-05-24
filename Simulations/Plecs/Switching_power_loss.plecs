@@ -39,7 +39,7 @@ Plecs {
   Schematic {
     Location      [0, 29; 1920, 984]
     ZoomFactor    1.33333
-    SliderPosition [1170, 413]
+    SliderPosition [1170, -1]
     ShowBrowser   off
     BrowserWidth  100
     Component {
@@ -2049,24 +2049,24 @@ Plecs {
       Position      [305, 205]
       Direction     up
       Flipped       off
-      Location      [0, 29; 1920, 1005]
+      Location      [0, 38; 1916, 1014]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAACBAAAAyPwCAAAAA/sAAAAQAFoAbwBvA"
 "G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
 "///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAALwAAAMgAAABqAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB4AAAAOxAAAA"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3wAAAOxAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAfwAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABWAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
+"AAZAAAAAEAAABkAAAAugAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABWAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAABkAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
       ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "1"
+      Open          "0"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
@@ -2339,14 +2339,14 @@ Plecs {
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAjAAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABjAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
+"AAZAAAAAEAAABkAAAAxwAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABjAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAABkAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
       TimeRange     "0.0"
       ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "1"
+      Open          "0"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
@@ -2610,7 +2610,7 @@ Plecs {
       TimeRange     "0.0"
       ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "1"
+      Open          "0"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
@@ -2778,7 +2778,7 @@ Plecs {
       TimeRange     "0.0"
       ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "1"
+      Open          "0"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
@@ -3524,7 +3524,7 @@ Plecs {
       TimeRange     "0.0"
       ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "1"
+      Open          "0"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
@@ -4025,33 +4025,223 @@ Plecs {
         }
       }
     }
+    Component {
+      Type          Diode
+      Name          "D1"
+      Show          on
+      Position      [875, 360]
+      Direction     down
+      Flipped       off
+      Parameter {
+        Variable      "Vf"
+        Value         ".1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Ron"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "thermal"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Diode
+      Name          "D2"
+      Show          on
+      Position      [865, 225]
+      Direction     down
+      Flipped       off
+      Parameter {
+        Variable      "Vf"
+        Value         ".1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Ron"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "thermal"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Diode
+      Name          "D3"
+      Show          on
+      Position      [1210, 215]
+      Direction     down
+      Flipped       off
+      Parameter {
+        Variable      "Vf"
+        Value         ".1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Ron"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "thermal"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Diode
+      Name          "D4"
+      Show          on
+      Position      [1210, 365]
+      Direction     down
+      Flipped       off
+      Parameter {
+        Variable      "Vf"
+        Value         ".1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Ron"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "thermal"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Diode
+      Name          "D5"
+      Show          on
+      Position      [1515, 355]
+      Direction     down
+      Flipped       off
+      Parameter {
+        Variable      "Vf"
+        Value         ".1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Ron"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "thermal"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         "0"
+        Show          off
+      }
+    }
+    Component {
+      Type          Diode
+      Name          "D6"
+      Show          on
+      Position      [1510, 230]
+      Direction     down
+      Flipped       off
+      Parameter {
+        Variable      "Vf"
+        Value         ".1"
+        Show          off
+      }
+      Parameter {
+        Variable      "Ron"
+        Value         "0"
+        Show          off
+      }
+      Parameter {
+        Variable      "thermal"
+        Value         ""
+        Show          off
+      }
+      Parameter {
+        Variable      "T_init"
+        Value         "0"
+        Show          off
+      }
+    }
     Connection {
       Type          Wire
-      SrcComponent  "FET2"
+      SrcComponent  "R1"
       SrcTerminal   1
-      Points        [840, 185; 960, 185; 960, 145]
+      Points        [1365, 145]
       Branch {
-        Points        [1185, 145]
+        Points        [1210, 145]
         Branch {
-          Points        [1365, 145]
+          Points        [1185, 145]
           Branch {
-            Points        [1490, 145]
-            DstComponent  "FET4"
-            DstTerminal   1
+            Points        [960, 145]
+            Branch {
+              Points        [960, 185; 865, 185]
+              Branch {
+                Points        [840, 185]
+                DstComponent  "FET2"
+                DstTerminal   1
+              }
+              Branch {
+                DstComponent  "D2"
+                DstTerminal   2
+              }
+            }
+            Branch {
+              DstComponent  "Am3"
+              DstTerminal   2
+            }
           }
           Branch {
-            DstComponent  "R1"
+            DstComponent  "FET7"
             DstTerminal   1
           }
         }
         Branch {
-          DstComponent  "FET7"
-          DstTerminal   1
+          DstComponent  "D3"
+          DstTerminal   2
         }
       }
       Branch {
-        DstComponent  "Am3"
-        DstTerminal   2
+        Points        [1490, 145; 1490, 200]
+        Branch {
+          DstComponent  "FET4"
+          DstTerminal   1
+        }
+        Branch {
+          Points        [1510, 200]
+          DstComponent  "D6"
+          DstTerminal   2
+        }
       }
     }
     Connection {
@@ -4098,9 +4288,16 @@ Plecs {
       Branch {
         Points        [1180, 515; 1365, 515]
         Branch {
-          Points        [1490, 515]
-          DstComponent  "FET5"
-          DstTerminal   2
+          Points        [1490, 515; 1490, 390]
+          Branch {
+            DstComponent  "FET5"
+            DstTerminal   2
+          }
+          Branch {
+            Points        [1515, 390]
+            DstComponent  "D5"
+            DstTerminal   1
+          }
         }
         Branch {
           DstComponent  "R2"
@@ -4108,45 +4305,72 @@ Plecs {
         }
       }
       Branch {
-        Points        [840, 415]
+        Points        [875, 415]
         Branch {
-          Points        [530, 415]
+          Points        [840, 415]
           Branch {
-            Points        [445, 415]
+            Points        [530, 415]
             Branch {
-              Points        [260, 415]
-              DstComponent  "V_dc"
-              DstTerminal   2
+              Points        [445, 415]
+              Branch {
+                Points        [260, 415]
+                DstComponent  "V_dc"
+                DstTerminal   2
+              }
+              Branch {
+                DstComponent  "Bank EPR"
+                DstTerminal   1
+              }
             }
             Branch {
-              DstComponent  "Bank EPR"
+              DstComponent  "Am2"
               DstTerminal   1
             }
           }
           Branch {
-            DstComponent  "Am2"
-            DstTerminal   1
+            DstComponent  "FET3"
+            DstTerminal   2
           }
         }
         Branch {
-          DstComponent  "FET3"
-          DstTerminal   2
+          DstComponent  "D1"
+          DstTerminal   1
         }
+      }
+      Branch {
+        Points        [1210, 415]
+        DstComponent  "D4"
+        DstTerminal   1
       }
     }
     Connection {
       Type          Wire
-      SrcComponent  "FET6"
-      SrcTerminal   1
-      Points        [1180, 295; 1185, 295]
+      SrcComponent  "FET7"
+      SrcTerminal   2
+      Points        [1185, 295]
       Branch {
-        Points        [1290, 295; 1290, 290]
-        DstComponent  "3ph Meter"
-        DstTerminal   2
+        Points        [1180, 295; 1180, 330]
+        Branch {
+          DstComponent  "FET6"
+          DstTerminal   1
+        }
+        Branch {
+          Points        [1210, 330]
+          DstComponent  "D4"
+          DstTerminal   2
+        }
       }
       Branch {
-        DstComponent  "FET7"
-        DstTerminal   2
+        Points        [1210, 295]
+        Branch {
+          Points        [1290, 295; 1290, 290]
+          DstComponent  "3ph Meter"
+          DstTerminal   2
+        }
+        Branch {
+          DstComponent  "D3"
+          DstTerminal   1
+        }
       }
     }
     Connection {
@@ -4155,28 +4379,57 @@ Plecs {
       SrcTerminal   1
       Points        [960, 280]
       Branch {
-        Points        [960, 295; 840, 295]
-        DstComponent  "FET3"
-        DstTerminal   1
+        Points        [960, 295; 875, 295]
+        Branch {
+          Points        [840, 295]
+          DstComponent  "FET3"
+          DstTerminal   1
+        }
+        Branch {
+          DstComponent  "D1"
+          DstTerminal   2
+        }
       }
       Branch {
-        Points        [960, 250]
-        DstComponent  "FET2"
-        DstTerminal   2
+        Points        [960, 250; 865, 250]
+        Branch {
+          DstComponent  "FET2"
+          DstTerminal   2
+        }
+        Branch {
+          DstComponent  "D2"
+          DstTerminal   1
+        }
       }
     }
     Connection {
       Type          Wire
-      SrcComponent  "FET5"
-      SrcTerminal   1
+      SrcComponent  "3ph Meter"
+      SrcTerminal   3
       Points        [1490, 300]
       Branch {
-        DstComponent  "3ph Meter"
-        DstTerminal   3
+        Points        [1490, 330]
+        Branch {
+          DstComponent  "FET5"
+          DstTerminal   1
+        }
+        Branch {
+          Points        [1515, 330]
+          DstComponent  "D5"
+          DstTerminal   2
+        }
       }
       Branch {
-        DstComponent  "FET4"
-        DstTerminal   2
+        Points        [1490, 255]
+        Branch {
+          DstComponent  "FET4"
+          DstTerminal   2
+        }
+        Branch {
+          Points        [1510, 255]
+          DstComponent  "D6"
+          DstTerminal   1
+        }
       }
     }
     Connection {

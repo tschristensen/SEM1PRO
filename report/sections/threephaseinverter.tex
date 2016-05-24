@@ -56,11 +56,11 @@ Therefore a through hole package will be suitable for this application. The chos
 \label{tab:MOSdata}
 \end{table}
 
-The MOSFET parameters in table~\ref{tab:MOSdata} seems to add up to all the requirements in table~\ref{tab:req1}. 
+The MOSFET parameters in table~\ref{tab:MOSdata} seems to add up to all the requirements in table~\ref{tab:req1}. \todo{well not really. Even the silicon limit isn't enought to handle 300 A comfortably.}
 However the TO-247 package has a continuous drain current limit of 195A that is only around two third of the minimum current requirement. 
 This problem will be solved using two MOSFETs in parallel. 
-Using the parallel setup, the two MOSFETs will share the current equally so that each will have a maximum peak current of 150A.
-As will be later discussed, the setup will also decrease the conduction losses but increase the switching losses\todo{Erlingur - How will it increase the switching loss}.
+Using the parallel setup, the two MOSFETs will share the current equally so that each will have a maximum peak current of 150A \todo{Martin: Because if one draws more current than the other, it will raise temperature, then rds-on and then reduce current.}.
+As will be later discussed, the setup will also decrease the conduction losses but increase the switching losses\todo{Erlingur - How will it increase the switching loss. Martin: because switching loss is dependent on switching time, current and voltage. with two in parallel, the switching time will go up, but the current will go down. And then there are two mosfets switching, so the switching loss should be approximately double}.
 
 
 \subsection{Power Losses}
