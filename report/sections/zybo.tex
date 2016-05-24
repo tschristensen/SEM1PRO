@@ -1,6 +1,5 @@
 %!TEX root = ../main.tex
 \section{Embedded Design}
-\label{sec:embedded}
 \todo[inline]{Thomas: Describe why the zybo is used!}
 \todo[inline]{Thomas: Describe the encoders of the motor.}
 An embedded system is needed to handle a wide range array. 
@@ -44,9 +43,7 @@ A task diagram of the complete system on the Zybo can be seen in figure \ref{fig
 	\caption[Task diagram.]{Task diagram of the complete system on the Zybo. Inside ARM rectangle circles are separate tasks while boxes are shared variables. In the FPGA area all the FPGA components are shown. Outside the rectangle all the signals to and from the outside world are shown.}
 	\label{fig:task_diagram}
 \end{figure}
-\todo[inline]{Thomas: Task diagram seems like it could be slightly smaller without any problems, signals from 3 phase pwm generator to world}
-\todo[inline]{Thomas: Task diagram: LEDs, no reason to write Pinx3, UART RX = UART receive, UART TX = UART Transmit, Vsq\_ref+Vsd\_ref stretch to fit entire word on one line, Censor = Sensor. Also, the TX/RX buffers should be labeled to match the text}
-\todo[inline]{Thomas: Task diagram: The distinction between PL, PS and world is not clear}
+\todo[inline]{Thomas: Task diagram: Vsq\_ref+Vsd\_ref stretch to fit entire word on one line. Also, the TX/RX buffers should be labeled to match the text}
 \todo[inline]{add ARM label. Add RX/TX buffer. text to tx. -Mikkel}
 As can be seen various signals are coming from the outside world through the FPGA into the ARM processor.
 The signals from the current sensors and the the pedal will go to the ADC on the Zybo board. 
@@ -116,7 +113,6 @@ Afterwards the calculated dutycycles will be written to the PWM generator in the
 	\label{fig:pwm_task}
 \end{figure}
 
-\todo[inline]{Smaller figure and less whitespace and change the order of vsd and vsq? -MIkkel}
 \todo[inline]{Where should we talk about the concept of dq and the meaning of it? -MIkkel}
 \todo[inline]{Third harmonic injection and why? -MIkkel}
 
@@ -173,6 +169,24 @@ It was choosen to use the SSI output as an IP core reading the position by SSI c
 Reading the position throug SSI yields a resolution of 8bit per mechanical revolution. 
 The IP core outputs a clock to the RMB28MD chip and reads data from a datapin. 
 It then makes the data available on the AXI4LITE bus, where it can be read from software. 
+
+\subsection{SPI communication}
+
+\begin{figure}[!h]
+	\centering
+		\includegraphics[width=1\linewidth]{graphics/spi_timing}
+	\caption[SPI timing requirements.]{SPI timing requirements.From datasheet? How to cite?}
+	\label{fig:spi_timing}
+\end{figure}
+
+\begin{figure}[!h]
+	\centering
+		\includegraphics[width=1\linewidth]{graphics/spi}
+	\caption[SPI communication.]{SPI communication from scope...}
+	\label{fig:spi_graph}
+\end{figure}
+
+
 
 \subsection{TEST or whatever}
 

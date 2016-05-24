@@ -23,7 +23,7 @@ J_pro2 = m*r^2*(G1/G2)^2;
 F_N = 9.8*m*weight_distribution;
 static = 1.1;
 dynamic = 0.75;
-viscous = 8e-5;
+viscous = 0;
 
 n1=0:255;
 offset = 0;
