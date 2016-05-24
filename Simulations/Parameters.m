@@ -53,10 +53,10 @@ Ds=tf(Num1,Den1);
 
 Tset=0.05;
 
-% alpha=(1.5*(1+3))/Tset;
-% Kp=(3*alpha-Kv/J_pro-(R/(2*L)))*L;
-% Ki=(3*alpha^2-((Kp*Kv)/(2*J_pro)-(Kv*R)/(J_pro*L)-(3*Kt^2)/(2*J_pro*L)))*L;
+alpha=(1.5*(1+3))/Tset;
+Kp=(3*alpha-Kv/J_pro-(R/(2*L)))*L;
+Ki=(3*alpha^2-((Kp*Kv)/(2*J_pro)-(Kv*R)/(J_pro*L)-(3*Kt^2)/(2*J_pro*L)))*L;
 
-Kp = (9/Tset - R/L)*L;
-Ki = (4.5/Tset)^2*L;
+% Kp = (9/Tset - R/L)*L;
+% Ki = (4.5/Tset)^2*L;
 
