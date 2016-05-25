@@ -312,8 +312,93 @@ In attempting this, much was learned about its functionality.\\
 
 The OCP detects an OCE by measuring $V_{ds}$.
 $V_{ds}$ for the high side of either channel is measured between pin SH\_x and PVDD1 while the low side $V_{ds}$ is measured between SL\_x and SH\_x.
-
+$R_{ds(on)}$ is known from the MOSFETs the threshold $V_{ds}$ for any $I_{ds}$ can be determined:
+\begin{equation}
+	V_{ds} = R_{ds(on)}\cdot I_{ds}
+\end{equation}
+Since the maximum $I_{ds}=300$\si{\ampere} and $R_{ds(on)}=3.2$\si{\milli\ohm} for the IRFP4468PBF (the MOSFET chosen for the inverter, see section \ref{sec:mosfet}):
+\begin{equation}
+	V_{ds} = 0.96\si{\volt}
+\end{equation}
+Clearly, it is necessary to set the correct threshold of $V_{ds}$.
+This parameter as well as several others can be set using SPI.
 
 \subsubsection{SPI}
 The DRV8301 is capable of performing SPI communication as a slave.
-This can be used to read status registers of the chip and set configuration options.
+As mentioned above, this can be used to change various parameters concerning the functionality of the chip.
+When sending a message to the driver, it will respond in the following communication cycle with the appropriate information.
+Figure \ref{fig:spipacket} is a depiction the format of an SPI input data packet.
+Any message sent to the driver must adhere to this format.
+As can be seen, the first 11 bits are data, followed by 4 address bits and finally, a read/write bit.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\linewidth]{graphics/spipacket}
+	\caption{SPI input data packet format of the DRV8301.}
+	\label{fig:spipacket}
+\end{figure}
+
+Figure \ref{fig:spipacketresponse} is a depiction of the format of an SPI output data packet.
+Upon receiving a message on SDI a response is prepared in this format.
+In a response packet, the R/W bit is used as a fault bit, indicating whether the received packet is valid.
+For a data packet to be considered valid, the DRV8301 requires the following:
+\begin{itemize}
+	\item SCLK must be low when $\overline{\text{SCS}}$ goes low.
+	\item Packet must have 16 full clock cycles.
+	\item SCLK must be low when  $\overline{\text{SCS}}$ goes high.
+\end{itemize}
+
+If the received packet is of type WRITE, the data in the response will contain the contents of status register 1, see figure \ref{fig:statreg1}.
+Using a READ message the contents of any of the four registers can be read at any time.\\
+
+All of the control of the functionality of the DRV8301 can be done through the control registers as seen in figure \ref{fig:contreg}.
+Of interest to this project are OCP\_MODE and OC\_ADJ\_SET. 
+OCP\_MODE allows the user to set the mode of operation of the OCP. 
+One of four options can be chosen: current limit mode, OC latch shut down mode, report only mode and OC disabled mode.
+During testing the driver was being run in OC disabled mode, however, during this time it was decided to attempt using the feature for detection of OCE's.
+Since the maximum allowed current through the IRFP4468PBF (the MOSFET chosen for the inverter, see section \ref{sec:mosfet}) is 300\si{\ampere} and its $R_{ds(on)=3.2}$\si{\milli\ampere} the 
+OC\_ADJ\_SET allows setting the value of $V_{ds}$ appropriate for the type of MOSFET chosen.
+
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\linewidth]{graphics/spipacketresponse}
+	\caption{SPI output data packet format of the DRV8301.}
+	\label{fig:spipacketresponse}
+\end{figure}
+
+\begin{figure}
+	\begin{subfigure}[b]{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{graphics/statreg1}
+		\caption{Status register 1 of the DRV8301.}
+		\label{fig:statreg1}
+	\end{subfigure}
+	\\
+	\begin{subfigure}[b]{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{graphics/statreg2}
+		\caption{Status register 2 of the DRV8301.}
+		\label{fig:statreg2}
+	\end{subfigure}
+	\caption{These registers contain the error bits of the system.}
+	\label{fig:statreg}
+\end{figure}
+
+\begin{figure}
+	\begin{subfigure}[b]{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{graphics/contreg1}
+		\caption{Control register 1 of the DRV8301.}
+		\label{fig:contreg1}
+	\end{subfigure}
+	\\
+	\begin{subfigure}[b]{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{graphics/contreg2}
+		\caption{Control register 2 of the DRV8301.}
+		\label{fig:contreg2}
+	\end{subfigure}
+	\caption{These registers are used to control the functionality of the DRV8301.}
+	\label{fig:contreg}
+\end{figure}
