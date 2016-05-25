@@ -45,10 +45,15 @@ Gs=tf(Num,Den);
 
 
 % % Transfer function of model with current as output:
-Num1=[2*J_pro 2*Kv*L];
+Num1=[2*J_pro 2*Kv];
 Den1=[2*J_pro*L 2*Kv*L+2*J_pro*R 3*Kt^2+2*Kv*R];
 Ds=tf(Num1,Den1);
-% 
+
+%%Fulld order model from michael
+num4=[2*J_pro 2*Kv];
+den4=[2*J_pro*L 2*J_pro*R+2*Kv*L 3*Kt^2+2*Kv*R];
+Gs=tf(num4,den4)
+
 % 
 % % Finding the KP and KI values. Done by hand using settling time formula:
 Tset=0.1;
@@ -103,7 +108,11 @@ a00=0;
 b00=((Kv)/(J_pro*L));
 Ki_v3=(d01-a01)/b01
 
+%Jacob tal
+Ts_J = 0.05; % settling time
 
+kp_J = (9/Ts_J-R/L)*L
+ki_J = (4.5/Ts_J)^2 * L
 
 
 

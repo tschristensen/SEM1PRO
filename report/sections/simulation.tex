@@ -202,20 +202,22 @@ This neutral seems to need a dc path to ground, and so does the controlled volta
 Since the external ground cannot be connected to the internal star point of the motor, the connection is made with a very large resistor of 1\si{\giga\ohm}. 
 The lighter blue wire going into the "\texttildelow" port of the PMSM block is a three phase electrical cable, which is used throughout the SimPowerSystem sublibrary, and the Splitter collects three wires into a cable. \\
 
-Current is sensed on wires A and B, and used to calculate $I_C$ in the upper part of the block diagram. 
-The signal goes to a Clarke-Park transformation block outside figure~\ref{fig:simulations_electrical}, and returns as "\texttildelow" $I_d$ and $I_q$ on the bottom left part of the picture. \\
+Current is sensed on wires A and B, and used to calculate $I_C$ in the Zybo block.
 
 The angular position is measured with an ideal position sensor, and then sent to the encoder block.
-Here, the finite precision of the encoder is simulated by "\texttildelow" equation~\ref{eq:Encoder_block_function}
+Here, the finite precision of the encoder is simulated by equation~\ref{eq:Encoder_block_function}
 
 \begin{equation}
 \label{eq:Encoder_block_function}
-output = \left\lfloor\frac{\phi \cdot 256}{2 \pi} \% 256\right\rfloor
+output = \left\lfloor \Bigg( \frac{\phi \cdot 256}{2 \pi} + 0.5 \Bigg) \% 256\right\rfloor
 \end{equation}
 
-Where \% is the mod function. 
-The purpose of that is to wrap the output to a value between 0 and 255, which can be used for look-up tables. 
-The floor function rounds a number, effectively quantizing the output. 
+where \% is the mod function. 
+The purpose of that is to wrap \todo{Wrap is the common way of saying, if a number goes outside a range, it restarts from the other end of the range, like an integer overflow is (ofteh) handled in coding.} the output to a value between 0 and 255, which can be used for look-up tables. 
+The round down function rounds a number, effectively quantizing the output. 
+The reason for using round down rather than just round is to ensure, that the number ranges from 0 to 255. 
+To combat the inaccuracy of the round down function, 0.5 is added. 
+The parking test in section~\ref{sub:parking_test}, does not have accuracy of less than one, so in reality, there is likely an inaccuracy of $\mathrm{\pm 1}$
 It has been attempted to use the quantizer block, but that causes stiffness to the point where the simulations almost stall. 
 The output is sent to the Zybo block, which will be explained in section~\ref{sub:sim_zybo}.\\
 
