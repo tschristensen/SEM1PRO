@@ -1,6 +1,6 @@
 clear all;clc;
 % Mechanical constants
-m = 180;            % Total mass of the car with driver
+m = 200;            % Total mass of the car with driver
 weight_distribution = 0.6; %how large a percentage of the mass is on the rear wheels.
 r = 11*.0254/2;     % Radius of driving wheels
 G1 = 12;            % Number of teeth on motor-side cog
@@ -56,4 +56,7 @@ Tset=0.05;
 alpha=(1.5*(1+3))/Tset;
 Kp=(3*alpha-Kv/J_pro-(R/(2*L)))*L;
 Ki=(3*alpha^2-((Kp*Kv)/(2*J_pro)-(Kv*R)/(J_pro*L)-(3*Kt^2)/(2*J_pro*L)))*L;
+
+% Kp = (9/Tset - R/L)*L;
+% Ki = (4.5/Tset)^2*L;
 

@@ -38,7 +38,7 @@ The figures show that the PMSM motor can be represented as an electrical diagram
 \end{figure}
 \todo{Morten: add source to cites or make it yourself!}
 
-The components shows are: the mutual inductance $l_s$, $L_md$ and $L_mq$. Armature resistance $R_s$ and flux leakage for both d and q axes.
+The components shown are: the mutual inductance $l_s$, $L_md$ and $L_mq$. Armature resistance $R_s$ and flux leakage for both d and q axes.
 
 What can be learned from this electrical equivalent diagram is that the magnet on the rotor side, on the d-axis diagram figure \ref{fig:PMSM_Equivalent_d_axis}, can be seen as a current source $i_m$. A change in flux of this magnet will induce a force resulting in current in the magnet. This is shown with the $R_m$ resistor. Through this it is apparent that the d-axis is the flux part of the motor, while q is the current.
 
@@ -63,6 +63,7 @@ Reducing this model to use transfer functions for the electrical and mechanical 
 	\label{fig:State_space_model3}
 \end{figure}
 
+\subsubsection{Reduced Order Model - No Inductor}
 The model from figure \ref{fig:State_space_model1} can also be reduced by removing the inductance completely, this yields a model of reduced order. Reducing the order results in a model that can be easier to derive a controller for, because it removes a pole from the system. The assumption here is that the inductor and integrators result in a very fast pole, that will be too fast to really affect the system. 
 Whether this is a correct assumption will be tested with a simulation of either model. This reduced order model is seen on figure \ref{fig:State_space_model_reduced_order}.
 
@@ -93,15 +94,56 @@ A pole-zero map of both models will be used to see whether the pole is as expect
 
 The simulation shows that the assumption about the inductor is correct with regards to the fast pole. The next simulation will show if the model has a similar output as the full order model. \newline
 
+The two state space models will be simulated with MatLab Simulink to see how much the system is affected by the removal of the inductor and integrator. This will be shown by applying a constant voltage of $26.2V$ and then monitoring the results in both current output and angular velocity. The following figures show these simulations. Figure \ref{fig:Full_Vs_Reduced1_Current} and \ref{fig:Full_Vs_Reduced1_Speed}.
 
-The two state space models can also be simulated with MatLab Simulink to see how much the system is affected by the removal of the inductor and integrator. This will be shown by applying a constant voltage of $26.2V$ and then monitoring the results in both current output and angular velocity. The following figures show these simulations. \todo{ref here}
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{.45\linewidth}
+		\includegraphics[width=\textwidth]{graphics/Full_Vs_Reduced1_Current}
+		\caption{Simulation of full order model}
+		\label{fig:Full_Vs_Reduced1_Current}
+	\end{subfigure}
+	\hspace{0.5cm}
+	\begin{subfigure}[t]{.45\linewidth}
+		\includegraphics[width=\textwidth]{graphics/Full_Vs_Reduced1_Speed}
+		\caption{Simulation of reduced order model}
+		\label{fig:Full_Vs_Reduced1_Speed}
+	\end{subfigure}
+	\caption{Matlab Simulink of each model with the same input}
+\end{figure}
 
+ A problem shows up by these simulations. The speed looks fine for the reduced order model but the current is not defined at zero. This is due to the removal of the inductor and integrator which removes an instance of zero being multiplied by $\tfrac{1}{R}$. The model not being defined at zero means that it is not a good idea to use it to develop a controller. The amplitude of speed and current are not important at this time, as that will be controlled later. 
 
+\subsubsection{Reduced Order Model 2 - No Mechanical}
+ Yet another reduced model can be derived, this model will be an experiment to remove the slow pole from the full order model. This should affect the system somehow, but by making a robust controller and viewing the entire mechanical system of the motor as a disturbance this should work. The model will be much simpler. It can be seen on fig: \ref{fig:State_space_model_reduced_order_v2}.
 
-\todo{Morten:Simulation pic of model with and without inductor here}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.75\linewidth]{graphics/State_space_reduced_order_v2}
+	\caption{Reduced order PMSM motor model version 2.}
+	\label{fig:State_space_model_reduced_order_v2}
+\end{figure}
 
+This model is basically an LR circuit where the output is the current between L and R. The current will just go as high as the L and R allows and stay there, since there is no disturbance or mechanical parts included. A PZ map should shows that the slow pole to the right is removed. Figure \ref{fig:PZmap_reduced_v2} shows the result.
 
- Hence the model of reduced order can be used to adequately simulate the motor, and for deriving a controller.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.55\linewidth]{graphics/PZmap_ReducedOrder_V2}
+	\caption{PZ map of the reduced order model version 2}
+	\label{fig:PZmap_reduced_v2}
+\end{figure}
+
+The slow pole is gone, this is an important pole because it is as slow as it is, so it might not be a good idea to remove it. Although the controller should be fast enough to react to the subtle changes in the speeder pedal, and robust because overshoot and steady state error should be intolerable, it should be able to handle all the mechanicals as a disturbance. A second simulation will test the current output. Figure \ref{fig:Full_Vs_Reduced2}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.55\linewidth]{graphics/Full_Vs_Reduced2_Current}
+	\caption{Fulld order vs reduced order model version 2}
+	\label{fig:Full_Vs_Reduced2}
+\end{figure}
+
+This shows that the current ramps up and stays there. It is defined in zero, unlike the other reduced order model. This model could be used with a controller, but will require some simulations with the motor after a controller has been developed.
+
 
 \subsection{Controlling Current}
 The motor must be current controlled in order to limit the torque. If the motor was speed controlled, as is often used in motor control, it could demand a much higher current than possible by the circuit, requiring a limiter on the current input instead, or otherwise it could result in destroying the drive circuit. A current control also means that the speeder pedal will be a current reference, translating into a torque reference, resulting in an even motor speed even if the kart is driving on a uneven plane such as a hill.
@@ -116,7 +158,7 @@ A control loop is added to the model, figure \ref{fig:State_space_model4}. It mu
 \end{figure}
 
 
-\subsection{Transfer Function}
+\subsection{Full Order Transfer Function}
 The model of figure \ref{fig:State_space_model4} can be rearranged to simplify the transfer function. This rearrangement can be seen on figure \ref{fig:State_space_model5}. Here the current is the output, a current reference is the input, and the mechanical part of the motor is all placed into a feedback loop. This reduces the complexity of the overall transfer function to only be a plant model with a PI controller added as shown in figure \ref{fig:State_space_model6}.
 
 \begin{figure}[H]
@@ -136,22 +178,15 @@ The model of figure \ref{fig:State_space_model4} can be rearranged to simplify t
 Using masons rule \todo{Morten: dodds book reference to masons} the transfer function can be derived. Seeing the control loop as a controller and a plant the following equation is achieved. Equation \ref{eq:plant_masons}.
 
 \begin{equation}
-\dfrac{I_m}{I_{ref}}= \dfrac{(K_p+K_i\frac{1}{s})G(s)}{1+G(s)(K_p+K_i \frac{1}{s})}
+\dfrac{I_q}{I_{q-ref}}= \dfrac{(K_p+K_i\frac{1}{s})G(s)}{1+G(s)(K_p+K_i \frac{1}{s})}
 \label{eq:plant_masons}
 \end{equation}
 
 From \ref{fig:State_space_model1} and \ref{fig:State_space_model_reduced_order} the transfer models for full and reduced order models can be derived as well. Using Masons Rule this yields equation ref for full order and equation ref for reduced order.
 
 \begin{equation}
-\frac{4\, J\, \mathrm{Kv}\, L\, s}{3\, {\mathrm{Kt}}^2 + 2\, J\, L\, s^2 + 2\, J\, R\, s + 2\, \mathrm{Kv}\, L + 2\, \mathrm{Kv}\, R}
+\frac{I_q}{I_{q-ref}}=G(s)=\frac{2 J_m s + 2 K_v}{s^2(2 J_m L_a) + s(2 K_v L_a + 2 J_m R_a)+3 K_t^2 + 2K_v R_a}
 \end{equation}
-
-\begin{equation}
-\frac{I_m}{I_{ref}}=\frac{2Js}{R(3K_t^2+2K_v+2Js)}
-\end{equation}
-
-
-
 
 Replacing $G(s)$ and rearranging to get the form of a characteristics equation the transfer function is equation \ref{eq:transfer_function_full}.
 
@@ -169,7 +204,7 @@ Replacing $G(s)$ and rearranging to get the form of a characteristics equation t
 
 This third order transfer function will be used to derive the controller values.
 
-\subsection{Controller Values}
+\subsection{Full Order Controller Values}
 To find the controller values the Stephen Dodds Settling Time Formula for $5\%$ settling time is used. The desired characteristics polynomial of a transfer function for the settling time formula to work is
 
 \begin{equation}
@@ -196,48 +231,56 @@ Finding the controller values using the characteristics equation:
 s^3+s^2\left(\frac{R}{2L}+\frac{K_v}{J}+\frac{K_p}{L}\right)+s\left( \frac{3K_t^2}{2JL}+\frac{K_vR}{JL}+\frac{K_i}{L}+\frac{K_pK_v}{JL}\right)+\frac{K_iK_v}{JL}
 \end{equation}
 
-Rewriting this to a normal form:
+Separating each part of the characteristics equation into added and multiplied components using the following form:
 
 \begin{equation}
 s^3+s^2(a_2+b_2K_p)+s(a_1+b_1K_i)+a_0+b_0
 \end{equation}
 
-Setting this equation equal to the one from Dodd's Settling Time Formula:
+From the characteristics equation the values of a and b can be found. Setting this equation equal to the one from Dodd's Settling Time Formula yields a solution to finding $K_p$ and $K_i$:
+
+%%%Morten: These calculations are for the reduced order model (v1). please leave until complete.
+%\begin{align}
+%a_2&=\frac{K_v}{J_m}+\frac{R_a}{L_a}  &b_2&=\frac{1}{L_a}\nonumber\\
+%a_1&=\frac{K_vR_a}{J_mL_a}+\frac{3}{2}\frac{K_t^2}{J_mL_a} &b_1&=\frac{1}{L_a}+\frac{K_pK_v}{J_mL_a}\nonumber\\
+%a_ 0&=0  &b_0&=\frac{K_v}{J_mL_a}\nonumber
+%\end{align}
+
+Solving the above equation for $d_2$ and $d_1$ 
+
 
 \begin{equation}
 s^3+s^2(a_2+b_2K_p)+s(a_1+b_1K_i)+a_0+b_0 = s^3+d_2s^2+d_1s+d_0
 \label{eq:doddsnormaleq}
 \end{equation}
 
-From the characteristics equation the values of a and b can be found:
-\begin{equation}
-a_2=\frac{K_v}{J_m}+\frac{R_a}{L_a} \quad \quad b_2=\frac{1}{L_a}
-\end{equation}
-\begin{equation}
-a_1=\frac{K_vR_a}{J_mL_a}+\frac{3}{2}\frac{K_t^2}{J_mL_a}+\frac{K_pK_v}{J_mL_a} \quad \quad b_1=\frac{1}{L_a}
-\end{equation}
-\begin{equation}
-a_0=0 \quad \quad b_0=\frac{K_v}{J_mL_a}
-\end{equation}
-
-From equation \ref{eq:doddsnormaleq}, the following equations can be made:
-\begin{equation}
-a_2+b_2K_p=d_2 \rightarrow K_p\frac{d_2-a_2}{b_2}
-\end{equation}
-
-\begin{equation}
-a_1+b_1K_i=d_1 \rightarrow K_i\frac{d_1-a_1}{b_1}
-\end{equation}
 
 %Old calculations of kp=0.0039 and Ki=0.4606. please leave it.
+\begin{equation}
+3 \alpha= \frac{R}{2L}+ \frac{K_v}{J}+ \frac{K_p}{L}
+\end{equation}
+\begin{equation}
+\rightarrow K_p=(3 \alpha - \frac{K_v}{J}- \frac{R}{2L})L
+\end{equation}\newline
+\begin{equation}
+3 \alpha^2= \frac{2K_t^2}{2JL}+ \frac{K_vR}{JL}+ \frac{K_i}{L}+ \frac{K_pK_v}{2J}
+\end{equation}
+\begin{equation}
+\rightarrow K_i=(3 \alpha^2- \frac{K_pK_v}{2J}- \frac{K_vR}{JL}- \frac{3K_t^2}{2JL})L
+\end{equation}
+
+
+%%Morten: Calculations from reduced order transfer function that does not work.
+%From equation \ref{eq:doddsnormaleq}, the following equations can be made:
 %\begin{equation}
-%3 \alpha= \frac{R}{2L}+ \frac{K_v}{J}+ \frac{K_p}{L} \rightarrow K_p=(3 \alpha - \frac{K_v}{J}- \frac{R}{2L})L
+%a_2+b_2K_p=d_2 \rightarrow K_p\frac{d_2-a_2}{b_2}
 %\end{equation}
+%
 %\begin{equation}
-%3 \alpha^2= \frac{2K_t^2}{2JL}+ \frac{K_vR}{JL}+ \frac{K_i}{L}+ \frac{K_pK_v}{2J} \rightarrow K_i=(3 \alpha^2- \frac{K_pK_v}{2J}- \frac{K_vR}{JL}- \frac{3K_t^2}{2JL})L
+%a_1+b_1K_i=d_1 \rightarrow K_i\frac{d_1-a_1}{b_1}
 %\end{equation}
 
-These equations yield the following controller values, equation \ref{eq:Kpvalue} and \ref{eq:Kivalue}.
+These equations yield the following controller values when inserting the known motor parameters, equation \ref{eq:Kpvalue} and \ref{eq:Kivalue}.
 \begin{equation}
 K_p=0.0039
 \label{eq:Kpvalue}
@@ -247,9 +290,65 @@ K_i=0.4606
 \label{eq:Kivalue}
 \end{equation}
 
-\subsection{Simulation}
-Testing the $K_p$ and $K_i$ values should result in a stable current output from the electrical part of the motor, which is desired to control the torque. This simulation will add the $K_p$ and $K_i$ values to the control loop and review the outcome.
+\subsection{Reduced Order Transfer Function}
+The same procedure as for the full order system will be used for this transfer function. The overall transfer function using the diagram of figure \ref{fig:State_space_model_reduced_order_v2} and Masons Rule becomes:
 
-\todo{Morten: Have to ask jacob about something before writing the rest of this. There are some issues with the third order derivation of KP and KI.}
+\begin{equation}
+\frac{I_q}{V_{in}}=H(s)=\frac{1}{R_a+L_qs}
+\end{equation}
+
+\subsection{Reduced Order Controller Values}
+Finding the controller values for this model is done as it was for the full order model. However an IP controller will be used instead to remove a zero from the transfer function compared to the PI controller. The IP controller places the $K_p$ value in a feedback loop resulting in the following diagram
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.95\linewidth]{graphics/IPcontroller}
+	\caption{Reduced order system with an IP controller}
+	\label{fig:IPcontroller1}
+\end{figure}
+
+The transfer function of this, including the model then becomes:
+
+\begin{equation}
+\frac{I_q}{I_q-ref}=\frac{\frac{K_t}{L_q}}{s^2+s(\frac{R_q}{L_q}+\frac{K_p}{L_q})+\frac{K_t}{L_q}}
+\end{equation}
+
+Using Dodd's $5\%$ settling time formula and solving using a rank of 2nd order and a settling time of $0.05s$. The results are:
+
+\begin{equation}
+\alpha=\frac{1.5(1+2)}{0.05}=90
+\end{equation}
+
+The characteristics equation has the form:
+\begin{equation}
+s^2+sd_1+d_0 = s^2+2 \alpha s+ \alpha^2
+\end{equation}
+
+Solving for the alpha values we find:
+\begin{equation}
+2 \alpha =\frac{R_a}{L_a}+\frac{K_p}{L_a} \rightarrow K_p=7e^{-4}
+\end{equation}
+\begin{equation}
+\alpha^2=\frac{K_i}{L_a} \rightarrow K_i=0.324
+\end{equation}
+
+\subsection{Simulation}
+Testing the $K_p$ and $K_i$ values of either controller should result in a stable current output from the electrical part of the motor, which is desired to control the torque. This simulation will add the $K_p$ and $K_i$ values to the control loop and review the outcome.
+
+
+
+
+
+
+\subsection{Discretization}
+Discretizing the controller is required to use it in the embedded software. To do this, the values of $K_p$ and $K_i$ can be used as they are, but for both a PI and IP controller the integrator must be discretized. An integrator in discrete is done by using a numerical integration method. The choice here will be the Trapezoidal method, which has the output equation given as: 
+
+\begin{equation}
+y(n) = y(n-1) + G\cdot (t(n)-t(n-1)\frac{n+u(n-1)}{2}
+\end{equation}
+
+Here n is the time step, G is the gain value, t is the time and u is the function to integrate. The Trapezoidal method yields a more precise method than forward or backwards Euler methods, due to it being 2nd order precise ($O(h^2)$), but it takes twice the computation power.
+
+
 
 \clearpage

@@ -178,7 +178,8 @@ Thus:
 The torque pedal is simply a variable resistor, $R_{tp}=7.5$\si{\kilo\ohm}. \todo[inline]{Thomas: Verify resistor value on final system}
 As the pedal is actuated the resistance changes.
 Figure \ref{fig:torquepedaldownscale} is a depiction of the circuit used to read the position of the torque pedal.
-$R_1$ and PEDAL form a variable voltage divider of the $15$\si{\volt} rail.
+
+$R_1$ and $\mathrm{R_P}$ form a variable voltage divider of the 15\si{\volt} rail.
 The analog input of the ADC in the FPGA, however, is limited to 0-1\si{\volt}.
 Therefore it is necessary to downscale the voltage.
 Intuitively this could be done using simply a voltage divider, but since the torque pedal functions as a voltage divider, the varying resistance distribution of the torque pedal would influence the voltage divider.
@@ -196,16 +197,16 @@ The resistance of the pedal is assumed to change linearly, which means the volta
 Voltage at the point TP as a function of pedal is:
 
 \begin{equation}
-V_{TP}(PEDAL) = V_{CC} \frac{PEDAL}{R1 + PEDAL} \frac{R3}{R3 + R2}
+V_{TP}(R_P) = V_{CC} \frac{R_P}{R1 + PEDAL} \frac{R3}{R3 + R2}
 \label{eq:pedal_voltage}
 \end{equation}
 
-By isolating PEDAL, it's possible to calculate what its resistance is. 
-The resistance of PEDAL varies from 0 to 7.5\si{\kilo\ohm}, as the pedal is pressed down. 
+By isolating $\mathrm{R_P}$, it's possible to calculate what its resistance is. 
+The resistance of $\mathrm{R_P}$ varies from $0$ to 7.5\si{\kilo\ohm}, as the pedal is pressed down. 
 Hence, equation~\ref{eq:pedal_back_calc} will give a value proportional to the torque requested by the driver
 
 \begin{equation}
-PEDAL = \frac{R1 V_{TP}}{V_{CC}-V}
+R_P = \frac{V_{TP} R1 \cdot (R2 + R3)}{R3 \cdot (V_{CC} - T_{TP}) -  V_{TP} \cdot R2}
 \label{eq:pedal_back_calc}
 \end{equation}
 

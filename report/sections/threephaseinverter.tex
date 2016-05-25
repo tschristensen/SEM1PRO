@@ -56,11 +56,11 @@ Therefore a through hole package will be suitable for this application. The chos
 \label{tab:MOSdata}
 \end{table}
 
-The MOSFET parameters in table~\ref{tab:MOSdata} seems to add up to all the requirements in table~\ref{tab:req1}. 
+The MOSFET parameters in table~\ref{tab:MOSdata} seems to add up to all the requirements in table~\ref{tab:req1}. \todo{well not really. Even the silicon limit isn't enought to handle 300 A comfortably.}
 However the TO-247 package has a continuous drain current limit of 195A that is only around two third of the minimum current requirement. 
 This problem will be solved using two MOSFETs in parallel. 
-Using the parallel setup, the two MOSFETs will share the current equally so that each will have a maximum peak current of 150A.
-As will be later discussed, the setup will also decrease the conduction losses but increase the switching losses\todo{Erlingur - How will it increase the switching loss}.
+Using the parallel setup, the two MOSFETs will share the current equally so that each will have a maximum peak current of 150A \todo{Martin: Because if one draws more current than the other, it will raise temperature, then rds-on and then reduce current.}.
+As will be later discussed, the setup will also decrease the conduction losses but increase the switching losses\todo{Erlingur - How will it increase the switching loss. Martin: because switching loss is dependent on switching time, current and voltage. with two in parallel, the switching time will go up, but the current will go down. And then there are two mosfets switching, so the switching loss should be approximately double}.
 
 
 \subsection{Power Losses}
@@ -69,21 +69,18 @@ To estimate the temperature, the power loss must be estimated.
 The total power loss, $P_{loss}$ of a switching device can be estimated using equation~\ref{eq:p_loss} where $P_C$ and $P_{SW}$ are conduction- and switching losses respectively.  
 
 \begin{equation}
-P_{loss} = P_{C} + P_{SW}
+P_{loss} = P_{c} + P_{sw}
 \label{eq:p_loss}
 \end{equation}
 
 Conduction loss of a single MOSFET can be calculated using equation~\ref{eq:p_c} and the switching loss with equation~\ref{eq:P_sw}
 
 \begin{equation}
-P_{C} = R_{DS(on)} I_{D,rms}^2
+P_{c} = R_{DS(on)} I_{D,rms}^2
 \label{eq:p_c}
 \end{equation}
 
-\begin{equation}
-P_{SW} = \dfrac{1}{2} V I t f_{SW}
-\label{eq:P_sw}
-\end{equation}
+
 
 For simplicity the power loss will be estimated from a single phase of the inverter circuit seen in figure~\ref{fig:single_phase}. 
 The Current $I_{out}$ is drawn by some load $R_{load}$ that will absorb the load power $P_{load}$ which is given by equation\ref{eq:p_load}. 
@@ -155,25 +152,63 @@ P_{C} = R_{DS(on),@100^{\circ}C} I_{Qi,rms}^2
 The switching loss happens when the MOSFETs go from the on state to the off state and vice versa. This loss can be found with experiments. 
 When determining the switching loss only from calculations, some assumptions have to be made.
 We assume that the gate to source capacitance $C_{GS}$ is the same for on and off time. 
-The gate to source current is defined by equation~\ref{I_gs}. 
-
+The gate to source current is defined by equation~\ref{eq:I_gs}. 
 
 \begin{equation}
-I = C\dfrac{dV}{dt}
-\label{I_gs}
+P_{sw} = \dfrac{1}{2} V_{in} I_{o} (t_{c,on} + t_{c,off} ) f_{s}
+\label{eq:P_sw}
 \end{equation}
 
-However, the gate to source current is known. the driver supports up to 2.3A sink and 1.7A source current. 
+
+\begin{eqnarray}
+t_{c,on} = t_{ri} + t_{fv}\\
+t_{c,off} = t_{rv} + t_{fi}
+\label{eq:times}
+\end{eqnarray}
+
+The voltage rise and fall times $t_{rv}$ and $t_{fv}$ are defined in figure~\ref{fig:sw_time_wavef}.
+The current rise and fall times,  $t_{ri}$ and $t_{fi}$, are depended on $C_{GS}$ and are defined in equation~\ref{eq:I_gs} as $dt$
+
+\begin{equation}
+I_{gs} = C\dfrac{dV}{dt} \rightarrow dt = C\dfrac{dV}{I_{gs}}
+\label{eq:I_gs}
+\end{equation}
+
+
+The gate to source current is known. The driver supports up to 2.3A sink and 1.7A source current.\todo{Erlingur - needs some more explanations} 
 
 \begin{figure}
 	\centering
 	\includegraphics[scale = 0.7]{graphics/sw_time_wavef}
-	\caption{Switching Time Waveforms}
-	\label{sw_time_wavef}
+	\caption{Switching Time Waveforms where $t_r = t_{rv}$ and $t_f = t_{fv}$ }
+	\label{fig:sw_time_wavef}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.4\textwidth}
+		\includegraphics[width=\textwidth]{graphics/mos_turn_on}
+		\caption{turn on}
+		\label{fig:Turn_on}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.4\textwidth}
+		\includegraphics[width=\textwidth]{graphics/mos_turn_off}
+		\caption{turn off}
+		\label{fig:Turn_off}
+	\end{subfigure}
+	\caption{the turn on and off characteristics of the MOSFETs.}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale = 0.6]{graphics/sw_losses}
+	\caption{MOSFET switching losses}
 \end{figure}
 
 \begin{table}
 	\centering
+	\caption{rise and fall time taken from datasheet}
 	\begin{tabular}{|c|c|c|c|}
 		\hline
 		Symbol & Parameter & Typ. & Units\\
@@ -183,5 +218,8 @@ However, the gate to source current is known. the driver supports up to 2.3A sin
 		\hline
 	\end{tabular}
 \end{table}
+
+\todo{Erlingur - describe the figures and make table of the resaults}
+
 
 \pagebreak
