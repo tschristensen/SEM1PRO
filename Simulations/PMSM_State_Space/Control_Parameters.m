@@ -49,17 +49,17 @@ Num1=[2*J_pro 2*Kv];
 Den1=[2*J_pro*L 2*Kv*L+2*J_pro*R 3*Kt^2+2*Kv*R];
 Ds=tf(Num1,Den1);
 
-%%Fulld order model from michael
+%%Full order model from michael
 num4=[2*J_pro 2*Kv];
 den4=[2*J_pro*L 2*J_pro*R+2*Kv*L 3*Kt^2+2*Kv*R];
 Gs=tf(num4,den4)
 
 % 
 % % Finding the KP and KI values. Done by hand using settling time formula:
-Tset=0.1;
+Tset=0.05;
 alpha=(1.5*(1+3))/Tset;
-% Kp=(3*alpha-Kv/J_pro-(R/(2*L)))*L;
-% Ki=(3*alpha^2-((Kp*Kv)/(2*J_pro)-(Kv*R)/(J_pro*L)-(3*Kt^2)/(2*J_pro*L)))*L;
+Kp=(3*alpha-Kv/J_pro-(R/(2*L)))*L
+Ki=(3*alpha^2-((Kp*Kv)/(2*J_pro)-(Kv*R)/(J_pro*L)-(3*Kt^2)/(2*J_pro*L)))*L
 % 
 % 
 % % Transfer function with current output and PI controller in forward path.
