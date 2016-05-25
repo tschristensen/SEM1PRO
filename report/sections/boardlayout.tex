@@ -19,9 +19,9 @@ For instance, GNDP is used as the return path of the high currents flowing throu
 The voltage on this rail is likely to be fluctuating significantly.
 This will surely compromise the integrity of more crucial signals such as the current measurements used to determine the position of the rotor.
 GNDD will also carry significant noise from the digital circuitry and should also be kept separate from GNDA.
-The only crossover between the GNDD and GNDA will happen in the DRV8301DCA (see section \ref{sec:driverboard}) and in the NOR circuitry described in section \ref{sec:nor}.
+The only crossover between the GNDD and GNDA will happen in the DRV8301 (see section \ref{sec:driverboard}) and in the NOR circuitry described in section \ref{sec:nor}.
 The latter occurs at the over-current event signal which is generated on the analog board but used in the digital system.
-An analog signal is fed to the SN74LVC1G17, a buffer with built-in Schmitt-trigger circuitry which is supplied from the digital 3.3$V$ rail.\\
+An analog signal is fed to the SN74LVC1G17, a buffer with built-in Schmitt-trigger circuitry which is supplied from the digital 3.3\si{\volt} rail.\\
 A simplified overview of the grounding planes can be seen on figure \ref{fig:groundplanes}.
 
 \begin{figure}[!h]
@@ -32,11 +32,11 @@ A simplified overview of the grounding planes can be seen on figure \ref{fig:gro
 \end{figure}
 
 As it is undesirable to have the potentially noisy GNDP present on the boards, it is constrained to one corner of the digital board.
-Here it is used to supply the TEN20-4823WIN and the TVN5-4811WI isolated dc-dc converters that generate the $\pm15V$ and $5V$ rails respectively.
-The previously mentioned 3.3$V$ rail is generated on the Zybo board.
-The driver chip (The DRV8301DCA is discussed in more detail in section \ref{sec:driverboard}), is also supplied from the power rail, and as such GNDP is extended to a corner of the driver board.
+Here it is used to supply the TEN20-4823WIN and the TVN5-4811WI isolated dc-dc converters that generate the $\pm15$\si{\volt} and 5\si{\volt} rails respectively.
+The previously mentioned 3.3\si{\volt} rail is generated on the Zybo board.
+The driver chip (The DRV8301 is discussed in more detail in section \ref{sec:driverboard}), is also supplied from the power rail, and as such GNDP is extended to a corner of the driver board.
 Limiting the extent of GNDP is also the reasoning behind generating the $\pm15V$ rail on the digital board, even though it is used exclusively on the analog board.
-An extended discussion of the grounding planes as well as the actual layout can be found in appendix
+An extended discussion of the grounding planes as well as the actual layout can be found in appendix \ref{app:boardlayout}.
 
 \subsection{Analog Board}
 The analog board houses, as the name implies, all of the analog signal processing.
@@ -44,16 +44,21 @@ Mainly the over-current protection, but also the torque pedal scaling is present
 
 \subsubsection{Over-current Protection}
 In order to protect the system, it is necessary to create some form of over-current protection, OCP.
-Three choices immediately present themselves:
+Two choices immediately present themselves:
 \begin{enumerate}
 	\item The DRV8301 is equipped with current sensing circuitry that allows the chip to automatically shut down the drivers when an over-current event, OCE, occurs.
-	This requires the use of external shunt resistors to divert some of the current through the mosfets to the current sensors.
-	\item Since the LF 205-S current transducers are used to measure the current through each of the phases, these measurements could be scaled such that they fulfil the role of the shunt resistors, still utilizing the built-in OCP of the DRV8301.
-	\item Build circuitry that, based on the measurements done by the current transducers, detects an OCE and turns off the drive signals. 
+	\item External circuitry that, based on the measurements done by the current transducers, detects an OCE and turns off the drive signals by driving the EN\_GATE signal of the DRV8301 low. 
 \end{enumerate}
-Initially 2 seemed like a sensible choice, however it was not possible to deduce the functionality of the OCP in the DRV8301 based on the datasheet.
-Therefore it was decided to use 3 since the function will be well known and can be easily adjusted to meet any altered requirements, should the need arise.\\
+Initially 1 seemed like a sensible choice, however, at the time it was not possible to deduce the functionality of the OCP in the DRV8301 based on the datasheet.
+Therefore it was decided to use 2 since the function of the OCP will be well known and can be easily adjusted to meet any altered requirements, should the need arise.\\
 
+In testing, the OCP function of the DRV8301 repeatedly shut down the drive circuitry and it was necessary to determine how to disable this feature.
+During this research the functionality of the OCP was more well understood.
+Due to difficulties with the debugging of the custom OCP circuitry presented below, it was decided to use the built-in OCP function of the DRV8301.
+This is discussed in more detail in section \ref{sec:driverboard}.\\
+
+Regardless of this change, it was decided to keep the description of the original OCP circuitry as this constitutes a significant portion of the work done on the project.
+This description continues here:
 Since only two phases are measured directly it is necessary to calculate the third.
 This is done using a non-inverting summing amplifier.
 See figure \ref{fig:sumamp}.
@@ -86,10 +91,10 @@ Each part will be explained in appropriate detail in the following paragraphs.
 \paragraph{ADC Isolation:}
 The current measured in each phase is used in the control of the motor and as such it is important to maintain the integrity of the signal.
 Therefore, after routing the signal to the ADC it is applied to the OCP circuit through a voltage follower.
-Since the op amp has extremely high input resistance ($10^{12}\Omega$ in the case of the LF353 used in this circuit) what happens on the output-side of the voltage follower has no meaningful impact on the input-side.
+Since the op amp has extremely high input resistance ($10^{12}$\si{\ohm} in the case of the LF353 used in this circuit) what happens on the output-side of the voltage follower has no meaningful impact on the input-side.
 
 \paragraph{Full Wave Rectifier:}
-The phase signals are sinusoids with an expected peak amplitude of $\pm0.5V$.
+The phase signals are sinusoids with an expected peak amplitude of $\pm0.5$\si{\volt}.
 In order to only needing to detect a positive OCE the signal is rectified.
 Due to the small magnitude of the signals it is necessary to use a precision full wave rectifier.
 The rectifier used here can be divided into two subcircuits; a half-wave rectifier and a summing amplifier.
@@ -104,14 +109,12 @@ Figure \ref{fig:rectifier} shows the voltages at these points.
 	\label{fig:rectifier}
 \end{figure}
 
-
-
 \paragraph{Thresholding:}
-As explained in section \ref{sec:lemsensor}, the input signal to the OCP circuit is dimensioned such that the maximum current in either of the phases will result in a voltage of 0.5$V$.
+As explained in section \ref{sec:lemsensor}, the input signal to the OCP circuit is dimensioned such that the maximum current in either of the phases will result in a voltage of 0.5\si{\volt}.
 Also mentioned in this section is the desire to leave some headroom in case of an OCE.
 This is due to the response time of the system.
-50$mV$ is estimated to be sufficient.
-An OCE is therefore defined as a time where the voltage exceeds 0.45$V$.
+50\si{\milli\volt} is estimated to be sufficient.
+An OCE is therefore defined as a time where the voltage exceeds 0.45\si{\volt}.
 In order to avoid repeatedly switching the signal on and off, it was decided to use a Schmitt trigger.
 Determining the component values is done using the following equations:
 
@@ -120,14 +123,14 @@ Determining the component values is done using the following equations:
 	\frac{V_{dd}-V_l}{R_{7}}&=\frac{V_l}{R_8}+\frac{V_l-V_{ref}}{R_6} \label{eq:vlow}
 \end{align}
 
-Where $V_{ref}=2.5V$ as set by the LM4040\footnote{Precision 2.5$V$ voltage reference}, the supply voltage $V_{cc}=15V$.
-The desired hysteresis voltages $V_h$ and $V_l$ are $0.475V$ and $0.25V$ respectively.
-This ensures that the enable signal will be pulled low when the current through any of the phases exceeds 285$A$, and will not return until the current is below 150$A$.
+Where $V_{ref}=2.5$\si{\volt} as set by the LM4040\footnote{Precision 2.5\si{\volt} voltage reference}, the supply voltage $V_{cc}=15$\si{\volt}.
+The desired hysteresis voltages $V_h$ and $V_l$ are $0.475$\si{\volt} and $0.25$\si{\volt} respectively.
+This ensures that the enable signal will be pulled low when the current through any of the phases exceeds 285\si{\ampere}, and will not return until the current is below 150\si{\ampere}.
 The LM4040 supplies a voltage in, effectively the same manner as a linear voltage supply.
 It is therefore desirable to draw as little current from the component, that is, through $R_6$, as possible.
-As per the datasheet it can operate from 60$\mu A\rightarrow15mA$.
-It was decided to set the maximum current through $R_6$, $\frac{V_{ref}-V_l}{R_6} = I_{R_6}=100\mu A$.
-This sets $R_6 = 22.5k\Omega$.
+As per the datasheet it can operate from 60$\mu A\rightarrow15$\si{\milli\ampere}.
+It was decided to set the maximum current through $R_6$, $\frac{V_{ref}-V_l}{R_6} = I_{R_6}=100$\si{\micro\ampere}.
+This sets $R_6 = 22.5k$\si{\kilo\ohm}.
 $R_7$ and $R_8$ can now be isolated using \ref{eq:vhigh} and \ref{eq:vlow}:
 
 \begin{align}
@@ -135,14 +138,14 @@ $R_7$ and $R_8$ can now be isolated using \ref{eq:vhigh} and \ref{eq:vlow}:
 	R_8 &= \frac{(V_{cc}V_l-V_{dd}V_h)(V_l-V_{ref})}{I_{R_6}(V_{cc}(V_l-V_{ref})-V_{dd}(V_h-V_{ref})+(V_h-V_l)V_{ref})}\label{eq:r8}
 \end{align}
 
-Resulting in $R_7 = 150k\Omega$ and $R_8 = 2542.37\Omega$.
-Since 2542.37$\Omega$ is hardly a standard value, the nearest standard value is chosen such that $R_8=2550\Omega$.
+Resulting in $R_7 = 150$\si{\kilo\ohm} and $R_8 = 2542.37$\si{\ohm}.
+Since 2542.37\si{\ohm} is hardly a standard value, the nearest standard value is chosen such that $R_8=2550$\si{\ohm}.
 
 \paragraph{Inverter:}
 Due to the NOR-stage described in section \ref{sec:nor}, it is necessary to invert the signal.
 A simple comparator is used to achieve this effect.
 The input voltage to this stage is either $V_{cc}$ or $GNDD$, the voltage on the non-inverting terminal is therefore not critical.
-Setting $R_9=R_{10}=10k\Omega$ is sufficient.
+Setting $R_9=R_{10}=10$\si{\kilo\ohm} is sufficient.
 
 The circuitry discussed above will ensure that in case of an OCE, a signal is sent to the digital board where it will be used to safely handle the event.
 This is discussed in further detail in later sections. 
@@ -161,26 +164,26 @@ Essentially, the LF 205-S generates a current proportional to the current flowin
 By changing the value of the resistor $R_m$, the resulting voltage drop can be dictated.
 
 In section \todo[inline]{Thomas: Section documenting the maximum current to be expected in each phase.} the maximum current to be expected in each phase is found to be 300$A$.
-As described in section \todo[inline]{Thomas: section on the zybo adc}, the ADC on the Zynq chip can work on signals in the ranges 0$V$-1$V$ or $\pm0.5V$.
+As described in section \todo[inline]{Thomas: section on the zybo adc}, the ADC on the Zynq chip can work on signals in the ranges 0\si{\volt}-1\si{\volt} or $\pm0.5$\si{\volt}.
 Since the current is sinusoidal it can be negative.
-Choosing the range $\pm0.5V$ therefore simplifies the circuitry needed to read the value correctly.
+Choosing the range $\pm0.5$\si{\volt} therefore simplifies the circuitry needed to read the value correctly.
 Consequently $R_m$ needs to be set such that the maximum expected current results in the maximum allowed voltage.
-However, it is desirable to leave some headroom in case of an OCE, 50$mV$ should be sufficient.
+However, it is desirable to leave some headroom in case of an OCE, 50\si{\milli\volt} should be sufficient.
 Thus:
 \begin{equation}
 	R_m = \frac{0.45}{I_{Pmax}/N_S} = 3\Omega
 \end{equation}
 
 \subsubsection{Torque Pedal Downscale}
-The torque pedal is simply a variable resistor, $R_{tp}=7.5k\Omega$. \todo[inline]{Thomas: Verify resistor value on final system}
+The torque pedal is simply a variable resistor, $R_{tp}=7.5$\si{\kilo\ohm}. \todo[inline]{Thomas: Verify resistor value on final system}
 As the pedal is actuated the resistance changes.
 Figure \ref{fig:torquepedaldownscale} is a depiction of the circuit used to read the position of the torque pedal.
-$R_1$ and PEDAL form a variable voltage divider of the $15V$ rail.
-The analog input of the ADC in the FPGA, however, is limited to 0-1$V$.
+$R_1$ and PEDAL form a variable voltage divider of the $15$\si{\volt} rail.
+The analog input of the ADC in the FPGA, however, is limited to 0-1\si{\volt}.
 Therefore it is necessary to downscale the voltage.
 Intuitively this could be done using simply a voltage divider, but since the torque pedal functions as a voltage divider, the varying resistance distribution of the torque pedal would influence the voltage divider.
 For this reason a voltage follower is used to isolate the two circuits.
-In addition, a 5.1$V$ zener diode is clamping the signal to ground in order to protect the ADC of the FPGA.
+In addition, a 5.1\si{\volt} zener diode is clamping the signal to ground in order to protect the ADC of the FPGA.
 \todo{capacitor for noise}
 \begin{figure}[!h]
 	\centering
@@ -189,7 +192,8 @@ In addition, a 5.1$V$ zener diode is clamping the signal to ground in order to p
 	\label{fig:torquepedaldownscale}
 \end{figure}
 
-The resistance of the pedal changes linearly, which means the voltage division does not. Voltage at the point TP as a function of pedal is:
+The resistance of the pedal is assumed to change linearly, which means the voltage division does not. 
+Voltage at the point TP as a function of pedal is:
 
 \begin{equation}
 V_{TP}(PEDAL) = V_{CC} \frac{PEDAL}{R1 + PEDAL} \frac{R3}{R3 + R2}
@@ -197,7 +201,7 @@ V_{TP}(PEDAL) = V_{CC} \frac{PEDAL}{R1 + PEDAL} \frac{R3}{R3 + R2}
 \end{equation}
 
 By isolating PEDAL, it's possible to calculate what its resistance is. 
-The resistance of PEDAL varies from $0$ to $7.5 k\Omega$, as the pedal is pressed down. 
+The resistance of PEDAL varies from 0 to 7.5\si{\kilo\ohm}, as the pedal is pressed down. 
 Hence, equation~\ref{eq:pedal_back_calc} will give a value proportional to the torque requested by the driver
 
 \begin{equation}
@@ -228,7 +232,7 @@ Since this signal is left floating when the pedal is not active, it can be route
 \todo[inline]{Thomas: Is the torque pedal active low or active high? Correct two places above to reflect the correct case}
 \subsubsection{Driver Enable Circuit}
 \label{sec:nor}
-The DRV8301DCA is equipped with a pin called \texttt{EN\_GATE}.
+The DRV8301 is equipped with a pin called \texttt{EN\_GATE}.
 If, while running, this pin is pulled low, the drive signals are immediately shut down.
 This feature allows for fast and reliable shut down of the motor in case of any detected faults.
 There are two different types of faults detected within the system, the aforementioned OCE and an over-temperature event, OTE.
@@ -253,23 +257,47 @@ This is done such that it is possible to discern which event has triggered when 
 \subsubsection{Logic-Level Shifters}
 Tracking the angular position of the rotor is done using an encoder mounted on the motor.
 Upon receiving a clock signal the encoder will return the current position of the rotor.
-The encoder module is an AM256 which, according to the datasheet, requires at least 3.5$V$ for digital high input.
-However, the Zybo uses 3.3$V$ and the clock signal therefore needs to be shifted to the correct voltage level, 5$V$. 
-A, B, Z and Data generated by the AM256 all need to be shifted down to 3.3$V$ in order to protect the Zybo.
+The encoder module is an AM256 which, according to the datasheet, requires at least 3.5\si{\volt} for digital high input.
+However, the Zybo uses 3.3\si{\volt} and the clock signal therefore needs to be shifted to the correct voltage level, 5\si{\volt}. 
+A, B, Z and Data generated by the AM256 all need to be shifted down to 3.3\si{\volt} in order to protect the Zybo.
 The circuit for these four signals can be seen in figure \ref{fig:lls}.
 The buffer used for these signals is, as can be seen from the figure, the 74AHC125 which is a quad-buffer.
-$V_{out}$ of this device is equal to $V_{cc}$, while $V_{in}$ can be any voltage from $0\rightarrow 5V$, by supplying it from the 3.3$V$ rail it will therefore act as a logic level shifter.
+$V_{out}$ of this device is equal to $V_{cc}$, while $V_{in}$ can be any voltage from $0\rightarrow 5$\si{\volt}, by supplying it from the 3.3\si{\volt} rail it will therefore act as a logic level shifter.
 
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=.5\linewidth,trim=0cm 1cm 0cm 1cm]{graphics/lls}
-	\caption[Logic level shifter circuit.]{The 74AHC125 quad-buffer used to shift the logic level of the encoder from 5$V$ down to the $3.3V$ required by the Zybo. Due to an oversight, a buffer with an enable on each port was bought. This feature is unnecessary and they are always enabled.}
+	\caption[Logic level shifter circuit.]{The 74AHC125 quad-buffer used to shift the logic level of the encoder from 5\si{\volt} down to the $3.3$\si{\volt} required by the Zybo. Due to an oversight, a buffer with an enable on each port was bought. This feature is unnecessary and they are always enabled.}
 	\label{fig:lls}
 \end{figure}
 
 \subsection{Driver Board}
-This is not finished!
 \label{sec:driverboard}
+The third and final board created in this project is the driver board.
+This board is made exclusively to house the DRV8301, the driver chip chosen for this project.
+The reason for the seemingly superfluous board is that there is no equipment available capable of creating the small footprint of the chip.
+Therefore this board is made by an external fabricator.\\
+
+The DRV8301 is a three-phase gate driver with a built-in buck converter.
+Additionally it features both dead time control as well as over-current protection.
+This chip is made specifically with driving PMAC motors in mind, making it an ideal candidate for this project.
+Figure \ref{fig:drv8301pinout} shows the pinout of the DRV8301.
+This will be used as a basis for a brief discussion of the features provided by the chip.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=.4\linewidth]{graphics/drv8301pinout}
+	\caption{Overview of the pinout of the DRV8301.}
+	\label{fig:drv8301pinout}
+\end{figure}
+
+\subsubsection{Buck Converter}
+The DRV8301 is equipped with a buck converter capable of 
+Initially it was the intention to use the buck converter in the driver chip to create the 5\si{\volt} rail needed to supply the Zybo board, however, for grounding reasons, it was decided to use the TVN5-4811WI, as mentioned previously.
+
+\subsubsection{Over-Current Protection}
+
+As has already been discussed, the functionality of the over-current protection of the DRV8301 was initially decided against, mainly due to the apparent complexity of the feature.
 
 \subsubsection{SPI}
 The DRV8301 is capable of performing SPI communication as a slave.
