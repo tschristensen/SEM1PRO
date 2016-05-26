@@ -221,9 +221,8 @@ The parking test in section~\ref{sub:parking_test}, does not have accuracy of le
 It has been attempted to use the quantizer block, but that causes stiffness to the point where the simulations almost stall. 
 The output is sent to the Zybo block, which will be explained in section~\ref{sub:sim_zybo}.\\
 
-The Zybo generates duty cycles for each phase ranging from -1 to 1. 
-This value is then multiplied with half the DC voltage, and saturated, of the ideal voltage sources do not provide more voltage than the battery can.
-\todo[inline]{Thomas: I don't understand this last paragraph?}
+The Zybo subdiagram generates duty cycles for each phase ranging from -1 to 1. 
+This value is then multiplied with 26.4 to represent half the battery voltage, and then saturated to ensure, that the ideal voltage sources do not provide more voltage than possible.
 \subsubsection{Zybo block}\label{sub:sim_zybo}
 The Zybo block consists of three other subsystems, corresponding with some of the blocks on the actual Zybo; Clarke-Park, Discrete controller and PWM generation.
 This can be seen on figure~\ref{fig:simulations_zybo}.
@@ -257,17 +256,106 @@ I_A \\
 I_B \\
 I_C
 \end{bmatrix}
+\label{eq:sim_clark-park}
 \end{equation}
 
 where $\gamma = \tfrac{2 \pi}{3}$. 
-Since the encoder only gives 64 different angles, it is possible to do this with six lookup tables, without any loss of precision.
-\todo[inline]{Thomas: Not understood}
-The same lookup tables are used in the PWM generator block
+Due to the limitations of the encoder, the system only measures 64 different electrical angles.
+To improve calculation speed, all six trigonometric functions in equation~\ref{eq:sim_clark-park} have been pre-calculated and saved to six lookup tables. \\
+
+The block diagram of the discrete controller is shown on figure~\ref{fig:sim_controller_diagram}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 16cm]{graphics/sim_controller_diagram}
+	\caption{Block diagram of discrete PI controller}
+	\label{fig:sim_controller_diagram}
+\end{figure}
+
+The two independent current controllers are drawn in blue boxes. 
+The feedback comes from the Idq port on the left.
+The integrator block uses trapezoidal integration, and the output is limited to $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$.
+This is to ensure, that the integrator does not wind up\todo{Martin: Is there a better term for when the integrator keeps becoming larger, because the output is saturated somewhere?}.
+The saturation block to the left of the q current controller limits the input to between 0 and a maximum current.
+The PI controllers produce duty cycle values in the range of $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, although it is possible to exceed this range at this point in the diagram.\\
+
+It is necessary to ensure, that the controller does not produce values outside the range that can be generated using PWM. 
+The obvious solution is to put a saturation block after each of the controllers, but a large value value from both controllers will still cause saturations.
+In order to limit both controller outputs without disturbing the controllers, both output values is reduced by the same factor. 
+If the magnitude of the dq-duty cycle vector must not exceed $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, when using third harmonic injection. 
+For this reason, the magnitude of the two controller outputs is calculated in the red box. 
+If the magnitude is larger than $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, the Parallel scale down subsystem is processed. 
+The functionality is explained in listing~\ref{code:parallel_scale_down}.
+
+\begin{lstlisting}[style=customMATLAB, label={code:parallel_scale_down}, caption = Matlab code for parallel scale down function]
+d = dq(1) * 2 / sqrt(3); 	% Split the input vector
+q = dq(2) * 2 / sqrt(3); 	% into two values
+
+d = d/Magnitude;		% Divide d with magnitude
+q = q/Magnitude;		% Divide q with magnitude
+
+Out1 = [d q];
+\end{lstlisting}
+
+For comparison, the d and q axis duty cycles have been simulated and are shown on figure~\ref{fig:parallel_scale_down_graphs}: 
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{.49\linewidth}
+		\includegraphics[width=\textwidth]{graphics/before_saturation}
+		\caption{Before parallel scale down}
+		\label{fig:before_saturation}
+	\end{subfigure}
+	\begin{subfigure}[t]{.49\linewidth}
+		\includegraphics[width=\textwidth]{graphics/after_saturation}
+		\caption{After parallel scale down}
+		\label{fig:after_saturation}
+	\end{subfigure}
+	\caption{dq duty cycle values before and after parallel scale down}
+	\label{fig:parallel_scale_down_graphs}
+\end{figure}
+
+The graphs are simulated with a car mass of 200 kg, and settling time of 0.01 s.
+At 2.5 s, the magnitude exceeds $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, at which point both the d and q output is scaled down. 
+On figure~\ref{fig:after_saturation}, this transition is almost invisible along the q-curve. 
+As the torque produced by the motor is reduced due to saturation of the supply, the need for a large negative d-duty is reduced, as both d and q current is reduced.
+This will be explained further on.
+
+Inverse Clark-Park transformation is done by equation~\ref{eq:sim_inverse_clark-park}.
+
+\begin{equation}
+\left[ \begin{array}{c}
+I_A \\ I_B \\I_C
+\end{array} \right]
+=
+\begin{bmatrix}
+\cos (\Phi) & -\sin (\Phi) \\
+\cos(\Phi - \gamma) & -\sin(\Phi - \gamma) \\
+\cos(\Phi + \gamma) & -\sin( \Phi + \gamma) 
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+I_d \\
+I_q
+\end{bmatrix}
+\label{eq:sim_inverse_clark-park}
+\end{equation}
+
+This is done in the PWM generation subsystem, which is shown on figure~\ref{fig:sim_PWM_generation}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 14cm]{graphics/sim_PWM_generation}
+	\caption{Block diagram of the PWM generator}
+	\label{fig:sim_PWM_generation}
+\end{figure}
+
+Along with the inverse Clarke-park transformation, this block also injects the third harmonic sinusoidal. 
 
 \subsection{Plecs model}\label{sub:sim_plecs_electrical}
 As previously mentioned, the Plecs model differs vastly from the Simulink model in the electrical network, as it more closely resembles the real analog circuit. 
 It is shown on figure~\ref{fig:plecs_electrical}.
-\todo[inline]{Thomas: This needs something more.. }
+\todo[inline]{Thomas: This needs something more.. Martin: ya think?}
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width = \textwidth]{graphics/Plecs_electrical.pdf}
