@@ -100,22 +100,22 @@ The two state space models will be simulated with MatLab Simulink to see how muc
 	\centering
 	\begin{subfigure}[t]{.45\linewidth}
 		\includegraphics[width=\textwidth]{graphics/Full_Vs_Reduced1_Current}
-		\caption{Simulation of full order model}
+		\caption{Simulation of current for full and reduced order models.}
 		\label{fig:Full_Vs_Reduced1_Current}
 	\end{subfigure}
 	\hspace{0.5cm}
 	\begin{subfigure}[t]{.45\linewidth}
 		\includegraphics[width=\textwidth]{graphics/Full_Vs_Reduced1_Speed}
-		\caption{Simulation of reduced order model}
+		\caption{Simulation of speed for full and reduced order models (almost stacked on each other).}
 		\label{fig:Full_Vs_Reduced1_Speed}
 	\end{subfigure}
 	\caption{Matlab Simulink of each model with the same input}
 \end{figure}
 
- A problem shows up by these simulations. The speed looks fine for the reduced order model but the current is not defined at zero. This is due to the removal of the inductor and integrator which removes an instance of zero being multiplied by $\tfrac{1}{R}$. The model not being defined at zero means that it is not a good idea to use it to develop a controller. The amplitude of speed and current are not important at this time, as that will be controlled later. 
+ A problem shows up by these simulations. The speed looks fine for the reduced order model but the current starts at a high value. The current starts out as a simple multiplication of the input voltage multiplied by the $1/R$ gain to equal $4000A$. The amplitude of speed and current are not important at this time, as that will be controlled later, but since the model does not closely resemble the full order model, a controller will not be derived for this reduced order model.
 
 \subsubsection{Reduced Order Model 2 - No Mechanical}
- Yet another reduced model can be derived, this model will be an experiment to remove the slow pole from the full order model. This should affect the system somehow, but by making a robust controller and viewing the entire mechanical system of the motor as a disturbance this should work. The model will be much simpler. It can be seen on fig: \ref{fig:State_space_model_reduced_order_v2}.
+ Another reduced model can be derived, this model will be an experiment to remove the slow pole from the full order model. This should affect the system somehow, but by making a robust controller and viewing the entire mechanical system of the motor as a disturbance this should work. The model will be much simpler. It can be seen on fig: \ref{fig:State_space_model_reduced_order_v2}.
 
 \begin{figure}[H]
 	\centering
@@ -142,7 +142,7 @@ The slow pole is gone, this is an important pole because it is as slow as it is,
 	\label{fig:Full_Vs_Reduced2}
 \end{figure}
 
-This shows that the current ramps up and stays there. It is defined in zero, unlike the other reduced order model. This model could be used with a controller, but will require some simulations with the motor after a controller has been developed.
+This shows that the current ramps up and stays there. It has a slope at time zero+, unlike the other reduced order model. This model could be used with a controller, but will require some simulations with the motor after a controller has been developed, the downward slope of the full order model is caused by the mechanical system getting saturated by current, this should not change how each model is affected by current control, because a fast and robust controller is desired.
 
 
 \subsection{Controlling Current}
