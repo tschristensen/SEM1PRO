@@ -114,5 +114,10 @@ Ts_J = 0.05; % settling time
 kp_J = (9/Ts_J-R/L)*L
 ki_J = (4.5/Ts_J)^2 * L
 
+%Jacob TF:
+NumJ=[0 1];
+DenJ=[R+L 0];
+JTF=tf(NumJ,DenJ)
+
 
 
