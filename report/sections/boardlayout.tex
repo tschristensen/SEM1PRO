@@ -356,9 +356,11 @@ Of interest to this project are OCP\_MODE and OC\_ADJ\_SET.
 OCP\_MODE allows the user to set the mode of operation of the OCP. 
 One of four options can be chosen: current limit mode, OC latch shut down mode, report only mode and OC disabled mode.
 During testing the driver was being run in OC disabled mode, however, during this time it was decided to attempt using the feature for detection of OCE's.
-Since the maximum allowed current through the IRFP4468PBF (the MOSFET chosen for the inverter, see section \ref{sec:mosfet}) is 300\si{\ampere} and its $R_{ds(on)=3.2}$\si{\milli\ampere} the 
-OC\_ADJ\_SET allows setting the value of $V_{ds}$ appropriate for the type of MOSFET chosen.
-
+The OC\_ADJ\_SET allows setting the value of $V_{ds}$ appropriate for the type of MOSFET chosen.
+As previously mentioned, this value is equal $V_{ds}=0.96$\si{\volt}.
+Figure \ref{fig:vdstable} shows the different values that can be set as the threshold.
+Since 0.96\si{\volt} is not available, the nearest value below is chosen.
+Choosing a value above would result in an OC limit higher than the 300\si{\ampere} specified.	\todo[inline]{Thomas: Are we sure that }
 
 \begin{figure}[!h]
 	\centering
