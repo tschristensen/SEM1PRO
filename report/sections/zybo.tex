@@ -6,7 +6,7 @@ An embedded system is needed to handle a wide range array.
 It is a requirement for the project that the Zybo board should be used as the embedded system in the project.
 The board features a Zynq Z-7010 chip from Xilinx, which has an integrated dual-core ARM Cortex-A9 processor and a Xilinx 7-series field programmable gate array (FPGA).
 The Zybo board itself consists among other of several buttons, switches, LEDs and connections for USB, Ethernet, HDMI and several PMOD connectors.
-
+\todo[inline]{Write about PS and PL - Mikkel}
 \subsection{Functionality}
 An analysis of the complete system yielded the functionalities listed below for the Zybo board. 
 
@@ -18,6 +18,7 @@ An analysis of the complete system yielded the functionalities listed below for 
 \item UART communication with external PC
 \item Control algorithms for dq-control
 \item Read position from encoder circuit
+\item SPI communication as master
 \end{itemize}
 
 As can be seen on the list there are multiple different tasks that needs to be handled. 
@@ -160,7 +161,21 @@ Therefore the outputs from the two LEM sensors will be connected to these.
 The torque pedal signal will be routed to channel 7 which will be sampled after channel 6 and 14.
 The top signal from the PWM generator will start the sampling and therefore it will also set the sampling frequency.
 As the PWM frequency is 20 \si{\kilo\hertz} the PWM frequency will be so as well.
-\todo[inline]{Will all channels be sampled on rising edge on CONVST pin? - Mikkel}
+
+\begin{lstlisting}[captionpos=b,style=customCpp, caption={Something clever!.}, label=lis:controller_code]
+q_error = q_set - I_q_measured;
+q_integral = q_integral + (q_previous_error + q_error)*0.5*dt;
+
+if(q_integral > MAX_TOTAL_OUTPUT){										
+	q_integral = MAX_TOTAL_OUTPUT;
+}else if(q_integral < -MAX_TOTAL_OUTPUT){
+	q_integral = -MAX_TOTAL_OUTPUT;
+}
+
+q_output = kp * q_error + ki * q_integral;
+q_previous_error = q_error;
+\end{lstlisting}
+
 
 \subsection{Encoder}
 The Zybo board needs to interface the RMB28MD encoder that is mounted on the motor.
@@ -171,23 +186,36 @@ The IP core outputs a clock to the RMB28MD chip and reads data from a datapin.
 It then makes the data available on the AXI4LITE bus, where it can be read from software. 
 
 \subsection{SPI communication}
+As described earlier the Zybo board will need to set certain parameters on the DRV8301 chip using SPI communication. 
+The Zynq chip has two SPI controllers in the PS area of the chip, which can be setup to communicate with external devices.
+By investigation the Zynq datasheet \cite{zynq_reference} it  was found that it was not possible to configure the SPI controller to meet the requirements of the DRV8301. 
+More specifically it was not possible to configure the clock signal to go low for a minimum of 40 \si{\nano\second} \cite{DRV8301}, before Slave Select goes low. 
 
-\begin{figure}[!h]
-	\centering
-		\includegraphics[width=1\linewidth]{graphics/spi_timing}
-	\caption[SPI timing requirements.]{SPI timing requirements.From datasheet? How to cite?}
-	\label{fig:spi_timing}
-\end{figure}
+Two solutions were found to this problem:
+\begin{enumerate}
+	\item To develop a simple SPI driver in VHDL or System Generator to send 16bit according to the SPI requirements of the DRV8301.
+	\item To use the SPI controller in PS of the Zynq and delay the Slave Select signal physically.
+\end{enumerate}
+It was found that the most correct solution to the problem would be to develop a SPI driver, but due to time considarations it was choosen to use the SPI controller of the Zynq.
+
+SPI 1 on the Zynq was used as it can be ported to MIO channels 10 to 15, which can be accessed through the PMOD connectors of the Zybo board. 
+The SPI controller was initialized in software and was configured to be in master mode, manuel chip select mode and manuel start mode by writing to the configuration register Config\_reg0.
+In order to comply with the SPI specifications of the DRV8301 it was configured with the XSPIPS\_CLK\_PHASE\_1\_OPTION in order to make data valid on falling edges of the clock. 
+The discharge of a capacitor is utialized to make a delay on the Slave Select signal, by putting a XX capacitor and XX resistor in series with the signal.
+The transmission of 0b0001000000110000 were measured by an oscilloscope and can be seen in figure \ref{fig:spi_graph}.
+\todo[inline]{can 0b0001000000110000 be written more beautifull?? :) Mikkel}
 
 \begin{figure}[!h]
 	\centering
 		\includegraphics[width=1\linewidth]{graphics/spi}
-	\caption[SPI communication.]{SPI communication from scope...}
+	\caption[SPI transmission.]{SPI transmission of two data bytes.}
 	\label{fig:spi_graph}
 \end{figure}
 
 
 
-\subsection{TEST or whatever}
+\subsection{Timing TEST or whatever}
+
+\todo[inline]{Write about the task frequencies}
 
 %\subsection{Conclusion}
