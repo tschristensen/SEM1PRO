@@ -387,17 +387,18 @@ Note that equation~\ref{eq:v_from_vdq} is not equal to equation 10 in the paper\
 From equation~\ref{eq:equation_9}, we know that:
 
 \begin{equation}
-\Theta = \sin^{-1} (\frac{V_A}{V})
+\Theta = \sin^{-1} \Big(\frac{V_A}{V}\Big)
+\label{eq:equation_11}
 \end{equation}
 
 The third harmonic sinusoidal is given in equation (12) of the paper\cite{third_harmonic_injection}, and shown in equation~\ref{eq:v_th}
 
 \begin{equation}
-V_{th} = \frac{1}{6} \sin(3 \Theta) = \frac{1}{6} \sin(3 \sin^{-1} (\frac{V_A}{V}))
+V_{th} = \frac{1}{6} \sin(3 \Theta) = \frac{1}{6} \sin\Bigg(3 \sin^{-1} \Big(\frac{V_A}{V}\Big)\Bigg)
 \label{eq:v_th} 
 \end{equation}
 
-This third harmonic sinus is added to each of the phases
+This third harmonic sinus is added to each of the phases, as shown in equation~\ref{eq:equations_14}
 
 \begin{equation}
 \begin{bmatrix}
@@ -407,9 +408,21 @@ V_{Cth}
 \end{bmatrix}
 =
 \begin{bmatrix}
-content...
+V_A + V_{th} \\
+V_B + V_{th} \\
+V_C + V_{th}
 \end{bmatrix}
+\label{eq:equations_14}
 \end{equation}
+
+This allows the controller to go beyond the full range of the voltage without saturating. \\
+
+The reason this third harmonic injection is only enabled when the magnitude is larger than zero is to avoid dividing by a negative number in equation~\ref{eq:equation_11}.
+
+\subsection{Simulink Simulation Results}\label{sub:simulink_results}
+
+As stated earlier, the simulink simulation is used to test how the controller handles the five events stated on page~\pageref{sec:Simulations}.
+
 
 \subsection{Plecs model}\label{sub:sim_plecs_electrical}
 As previously mentioned, the Plecs model differs vastly from the Simulink model in the electrical network, as it more closely resembles the real analog circuit. 
