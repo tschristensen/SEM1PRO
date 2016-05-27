@@ -422,6 +422,43 @@ The reason this third harmonic injection is only enabled when the magnitude is l
 \subsection{Simulink Simulation Results}\label{sub:simulink_results}
 
 As stated earlier, the simulink simulation is used to test how the controller handles the five events stated on page~\pageref{sec:Simulations}.
+The simulation will be run with both PI and IP controllers, with values described in sections~\ref{sub:full_order_controller_values} and~\ref{sub:reduced_order_controller_values}. \\
+
+At first, a simulation will be run where the throttle is pressed fully from 0.12 s to 5 s, and then released.
+The load is 200 kg, which is enough to guard against wheel spin.
+The resultant current along the d and q axes have been plotted in figure~\ref{fig:Sim_results_pi_Idq}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{graphics/Sim_results_pi_Idq}
+	\caption{d and q current simulated with a positive and negative step}
+	\label{fig:Sim_results_pi_Idq}
+\end{figure}
+
+Much like on figure~\ref{fig:Output_Full}, the current steps up nicely with almost no overshoot. 
+There is also a small steady state error of about 2 \%.
+meanwhile, the d-axis current is kept very low, at least until 2.6 seconds, when the voltage starts saturating. 
+A small undershoot is not a big issue, as this is likely to occur if the position encoder is not perfectly aligned.
+When saturation occurs, the current drops off almost exponentially. 
+As the speed increases, the voltage needed to produce torque lowers until it's only enough to compensate for the drag.
+At 5 seconds, when the throttle is released, both the d and q current ripples a bit. 
+This is due to the way saturation is handled, but it's not a major ground for concern.
+
+The voltage waveforms must not be saturated, and should remain sinusoidal with third harmonic injection.
+This is shown on figure~\ref{fig:Sim_results_pi_phase_voltage}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.7\linewidth]{graphics/Sim_results_pi_phase_voltage}
+	\caption{Voltage waveforms measured when the motor is running at 4000 RPM}
+	\label{fig:Sim_results_pi_phase_voltage}
+\end{figure}
+
+The reason for is the limited resolution of the encoder. 
+
+When the throttle is released after 5 s, the power should ideally not become negative.
+
+
 
 
 \subsection{Plecs model}\label{sub:sim_plecs_electrical}

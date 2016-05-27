@@ -220,7 +220,7 @@ Replacing $G(s)$ and rearranging to get the form of a characteristics equation t
 This increases the order of the transfer function by one and adds a zero and a pole to the system. Where these lie again depends on the component and the controller values.
 This third order transfer function will be used to derive the controller values.
 
-\subsection{Full Order Controller Values}
+\subsection{Full Order Controller Values}\label{sub:full_order_controller_values}
 To find the controller values the Stephen Dodds Settling Time Formula for $5\%$ settling time is used. The desired characteristics polynomial of a transfer function for the settling time formula to work is
 
 \begin{equation}
@@ -331,7 +331,7 @@ The same procedure as for the full order system will be used for this transfer f
 
 There are no zeros as the numerator has no s values and there is one real pole at $R_a+L_as=0 \rightarrow s=0$. Which equals to (0,0) in the pole-zero map. This means that as the gain increases this pole becomes faster and faster (moves to the left). With the pole right on the imaginary axis the transfer function itself is marginally damped, and will be stable by itself. It is basically a constant value determined by the initial conditions. The controller is still needed to set a reference value though. With no mechanical part there is no decay at all, but a test will have to be performed to see how well a controller can react to the disturbance of the mechanical part.
 
-\subsection{Reduced Order Controller Values}
+\subsection{Reduced Order Controller Values}\label{sub:reduced_order_controller_values}
 Finding the controller values for this model is done as it was for the full order model. However an IP controller will be used instead to avoid adding a zero to the transfer function compared to the PI controller.
 
  The IP controller places the $K_p$ value in a feedback loop resulting in the following diagram on figure \ref{fig:IPcontroller1}.
