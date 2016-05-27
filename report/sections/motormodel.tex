@@ -112,7 +112,7 @@ The two state space models will be simulated with MatLab Simulink to see how muc
 	\caption{Matlab Simulink of each model with the same input}
 \end{figure}
 
- A problem shows up by these simulations. The speed looks fine for the reduced order model but the current starts at a high value. The current starts out as a simple multiplication of the input voltage multiplied by the $1/R$ gain to equal $4000A$. The amplitude of speed and current are not important at this time, as that will be controlled later, but since the model does not closely resemble the full order model, a controller will not be derived for this reduced order model.
+ A problem shows up by these simulations. The speed looks fine for the reduced order model but the current starts at a high value. The current starts out as a simple multiplication of the input voltage multiplied by the $1/R$ gain to equal $4000A$. The amplitude of speed and current are not important at this time, as that will be controlled later, but since the model does not ramp up the current like the  full order model, a controller will not be derived for this reduced order model.
 
 \subsubsection{Reduced Order Model 2 - No Mechanical}
  Another reduced model can be derived, this model will be an experiment to remove the slow pole from the full order model. This should affect the system somehow, but by making a robust controller and viewing the entire mechanical system of the motor as a disturbance this should work. The model will be much simpler. It can be seen on fig: \ref{fig:State_space_model_reduced_order_v2}.
@@ -182,13 +182,24 @@ Using masons rule \todo{Morten: dodds book reference to masons} the transfer fun
 \label{eq:plant_masons}
 \end{equation}
 
-From \ref{fig:State_space_model1} and \ref{fig:State_space_model_reduced_order} the transfer models for full and reduced order models can be derived as well. Using Masons Rule this yields equation ref for full order and equation ref for reduced order.
+From \ref{fig:State_space_model1} the transfer function can be derived for the plant, load torque and wind resistance excluded. Using Masons Rule this yields equation \ref{eq:full_order_tf}.
 
 \begin{equation}
 \frac{I_q}{I_{q-ref}}=G(s)=\frac{2 J_m s + 2 K_v}{s^2(2 J_m L_a) + s(2 K_v L_a + 2 J_m R_a)+3 K_t^2 + 2K_v R_a}
+\label{eq:full_order_tf}
 \end{equation}
 
-Replacing $G(s)$ and rearranging to get the form of a characteristics equation the transfer function is equation \ref{eq:transfer_function_full}.
+Analysing this transfer function it can be seen that we have a second order system, with possibly one zero and one or two poles. The zero will be located at the root of the nominator: $2J_ms+2K_v=0 \rightarrow s=\frac{-K_v}{J_m}$. Which will probably be a very small real number, as inertia should be much larger than the viscous friction. 
+The pole(s) will be located at the roots of the denominator. The denominator can be reduced by dividing everything with $2J_{pro}L_a$. yielding the transfer function:
+
+\begin{equation}
+\frac{I_q}{I_{q-ref}}=G(s)=\frac{\frac{1}{L_a}s+\frac{K_v}{J_pro}}{
+s^2+s \left( \frac{K_v}{J_{pro}}+\frac{R_a}{L_a} \right) +\frac{3}{2}\frac{K_t^2}{J_{pro}L_a}+\frac{K_vR_a}{J_{pro}L_a}}
+\end{equation}
+
+Based on the form of the denominator being a second order equation, there could be complex conjugate poles. This cannot be known until all values are inserted and the roots of the denominator found. This means that it could have any number of characteristic. The pole-zero map with the values included was used in figure \ref{fig:PZmap_full}. Two poles on the real axis and a zero close to the imaginary axes mean that the system is stable with decay. \newline
+
+Replacing $G(s)$ and rearranging to get the form of a characteristics equation the transfer function including the controller is equation \ref{eq:transfer_function_full}.
 
 %old equation. please leave (Morten)
 \begin{equation}
@@ -202,6 +213,7 @@ Replacing $G(s)$ and rearranging to get the form of a characteristics equation t
 %\label{eq:transfer_function_full2}
 %\end{equation}
 
+This increases the order of the transfer function by one and adds a zero and a pole to the system. Where these lie again depends on the component and the controller values.
 This third order transfer function will be used to derive the controller values.
 
 \subsection{Full Order Controller Values}
@@ -290,6 +302,21 @@ K_i=1.7566
 \label{eq:Kivalue}
 \end{equation}
 
+The pole-zero map for the transfer function including the controller confirms that a new pole and zero has been added. All poles and zeroes lie on the real axis, meaning they affect the system by altering the decay. The system is stable with these values since they are all on the left side of the imaginary axis. See figure \ref{fig:PZmap_Control_full}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.55\linewidth]{graphics/PZmap_ControlFullOrder}
+	\caption{PZ map with the controller}
+	\label{fig:PZmap_Control_full}
+\end{figure}
+
+\todo[inline]{Morten: Very hard to see the pole and zeroes- don't know how to improve it. matlab hates me today:sadface}
+
+
+
+
+
 \subsection{Reduced Order Transfer Function}
 The same procedure as for the full order system will be used for this transfer function. The overall transfer function using the diagram of figure \ref{fig:State_space_model_reduced_order_v2} and Masons Rule becomes:
 
@@ -297,8 +324,17 @@ The same procedure as for the full order system will be used for this transfer f
 \frac{I_q}{V_{in}}=H(s)=\frac{1}{R_a+L_qs}
 \end{equation}
 
+There are no zeros as the numerator has no s values and there is one real pole at $R_a+L_as=0 \rightarrow s=0$. Which equals to (0,0) in the pole-zero map. This means that as the gain increases this pole becomes faster and faster (moves to the left). With the pole right on the imaginary axis the transfer function itself is marginally damped, and will be stable by itself. It is basically a constant value determined by the initial conditions. The controller is still needed to set a reference value though. With no mechanical part there is no decay at all, but a test will have to be performed to see how well a controller can react to the disturbance of the mechanical part.
+
 \subsection{Reduced Order Controller Values}
-Finding the controller values for this model is done as it was for the full order model. However an IP controller will be used instead to remove a zero from the transfer function compared to the PI controller. The IP controller places the $K_p$ value in a feedback loop resulting in the following diagram
+Finding the controller values for this model is done as it was for the full order model. However an IP controller will be used instead to avoid adding a zero to the transfer function compared to the PI controller.
+
+
+ The IP controller places the $K_p$ value in a feedback loop resulting in the following diagram on figure \ref{fig:IPcontroller1}.
+
+
+
+
 
 \begin{figure}[H]
 	\centering
@@ -308,20 +344,19 @@ Finding the controller values for this model is done as it was for the full orde
 \end{figure}
 
 The transfer function of this, including the model then becomes:
-
 \begin{equation}
-\frac{I_q}{I_{q-ref}}=\frac{\frac{K_t}{L_q}}{s^2+s(\frac{R_q}{L_q}+\frac{K_p}{L_q})+\frac{K_t}{L_q}}
+\frac{I_q}{I_{qref}}=\frac{\frac{K_t}{L_a}}{s^2+s(\frac{R_a}{L_a}+\frac{K_p}{L_a})+\frac{K_t}{L_a}}
 \end{equation}
 
 Using Dodd's $5\%$ settling time formula and solving using a rank of 2nd order and a settling time of $0.05s$. The results are:
-
 \begin{equation}
 \alpha=\frac{1.5(1+2)}{0.05}=90
 \end{equation}
 
-The characteristics equation has the form:
+The characteristics equation has the form of the following equation, showing how the alphas are inserted into the characteristic equation.
 \begin{equation}
 s^2+sd_1+d_0 = s^2+2 \alpha s+ \alpha^2
+\label{eq:char_eq_reduced1}
 \end{equation}
 
 Solving for the alpha values $K_p$ and $K_p$ can be found:
@@ -332,19 +367,19 @@ Solving for the alpha values $K_p$ and $K_p$ can be found:
 \alpha^2=\frac{K_i}{L_a} \rightarrow K_i=0.324
 \end{equation}
 
-\subsection{Simulation}
+\subsection{Control Simulation}
 Testing the $K_p$ and $K_i$ values of either controller should result in a stable current output from the electrical part of the motor, which is desired to control the torque. This simulation will add the $K_p$ and $K_i$ values to the control loop and review the outcome.
 
 Figure \ref{fig:Input_ref} is the input reference signal which simulates the speeder pedal being fully actuated, then held for a few seconds and then released over two seconds. Full actuation is set to $300A$ and the run time is set at 10 seconds.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.65\linewidth]{graphics/Control_signal_input}
+	\includegraphics[width=.50\linewidth]{graphics/Control_signal_input}
 	\caption{Input reference for the controller}
 	\label{fig:Input_ref}
 \end{figure}
 
-Figures \ref{fig:Output_Full} and \ref{fig:Output_LC} shows how both models perform with the controller values found above and the input signal. The full order model has a small steady state error of slightly less than $5A$ while the reduced order model is spot on. The response time for both is less than the $0.05$ value set for the settling time formula. The full order model settles in $0.9s$ while the reduced model settles is $0.13s$. They both handle the pedal release as they should, with not undershoot at the end of the breaking.
+Figures \ref{fig:Output_Full} and \ref{fig:Output_LC} shows how both models perform with the controller values found above and the input signal. The full order model has a small steady state error of slightly less than $5A$ while the reduced order model is spot on. The response time for both is higher than the $0.05$ value set for the settling time formula though. The full order model settles in $0.9s$ while the reduced model settles is $0.13s$. They both handle the control as they should, with no overshoot at the start, or undershoot at the end of the breaking.
 
 \begin{figure}[H]
 	\centering
