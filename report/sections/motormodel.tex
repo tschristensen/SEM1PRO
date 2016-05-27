@@ -235,10 +235,10 @@ This yields the following third order equation for a third order system.
 s^3+3\alpha s^2+3\alpha^2s+\alpha^3
 \end{equation}
 
-Based on the transfer function in equation ref and a settling time of 0.1 seconds, alpha will be defined by the following equation. This value is used to find the Kp and Ki values for the controller.
+Based on the transfer function in equation ref and a settling time of 0.05 seconds, alpha will be defined by the following equation. This value is used to find the Kp and Ki values for the controller.
 
 \begin{equation}
-\alpha=\frac{1.5(1+n)}{T_s^{5\%}}=\frac{6}{0.1}=60
+\alpha=\frac{1.5(1+n)}{T_s^{5\%}}=\frac{6}{0.05}=120
 \label{eq:Dodds_settlingtime}
 \end{equation}
 
@@ -296,7 +296,7 @@ s^3+s^2(a_2+b_2K_p)+s(a_1+b_1K_i)+a_0+b_0 = s^3+d_2s^2+d_1s+d_0
 %a_1+b_1K_i=d_1 \rightarrow K_i\frac{d_1-a_1}{b_1}
 %\end{equation}
 
-These equations yield the following controller values when inserting the known motor parameters, equation \ref{eq:Kpvalue} and \ref{eq:Kivalue}.
+These equations yield the following controller values when inserting the known motor parameters. This is with a settling time of 0.05 seconds. Equation \ref{eq:Kpvalue} and \ref{eq:Kivalue}.
 \begin{equation}
 K_p=0.0111
 \label{eq:Kpvalue}
@@ -305,7 +305,6 @@ K_p=0.0111
 K_i=1.7566
 \label{eq:Kivalue}
 \end{equation}
-\todo[inline]{Martin: at which settling time? For simulations, I'm using 0.01 s.}
 
 The pole-zero map for the transfer function including the controller confirms that a new pole and zero has been added. All poles and zeroes lie on the real axis, meaning they affect the system by altering the decay. The system is stable with these values since they are all on the left side of the imaginary axis. See figure \ref{fig:PZmap_Control_full}.
 
