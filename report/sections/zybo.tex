@@ -132,11 +132,6 @@ The basic funcionality of the interface task can be seen in the flowchart of fig
 \todo[inline]{Is the inrush relay explained somewhere?? -MIkkel}
 
 \subsubsection{Controller task}
-The controller tasks basic functionality can be seen in figuer \ref{fig:controller_task}.
-It reads from the variables $I_a$ and $I_b$ and calculates $I_c$. 
-$I_a$, $I_b$, $I_c$ and $\theta$ are then used to perform a Clarke Park transformation. 
-$I_d$ and $I_q$ are then controlled with two seperate PI controllers. 
-$I_d$ is controlled with reference $0$ and $I_q$ is controlled with the pedal as reference.
 
 \begin{figure}[!h]
 	\centering
@@ -144,6 +139,58 @@ $I_d$ is controlled with reference $0$ and $I_q$ is controlled with the pedal as
 	\caption[Block diagram of controller task.]{Block diagram showing the functionality of the controller task.}
 	\label{fig:controller_task}
 \end{figure}
+
+The basic functionality of the controller task can be seen in figure \ref{fig:controller_task}.
+\todo[inline]{This figure needs to be updated.!!}
+The task polls data from the ADC in order to get raw data for $I_a$, $I_b$ and the foot pedal.
+The raw data from the ADC are then calculated into voltages and the two currents are calculated based by the equation:
+
+\begin{equation}
+	 I = \frac{V_{measured}}{R_m} \cdot NS
+\end{equation}
+$I_c$ is calculated based on the assumption that the three currents form a balanced three phase system.
+The resistance of the foot pedal potentiometer is calculated from the measured voltage and equation \ref{eq:pedal_back_calc}.
+
+$I_a$, $I_b$, $I_c$ and $\theta$ are then used to perform a Clarke Park transformation and obtaining the values of $I_d$ and $I_q$. 
+
+\myparagraph{Controllers}
+$I_d$ and $I_q$ should be controlled towards a setpoint by two seperate controllers.
+The setpoint for $I_d$ is 0 as will be explained later?? .
+\todo[inline]{Where?} 
+The setpoint, $q_{set}$, for $I_q$ should be related to the maximum allowed current, $q_{max}$, and the position of the foot pedal in percent, $pedal_\%$:
+\begin{equation}
+	q_{set} = pedal_\% \cdot q_{max};
+\end{equation}
+It was choosen to use two PI controllers as will be described in section \ref{sec:controller_design}.
+The code for one of the controllers can be seen in listing \ref{lis:controller_code}.
+It can be seen that trapezoidal integration and a anti windup scheme is used. 
+
+\begin{lstlisting}[captionpos=b,style=customCpp, caption={Something clever!.}, label=lis:controller_code]
+q_error = q_set - I_q_measured;
+q_integral = q_integral + (q_previous_error + q_error)*0.5*dt;
+
+if(q_integral > MAX_TOTAL_OUTPUT){										
+	q_integral = MAX_TOTAL_OUTPUT;
+}else if(q_integral < -MAX_TOTAL_OUTPUT){
+	q_integral = -MAX_TOTAL_OUTPUT;
+}
+
+q_output = kp * q_error + ki * q_integral;
+q_previous_error = q_error;
+\end{lstlisting}
+In listing \ref{lis:saturation} the code for detecting and downscaling output values exceeding the maximum output can bee seen.
+
+\begin{lstlisting}[captionpos=b,style=customCpp, caption={Something clever!.}, label=lis:saturation]
+total_output_magnitude = sqrt(d_output*d_output + q_output*q_output);
+
+if(total_output_magnitude > MAX_TOTAL_OUTPUT){
+	d_output = (d_output* MAX_TOTAL_OUTPUT)/total_output_magnitude;
+	q_output = (q_output* MAX_TOTAL_OUTPUT)/total_output_magnitude;
+}
+\end{lstlisting}
+
+
+
 
 \subsubsection{ADC}
 The Zynq chip contains a dual 12-bit, 1 Mega sample per second (MSPS) Analog-to-Digital Converter (ADC) \cite{adc}.
@@ -161,21 +208,6 @@ Therefore the outputs from the two LEM sensors will be connected to these.
 The torque pedal signal will be routed to channel 7 which will be sampled after channel 6 and 14.
 The top signal from the PWM generator will start the sampling and therefore it will also set the sampling frequency.
 As the PWM frequency is 20 \si{\kilo\hertz} the PWM frequency will be so as well.
-
-\begin{lstlisting}[captionpos=b,style=customCpp, caption={Something clever!.}, label=lis:controller_code]
-q_error = q_set - I_q_measured;
-q_integral = q_integral + (q_previous_error + q_error)*0.5*dt;
-
-if(q_integral > MAX_TOTAL_OUTPUT){										
-	q_integral = MAX_TOTAL_OUTPUT;
-}else if(q_integral < -MAX_TOTAL_OUTPUT){
-	q_integral = -MAX_TOTAL_OUTPUT;
-}
-
-q_output = kp * q_error + ki * q_integral;
-q_previous_error = q_error;
-\end{lstlisting}
-
 
 \subsection{Encoder}
 The Zybo board needs to interface the RMB28MD encoder that is mounted on the motor.
