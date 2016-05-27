@@ -5,7 +5,7 @@ This section will describe how the system was implemented and tested on both a t
 \subsection{Test Setup}
 In order to test subparts of the complete system a test setup was introduced.
 It consists of a permanent magnet motor of the type PM5113 with a RMB28MD encoder module mounted with a small distance to the end of the shaft.
-The setup furthermore consits of a 74HCT14 level shift interface board and a ?? dual H-bridge and can be seen in figure \ref{fig:small_motor_setup}.
+The setup furthermore consists of a 74HCT14 level shift interface board and a ??\todo{Thomas: Questionmark?} dual H-bridge and can be seen in figure \ref{fig:small_motor_setup}.
 The setup was made and soldered by the supervisors of the project.
 The full setup with H-bridge can be used to test the functionality of the Embedded System.
 The motor and encoder can be used to test the full system.
@@ -38,3 +38,17 @@ It can also be seen that the rotor is accelerated within a fraction of an electr
 	\caption[Phase voltages.]{Phase voltages measured through a lowpass filter.}
 	\label{fig:small_motor_phases}
 \end{figure}
+
+\subsection{Analog, Digital and Driver Boards}
+\todo[inline]{Thomas: I think it would be advisable to have someone else read through this to ensure that it is not too emotional... I dislike making excuses..}
+Various issues were encountered while creating prototypes of especially the analog and digital boards.
+Several iterations were etched before a satisfactory result was obtained.
+Due to delivery issues, the components were not available until very late in the process and there was not sufficient time remaining to fully debug the boards.
+The driver board was made to function as was intended and is used in section \todo[inline]{Thomas: section that describes testing of the power board.}.
+As mentioned in previous sections, the strategy used for OCP changed throughout the testing phase.
+It became apparent that it was infeasible to spend the time necessary to have the analog board functioning in time for the deadline.
+In the meantime the OCP of the DRV8301 was understood, allowing to use this feature instead.\\
+
+As shown in section \ref{sec:electricsimulation}, the general behaviour of the OCP circuit is working as intended.
+The errors found on the analog and digital boards are mostly related to layout and unintentional short circuits.
+For this reason it is the conviction of the group that one or two revisions of the boards would be necessary to fully debug them.

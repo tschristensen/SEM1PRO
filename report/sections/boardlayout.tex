@@ -43,12 +43,15 @@ The analog board houses, as the name implies, all of the analog signal processin
 Mainly the over-current protection, but also the torque pedal scaling is present on this board.
 
 \subsubsection{Over-current Protection}
+\label{sec:ocpcircuit}
 In order to protect the system, it is necessary to create some form of over-current protection, OCP.
 Two choices immediately present themselves:
+
 \begin{enumerate}
 	\item The DRV8301 is equipped with current sensing circuitry that allows the chip to automatically shut down the drivers when an over-current event, OCE, occurs.
 	\item External circuitry that, based on the measurements done by the current transducers, detects an OCE and turns off the drive signals by driving the EN\_GATE signal of the DRV8301 low. 
 \end{enumerate}
+
 Initially 1 seemed like a sensible choice, however, at the time it was not possible to deduce the functionality of the OCP in the DRV8301 based on the datasheet.
 Therefore it was decided to use 2 since the function of the OCP will be well known and can be easily adjusted to meet any altered requirements, should the need arise.\\
 
@@ -337,10 +340,33 @@ As can be seen, the first 11 bits are data, followed by 4 address bits and final
 	\caption{SPI input data packet format of the DRV8301.}
 	\label{fig:spipacket}
 \end{figure}
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\linewidth]{graphics/spipacketresponse}
+	\caption{SPI output data packet format of the DRV8301.}
+	\label{fig:spipacketresponse}
+\end{figure}
 
 Figure \ref{fig:spipacketresponse} is a depiction of the format of an SPI output data packet.
 Upon receiving a message on SDI a response is prepared in this format.
 In a response packet, the R/W bit is used as a fault bit, indicating whether the received packet is valid.
+\begin{figure}[!h]
+	\begin{subfigure}[b]{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{graphics/statreg1}
+		\caption{Status register 1 of the DRV8301.}
+		\label{fig:statreg1}
+	\end{subfigure}
+	\\
+	\begin{subfigure}[b]{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{graphics/statreg2}
+		\caption{Status register 2 of the DRV8301.}
+		\label{fig:statreg2}
+	\end{subfigure}
+	\caption{These registers contain the error bits of the system.}
+	\label{fig:statreg}
+\end{figure}
 For a data packet to be considered valid, the DRV8301 requires the following:
 \begin{itemize}
 	\item SCLK must be low when $\overline{\text{SCS}}$ goes low.
@@ -360,34 +386,16 @@ The OC\_ADJ\_SET allows setting the value of $V_{ds}$ appropriate for the type o
 As previously mentioned, this value is equal $V_{ds}=0.96$\si{\volt}.
 Figure \ref{fig:vdstable} shows the different values that can be set as the threshold.
 Since 0.96\si{\volt} is not available, the nearest value below is chosen.
-Choosing a value above would result in an OC limit higher than the 300\si{\ampere} specified.	\todo[inline]{Thomas: Are we sure that }
+Choosing a value above would result in an OC limit higher than the 300\si{\ampere} specified.	\todo[inline]{Thomas: Are we sure that it is 300 ampere in the calculations? why not 150 when the fets are parallelised?}
+For this reason, the threshold is set to $V_{ds}=0.926$\si{\volt} by setting OC\_ADJ\_SET in control register 1 equal to 23.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{graphics/vdstable}
+	\caption{The threshold values for $V_{ds}$ and the associated code to be set in control register 1.}
+\end{figure}
 
 \begin{figure}[!h]
-	\centering
-	\includegraphics[width=\linewidth]{graphics/spipacketresponse}
-	\caption{SPI output data packet format of the DRV8301.}
-	\label{fig:spipacketresponse}
-\end{figure}
-
-\begin{figure}
-	\begin{subfigure}[b]{\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{graphics/statreg1}
-		\caption{Status register 1 of the DRV8301.}
-		\label{fig:statreg1}
-	\end{subfigure}
-	\\
-	\begin{subfigure}[b]{\linewidth}
-		\centering
-		\includegraphics[width=\linewidth]{graphics/statreg2}
-		\caption{Status register 2 of the DRV8301.}
-		\label{fig:statreg2}
-	\end{subfigure}
-	\caption{These registers contain the error bits of the system.}
-	\label{fig:statreg}
-\end{figure}
-
-\begin{figure}
 	\begin{subfigure}[b]{\linewidth}
 		\centering
 		\includegraphics[width=\linewidth]{graphics/contreg1}
