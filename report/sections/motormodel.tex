@@ -1,6 +1,6 @@
 \newpage
 \section{Controller Design}
-Controlling the PMSM motor will be done using the principles of vector control, where the controller produces a change to the PWM inverter input. This is done by monitoring the two of the three current inputs to the motor and transforming them using the dq0 transform. This transform yields a d and q DC value and a zero, which are respectively referred to a torque demand and a flux demand. \newline
+Controlling the PMSM motor will be done using the principles of vector control\todo{Martin: Field Oriented Control. Should Clarke Park be explained, or just referenced?}, where the controller produces a change to the PWM inverter input. This is done by monitoring the two of the three current inputs to the motor and transforming them using the dq0 transform. This transform yields a d and q DC value and a zero, which are respectively referred to a torque demand and a flux demand. \newline
 
 The requirement for this project outlines that the motor must be torque controlled, hence the flux demand will be a zero while the torque demand will be defined by the speeder pedal. After the dq values have been compared to the reference/demand values the error is fed to a PID controller which will adjust the output accordingly. This output is transformed using the inverse dq0 transform, which yields a three phase AC signal that can be fed into the inverter and yield a new motor speed. \newline
 
@@ -210,7 +210,7 @@ Replacing $G(s)$ and rearranging to get the form of a characteristics equation t
 \frac{I_m}{I_{ref}}=\frac{s^2\frac{K_p}{L}+s(\frac{K_i}{L}+\frac{K_pK_v}{J})+\frac{K_iK_v}{J_r}}{s^3+s^2(\frac{R}{2L}+\frac{K_v}{J}+\frac{K_p}{L})+s(\frac{3K_t^2}{2JL}+\frac{K_vR}{JL}+\frac{K_i}{L}+\frac{K_pK_v}{JL})+\frac{K_iK_v}{JL}}
 \label{eq:transfer_function_full}
 \end{equation}
-
+\todo{Martin: I'm quite happy, that I didn't have to put this fucking equation in}
 %2nd order transfer function: dont delete
 %\begin{equation}
 %\dfrac{I_m}{I_{ref}}=\dfrac{L_a(K_i+K_ps)}{s^2+s(\frac{R_a}{L_a}+\frac{1}{L_a}K_p)+\frac{1}{L_a}K_i+\frac{3K_t^2}{2JL_a}}
@@ -305,6 +305,7 @@ K_p=0.0111
 K_i=1.7566
 \label{eq:Kivalue}
 \end{equation}
+\todo[inline]{Martin: at which settling time? For simulations, I'm using 0.01 s.}
 
 The pole-zero map for the transfer function including the controller confirms that a new pole and zero has been added. All poles and zeroes lie on the real axis, meaning they affect the system by altering the decay. The system is stable with these values since they are all on the left side of the imaginary axis. See figure \ref{fig:PZmap_Control_full}.
 
