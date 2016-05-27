@@ -44,6 +44,8 @@ What can be learned from this electrical equivalent diagram is that the magnet o
 
 To current control the motor, the model and controller will be developed for the q-axis of this equivalent diagram. The q-axis by itself resembles the equivalent circuit of a DC motor very much and this can be used to design a mathematical model of the motor.
 
+\todo[inline]{Morten: Some of this text might need better explaining.}
+
 \subsection{State Space Model}
 A state space model is derived from the physical representation of a PMSM motor, figure \ref{fig:State_space_model1}, consisting of an electrical part on the left and a mechanical part on the right side of the model. The model is made in MatLab Simulink. The model is very similar to that of a DC motor when interpreted like this. A wind resistance has been added to show how it affects the torque of the motor. The value of the wind resistance is the rotational speed squared multiplied by a drag value. This value will be a negative number, which is then added to the torque output to slow down the motor. The drag can be approximated by looking at the gearings of the kart and the motors own drag coefficient.
 
@@ -156,6 +158,8 @@ A control loop is added to the model, figure \ref{fig:State_space_model4}. It mu
 	\caption{Full PMSM motor model with a current control loop.}
 	\label{fig:State_space_model4}
 \end{figure}
+
+The controller chosen here is a PI controller. It should be able to control the 2nd order system based on the fact that one of the poles are very fast. The PI itself is preferred to avoid using a derivative in the discretized controller. A derivative term can become very inaccurate at high frequency. To do improve precision it must be slowed down, but then the controller might be too slow all together. Hence if the derivative term can be avoided it will be. The following sections will determine how well the PI controller can control the system.
 
 
 \subsection{Full Order Transfer Function}
@@ -329,12 +333,7 @@ There are no zeros as the numerator has no s values and there is one real pole a
 \subsection{Reduced Order Controller Values}
 Finding the controller values for this model is done as it was for the full order model. However an IP controller will be used instead to avoid adding a zero to the transfer function compared to the PI controller.
 
-
  The IP controller places the $K_p$ value in a feedback loop resulting in the following diagram on figure \ref{fig:IPcontroller1}.
-
-
-
-
 
 \begin{figure}[H]
 	\centering
@@ -366,6 +365,16 @@ Solving for the alpha values $K_p$ and $K_p$ can be found:
 \begin{equation}
 \alpha^2=\frac{K_i}{L_a} \rightarrow K_i=0.324
 \end{equation}
+
+The transfer function including these values result in the pzmap of figure \ref{fig:PZmapIPcontroller1}. Since there is no zero in the transfer function, there wont be one when adding an IP controller. The added pole becomes a complex conjugate pair as there is nothing to keep them on the real axis. This means that the system is stable but might have oscillation. This will be tested in a simulation in the next section.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.55\linewidth]{graphics/PZmap_ControlReducedOrder}
+	\caption{PZ map of the reduced order system with an IP controller}
+	\label{fig:PZmapIPcontroller1}
+\end{figure}
+
 
 \subsection{Control Simulation}
 Testing the $K_p$ and $K_i$ values of either controller should result in a stable current output from the electrical part of the motor, which is desired to control the torque. This simulation will add the $K_p$ and $K_i$ values to the control loop and review the outcome.
