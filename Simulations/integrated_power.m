@@ -1,5 +1,5 @@
-lower_limit = 445757;
-upper_limit = 447774;
+lower_limit = index;
+upper_limit = length(t)-1;
 clear E_out t_out
 E_out(1)=0;
 t_out(1)=(t(lower_limit)+t(lower_limit-1))*.5;

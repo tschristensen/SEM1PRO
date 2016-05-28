@@ -23,6 +23,7 @@
 
 \usepackage{todonotes}
 \usepackage{listings}
+\usepackage{standalone}
 
 \usepackage{chngcntr} %Change the counters of objects. Used to make figure/table and equation counting specific to the section they are in.
 \counterwithin{figure}{section}
@@ -119,17 +120,17 @@
 \clearpage
 \newpage
 \pagenumbering{arabic}
-%\input{sections/introduction}
-%\input{sections/requirements}
+\input{sections/introduction}
+\input{sections/requirements}
 \input{sections/systemdescription}
 \input{sections/systemdiagram}
-%\input{sections/boardlayout}
+\input{sections/boardlayout}
 \input{sections/zybo}
-%\input{sections/threephaseinverter}
-%\input{sections/PMACmotor}
+\input{sections/threephaseinverter}
+\input{sections/PMACmotor}
 \input{sections/motormodel}
 \input{sections/simulation}
-%\input{sections/testsetup}
+\input{sections/testsetup}
 \input{sections/conclusion}
 \newpage
 \input{bib}

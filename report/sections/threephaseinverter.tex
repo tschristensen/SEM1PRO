@@ -1,6 +1,5 @@
-%
+%!TEX root = ../main.tex
 \section{Three phase inverter}
-<<<<<<< HEAD
 This section will describe the design of the three-phase inverter used to drive the PMAC motor in this project.
 This includes the calculations and considerations done  
 Initially, a short overview of the principle of operation of a three-phase inverter is given.
@@ -14,26 +13,26 @@ Each pair of switches can never be on at the same time as this would result in a
 
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=\linewidth,trim=0cm 5cm 0cm 5cm]{graphics/threephaseinverter}
+	\includegraphics[width=\linewidth,trim=0cm 5cm 0cm 1cm]{graphics/threephaseinverter}
 	\caption{Simulink model of a simple three-phase inverter.}
 	\label{fig:threephaseinverter}
 \end{figure}
 
-It is possible to have eight different configurations that do not violate this restriction.
-Of these six are said to be active while two are inactive, that is, no current is flowing during these configurations.
-\begin{table}[!h]
-\centering
-	\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
-		\hline
-						   & Q$_0$ & Q$_1$ & Q$_2$ & Q$_3$ & Q$_4$ & Q$_5$ & Q$_6$ & Q$_7$\\ \hline
-						 A & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 1\\ 
-		  $\bar{\text{A}}$ & 1 & 0 & 1 & 0 & 1 & 0 & 1 & 0\\ 
-  						 B & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 1\\ 
-		  $\bar{\text{B}}$ & 1 & 1 & 0 & 0 & 1 & 1 & 0 & 0\\ 
-  						 C & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0\\ 
-		  $\bar{\text{C}}$ & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 1\\ \hline
-	\end{tabular}
-\end{table}
+Several schemes exist to control the switches.
+Throughout this project a PWM modulation technique using sinusoids as references is used.
+Figure \ref{fig:countercarrier} is a depiction of the modulation technique.
+A counter is continuously counting up and down, creating a triangle wave.
+This is called the carrier wave.
+The carrier wave is compared to a sinusoidal reference signal.
+The frequency of the sinusoidal will be the fundamental frequency of the output voltage.
+Whenever the reference cross the carrier wave, the gate voltages of the relevant half-bridge invert, of course taking into account the necessary dead time to avoid short circuiting the power rail.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{graphics/countercarrier}
+	\caption{Naturally sampled PWM using a sinusoid as fundamental frequency.}
+	\label{fig:countercarrier}
+\end{figure}
 
 \subsection{Choosing the MOSFETs}
 \label{sec:mosfet}
@@ -112,21 +111,24 @@ P_{c} = R_{DS(on)} I_{D,rms}^2
 \label{eq:p_c}
 \end{equation}
 
-
-
 For simplicity the power loss will be estimated from a single phase of the inverter circuit seen in figure~\ref{fig:single_phase}. 
 The Current $I_{out}$ is drawn by some load $R_{load}$ that will absorb the load power $P_{load}$ which is given by equation\ref{eq:p_load}. 
 Since there are two switches, the load power must be delivered equally from both. Thus the output power, $P_{Q}$, of each switch is given by equation~\ref{eq:P_Q}  
 
 
-
-\begin{figure}[h!]
+\begin{figure}[!h]
 	\centering
-	\includegraphics[scale = 0.6]{graphics/single_phase}
-	\caption{Single phase}
-	\label{fig:single_phase}
+  \includestandalone[width=0.2\textwidth]{graphics/mosfets}
+  \caption{Single phase}
+  \label{fig:single_phase}
 \end{figure}
 
+%\begin{figure}[h!]
+%	\centering
+%	\includegraphics[scale = 0.6]{graphics/single_phase}
+%	\caption{Single phase}
+%	\label{fig:single_phase}
+%\end{figure}
 
 \begin{equation}
 P_{load} = R_{load} I_{out,rms}^2
