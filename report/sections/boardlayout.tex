@@ -113,6 +113,7 @@ Figure \ref{fig:rectifier} shows the voltages at these points.
 \end{figure}
 \todo[inline]{Thomas: It was my intention to explain the function of this full-wave rectifier but it somehow illudes me}
 \paragraph{Thresholding:}
+\label{sec:schmitt}
 As explained in section \ref{sec:lemsensor}, the input signal to the OCP circuit is dimensioned such that the maximum current in either of the phases will result in a voltage of 0.5\si{\volt}.
 Also mentioned in this section is the desire to leave some headroom in case of an OCE.
 This is due to the response time of the system.
@@ -145,6 +146,7 @@ Resulting in $R_7 = 150$\si{\kilo\ohm} and $R_8 = 2542.37$\si{\ohm}.
 Since 2542.37\si{\ohm} is hardly a standard value, the nearest standard value is chosen such that $R_8=2550$\si{\ohm}.
 
 \todo[inline]{Thomas: What do these rounded values result in, in terms of hysteresis}
+\todo[inline]{Thomas: I think there is an error in the calculations vs the text - it seems the values result in 0.475 when we discussed 0.45 volt hysteresis.}
 
 \paragraph{Inverter:}
 Due to the NOR-stage described in section \ref{sec:nor}, it is necessary to invert the signal.
