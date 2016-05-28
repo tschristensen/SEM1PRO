@@ -233,7 +233,7 @@ The PWM tasks basic functionality can be seen in the block diagram of figure \re
 The PWM task is a seperate task from the controller task as it might be preferrable to have the two tasks run at different frequencies.
 The task reads the rotor position from the encoder and access the global variables $d_{output}$ and $q_{output}$. 
 It uses this information to perform inverse Clarke Park transformation.
-Afterwards third harmonic injection is performed and if the values are higher or lower than the bounds they are saturated.
+Afterwards third harmonic injection is performed and if the values are higher or lower than the maximum bounds they are saturated.
 The global enable variable is checked and if high the physical enable pin is set high.
 
 
@@ -328,8 +328,9 @@ The Zybo board needs to interface the RMB28MD encoder that is mounted on the mot
 The RMB28MD is an absolute encoder with sine/cosine, SSI and incremental output. 
 It was choosen to use the SSI output as an IP core reading the position by SSI communication was made available by the supervisors of the group.
 Reading the position throug SSI yields a resolution of 8bit per mechanical revolution. 
+The physical RMB28MD encoder signals are interfaceb by a IP Core made by the supervisors.
 The IP core outputs a clock to the RMB28MD chip and reads data from a datapin. 
-It then makes the data available on the AXI4LITE bus, where it can be read from software. 
+It then makes the data available on the AXI4LITE bus, where it can be read from software by the PWM task. 
 
 \subsection{SPI communication}
 

@@ -1,4 +1,4 @@
-%
+%!TEX root = ../main.tex
 \section{Three phase inverter}
 This section will describe the design of the three-phase inverter used to drive the PMAC motor in this project.
 This includes the calculations and considerations done  
@@ -115,12 +115,20 @@ For simplicity the power loss will be estimated from a single phase of the inver
 The Current $I_{out}$ is drawn by some load $R_{load}$ that will absorb the load power $P_{load}$ which is given by equation\ref{eq:p_load}. 
 Since there are two switches, the load power must be delivered equally from both. Thus the output power, $P_{Q}$, of each switch is given by equation~\ref{eq:P_Q}  
 
-\begin{figure}[h!]
+
+\begin{figure}[!h]
 	\centering
-	\includegraphics[scale = 0.6]{graphics/single_phase}
-	\caption{Single phase}
-	\label{fig:single_phase}
+  \includestandalone[width=0.2\textwidth]{graphics/mosfets}
+  \caption{Single phase}
+  \label{fig:single_phase}
 \end{figure}
+
+%\begin{figure}[h!]
+%	\centering
+%	\includegraphics[scale = 0.6]{graphics/single_phase}
+%	\caption{Single phase}
+%	\label{fig:single_phase}
+%\end{figure}
 
 \begin{equation}
 P_{load} = R_{load} I_{out,rms}^2
