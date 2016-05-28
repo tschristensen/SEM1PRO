@@ -156,12 +156,12 @@ if(rx_flag)
   if(!strcmp(cmd,"set"))
   {
     if(!strcmp(var,"kp"))
-  	{
-  	  scanf(val, "%f", &kp);
-  	  sprintf(tx_buffer, "kp was set: %f", kp);
-  	  tx_flag = true;
-  	  tx_tail = strlen(tx_buffer);
-  	}
+    {
+      scanf(val, "%f", &kp);
+      sprintf(tx_buffer, "kp was set: %f", kp);
+      tx_flag = true;
+      tx_tail = strlen(tx_buffer);
+    }
   	
 (*@\makebox[.25\linewidth][c]{$\smash{\vdots}$}@*)
   
@@ -278,7 +278,7 @@ void uart_rx_task()
   {
     rx_flag = true;
   }
-   _wait(MILLI_SEC(1));
+  _wait(MILLI_SEC(1));
 }
 \end{lstlisting}
 
@@ -298,11 +298,11 @@ void uart_tx_task()
   if(tx_flag)
   {
     uint8_t i;
-	for(i = 0; i < tx_tail; i++)
+    for(i = 0; i < tx_tail; i++)
     {
-	  xil_printf("%c",tx_buffer[i]);
+      xil_printf("%c",tx_buffer[i]);
     }
-	tx_tail = 0x00;
+    tx_tail = 0x00;
     tx_flag = false;
   }
   _wait(MILLI_SEC(250));
