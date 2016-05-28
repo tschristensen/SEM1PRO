@@ -1,5 +1,6 @@
 \newpage
 \section{Controller Design}
+\label{sec:controller_design}
 Controlling the PMSM motor will be done using the principles of vector control\todo{Martin: Field Oriented Control. Should Clarke Park be explained, or just referenced?}, where the controller produces a change to the PWM inverter input. This is done by monitoring the two of the three current inputs to the motor and transforming them using the dq0 transform. This transform yields a d and q DC value and a zero, which are respectively referred to a torque demand and a flux demand. \newline
 
 The requirement for this project outlines that the motor must be torque controlled, hence the flux demand will be a zero while the torque demand will be defined by the speeder pedal. After the dq values have been compared to the reference/demand values the error is fed to a PID controller which will adjust the output accordingly. This output is transformed using the inverse dq0 transform, which yields a three phase AC signal that can be fed into the inverter and yield a new motor speed. \newline
