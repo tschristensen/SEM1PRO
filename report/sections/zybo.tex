@@ -107,7 +107,7 @@ Afterwards the calculated dutycycles will be written to the PWM generator in the
 
 \begin{figure}[!h]
 	\centering
-		\includegraphics[width=0.9\linewidth,trim=2cm 17cm 0cm 4cm]{graphics/pwm_tasktikz}
+	\includegraphics[width=0.9\linewidth,trim=2cm 17cm 0cm 4cm]{graphics/pwm_tasktikz}
 	\caption[Block diagram of PWM task.]{Block diagram showing the functionality of the PWM task.}
 	\label{fig:pwm_task}
 \end{figure}
@@ -128,6 +128,55 @@ The basic funcionality of the interface task can be seen in the flowchart of fig
 \end{figure}
 \todo[inline]{Can there be less whitespace in the figure? -MIkkel}
 \todo[inline]{Is the inrush relay explained somewhere?? -MIkkel}
+
+An interface to a PC is established using UART.
+This interface enables the setting of values within the system as well as potentially reading the current status of the system.
+All communication through the UART interface is done through the \texttt{rx\_buffer} and \texttt{tx\_buffer} arrays shown in listing \ref{lis:uartvars}.
+Currently three parameters can be set within the system:
+\begin{itemize}
+	\item \texttt{kp/ki}: These are the values of the PI controller used.
+	\item \texttt{qmax}: The limit of the current that the controller is allowed to set as reference. 
+\end{itemize}
+Setting any of the above is done by:
+\begin{center}
+\texttt{set <parameter> <value>}
+\end{center}
+As can be seen in listing \ref{lis:cutcommand} the command is split into parts using \texttt{strtok()}.
+This is a non-reentrant function that will return all the characters until the first appearance of delimiter.
+Every consecutive call to the function with \texttt{NULL} as the first parameter will continue the search through the same array.
+With the command split into tokens it is parsed using a simple if-structure, comparing each argument in the command using \texttt{strcmp()} until a value can be set.
+
+\begin{lstlisting}[captionpos=b,style=customCpp, caption={Something clever!.}, label=lis:cutcommand, escapeinside={(*@}{@*)}]
+if(rx_flag)
+{
+  char* cmd = strtok(rx_buffer, DELIMITER);
+  char* var = strtok(NULL, DELIMITER);
+  char* val = strtok(NULL, DELIMITER);
+  
+  if(!strcmp(cmd,"set"))
+  {
+    if(!strcmp(var,"kp"))
+  	{
+  	  scanf(val, "%f", &kp);
+  	  sprintf(tx_buffer, "kp was set: %f", kp);
+  	  tx_flag = true;
+  	  tx_tail = strlen(tx_buffer);
+  	}
+  	
+(*@\makebox[.25\linewidth][c]{$\smash{\vdots}$}@*)
+  
+  }
+  rx_flag = false;
+  rx_tail = 0x00;
+}
+\end{lstlisting}
+
+Once the value is set a message is returned to the user, informing of the successful setting.
+\texttt{rx\_flag} is cleared and the buffer is emptied by setting \texttt{rx\_tail} to zero.
+
+\todo[inline]{Thomas: Not sure the lines below are relevant, but i felt like writing it...}
+The system is made with expandability in mind, currently only a \texttt{set} command is implemented.
+This could easily be extended to a \texttt{read} or perhaps a \texttt{shutdown} command.
 
 \subsubsection{Controller task}
 
@@ -175,6 +224,7 @@ if(q_integral > MAX_TOTAL_OUTPUT){
 q_output = kp * q_error + ki * q_integral;
 q_previous_error = q_error;
 \end{lstlisting}
+\todo[inline]{Thomas: Perhaps not quite as clever..}
 In listing \ref{lis:saturation} the code for detecting and downscaling output values exceeding the maximum output can bee seen.
 
 \begin{lstlisting}[captionpos=b,style=customCpp, caption={Something clever!.}, label=lis:saturation]
@@ -185,9 +235,6 @@ if(total_output_magnitude > MAX_TOTAL_OUTPUT){
 	q_output = (q_output* MAX_TOTAL_OUTPUT)/total_output_magnitude;
 }
 \end{lstlisting}
-
-
-
 
 \subsubsection{ADC}
 The Zynq chip contains a dual 12-bit, 1 Mega sample per second (MSPS) Analog-to-Digital Converter (ADC) \cite{adc}.
@@ -205,6 +252,62 @@ Therefore the outputs from the two LEM sensors will be connected to these.
 The torque pedal signal will be routed to channel 7 which will be sampled after channel 6 and 14.
 The top signal from the PWM generator will start the sampling and therefore it will also set the sampling frequency.
 As the PWM frequency is 20 \si{\kilo\hertz} the PWM frequency will be so as well.
+
+\subsubsection{UART RX/TX}
+In order to facilitate communication between the Zybo board and a PC, a small UART connection is established.
+The connection consists of two tasks, UART\_RX and UART\_TX.
+They handle receiving and transmitting, respectively.
+As shown in listing \ref{lis:uartvars} each of the tasks are given a buffer, a flag and a tail variable.
+
+\begin{lstlisting}[captionpos=b,style=customCpp, caption={UART\_RX/TX buffers and variables.}, label=lis:uartvars]
+char rx_buffer[0xff];
+char tx_buffer[0xff];
+bool rx_flag = false, tx_flag = false;
+uint8_t rx_tail = 0x00, tx_tail = 0x00;
+\end{lstlisting}
+
+\begin{lstlisting}[captionpos=b,style=customCpp, caption={UART\_RX task.}, label=lis:uartrx]
+void uart_rx_task()
+{
+  if (XUartPs_IsReceiveData(UART_BASEADDR))
+  {
+    rx_buffer[rx_tail] = XUartPs_ReadReg(UART_BASEADDR, XUARTPS_FIFO_OFFSET);
+    rx_tail++;
+  }
+  if(rx_buffer[rx_tail-1] == '\r')
+  {
+    rx_flag = true;
+  }
+   _wait(MILLI_SEC(1));
+}
+\end{lstlisting}
+
+Looking at listing \ref{lis:uartrx} the function of these in the UART\_RX task can be seen.
+If there is data on the line it is pushed onto the \texttt{rx\_buffer} and \texttt{rx\_tail} is incremented.
+This is to keep track of the number of characters that have been received.
+Finally, if the last character received is a carriage return, the \texttt{rx\_flag} is set high.
+This indicates to the interface task that a full command has been received and is ready for execution.
+Listing \ref{lis:uarttx} shows the UART\_TX task.
+Every time it is run it will check \texttt{tx\_flag}.
+If \texttt{tx\_flag} is high, this indicates that data has been put into the \texttt{tx\_buffer}.
+All \texttt{tx\_tail} characters in the buffer are transmitted character by character.
+Hereafter \texttt{tx\_buffer} is "emptied" by setting \texttt{tx\_tail} to zero and \texttt{tx\_flag} is set low to indicate that transmission is complete.
+\begin{lstlisting}[captionpos=b,style=customCpp, caption={UART\_TX task.}, label=lis:uarttx] 
+void uart_tx_task()
+{
+  if(tx_flag)
+  {
+    uint8_t i;
+	for(i = 0; i < tx_tail; i++)
+    {
+	  xil_printf("%c",tx_buffer[i]);
+    }
+	tx_tail = 0x00;
+    tx_flag = false;
+  }
+  _wait(MILLI_SEC(250));
+}
+\end{lstlisting}
 
 \subsection{Encoder}
 The Zybo board needs to interface the RMB28MD encoder that is mounted on the motor.
