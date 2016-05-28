@@ -1,7 +1,7 @@
 clear all;clc;
 % Mechanical constants
-m = 200;            % Total mass of the car with driver
-weight_distribution = 0.6; %how large a percentage of the mass is on the rear wheels.
+m = 150;            % Total mass of the car with driver
+weight_distribution = 0.5; %how large a percentage of the mass is on the rear wheels.
 r = 11*.0254/2;     % Radius of driving wheels
 G1 = 12;            % Number of teeth on motor-side cog
 G2 = 50;            % Number of teeth on wheel-side cog
@@ -21,7 +21,7 @@ J_pro = (m*r^2+J_G2)*(G1/G2)^2 + J_G1;% Projected inertia
 J_pro1 = J_G2*(G1/G2)^2 + J_G1 + J_M;
 J_pro2 = m*r^2*(G1/G2)^2;
 F_N = 9.8*m*weight_distribution;
-static = 1.1;
+static = 1.0;
 dynamic = 0.75;
 viscous = 0;
 
@@ -53,9 +53,11 @@ Ds=tf(Num1,Den1);
 
 Tset=0.05;
  
-alpha=(1.5*(1+3))/Tset;
-Kp=(3*alpha-Kv/J_pro-(R/(2*L)))*L/26.4;
-Ki=(3*alpha^2-((Kp*Kv)/(2*J_pro)-(Kv*R)/(J_pro*L)-(3*Kt^2)/(2*J_pro*L)))*L/26.4;
+% alpha=(1.5*(1+3))/Tset;
+% Kp=(3*alpha-Kv/J_pro-(R/(2*L)))*L/26.4;
+% Ki=(3*alpha^2-((Kp*Kv)/(2*J_pro)-(Kv*R)/(J_pro*L)-(3*Kt^2)/(2*J_pro*L)))*L/26.4;
+Kp = 4.223417610457842e-04;
+Ki = 0.066810002916190;
 
 %Kp = -(9/Tset - R/L)*L/26.4;
 %Ki = (4.5/Tset)^2*L/26.4;

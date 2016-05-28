@@ -274,6 +274,10 @@ The block diagram of the discrete controller is shown on figure~\ref{fig:sim_con
 
 The two independent current controllers are drawn in blue boxes. 
 The feedback comes from the Idq port on the left.
+The constants, Kp and Ki, are calculated in chapter~\ref{sec:controller_design}, and divided by half the battery voltage.
+This is done, because the controller designs produce a voltage, whereas the simulink controller produces a percentage of half the battery voltage.
+Similarly the implemented controller in chapter~\ref{sec:Embedded_Design} produces a range from -1 to 1, so the controller constants need to be scaled acordingly
+\todo[inline]{Martin: I'm actually not sure about the implemented controller.}
 The integrator block uses trapezoidal integration, and the output is limited to $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$.
 This is to ensure, that the integrator does not wind up\todo{Martin: Is there a better term for when the integrator keeps becoming larger, because the output is saturated somewhere?}.
 The saturation block to the left of the q current controller limits the input to between 0 and a maximum current.
@@ -454,19 +458,36 @@ This is shown on figure~\ref{fig:Sim_results_pi_phase_voltage}
 
 The reason for stepping voltage instead of a smooth curve is the limited resolution of the encoder. 
 This is not an issue, because these steps will induce a high frequency noise, that the inductance of the motor will choke.
-Figure~\ref{fig:Sim_results_pi_phase_voltage} shows that the voltage waveforms span the whole range, even at speeds where the controller output is outside the $\mathrm{\pm} 1.15$. 
+Figure~\ref{fig:Sim_results_pi_phase_voltage} shows that the voltage waveforms span the whole range, even at speeds where the controller output is outside the $\mathrm{\pm} 1.15$. \\
+
+When the throttle is released after 5 s, the power should ideally not become negative, as the inverter is not designed to handle regenerative braking.
+This means, that it is not known what happens if the motor tries to push power back to the battery.
+Figure~\ref{fig:Sim_results_pi_phase_power} shows a short power undershoot occurring when the controller input goes from full to zero.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width = 0.7\linewidth]{graphics/sim_results_pi_controller}
-	\caption{Output of the PI controllers}
-	\label{fig:sim_results_pi_controller}
+	\includegraphics[width = 0.7\linewidth]{graphics/Sim_results_pi_phase_power}
+	\caption{Power undershoot when throttle is released}
+	\label{fig:Sim_results_pi_phase_power}
 \end{figure}
 
-When the throttle is released after 5 s, the power should ideally not become negative.
+The power peaks at $\mathrm{-400 \si{\watt}}$ for a short time.
+Integrating the power from 5.06 to 5.5 s gives an energy of $\mathrm{-25 \si{\joule}}$.
+This is not likely to cause problems, as this energy easily could be lost in the inverter.
+The issue is larger when releasing the throttle while the kart is accelerating. 
+This is shown on figure~\ref{fig:Sim_results_pi05_large_power_undershoot}.
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.7\linewidth]{graphics/Sim_results_pi05_large_power_undershoot}
+	\caption{Power undershoot crosses zero 33 ms after the throttle is released}
+	\label{fig:Sim_results_pi05_large_power_undershoot}
+\end{figure}
 
+Integrating this undershoot yields $\mathrm{-62 \si{\joule}}$. 
+This is not a major concern, however it causes a ripple in the speed, that might be felt. 
 
+Figure
 
 \subsection{Plecs model}\label{sub:sim_plecs_electrical}
 As previously mentioned, the Plecs model differs vastly from the Simulink model in the electrical network, as it more closely resembles the real analog circuit. 

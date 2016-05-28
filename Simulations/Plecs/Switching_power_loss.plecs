@@ -37,9 +37,9 @@ Plecs {
   ExtendedMatrixPrecision "1"
   MatrixSignificanceCheck "2"
   Schematic {
-    Location      [0, 29; 1920, 984]
+    Location      [0, 38; 1920, 993]
     ZoomFactor    1.33333
-    SliderPosition [1170, -139]
+    SliderPosition [-1, 275]
     ShowBrowser   off
     BrowserWidth  100
     Component {
@@ -1660,35 +1660,10 @@ Plecs {
                 Show          off
               }
             }
-            Component {
-              Type          RateLimiter
-              Name          "Rate Limiter"
-              Show          on
-              Position      [190, 135]
-              Direction     right
-              Flipped       off
-              Parameter {
-                Variable      "RisingRateLimit"
-                Value         "1000/300"
-                Show          off
-              }
-              Parameter {
-                Variable      "FallingRateLimit"
-                Value         "-1000/300"
-                Show          off
-              }
-            }
             Connection {
               Type          Signal
               SrcComponent  "Pulse\nGenerator"
               SrcTerminal   1
-              DstComponent  "Rate Limiter"
-              DstTerminal   1
-            }
-            Connection {
-              Type          Signal
-              SrcComponent  "Rate Limiter"
-              SrcTerminal   2
               DstComponent  "1"
               DstTerminal   1
             }
@@ -4200,18 +4175,18 @@ Plecs {
       Position      [1220, 590]
       Direction     up
       Flipped       off
-      Location      [0, 29; 1920, 1005]
+      Location      [0, 38; 1914, 1014]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
 "G0AQQByAGUAYQAAAAAA/////wAAAIgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
 "///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB4AAAAOxAAAA"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAB3oAAAOxAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAApwAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABDAAA"
-"AAQAAAAAAAAAAAAAACQAAAAAAAABkAAAAAQAAAAA="
+"AAZAAAAAEAAABkAAAAbAAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABDAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAA"
 "AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 "=="
@@ -4219,7 +4194,7 @@ Plecs {
       TimeRange     "0"
       ScrollingMode "1"
       SingleTimeAxis "1"
-      Open          "1"
+      Open          "0"
       Ts            "-1"
       SampleLimit   "0"
       XAxisLabel    ""
