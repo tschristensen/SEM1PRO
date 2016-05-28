@@ -26,8 +26,8 @@ As can be seen on the list there are multiple different tasks that needs to be h
 By looking at them it can be seen that optimally they should be run at different speeds.
 The PWM switching frequency should be 20kHz as described in section ????.
 \todo[inline]{Thomas: Section that describes pwm switching losses?}
-As this is quite fast it should be handled in the FPGA \todo[inline]{Thomas: Xilinx speak of PS and PL, the "FPGA part" is known as the PL (Programmable logic)} part of the Zynq chip. 
-The rest can be handled on the ARM processor. 
+As this is quite fast it should be handled in the PL part of the Zynq chip. 
+The rest can be handled on the PS part. 
 In order to utilize that some tasks needs to be run at lower frequencies it was choosen to use khaOS which is a Run To Comple Scheduler (RTCS) system made by Karsten Holm Andersen.
 \todo[inline]{Thomas: Are there any papers on khaOS that we could reference?}
 Using an RTCS makes it easy to schedule tasks to run at different frequencies. 
@@ -47,16 +47,9 @@ A task diagram of the complete system on the Zybo can be seen in figure \ref{fig
 %\end{figure}
 
 \begin{figure}[!h]
-<<<<<<< HEAD
   \includegraphics[width=\textwidth]{graphics/taskdiagram}
   \caption[Task diagram]{Task diagram showing software tasks as green circles, shared variables as yellow boxes, IP cores as blue boxes, I/O periphirals as limegreen boxes, external signals as orange boxes and external components in red. The PS and PL areas are marked accordingly and arrows show the data and signal direction. $C_p$ denotes various controller parameters.}
   \label{fig:task_diagram}
-=======
-	\centering
-	\includegraphics[width=1\linewidth]{graphics/TaskDiagram}
-	\caption[Task diagram.]{Task diagram of the complete system on the Zybo. Inside ARM rectangle circles are separate tasks while boxes are shared variables. In the FPGA area all the FPGA components are shown. Outside the rectangle all the signals to and from the outside world are shown.}
-	\label{fig:task_diagram}
->>>>>>> 595bc194fcc54493d5ea27523ce39a0b3dcf2893
 \end{figure}
 
 As can be seen various signals are coming from the outside world through the PL into the PS.
@@ -108,22 +101,6 @@ As the PWM generator should be able to do three independent PWM signal there are
 		\label{fig:pwm_graph}
 	\end{center}
 \end{figure}
-
-\subsubsection{PWM task}
-The PWM tasks basic functionality can be seen in the block diagram of figure \ref{fig:pwm_task}.
-The PWM task is a seperate task from the controller task as it might be preferrable to have the two tasks run at different frequencies.
-It is responsible for performing inverse Clarke Park transformation using $V_{sd}$, $V_{sq}$ and $\theta$. 
-Afterwards the calculated dutycycles will be written to the PWM generator in the FPGA if the enable signal is high.
-
-\begin{figure}[!h]
-	\centering
-	\includegraphics[width=0.9\linewidth,trim=2cm 17cm 0cm 4cm]{graphics/pwm_tasktikz}
-	\caption[Block diagram of PWM task.]{Block diagram showing the functionality of the PWM task.}
-	\label{fig:pwm_task}
-\end{figure}
-
-\todo[inline]{Where should we talk about the concept of dq and the meaning of it? -MIkkel}
-\todo[inline]{Third harmonic injection and why? -MIkkel}
 
 
 \subsubsection{Interface task}
@@ -189,8 +166,6 @@ The system is made with expandability in mind, currently only a \texttt{set} com
 This could easily be extended to a \texttt{read} or perhaps a \texttt{shutdown} command.
 
 \subsubsection{Controller task}
-
-\todo[inline]{REMEMBER TO USE ENABLE SIGNAL TO RESET INTEGARTOR - MIKKEL}
 \begin{figure}[!h]
 	\centering
 		\includegraphics[width=0.9\linewidth,trim=3cm 15cm 0 2cm]{graphics/controller_tasktikz}
@@ -202,7 +177,6 @@ The basic functionality of the controller task can be seen in figure \ref{fig:co
 \todo[inline]{This figure needs to be updated.!!}
 The task polls data from the ADC in order to get raw data for $I_a$, $I_b$ and the foot pedal.
 The raw data from the ADC are then calculated into voltages and the two currents are calculated based by the equation:
-
 \begin{equation}
 	 I = \frac{V_{measured}}{R_m} \cdot NS
 \end{equation}
@@ -220,25 +194,32 @@ The setpoint, $q_{set}$, for $I_q$ should be related to the maximum allowed curr
 \end{equation}
 It was choosen to use two PI controllers as will be described in section \ref{sec:controller_design}.
 The code for one of the controllers can be seen in listing \ref{lis:controller_code}.
-It can be seen that trapezoidal integration and a anti windup scheme is used. 
+As can been seen in line 2 trapezoidal integration is used. 
+Lines 4-8 performs anti windup and lines 9-14 uses the output if enable is high and performs integrator reset if low.
 
-\begin{lstlisting}[captionpos=b,style=customCpp, caption={Something clever!.}, label=lis:controller_code]
-q_error = q_set - I_q_measured;
-q_integral = q_integral + (q_previous_error + q_error)*0.5*dt;
+\begin{lstlisting}[captionpos=b,style=customCpp, caption={[C code constituting a PI controller.]C code constituting a PI controller with trapezoidal integration, anti windup and integration reset.}, label=lis:controller_code]
+d_error = d_set - I_d_measured;
+d_integral = d_integral + (d_previous_error + d_error)*0.5*dt;
 
-if(q_integral > MAX_TOTAL_OUTPUT){										
-	q_integral = MAX_TOTAL_OUTPUT;
-}else if(q_integral < -MAX_TOTAL_OUTPUT){
-	q_integral = -MAX_TOTAL_OUTPUT;
+if(d_integral > MAX_TOTAL_OUTPUT){
+	d_integral = MAX_TOTAL_OUTPUT;
+}else if (d_integral < -MAX_TOTAL_OUTPUT){
+	d_integral = -MAX_TOTAL_OUTPUT;
 }
+if(enable){
+	d_output = kp * d_error + ki * d_integral;
+}else{
+	d_output = 0;
+	d_integral = 0;
+}
+d_previous_error = d_error;
 
-q_output = kp * q_error + ki * q_integral;
-q_previous_error = q_error;
 \end{lstlisting}
-\todo[inline]{Thomas: Perhaps not quite as clever..}
-In listing \ref{lis:saturation} the code for detecting and downscaling output values exceeding the maximum output can bee seen.
+Afterwards $d_{output}$ and $q_{output}$ are 
+Afterwards the output values are downscaled if they exceed the maximum limits.
+The code for downscaling can be seen in \ref{lis:saturation}.
 
-\begin{lstlisting}[captionpos=b,style=customCpp, caption={Something clever!.}, label=lis:saturation]
+\begin{lstlisting}[captionpos=b,style=customCpp, caption={[C code for downscaling.]C code for detecting and downscaling output values that exceed the maximum limits.}, label=lis:saturation]
 total_output_magnitude = sqrt(d_output*d_output + q_output*q_output);
 
 if(total_output_magnitude > MAX_TOTAL_OUTPUT){
@@ -246,6 +227,28 @@ if(total_output_magnitude > MAX_TOTAL_OUTPUT){
 	q_output = (q_output* MAX_TOTAL_OUTPUT)/total_output_magnitude;
 }
 \end{lstlisting}
+
+\subsubsection{PWM task}
+The PWM tasks basic functionality can be seen in the block diagram of figure \ref{fig:pwm_task}.
+The PWM task is a seperate task from the controller task as it might be preferrable to have the two tasks run at different frequencies.
+The task reads the rotor position from the encoder and access the global variables $d_{output}$ and $q_{output}$. 
+It uses this information to perform inverse Clarke Park transformation.
+Afterwards third harmonic injection is performed and if the values are higher or lower than the bounds they are saturated.
+The global enable variable is checked and if high the physical enable pin is set high.
+
+
+\begin{figure}[!h]
+	\centering
+%	\includegraphics[width=0.9\linewidth,trim=2cm 17cm 0cm 4cm]{graphics/pwm_tasktikz}
+  	\includegraphics[width=\textwidth]{graphics/PwmTask2}
+	\caption[Block diagram of PWM task.]{Block diagram showing the functionality of the PWM task.}
+	\label{fig:pwm_task}
+\end{figure}
+
+\todo[inline]{Where should we talk about the concept of dq and the meaning of it? -MIkkel}
+\todo[inline]{Third harmonic injection and why? -MIkkel}
+
+
 
 \subsubsection{ADC}
 The Zynq chip contains a dual 12-bit, 1 Mega sample per second (MSPS) Analog-to-Digital Converter (ADC) \cite{adc}.

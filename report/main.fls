@@ -303,10 +303,10 @@ INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.out
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.out
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.out
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.out
-OUTPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.out
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.out
 OUTPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.out
+OUTPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.pdf
 INPUT /usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
@@ -333,7 +333,6 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.toc
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.toc
-INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
 OUTPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.toc
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.lof
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.lof
@@ -362,9 +361,7 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmss9.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmss8.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmtt9.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmtt8.tfm
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/TaskDiagram.pdf
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/TaskDiagram.pdf
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/TaskDiagram.pdf
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/counter.png
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/counter.png
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/counter.png
@@ -380,9 +377,6 @@ INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/pwm_plot.eps
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/pwm_plot-eps-converted-to.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/pwm_plot-eps-converted-to.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/pwm_plot-eps-converted-to.pdf
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/pwm_tasktikz.pdf
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/pwm_tasktikz.pdf
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/pwm_tasktikz.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/interface_task.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/interface_task.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/interface_task.pdf
@@ -401,6 +395,9 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmss8.tfm
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/controller_tasktikz.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/controller_tasktikz.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/controller_tasktikz.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/PwmTask2.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/PwmTask2.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/PwmTask2.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/spi_timing.png
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/spi_timing.png
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/spi_timing.png
@@ -622,6 +619,7 @@ INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/sumulation.eps
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/sumulation-eps-converted-to.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/sumulation-eps-converted-to.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/sumulation-eps-converted-to.pdf
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx9.tfm
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/fullwaverectifier.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/fullwaverectifier.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/fullwaverectifier.pdf
@@ -655,6 +653,7 @@ INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.out
 INPUT /usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-ts1.enc
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
+INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
