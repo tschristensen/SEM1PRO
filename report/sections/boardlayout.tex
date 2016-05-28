@@ -111,7 +111,7 @@ Figure \ref{fig:rectifier} shows the voltages at these points.
 	\caption{The condition of the signal at points $V_i$, $V_r$ and $V_o$ in the full wave rectifier.}
 	\label{fig:rectifier}
 \end{figure}
-
+\todo[inline]{Thomas: It was my intention to explain the function of this full-wave rectifier but it somehow illudes me}
 \paragraph{Thresholding:}
 As explained in section \ref{sec:lemsensor}, the input signal to the OCP circuit is dimensioned such that the maximum current in either of the phases will result in a voltage of 0.5\si{\volt}.
 Also mentioned in this section is the desire to leave some headroom in case of an OCE.
@@ -133,7 +133,7 @@ The LM4040 supplies a voltage in, effectively the same manner as a linear voltag
 It is therefore desirable to draw as little current from the component, that is, through $R_6$, as possible.
 As per the datasheet it can operate from 60$\mu A\rightarrow15$\si{\milli\ampere}.
 It was decided to set the maximum current through $R_6$, $\frac{V_{ref}-V_l}{R_6} = I_{R_6}=100$\si{\micro\ampere}.
-This sets $R_6 = 22.5k$\si{\kilo\ohm}.
+This sets $R_6 = 22.5$\si{\kilo\ohm}.
 $R_7$ and $R_8$ can now be isolated using \ref{eq:vhigh} and \ref{eq:vlow}:
 
 \begin{align}
@@ -143,6 +143,8 @@ $R_7$ and $R_8$ can now be isolated using \ref{eq:vhigh} and \ref{eq:vlow}:
 
 Resulting in $R_7 = 150$\si{\kilo\ohm} and $R_8 = 2542.37$\si{\ohm}.
 Since 2542.37\si{\ohm} is hardly a standard value, the nearest standard value is chosen such that $R_8=2550$\si{\ohm}.
+
+\todo[inline]{Thomas: What do these rounded values result in, in terms of hysteresis}
 
 \paragraph{Inverter:}
 Due to the NOR-stage described in section \ref{sec:nor}, it is necessary to invert the signal.
