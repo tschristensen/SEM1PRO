@@ -213,7 +213,7 @@ output = \left\lfloor \Bigg( \frac{\phi \cdot 256}{2 \pi} + 0.5 \Bigg) \% 256\ri
 \end{equation}
 
 where \% is the mod function. 
-The purpose of that is to wrap \todo{Wrap is the common way of saying, if a number goes outside a range, it restarts from the other end of the range, like an integer overflow is (ofteh) handled in coding.} the output to a value between 0 and 255, which can be used for look-up tables. 
+The purpose of that is to wrap \todo{Wrap is the common way of saying, if a number goes outside a range, it restarts from the other end of the range, like an integer overflow is (ofteh) handled in coding.} the output to a value between 0 and 255, which is the same range of integers as the real encoder. 
 The round down function rounds a number, effectively quantizing the output. 
 The reason for using round down rather than just round is to ensure, that the number ranges from 0 to 255. 
 To combat the inaccuracy of the round down function, 0.5 is added. 
@@ -261,7 +261,8 @@ I_C
 
 where $\gamma = \tfrac{2 \pi}{3}$. 
 Due to the limitations of the encoder, the system only measures 64 different electrical angles.
-To improve calculation speed, all six trigonometric functions in equation~\ref{eq:sim_clark-park} have been pre-calculated and saved to six lookup tables. \\
+To reduce computation time for the Zybo or enable it to be done in FPGA, all six trigonometric functions in equation~\ref{eq:sim_clark-park} can be saved in six lookup tables without any loss of precision. 
+However, Simulink seems to employ an inefficient method of looking up these values, which means simulation time actually is three times longer.\\
 
 The block diagram of the discrete controller is shown on figure~\ref{fig:sim_controller_diagram}.
 
@@ -341,6 +342,7 @@ I_q
 \label{eq:sim_inverse_clark-park}
 \end{equation}
 
+The trigonometric functions used in equation~\ref{eq:sim_inverse_clark-park} are the same as in equation~\ref{eq:sim_clark-park}, so if using lookup-tables, the tables could be reused here. 
 This is done in the PWM generation subsystem, which is shown on figure~\ref{fig:sim_PWM_generation}.
 
 \begin{figure}[H]
@@ -350,7 +352,114 @@ This is done in the PWM generation subsystem, which is shown on figure~\ref{fig:
 	\label{fig:sim_PWM_generation}
 \end{figure}
 
-Along with the inverse Clarke-park transformation, this block also injects the third harmonic sinusoidal. 
+The majority of this block diagram calculates the inverse Clarke-Park transformation, and in the upper right corner, the third harmonic injection is calculated using the knowledge given in the paper 'A Novel Third Harmonic Injection Method for Closed Loop Control of PMSM Motors' \cite{third_harmonic_injection}. \\
+
+The issue is that, when using field oriented control, the stator voltage does not remain at a constant angle relative to the rotor angle.
+That means, that calculating the third harmonic isn't as simple as multiplying the rotor position with three. 
+Doing this will result in the the third harmonic being out of phase with the three sinusoidal voltage waveforms as speed increases.
+This will result in higher peak voltages at certain speeds.
+Instead, the third harmonic needs to be calculated from the dq output from the controller. \\
+
+Equation (9) in the paper\cite{third_harmonic_injection} defines the three phase voltage of a balances system without third harmonic injection:
+
+\begin{equation}
+\left[ \begin{array}{c}
+V_A \\ V_B \\V_C
+\end{array} \right]
+=
+\left[ \begin{array}{c}
+V \sin(\Theta) \\
+V \sin(\Theta - 120 \si{\degree}) \\
+V \sin(\Theta + 120 \si{\degree})
+\end{array} \right]
+\label{eq:equation_9}
+\end{equation}
+
+where $\mathrm{\Theta}$ is the instantaneous phase, and V is the instantaneous magnitude, calculated as:
+
+\begin{equation}
+V = \sqrt{V_q ^2 + V_d ^2}
+\label{eq:v_from_vdq}
+\end{equation}
+
+Note that equation~\ref{eq:v_from_vdq} is not equal to equation 10 in the paper\cite{third_harmonic_injection}, because this dividing with 1.5 is done in the Clarke-Park transform block. 
+
+From equation~\ref{eq:equation_9}, we know that:
+
+\begin{equation}
+\Theta = \sin^{-1} \Big(\frac{V_A}{V}\Big)
+\label{eq:equation_11}
+\end{equation}
+
+The third harmonic sinusoidal is given in equation (12) of the paper\cite{third_harmonic_injection}, and shown in equation~\ref{eq:v_th}
+
+\begin{equation}
+V_{th} = \frac{1}{6} \sin(3 \Theta) = \frac{1}{6} \sin\Bigg(3 \sin^{-1} \Big(\frac{V_A}{V}\Big)\Bigg)
+\label{eq:v_th} 
+\end{equation}
+
+This third harmonic sinus is added to each of the phases, as shown in equation~\ref{eq:equations_14}
+
+\begin{equation}
+\begin{bmatrix}
+V_{Ath} \\
+V_{Bth} \\
+V_{Cth}
+\end{bmatrix}
+=
+\begin{bmatrix}
+V_A + V_{th} \\
+V_B + V_{th} \\
+V_C + V_{th}
+\end{bmatrix}
+\label{eq:equations_14}
+\end{equation}
+
+This allows the controller to go beyond the full range of the voltage without saturating. \\
+
+The reason this third harmonic injection is only enabled when the magnitude is larger than zero is to avoid dividing by a negative number in equation~\ref{eq:equation_11}.
+
+\subsection{Simulink Simulation Results}\label{sub:simulink_results}
+
+As stated earlier, the simulink simulation is used to test how the controller handles the five events stated on page~\pageref{sec:Simulations}.
+The simulation will be run with both PI and IP controllers, with values described in sections~\ref{sub:full_order_controller_values} and~\ref{sub:reduced_order_controller_values}. \\
+
+At first, a simulation will be run where the throttle is pressed fully from 0.12 s to 5 s, and then released.
+The load is 200 kg, which is enough to guard against wheel spin.
+The resultant current along the d and q axes have been plotted in figure~\ref{fig:Sim_results_pi_Idq}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{graphics/Sim_results_pi_Idq}
+	\caption{d and q current simulated with a positive and negative step}
+	\label{fig:Sim_results_pi_Idq}
+\end{figure}
+
+Much like on figure~\ref{fig:Output_Full}, the current steps up nicely with almost no overshoot. 
+There is also a small steady state error of about 2 \%.
+meanwhile, the d-axis current is kept very low, at least until 2.6 seconds, when the voltage starts saturating. 
+A small undershoot is not a big issue, as this is likely to occur if the position encoder is not perfectly aligned.
+When saturation occurs, the current drops off almost exponentially. 
+As the speed increases, the voltage needed to produce torque lowers until it's only enough to compensate for the drag.
+At 5 seconds, when the throttle is released, both the d and q current ripples a bit. 
+This is due to the way saturation is handled, but it's not a major ground for concern.
+
+The voltage waveforms must not be saturated, and should remain sinusoidal with third harmonic injection.
+This is shown on figure~\ref{fig:Sim_results_pi_phase_voltage}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.7\linewidth]{graphics/Sim_results_pi_phase_voltage}
+	\caption{Voltage waveforms measured when the motor is running at 4000 RPM}
+	\label{fig:Sim_results_pi_phase_voltage}
+\end{figure}
+
+The reason for is the limited resolution of the encoder. 
+
+When the throttle is released after 5 s, the power should ideally not become negative.
+
+
+
 
 \subsection{Plecs model}\label{sub:sim_plecs_electrical}
 As previously mentioned, the Plecs model differs vastly from the Simulink model in the electrical network, as it more closely resembles the real analog circuit. 

@@ -1,58 +1,6 @@
 
 \section{Three phase inverter}
 
-Power inverters are circuits which transfer power from a DC source to an AC load.
-They come in all shapes and sizes, from low power functions such as powering a car radio to that of backing up a building in case of power outage.
-Inverters can come in many different varieties, differing in price, power, efficiency and purpose.
-The purpose of a DC/AC power inverter is typically to take DC power supplied by a battery, such as a 12 volt car battery, and transform it into a 120 volt AC power source operating at 60 Hz, emulating the power available at an ordinary household electrical outlet. 
-
-Power inverters are used today for many tasks like powering appliances in a car such as cell phones, radios and televisions.
-They also come in handy for consumers who own camping vehicles, boats and at construction sites where an electric grid may not be as accessible to hook into.
-Inverters allow the user to  provide AC power in areas where only batteries can be made available, allowing portability and freeing the user of long power cords.
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[scale = 0.7]{graphics/inverter_blockD}
-	\caption{Block diagram of inverter. Battery supply is given to the MOSFET driver where it will convert DC to AC and the resulting AC is given to the step up transformer}
-\end{figure}
-
-When four switches, S1 to S4, are connected to the DC power supply, S1 and S4 and also S2 and S4 are respectively paired and the pairs are alternately turned ON and OFF, the AC flows as shown in Figure~
-
-
-\subsection{Principle of Inverter Operation}
-
-An inverter is a device to create the AC from the DC power supply. Below is given a simple example in order to be understandable the operation of an Inverter. See the basic principle with the single-phase DC as the simplest example.
-Figure~\ref{fig:ac_create} shows the example of the method to convert the DC to the AC by utilizing a lamp for the load in place of a motor. 
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[scale = 0.7]{graphics/ac_create}
-	\caption{Method to create AC}
-	\label{fig:ac_create}
-\end{figure}
-
-When four switches, S1 to S4, are connected to the DC power supply, S1 and S4 and also S2 and S4 are respectively paired and the pairs are alternately turned ON and OFF, the AC flows as shown in Figure~\ref{fig:switching}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[scale = 0.7]{graphics/switching}
-	\caption{ }
-	\label{fig:switching}
-\end{figure}
-
-\begin{itemize}
-	\item When the switches S1 and S4 are turned ON, the current flows in the lamp in the direction of A.\\
-	\item When the switches S2 and S3 are turned ON, the current flows in the lamp in the direction of B
-	
-\end{itemize}
-
-If these operations are repeated by a certain period, the AC is created since the direction of the current flowing in the lamp alters.
-
-\subsection{The three phase inverter}
-
-
-
-
 
 \subsection{Choosing the MOSFETs}
 \label{sec:mosfet}
