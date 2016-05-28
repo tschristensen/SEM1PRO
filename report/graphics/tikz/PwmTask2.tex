@@ -1,0 +1,61 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usetikzlibrary{shapes,shadows,arrows}
+\begin{document}
+\tikzstyle{decision} = [diamond,draw]
+\tikzstyle{line} = [draw,-stealth, thick]
+\tikzstyle{elli} = [draw, ellipse,minimum height=8mm,text width=5em, text centered]
+\tikzstyle{block} = [draw, rectangle,text width=6em, text centered , minimum height=15mm, node distance=10em]
+\tikzstyle{blocksmall} = [draw, rectangle, text width=4em, text centered, minimum height=7mm, node distance=15em]
+\tikzstyle{blockmed} = [draw, rectangle, text width=6em, text centered, minimum height=7mm, node distance=15em]
+\tikzstyle{blockhuge} = [draw, dashed, rectangle, text width=44em, minimum height=16em, node distance=15em]
+\tikzstyle{blocktall} = [draw, rectangle, text width=6em, text centered, minimum height=35mm, node distance=15em]
+
+\begin{tikzpicture}
+%surround block
+\node [blockhuge,yshift=-1em,xshift=0.7cm](surroundblock){};
+
+%Central blocks:
+\node [blocktall, xshift=-7em](inverse){Inverse Clarke Park Transform};
+\node [blocktall, right of=inverse](pwm){Third harmonic injection};
+\node [blocktall, right of=pwm](sat)[xshift=-1cm]{Saturation};
+
+%input blocks:
+\node [blocksmall,left of=inverse,yshift=3em,xshift=-1cm](vsq){$d_{output}$};
+\node [blocksmall,below of=vsq,yshift=12em](vsd){$q_{output}$};
+\node [blocksmall,below of=vsd,yshift=12em](theta){$\theta$};
+\node [blocksmall,below of=theta,yshift=11em](enable){Enable};
+
+\node [blocksmall,right of=theta,xshift=-2.3cm](read){Read $\theta$};
+
+%Input arrows:
+\path[line](vsq.east) -- ([yshift=3em]inverse.west);
+\path[line](vsd.east) -- (inverse.west);
+\path[line](theta.east) -- (read.west);
+\path[line](read.east) -- (inverse.222);
+\path[line](enable.east) -- node[yshift=0.5em,xshift = 8cm]{Enable} ([xshift=10em,yshift=-2em]sat.south);
+
+%Inverse to pwm arrows:
+\path[line]([yshift=3em]inverse.east) -- node[yshift=0.5em]{Duty A} ([yshift=3em]pwm.west);
+\path[line](inverse.east) -- node[yshift=0.5em]{Duty B} (pwm.west);
+\path[line]([yshift=-3em]inverse.east) -- node[yshift=0.5em]{Duty C} ([yshift=-3em]pwm.west);
+
+%output arrows:
+%\path[line]([yshift=3em]pwm.east) -- node[xshift=5.5em]{Duty A} ([yshift=3em, xshift=3em]pwm.east);
+%\path[line]([yshift=1em]pwm.east) -- node[xshift=5.5em]{Duty B} ([yshift=1em, xshift=3em]pwm.east);
+%\path[line]([yshift=-1em]pwm.east) -- node[xshift=5.5em]{Duty C} ([yshift=-1em, xshift=3em]pwm.east);
+%\path[line]([yshift=-3em]pwm.east) -- node[xshift=5.5em]{Enable} ([yshift=-3em, xshift=3em]pwm.east);
+
+\path[line](pwm.45) --  node[yshift=0.5em]{Duty A} (sat.135);
+\path[line](pwm.0) -- node[yshift=0.5em]{Duty B}(sat.180);
+\path[line](pwm.315) -- node[yshift=0.5em]{Duty C}(sat.315-90);
+
+\path[line](sat.45) --  node[yshift=0.5em]{Duty A} ([xshift=4.5cm]sat.135);
+\path[line](sat.0) -- node[yshift=0.5em]{Duty B}([xshift=4.5cm]sat.180);
+\path[line](sat.315) -- node[yshift=0.5em]{Duty C}([xshift=4.5cm]sat.315-90);
+
+
+\end{tikzpicture}
+
+\end{document}

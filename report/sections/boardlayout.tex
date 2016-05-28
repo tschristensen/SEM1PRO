@@ -43,12 +43,15 @@ The analog board houses, as the name implies, all of the analog signal processin
 Mainly the over-current protection, but also the torque pedal scaling is present on this board.
 
 \subsubsection{Over-current Protection}
+\label{sec:ocpcircuit}
 In order to protect the system, it is necessary to create some form of over-current protection, OCP.
 Two choices immediately present themselves:
+
 \begin{enumerate}
 	\item The DRV8301 is equipped with current sensing circuitry that allows the chip to automatically shut down the drivers when an over-current event, OCE, occurs.
 	\item External circuitry that, based on the measurements done by the current transducers, detects an OCE and turns off the drive signals by driving the EN\_GATE signal of the DRV8301 low. 
 \end{enumerate}
+
 Initially 1 seemed like a sensible choice, however, at the time it was not possible to deduce the functionality of the OCP in the DRV8301 based on the datasheet.
 Therefore it was decided to use 2 since the function of the OCP will be well known and can be easily adjusted to meet any altered requirements, should the need arise.\\
 
@@ -108,8 +111,9 @@ Figure \ref{fig:rectifier} shows the voltages at these points.
 	\caption{The condition of the signal at points $V_i$, $V_r$ and $V_o$ in the full wave rectifier.}
 	\label{fig:rectifier}
 \end{figure}
-
+\todo[inline]{Thomas: It was my intention to explain the function of this full-wave rectifier but it somehow illudes me}
 \paragraph{Thresholding:}
+\label{sec:schmitt}
 As explained in section \ref{sec:lemsensor}, the input signal to the OCP circuit is dimensioned such that the maximum current in either of the phases will result in a voltage of 0.5\si{\volt}.
 Also mentioned in this section is the desire to leave some headroom in case of an OCE.
 This is due to the response time of the system.
@@ -130,7 +134,7 @@ The LM4040 supplies a voltage in, effectively the same manner as a linear voltag
 It is therefore desirable to draw as little current from the component, that is, through $R_6$, as possible.
 As per the datasheet it can operate from 60$\mu A\rightarrow15$\si{\milli\ampere}.
 It was decided to set the maximum current through $R_6$, $\frac{V_{ref}-V_l}{R_6} = I_{R_6}=100$\si{\micro\ampere}.
-This sets $R_6 = 22.5k$\si{\kilo\ohm}.
+This sets $R_6 = 22.5$\si{\kilo\ohm}.
 $R_7$ and $R_8$ can now be isolated using \ref{eq:vhigh} and \ref{eq:vlow}:
 
 \begin{align}
@@ -140,6 +144,9 @@ $R_7$ and $R_8$ can now be isolated using \ref{eq:vhigh} and \ref{eq:vlow}:
 
 Resulting in $R_7 = 150$\si{\kilo\ohm} and $R_8 = 2542.37$\si{\ohm}.
 Since 2542.37\si{\ohm} is hardly a standard value, the nearest standard value is chosen such that $R_8=2550$\si{\ohm}.
+
+\todo[inline]{Thomas: What do these rounded values result in, in terms of hysteresis}
+\todo[inline]{Thomas: I think there is an error in the calculations vs the text - it seems the values result in 0.475 when we discussed 0.45 volt hysteresis.}
 
 \paragraph{Inverter:}
 Due to the NOR-stage described in section \ref{sec:nor}, it is necessary to invert the signal.
@@ -337,29 +344,6 @@ As can be seen, the first 11 bits are data, followed by 4 address bits and final
 	\caption{SPI input data packet format of the DRV8301.}
 	\label{fig:spipacket}
 \end{figure}
-
-Figure \ref{fig:spipacketresponse} is a depiction of the format of an SPI output data packet.
-Upon receiving a message on SDI a response is prepared in this format.
-In a response packet, the R/W bit is used as a fault bit, indicating whether the received packet is valid.
-For a data packet to be considered valid, the DRV8301 requires the following:
-\begin{itemize}
-	\item SCLK must be low when $\overline{\text{SCS}}$ goes low.
-	\item Packet must have 16 full clock cycles.
-	\item SCLK must be low when  $\overline{\text{SCS}}$ goes high.
-\end{itemize}
-
-If the received packet is of type WRITE, the data in the response will contain the contents of status register 1, see figure \ref{fig:statreg1}.
-Using a READ message the contents of any of the four registers can be read at any time.\\
-
-All of the control of the functionality of the DRV8301 can be done through the control registers as seen in figure \ref{fig:contreg}.
-Of interest to this project are OCP\_MODE and OC\_ADJ\_SET. 
-OCP\_MODE allows the user to set the mode of operation of the OCP. 
-One of four options can be chosen: current limit mode, OC latch shut down mode, report only mode and OC disabled mode.
-During testing the driver was being run in OC disabled mode, however, during this time it was decided to attempt using the feature for detection of OCE's.
-Since the maximum allowed current through the IRFP4468PBF (the MOSFET chosen for the inverter, see section \ref{sec:mosfet}) is 300\si{\ampere} and its $R_{ds(on)=3.2}$\si{\milli\ampere} the 
-OC\_ADJ\_SET allows setting the value of $V_{ds}$ appropriate for the type of MOSFET chosen.
-
-
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=\linewidth]{graphics/spipacketresponse}
@@ -367,7 +351,10 @@ OC\_ADJ\_SET allows setting the value of $V_{ds}$ appropriate for the type of MO
 	\label{fig:spipacketresponse}
 \end{figure}
 
-\begin{figure}
+Figure \ref{fig:spipacketresponse} is a depiction of the format of an SPI output data packet.
+Upon receiving a message on SDI a response is prepared in this format.
+In a response packet, the R/W bit is used as a fault bit, indicating whether the received packet is valid.
+\begin{figure}[!h]
 	\begin{subfigure}[b]{\linewidth}
 		\centering
 		\includegraphics[width=\linewidth]{graphics/statreg1}
@@ -384,8 +371,35 @@ OC\_ADJ\_SET allows setting the value of $V_{ds}$ appropriate for the type of MO
 	\caption{These registers contain the error bits of the system.}
 	\label{fig:statreg}
 \end{figure}
+For a data packet to be considered valid, the DRV8301 requires the following:
+\begin{itemize}
+	\item SCLK must be low when $\overline{\text{SCS}}$ goes low.
+	\item Packet must have 16 full clock cycles.
+	\item SCLK must be low when  $\overline{\text{SCS}}$ goes high.
+\end{itemize}
+
+If the received packet is of type WRITE, the data in the response will contain the contents of status register 1, see figure \ref{fig:statreg1}.
+Using a READ message the contents of any of the four registers can be read at any time.\\
+
+All of the control of the functionality of the DRV8301 can be done through the control registers as seen in figure \ref{fig:contreg}.
+Of interest to this project are OCP\_MODE and OC\_ADJ\_SET. 
+OCP\_MODE allows the user to set the mode of operation of the OCP. 
+One of four options can be chosen: current limit mode, OC latch shut down mode, report only mode and OC disabled mode.
+During testing the driver was being run in OC disabled mode, however, during this time it was decided to attempt using the feature for detection of OCE's.
+The OC\_ADJ\_SET allows setting the value of $V_{ds}$ appropriate for the type of MOSFET chosen.
+As previously mentioned, this value is equal $V_{ds}=0.96$\si{\volt}.
+Figure \ref{fig:vdstable} shows the different values that can be set as the threshold.
+Since 0.96\si{\volt} is not available, the nearest value below is chosen.
+Choosing a value above would result in an OC limit higher than the 300\si{\ampere} specified.	\todo[inline]{Thomas: Are we sure that it is 300 ampere in the calculations? why not 150 when the fets are parallelised?}
+For this reason, the threshold is set to $V_{ds}=0.926$\si{\volt} by setting OC\_ADJ\_SET in control register 1 equal to 23.
 
 \begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{graphics/vdstable}
+	\caption{The threshold values for $V_{ds}$ and the associated code to be set in control register 1.}
+\end{figure}
+
+\begin{figure}[!h]
 	\begin{subfigure}[b]{\linewidth}
 		\centering
 		\includegraphics[width=\linewidth]{graphics/contreg1}

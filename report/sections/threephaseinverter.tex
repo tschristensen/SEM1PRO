@@ -1,6 +1,38 @@
-
+%!TEX root = ../main.tex
 \section{Three phase inverter}
+This section will describe the design of the three-phase inverter used to drive the PMAC motor in this project.
+This includes the calculations and considerations done  
+Initially, a short overview of the principle of operation of a three-phase inverter is given.
 
+\subsection{Principle of Operation of the Three-Phase Inverter}
+A three-phase inverter enables the use of a DC supply in variable frequency control of a three-phase load.
+In this project the DC supply is a battery and the load, a PMAC motor.
+Figure \ref{fig:threephaseinverter} is a simulink model showing the most basic three-phase inverter.
+As can be seen, the inverter three half-bridges for a total of six switches.
+Each pair of switches can never be on at the same time as this would result in a short circuit of the power rail.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\linewidth,trim=0cm 5cm 0cm 1cm]{graphics/threephaseinverter}
+	\caption{Simulink model of a simple three-phase inverter.}
+	\label{fig:threephaseinverter}
+\end{figure}
+
+Several schemes exist to control the switches.
+Throughout this project a PWM modulation technique using sinusoids as references is used.
+Figure \ref{fig:countercarrier} is a depiction of the modulation technique.
+A counter is continuously counting up and down, creating a triangle wave.
+This is called the carrier wave.
+The carrier wave is compared to a sinusoidal reference signal.
+The frequency of the sinusoidal will be the fundamental frequency of the output voltage.
+Whenever the reference cross the carrier wave, the gate voltages of the relevant half-bridge invert, of course taking into account the necessary dead time to avoid short circuiting the power rail.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{graphics/countercarrier}
+	\caption{Naturally sampled PWM using a sinusoid as fundamental frequency.}
+	\label{fig:countercarrier}
+\end{figure}
 
 \subsection{Choosing the MOSFETs}
 \label{sec:mosfet}
@@ -74,18 +106,16 @@ P_{loss} = P_{c} + P_{sw}
 \label{eq:p_loss}
 \end{equation}
 
-
 For simplicity the power loss will be estimated from a single phase of the inverter circuit seen in figure~\ref{fig:single_phase}. 
 The Current $I_{out}$ is drawn by some load $R_{load}$ that will absorb the load power $P_{load}$ which is given by equation\ref{eq:p_load}. 
 Since there are two switches, the load power must be delivered equally from both. Thus the output power, $P_{Q}$, of each switch is given by equation~\ref{eq:P_Q}  
 
 
-
-\begin{figure}[h!]
+\begin{figure}[!h]
 	\centering
-	\includegraphics[scale = 0.6]{graphics/single_phase}
-	\caption{Single phase}
-	\label{fig:single_phase}
+  \includestandalone[width=0.2\textwidth]{graphics/mosfets}
+  \caption{Single phase}
+  \label{fig:single_phase}
 \end{figure}
 
 
@@ -124,15 +154,12 @@ I_{Pi,rms}=\dfrac{I_{Qi,rms}}{n} = \dfrac{I_{out}}{2n}
 \subsubsection{Conduction loss}
 
 
-Conduction loss of a single MOSFET can be calculated using equation~\ref{eq:p_c}
+Conduction loss of the MOSFETs can be calculated using equation~\ref{eq:p_c}
 
 \begin{equation}
 P_{c} = R_{DS(on)} I_{Pi,rms}^2
 \label{eq:p_c}
 \end{equation}
-
-
-
 
 
 Although listed in the datasheet, the drain to source resistance $R_{DS(on)}$ only applies to the  $T_J = 25^{\circ}$C condition. 
