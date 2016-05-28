@@ -213,7 +213,7 @@ output = \left\lfloor \Bigg( \frac{\phi \cdot 256}{2 \pi} + 0.5 \Bigg) \% 256\ri
 \end{equation}
 
 where \% is the mod function. 
-The purpose of that is to wrap \todo{Wrap is the common way of saying, if a number goes outside a range, it restarts from the other end of the range, like an integer overflow is (ofteh) handled in coding.} the output to a value between 0 and 255, which is the same range of integers as the real encoder. 
+The purpose of that is to wrap \todo{Wrap is the common way of saying, if a number goes outside a range, it restarts from the other end of the range, like an integer overflow is (ofteh) handled in coding.} the output to a value between 0 and 255, which can be used for look-up tables. 
 The round down function rounds a number, effectively quantizing the output. 
 The reason for using round down rather than just round is to ensure, that the number ranges from 0 to 255. 
 To combat the inaccuracy of the round down function, 0.5 is added. 
@@ -261,8 +261,7 @@ I_C
 
 where $\gamma = \tfrac{2 \pi}{3}$. 
 Due to the limitations of the encoder, the system only measures 64 different electrical angles.
-To reduce computation time for the Zybo or enable it to be done in FPGA, all six trigonometric functions in equation~\ref{eq:sim_clark-park} can be saved in six lookup tables without any loss of precision. 
-However, Simulink seems to employ an inefficient method of looking up these values, which means simulation time actually is three times longer.\\
+To improve calculation speed, all six trigonometric functions in equation~\ref{eq:sim_clark-park} have been pre-calculated and saved to six lookup tables. \\
 
 The block diagram of the discrete controller is shown on figure~\ref{fig:sim_controller_diagram}.
 
@@ -343,7 +342,6 @@ I_q
 \end{equation}
 
 The trigonometric functions used in equation~\ref{eq:sim_inverse_clark-park} are the same as in equation~\ref{eq:sim_clark-park}, so if using lookup-tables, the tables could be reused here. 
-This is done in the PWM generation subsystem, which is shown on figure~\ref{fig:sim_PWM_generation}.
 
 \begin{figure}[H]
 	\centering
@@ -473,7 +471,7 @@ When the throttle is released after 5 s, the power should ideally not become neg
 \subsection{Plecs model}\label{sub:sim_plecs_electrical}
 As previously mentioned, the Plecs model differs vastly from the Simulink model in the electrical network, as it more closely resembles the real analog circuit. 
 It is shown on figure~\ref{fig:plecs_electrical}.
-\todo[inline]{Thomas: This needs something more.. Martin: ya think?}
+\todo[inline]{Thomas: This needs something more.. Martin: ya think? Thomas: I think...}
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width = \textwidth]{graphics/Plecs_electrical.pdf}
@@ -482,4 +480,68 @@ It is shown on figure~\ref{fig:plecs_electrical}.
 	\end{center}
 \end{figure}
 
+\subsection{Simulation of the Over-Current Protection Circuit}
+\todo[inline]{Thomas: I'm not sure the placement of this makes sense..}
+In order to verify the functionality of the OCP circuit discussed in section \ref{sec:ocpcircuit}, simulations of the circuit were conducted in LTSpice\footnote{LTSpice: Free simulation software by Linear Technologies.}.
+The results of the simulation will be discussed in the order of the circuit.
+As mentioned, only two of the phases are measured and the third will have to be calculated. 
+This is done using the summing amplifier circuit shown in section \ref{sec:ocpcircuit}, repeated in figure \ref{fig:sumsimamp} for convenience.
+The resulting signals can be seen on figure \ref{fig:sumsimresults}.
+Clearly, P3 is not phase shifted 120\si{\degree} with respect to P1 or P2.
+This is a consequence of using the non-inverting summing amplifier.
 
+\begin{figure}[!h]
+	\begin{subfigure}[b]{0.4\linewidth}
+		\centering
+		\includegraphics[width=\linewidth,trim=10cm 7.5cm 10cm 8cm]{graphics/sumamp}
+		\caption{}
+		\label{fig:sumsimamp}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.6\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{graphics/sumulation}
+		\caption{}	
+		\label{fig:sumsimresults}
+	\end{subfigure}
+	\caption{In \ref{fig:sumsimamp} is shown the summing amplifier used. In \ref{fig:sumsimresults} P1 and P2 represent the two measured phases while P3 is the calculated, third phase.}
+	\label{fig:sumsim}
+\end{figure}
+
+Inverting P3 however, reveals the correct signal.
+As all three signals, P1, P2 and P3 are rectified in the next step, this discrepancy is irrelevant.
+For the remainder of this section only one phase is discussed as the circuitry of all three phases is identical after the initial summation.\\
+
+The next step in the OCP process is the rectification of the signals.
+This is done using a precision full wave rectifier as shown in figure \ref{fig:fullwaverectifier}.
+As can be seen, the rectification error is relatively minor compared to the signal size.
+It is mostly caused by the phase shifting done by the rectifier circuit.
+This is apparent when noticing that the error is mostly identical between the rectified and non-rectified parts of the signal.
+
+\begin{figure}[!h]
+	\begin{subfigure}[b]{\linewidth}
+		\centering
+		\includegraphics[width=.75\linewidth, trim=0cm 2cm 0cm 2cm]{graphics/fullwaverectifier}
+		\caption{}
+		\label{fig:fullwaverectifier}
+	\end{subfigure}
+	\begin{subfigure}[b]{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{graphics/fullwaverectifiersim}
+		\caption{}	
+		\label{fig:fullwaverectifiersim}
+	\end{subfigure}
+	\caption{\ref{fig:fullwaverectifier} is the the full wave rectifier used to rectify the current signals. \ref{fig:fullwaverectifiersim} shows the rectified version, PR, of one of the phase signals, P1, as well as the error of the rectification.}
+	\label{fig:rectifiersim}
+\end{figure}
+
+\todo[inline]{Thomas: It would be nice to have numbers on the simulated phase shift done by the recifier.}
+
+After rectification, the signal is fed to a Schmitt-trigger with hysteresis voltages $V_h=0.475\si{\volt}$ and $V_l=0.25\si{\volt}$.
+These signals are shown in figure \ref{fig:schmitt}.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\linewidth]{graphics/schmitt}
+	\caption{Thresholding of the phase signals.}
+	\label{fig:schmitt}
+\end{figure} 
