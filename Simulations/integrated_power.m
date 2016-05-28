@@ -1,5 +1,5 @@
-lower_limit = index;
-upper_limit = length(t)-1;
+lower_limit = i1;
+upper_limit = index;
 clear E_out t_out
 E_out(1)=0;
 t_out(1)=(t(lower_limit)+t(lower_limit-1))*.5;
