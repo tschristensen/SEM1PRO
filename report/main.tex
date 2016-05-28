@@ -21,12 +21,28 @@
 \usepackage{tikz} 			%Utility to draw nice figures
 \usepackage{circuitikz} 	%Utility to draw circuits in tikz
 
+\usepackage{todonotes}
+\usepackage{listings}
+
 \usepackage{chngcntr} %Change the counters of objects. Used to make figure/table and equation counting specific to the section they are in.
 \counterwithin{figure}{section}
 \counterwithin{equation}{section}
 
-\usepackage{todonotes}
-\usepackage{listings}
+%Make counter of listings specific to sections
+\AtBeginDocument{%
+  \counterwithin*{lstlisting}{section}
+  \renewcommand{\thelstlisting}{%
+    \ifnum\value{subsection}=0
+      \thesection.\arabic{lstlisting}%
+    \else
+      \ifnum\value{subsubsection}=0
+        \thesection.\arabic{lstlisting}%
+      \else
+        \thesection.\arabic{lstlisting}%
+      \fi
+    \fi
+  }%
+}
 
 \usepackage{fullpage}
 
@@ -46,7 +62,6 @@
 % 8 #666666 (grey)
 \definecolor{brewergrey}{RGB}{102,102,102}
 
-
 \lstdefinestyle{customCpp}{
     backgroundcolor=\color{lgrey!40}, 
     language=C++,
@@ -62,7 +77,6 @@
     numbersep = 3pt, 
     linewidth=1\linewidth,
 }
-
 
 \usepackage{xcolor}
 \hypersetup{
@@ -87,8 +101,8 @@
 \setlength{\parindent}{0pt}
 
 \title{Electronics - 1. Semester Project}
-\author{Thomas Søndergaard Christensen, Erlingur Ívar Jóhannsson, Mikkel Skarup Jaedicke, Kyriakos Dovelos, Morten Tholstrup Pedersen, Martin Brøchner Andersen}
-\date{dd/mm/yyyy}
+\author{Thomas Søndergaard Christensen, Erlingur Ívar Jóhannsson, Mikkel Skarup Jaedicke, Morten Tholstrup Pedersen, Martin Brøchner Andersen}
+\date{31/05/2016}
 
 \begin{document}
 \input{sections/titlepage.tex}
