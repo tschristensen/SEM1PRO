@@ -1,6 +1,5 @@
 %!TEX root = ../main.tex
 \section{Embedded Design}\label{sec:Embedded_Design}
-\todo[inline]{Thomas: Describe the encoders of the motor.}
 An embedded system is needed to handle a wide range of task. 
 It is a requirement for the project that the Zybo board should be used as the embedded system in the project.
 The board features a Zynq Z-7010 chip from Xilinx, which has an integrated dual-core ARM Cortex-A9 processor and a Xilinx 7-series field programmable gate array (FPGA).
@@ -105,19 +104,31 @@ As the PWM generator should be able to do three independent PWM signal there are
 
 \subsubsection{Interface task}
 The interface task is the task that has to read external signals, output digital signals and control the other tasks.
-The UART tasks will be controlled through two buffers, while the controller and PWM task will have to read the enable variable updated by the interface task.
+The task needs to update the enable variable that the controller and PWM task reads.
 The basic funcionality of the interface task can be seen in the flowchart of figure \ref{fig:interface}.
+
+%\begin{figure}[!h]
+%	\centering
+%	\includegraphics[width=0.7\linewidth]{graphics/interface_task}
+%	\caption[Block diagram of PWM generator.]{Simulink block diagram of the counter in the PWM generator.}
+%	\label{fig:interface}
+%\end{figure}
+
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=0.7\linewidth]{graphics/interface_task}
-	\caption[Block diagram of PWM generator.]{Simulink block diagram of the counter in the PWM generator.}
+	\includestandalone[width=0.4\textwidth]{graphics/interface_flow}
+	\caption[Interface task.]{Flow chart illustrating the basic funtionality of the interface task.}
 	\label{fig:interface}
 \end{figure}
-\todo[inline]{Can there be less whitespace in the figure? -MIkkel}
 \todo[inline]{Is the inrush relay explained somewhere?? -MIkkel}
 
-An interface to a PC is established using UART.
-This interface enables the setting of values within the system as well as potentially reading the current status of the system.
+At startup the interface task needs to turn on the inrush relay for a certain time.
+Afterwards the main relay needs to be turned on and the inrush relay is turned off after some time to be sure that the main relay is conducting.
+Then the task will read all signals from the the digital boards and if they are all good the global enable variable will be changed to high.
+If one or more of the drive signals indicate a fault, the task will change the enable variable to low.
+
+Alongside the functionality of figure \ref{fig:interface} the interface will act as master for the two UART tasks.
+This enables the setting of values within the system as well as potentially reading the current status of the system.
 All communication through the UART interface is done through the \texttt{rx\_buffer} and \texttt{tx\_buffer} arrays shown in listing \ref{lis:uartvars}.
 Currently three parameters can be set within the system:
 \begin{itemize}
@@ -168,13 +179,13 @@ This could easily be extended to a \texttt{read} or perhaps a \texttt{shutdown} 
 \subsubsection{Controller task}
 \begin{figure}[!h]
 	\centering
-		\includegraphics[width=0.9\linewidth,trim=3cm 15cm 0 2cm]{graphics/controller_tasktikz}
+	\includestandalone[width=0.9\textwidth]{graphics/tikz/Block_diagram1tikz}
+%		\includegr%aphics[width=0.9\linewidth,trim=3cm 15cm 0 2cm]{graphics/controller_tasktikz}
 	\caption[Block diagram of controller task.]{Block diagram showing the functionality of the controller task.}
 	\label{fig:controller_task}
 \end{figure}
 
 The basic functionality of the controller task can be seen in figure \ref{fig:controller_task}.
-\todo[inline]{This figure needs to be updated.!!}
 The task polls data from the ADC in order to get raw data for $I_a$, $I_b$ and the foot pedal.
 The raw data from the ADC are then calculated into voltages and the two currents are calculated based by the equation:
 \begin{equation}
@@ -359,7 +370,6 @@ The SPI controller was initialized in software and was configured to be in maste
 In order to comply with the SPI specifications of the DRV8301 it was configured with the XSPIPS\_CLK\_PHASE\_1\_OPTION in order to make data valid on falling edges of the clock. 
 The discharge of a capacitor is utialized to make a delay on the Slave Select signal, by putting a XX capacitor and XX resistor in series with the signal.
 The transmission of \texttt{0b0001000000110000} were measured by an oscilloscope and can be seen in figure \ref{fig:spi_graph}.
-\todo[inline]{can 0b0001000000110000 be written more beautifull?? :) Mikkel}
 
 \begin{figure}[!h]
 	\centering
@@ -369,6 +379,7 @@ The transmission of \texttt{0b0001000000110000} were measured by an oscilloscope
 \end{figure}
 
 
+\subsection{Task frequencies}
 
 \subsection{Timing TEST or whatever}
 
