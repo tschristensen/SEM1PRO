@@ -485,9 +485,91 @@ This is shown on figure~\ref{fig:Sim_results_pi05_large_power_undershoot}.
 \end{figure}
 
 Integrating this undershoot yields $\mathrm{-62 \si{\joule}}$. 
-This is not a major concern, however it causes a ripple in the speed, that might be felt. 
+This is not a major concern, however it causes a ripple in the speed, that might be felt. \\
 
-Figure
+To simulate wheel spin and wheel lock, the mass of the go-kart has been lowered to 150 kg, and the weight distribution has been reduced to 50 \% on the rear wheels.
+Torque input is initially set to full for one second, and then declining to zero for the next 4 seconds, as shown in figure~\ref{fig:torque_setpoint_waveform}.
+After this, the brake will be active, and finally the motor will be producing torque again.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.7\linewidth]{graphics/sim_results_pi_slip_setpoints}
+	\caption{Motor torque in blue, and brake torque in red. The brake is mounted on the wheel side of the gear, which is why it is significantly larger}
+	\label{fig:torque_setpoint_waveform}
+\end{figure}
+
+Looking at the first 5 seconds, the wheel slip has been plotted on figure~\ref{fig:sim_results_pi_slip_acceleration} as the wheel speed minus the speed of the gokart. For the same timespan, figure~\ref{fig:sim_results_pi_slip_acceleration_current} shows the d and q axis current. 
+
+\begin{figure}[H]
+	\begin{subfigure}[b]{0.49\linewidth}
+		\centering
+		\includegraphics[width=\linewidth,]{graphics/sim_results_pi_slip_acceleration}
+		\caption{Wheel slip during acceleration}
+		\label{fig:sim_results_pi_slip_acceleration}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.49\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{graphics/sim_results_pi_slip_acceleration_current}
+		\caption{d and q axis current during slip}
+		\label{fig:sim_results_pi_slip_acceleration_current}
+	\end{subfigure}
+	\caption{}
+	\label{fig:slip_and_current}
+\end{figure}
+
+In figure~\ref{fig:sim_results_pi_slip_acceleration}, the wheel starts slipping almost immediately, and reaches a maximum speed difference of $\mathrm{11.7 \si{\meter \per \second}}$ at $\mathrm{0.44 \si{\second}}$.
+When the wheel is slipping, the controller is no longer connected to a large inertia, and might act more unstable.
+The motor produces maximum torque until $\mathrm{0.35 \si{\second}}$.
+At this point, the motor is running at 3200 RPM, at which point it starts saturating.
+The current becomes steady at 170 A, which produces $\mathrm{18.7 \si{\newton \meter}}$, or $\mathrm{557 \si{\newton}}$:
+
+\begin{equation}
+F = I_q \frac{3 G_2}{2 G_1 \cdot r}
+\label{eq:slipping_force}
+\end{equation}
+This matches the dynamic force specified in the Tyre block on figure~\ref{fig:simulations_mechanical_simscape}.
+
+When the torque setpoint goes below $\mathrm{18.7 \si{\newton \meter}}$, the current is lowered, and the wheel slip drops more quickly. 
+At 2.6 seconds, the speed of the wheel matches the speed of the vehicle.
+The controller will then have to match the of the full inertia.
+This transition can be seen on figure~\ref{fig:sim_results_pi_slip_acceleration_current} as a small torque undershoot.\\
+
+This controller handles wheel spin as well as could have been expected.
+It does noting to reduce slip, but the transition from slipping and non-slipping is handled rather well.\\
+
+Figure~\ref{fig:slip_and_current_braking} shows the wheel slip and current for the timespan going from $\mathrm{5 \si{\second}}$ to $\mathrm{7.5 \si{\second}}$
+
+\begin{figure}[H]
+	\begin{subfigure}[b]{0.49\linewidth}
+		\centering
+		\includegraphics[width=\linewidth,]{graphics/sim_results_pi_slip_braking}
+		\caption{Wheel slip during acceleration}
+		\label{fig:sim_results_pi_slip_abraking}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.49\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{graphics/sim_results_pi_slip_braking_current}
+		\caption{d and q axis current during slip}
+		\label{fig:sim_results_pi_slip_braking_current}
+	\end{subfigure}
+	\caption{}
+	\label{fig:slip_and_current_braking}
+\end{figure}
+
+The brake steps to $\mathrm{66 \si{\newton \meter}}$ at $\mathrm{5.36 \si{\second}}$, and ramps up until it hits a limit of $\mathrm{102 \si{\newton \meter}}$ at $\mathrm{6 \si{\second}}$.
+During this time, it can be seen, that the q-axis current is positive, which means, the motor produces some forward torque when the brake is active. 
+This is a flaw in the controller, that it doesn't settle quickly enough
+This results in an energy waste of $\mathrm{150 \si{\watt}}$.
+From 6 to 6.3s, the wheel starts slipping.
+The wheel speed then drops to zero, at which point, the motor starts producing a forward torque.
+Whereas the $\mathrm{150 \si{\watt}}$ energy loss is acceptable, the up to $\mathrm{1000 \si{\watt}}$ in this timeframe is much worse. 
+It would not brake anything, but it's not great \\
+
+The brake is released at 7 seconds, at which point, the wheel speed experiences a large step. 
+The controller responds with a negative torque.
+The total energy of this negative torque pulse is $\mathrm{-58 \si{\joule}}$, which, like the power undershoot on figure~\ref{fig:Sim_results_pi05_large_power_undershoot}, is deemed too much
+
+
 
 \subsection{Plecs model}\label{sub:sim_plecs_electrical}
 As previously mentioned, the Plecs model differs vastly from the Simulink model in the electrical network, as it more closely resembles the real analog circuit. 

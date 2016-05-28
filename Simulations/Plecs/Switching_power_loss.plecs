@@ -39,7 +39,7 @@ Plecs {
   Schematic {
     Location      [0, 38; 1920, 993]
     ZoomFactor    1.33333
-    SliderPosition [-1, 275]
+    SliderPosition [21, -1]
     ShowBrowser   off
     BrowserWidth  100
     Component {
@@ -1604,7 +1604,7 @@ Plecs {
             Direction     right
           }
           Schematic {
-            Location      [489, 362; 791, 645]
+            Location      [218, 319; 605, 635]
             ZoomFactor    1
             SliderPosition [0, 0]
             ShowBrowser   off
@@ -1631,7 +1631,7 @@ Plecs {
               Type          PulseGenerator
               Name          "Pulse\nGenerator"
               Show          on
-              Position      [135, 135]
+              Position      [70, 140]
               Direction     right
               Flipped       off
               Parameter {
@@ -1660,12 +1660,88 @@ Plecs {
                 Show          off
               }
             }
+            Component {
+              Type          RateLimiter
+              Name          "Rate Limiter"
+              Show          on
+              Position      [200, 135]
+              Direction     right
+              Flipped       off
+              Parameter {
+                Variable      "RisingRateLimit"
+                Value         "50"
+                Show          off
+              }
+              Parameter {
+                Variable      "FallingRateLimit"
+                Value         "-50"
+                Show          off
+              }
+            }
+            Component {
+              Type          Product
+              Name          "Product"
+              Show          on
+              Position      [145, 135]
+              Direction     up
+              Flipped       off
+              Parameter {
+                Variable      "Inputs"
+                Value         "2"
+                Show          off
+              }
+            }
+            Component {
+              Type          Step
+              Name          "Step"
+              Show          on
+              Position      [60, 40]
+              Direction     right
+              Flipped       off
+              Parameter {
+                Variable      "Time"
+                Value         "0.1"
+                Show          off
+              }
+              Parameter {
+                Variable      "Before"
+                Value         "0"
+                Show          off
+              }
+              Parameter {
+                Variable      "After"
+                Value         "1"
+                Show          off
+              }
+            }
+            Connection {
+              Type          Signal
+              SrcComponent  "Rate Limiter"
+              SrcTerminal   2
+              DstComponent  "1"
+              DstTerminal   1
+            }
+            Connection {
+              Type          Signal
+              SrcComponent  "Product"
+              SrcTerminal   1
+              DstComponent  "Rate Limiter"
+              DstTerminal   1
+            }
             Connection {
               Type          Signal
               SrcComponent  "Pulse\nGenerator"
               SrcTerminal   1
-              DstComponent  "1"
-              DstTerminal   1
+              DstComponent  "Product"
+              DstTerminal   3
+            }
+            Connection {
+              Type          Signal
+              SrcComponent  "Step"
+              SrcTerminal   1
+              Points        [100, 40; 100, 130]
+              DstComponent  "Product"
+              DstTerminal   2
             }
           }
         }
@@ -2848,17 +2924,17 @@ Plecs {
       Position      [2110, 190]
       Direction     up
       Flipped       off
-      Location      [648, 463; 998, 690]
+      Location      [648, 463; 1270, 814]
       State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
 "G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
 "///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
-"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAAV4AAADEAAAA"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAAm4AAAFAAAAA"
 "BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
 "AAAAA=="
       SavedViews    "AAAAAgAAAAA="
       HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
 "QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
-"AAZAAAAAEAAABkAAAAjgAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABlAAA"
+"AAZAAAAAEAAABkAAAAkQAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABoAAA"
 "AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
       PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       Axes          "1"
@@ -4268,6 +4344,62 @@ Plecs {
         }
       }
     }
+    Component {
+      Type          Scope
+      Name          "Current Ripple1"
+      Show          on
+      Position      [420, 555]
+      Direction     up
+      Flipped       off
+      Location      [361, 335; 715, 566]
+      State         "AAAA/wAAAAD9AAAAAgAAAAEAAAAAAAAAAPwCAAAAA/sAAAAQAFoAbwBvA"
+"G0AQQByAGUAYQAAAAAA/////wAAADgA////+wAAABQAUwBhAHYAZQBkAFYAaQBlAHcAcwAAAAAA//"
+"///wAAAGoA////+wAAAAwAVAByAGEAYwBlAHMAAAAAAP////8AAABqAP///wAAAAMAAAAAAAAAAPw"
+"BAAAAAfsAAAAUAEQAYQB0AGEAVwBpAGQAZwBlAHQAAAAAAP////8AAABbAP///wAAAWIAAADIAAAA"
+"BAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAEAAAAOAFQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAA"
+"AAAAA=="
+      SavedViews    "AAAAAgAAAAA="
+      HeaderState   "AAAA/wAAAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAL/gMAAAAJAAAAC"
+"QAAAGQAAAAIAAAAZAAAAAcAAABkAAAABgAAAGQAAAAFAAAAZAAAAAQAAABkAAAAAwAAAGQAAAACAA"
+"AAZAAAAAEAAABkAAAAhAAAAAsBAAABAAAAAAAAAAAAAAAAZP////8AAACBAAAAAAAAAAMAAABbAAA"
+"AAQAAAAAAAAAAAAAACQAAAAAAAAApAAAAAQAAAAA="
+      PlotPalettes  "AAAAAQAAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      Axes          "1"
+      TimeRange     "0.0"
+      ScrollingMode "1"
+      SingleTimeAxis "1"
+      Open          "0"
+      Ts            "-1"
+      SampleLimit   "0"
+      XAxisLabel    ""
+      Axis {
+        Name          ""
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Fourier {
+        SingleXAxis   on
+        AxisLabel     "Frequency"
+        Scaling       0
+        PhaseDisplay  0
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+      }
+    }
     Connection {
       Type          Wire
       SrcComponent  "R1"
@@ -4713,13 +4845,6 @@ Plecs {
       SrcTerminal   1
       DstComponent  "V_dc"
       DstTerminal   1
-    }
-    Connection {
-      Type          Signal
-      SrcComponent  "Signal Builder"
-      SrcTerminal   1
-      DstComponent  "Sum3"
-      DstTerminal   2
     }
     Connection {
       Type          Signal
@@ -5492,6 +5617,21 @@ Plecs {
         Points        [1170, 600]
         DstComponent  "PWM1"
         DstTerminal   3
+      }
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Signal Builder"
+      SrcTerminal   1
+      Points        [330, 665]
+      Branch {
+        DstComponent  "Sum3"
+        DstTerminal   2
+      }
+      Branch {
+        Points        [330, 555]
+        DstComponent  "Current Ripple1"
+        DstTerminal   1
       }
     }
   }
