@@ -1,0 +1,130 @@
+\documentclass{standalone}
+\usepackage{tikz}
+
+\usetikzlibrary{positioning,calc,arrows.meta}
+\tikzset{>={Latex[width=2mm,length=2mm]}}
+
+\begin{document}
+
+\definecolor{brewergreen}{RGB}{127,201,127}
+\definecolor{nicegreen}{RGB}{30,200,30}
+\definecolor{brewergrey}{RGB}{102,102,102}
+\definecolor{brewerblue}{RGB}{56,108,176}
+\definecolor{brewerorange}{RGB}{253,192,134}
+
+\begin{tikzpicture}[node distance=2cm]
+
+\tikzstyle{task} = [circle, draw, color=black!50, text = black, fill=nicegreen!20,  thick, minimum width = 6em, minimum height = 6em, text centered]
+
+\tikzstyle{buffer} = [rectangle, draw, color=black!50, text = black, fill=yellow!30,  thick, text width = 3em,text centered]
+\tikzstyle{pin} = [rectangle, draw, color=black!50, text = black, fill=brewerorange!50,  thick, minimum width = 5em,text centered]
+\tikzstyle{area} = [rectangle, draw, color=black!50, text = black, fill=black!10,  thick, text width = 13cm,text height = 10cm,text centered]
+\tikzstyle{area1} = [rectangle, draw, color=black!50, text = black, fill=black!5,  thick, minimum width = 16.5cm,minimum height = 13.5cm,text centered]
+\tikzstyle{io_peri} = [rectangle, draw, color=black!50, text = black, fill=lime!35,  thick, minimum width = 3em,minimum height=3em,text centered]
+\tikzstyle{external} = [rectangle, draw, color=black!50, text = black, fill=red!20,  thick, minimum width = 3em,minimum height=3em,text centered]
+\tikzstyle{fpga} = [rectangle, draw, color=black!50, text = black, fill=brewerblue!30,  thick, minimum width = 3em,minimum height=3em,text centered]
+\tikzstyle{textt} = [rectangle, draw, color=black!5, text = black, fill=black!5, very thick, minimum width = 1em,minimum height=1em,text centered]
+\tikzstyle{texttt} = [rectangle, draw, color=black!10, text = black, fill=black!10, very thick, minimum width = 1em,minimum height=1em,text centered]
+
+
+\node[area1] (pl) at (0,0){};
+\node[area] (ps) at (0,0){};
+
+
+\node[task] (interface)  at (1,2) {Interface};
+\node[buffer] (enable) [right of=interface,yshift =-3.3cm] {Enable};
+\node[task] (pwm) [right of=interface, yshift = -5cm, xshift = 2cm] {PWM};
+\node[task] (uart_tx) [left of=interface, yshift = 1.5cm, xshift = -3cm] {TX};
+\node[task] (controller) [below of=interface, yshift = -3.2cm, xshift = -2.5cm] {Controller};
+\node[task] (uart_rx) [left of=interface, yshift = -1.5cm, xshift = -3cm] {RX};
+\node[buffer] (tx_buffer) [left of=interface, yshift = 1.5cm, xshift = -0.5cm] {TX buffer};
+\node[buffer] (rx_buffer) [left of=interface, yshift = -1.5cm, xshift = -0.5cm] {RX buffer};
+\node[buffer] (theta) at ($(pwm)!0.5!(controller)$) [yshift = 1cm] {$\theta$};
+\node[buffer] (d_out) [below of=theta, yshift = 0cm, xshift = 0cm]  {$d_{output}$};
+\node[buffer] (q_out) [below of=theta, yshift = -0.6cm, xshift = 0cm]  {$q_{output}$};
+\node[buffer] (cp) [below of=interface, yshift = -0.2cm, xshift = -0.6cm]  {$C_p$};
+
+
+\node[texttt] (ps) [left of=controller, yshift = -1.5cm, xshift = -2.5cm]  {PS};
+\node[textt] (pl) [left of=controller, yshift = -3cm, xshift = -4cm]  {PL};
+
+
+\node[io_peri] (uart) [left of=uart_tx, yshift = -1.5cm, xshift = -0.6cm] {UART};
+\node[io_peri] (adc) [below of=controller, yshift = -0cm, xshift = 0cm] {ADC};
+\node[io_peri] (spi) [right of=interface, yshift = 0cm, xshift = 3.6cm] {SPI};
+
+\node[external] (computer) [left of=uart, yshift = 0cm, xshift = -1cm] {Computer};
+\node[external] (driver) [right of=spi, yshift = 0cm, xshift = 1cm] {DRV8301};
+
+\node[fpga] (pwm_gen) [below of= pwm, yshift = -1cm, xshift = 0cm] {Three phase PWM generator};
+\node[fpga] (encoder) [right of= pwm, yshift = 0cm, xshift = 0.4cm] {SSI};
+\node[fpga] (interface_fpga) [above of= interface, yshift = 1.9cm, xshift = 0cm] {Interface connector};
+
+\node[external] (encoder_) [right of=encoder, yshift = 0cm, xshift = 0cm] {Encoder};
+\node[external] (motor) [below of=pwm_gen, yshift = 0cm, xshift = 0cm] {DRV8301};
+
+%\node[task] (uart_rx) [right of=interface, yshift = -5cm, xshift = 2.5cm] {PWM};
+
+
+\node[pin] (pin1) [above of=interface, yshift = 3.5cm, xshift = 0cm] {LEDs};
+\node[pin] (pin2) [right of=pin1, yshift = 0cm, xshift = 0.2cm] {Main relay};
+\node[pin] (pin4) [right of=pin2, yshift = 0cm, xshift = 0.2cm] {Inrush relay};
+\node[pin] (pin3) [left of=pin1, yshift = 0cm, xshift = -0.5cm] {DRV8301 signals};
+\node[pin] (pin5) [left of=pin3, yshift = 0cm, xshift = -0.7cm] {Drive enable};
+
+\node[pin] (sensor) [below of=adc, yshift = 0cm, xshift = -1.2cm] {Current sensors};
+\node[pin] (pedal) [below of=adc, yshift = 0cm, xshift = 1.2cm] {Pedal};
+
+
+% \path[->] (interface) edge (buffer);
+%\draw [->] (interface) -- (buffer.north);
+ \path[->] (interface) edge[bend  left=30] (enable.north);
+ \path[->] (enable.south) edge[bend  left=-30] (pwm.140);
+ \path[<-] (pin1.south) edge[bend  left=0] (interface_fpga.north);
+\path[<-] (pin2.south) edge[bend  left=20] (interface_fpga.10);
+\path[<-] (pin4.south) edge[bend  left=20] (interface_fpga.0);
+\path[->] (pin3.south) edge[bend  left=-20] (interface_fpga.170);
+\path[->] (pin5.south) edge[bend  left=-10] (interface_fpga.180);
+
+\path[->] (interface.150) edge[bend  left=-40] 	(tx_buffer.east);
+\path[->] (tx_buffer.west) edge					 	(uart_tx.east);
+\path[->] (rx_buffer.east) edge[bend  left=-40] 	(interface.210);
+\path[->] (uart_rx.east) edge					 	(rx_buffer.west);
+
+\path[->] (uart_tx.west) edge[bend  left=-30] (uart.70);
+\path[->] (uart.290) edge[bend  left=-30] (uart_rx.west);
+
+\path[<->] (computer.east) edge[bend  left=0] (uart.west);
+
+\path[->] (pwm.south) edge[bend  left=0] (pwm_gen.north);
+\path[->] (pwm_gen.south) edge[bend  left=0] (motor.north);
+
+\path[->] (enable.west) edge[bend  left=-30] (controller.45);
+
+\path[->] (pwm.west) edge[bend  left=-20] (theta.east);
+\path[->] (theta.west) edge[bend  left=-15] (controller.20);
+
+\path[->] (controller.330) edge[bend  left=-15] (d_out.west);
+\path[->] (controller.310) edge[bend  left=-20] (q_out.west);
+
+\path[->] (d_out.east) edge[bend  left=-10] (pwm.210);
+\path[->] (q_out.east) edge[bend  left=-15] (pwm.230);
+
+\path[->] (adc.north) edge[bend  left=0] (controller);
+\path[<->] (pwm.east) edge[bend  left=0] (encoder);
+\path[<->] (encoder_.west) edge[bend  left=0] (encoder);
+
+
+\path[->] (sensor.north) edge[bend  left=-20] (adc.240);
+\path[->] (pedal.north) edge[bend  left=20] (adc.300);
+\path[<-] (interface_fpga.south) edge[bend  left=0] (interface);
+
+\path[<->] (interface.east) edge[bend  left=0] (spi.west);
+\path[<->] (spi.east) edge[bend  left=0] (driver.west);
+
+\path[->] (interface.250) edge[bend  left=0] (cp.north);
+\path[->] (cp.south) edge[bend  left=10] (controller.70);
+
+
+\end{tikzpicture}
+\end{document}

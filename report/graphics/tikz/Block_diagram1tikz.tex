@@ -1,0 +1,65 @@
+\documentclass{article}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usetikzlibrary{shapes,shadows,arrows}
+\begin{document}
+\tikzstyle{decision} = [diamond,draw]
+\tikzstyle{line} = [draw,-stealth, thick]
+\tikzstyle{elli} = [draw, ellipse,minimum height=8mm,text width=5em, text centered]
+\tikzstyle{block} = [draw, rectangle,text width=6em, text centered , minimum height=15mm, node distance=10em]
+\tikzstyle{blocksmall} = [draw, rectangle, text width=4em, text centered, minimum height=7mm, node distance=15em]
+\tikzstyle{blockmed} = [draw, rectangle, text width=6em, text centered, minimum height=7mm, node distance=15em]
+\tikzstyle{blockhuge} = [draw, dashed, rectangle, text width=28em, minimum height=22em, node distance=15em]
+
+\begin{tikzpicture}[scale=1,every note/.style={1}]
+%surround block
+\node [blockhuge,yshift=-2.5em](surroundblock){};
+
+%Controlle blocks:
+\node [block, xshift=10em](controller1){Controller};
+\node [block, below of=controller1](controller2){Controller};
+
+%Clark Park block:
+\node [block, left of=controller1](transform){Clarke Park Transform};
+
+%Flux reference:
+\node [blockmed, left of=controller2,yshift=1em,xshift=5em](fluxref){Flux Reference};
+
+%Current Calculation:
+\node [block, left of=transform](calc){Current Calculation};
+
+%Inputs x5:
+\node [blocksmall, left of=calc,yshift=1em,xshift=6em](ia){$I_a$};
+\node [blockmed, above of=ia,yshift=-10em](torque){Torque Reference};
+\node [blocksmall, below of=ia,yshift=13em](ib){$I_b$};
+\node [blocksmall, below of=ib,yshift=10em](theta){Motor Position};
+\node [blockmed, below of=theta,yshift=10em](enable){Enable};
+
+%Input arrows:
+\path[line](torque) -| (controller1);
+\path[line](ia) -- ([yshift=1em]calc.west);
+\path[line](ib) -- ([yshift=-1em]calc.west);
+\path[line](theta) -| ([xshift=-1.5em]transform.south);
+\path[line](fluxref) -- ([yshift=1em]controller2.west);
+
+%Enable arrows:
+\path[line](enable) -- node[circle,fill,inner sep=2pt,xshift=10.4em](){} ++(8.5,0) -| ++(0,3.5) -- node[yshift=0.4em,xshift=-0.8em]{En} ([yshift=-1em]controller1.west);
+\path[line](enable) -- ([yshift=-1em]controller2.west);
+
+%transform to controller arrows:
+\path[line]([yshift=1em]transform.east) -- node[yshift=0.5em]{$I_q$} ([yshift=1em]controller1.west);
+\path[line]([xshift=1.5em]transform.south) |-++(0,-1) -| node[yshift=0.5em,xshift=-2em]{$I_d$} (controller2.north);
+
+%Current to clark park arrows:
+\path[line]([yshift=1.2em]calc.east) -- node[yshift=0.5em]{$I_a$} ([yshift=1.2em]transform.west);
+\path[line](calc) -- node[yshift=0.5em]{$I_b$} (transform);
+\path[line]([yshift=-1.2em]calc.east) -- node[yshift=0.5em]{$I_c$} ([yshift=-1.2em]transform.west);
+
+%output from controllers
+\path[line](controller1.east) -- node[xshift=2.5em]{$V_{sq}$} ([xshift=3em]controller1.east);
+\path[line](controller2.east) -- node[xshift=2.5em]{$V_{sd}$} ([xshift=3em]controller2.east);
+
+
+\end{tikzpicture}
+
+\end{document}
