@@ -1,0 +1,225 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usetikzlibrary{shapes,shadows,arrows}
+
+
+\begin{document}
+
+%% Tikz styles - shape of boxes etc.
+\tikzstyle{line} = [draw,
+					-stealth, 
+					thick]
+					
+\tikzstyle{elli} = [draw, 
+					circle,
+					minimum height=5mm,
+					text width=5em, 
+					text centered,
+					node distance=10em]
+					
+\tikzstyle{circlesmall}	=	[draw,
+							ellipse,
+							minimum height=8mm,
+							text width=0.3em,
+							text centered,
+							node distance=10em]
+					
+\tikzstyle{block} = [draw,
+					rectangle,
+					text width=6em,
+					text centered,
+					minimum height=15mm,
+					node distance=10em]
+					
+\tikzstyle{blocksmall} = 	[draw,
+							rectangle,
+							text width=4em,
+							text centered,
+							minimum height=7mm,
+							node distance=10em]
+							
+\tikzstyle{blockmed} = 	[draw,
+						rectangle,
+						text width=6em,
+						text centered,
+						minimum height=7mm,
+						node distance=10em]
+						
+\tikzstyle{blockhuge} = [draw,
+						dashed,
+						rectangle,
+						text width=80em,
+						minimum height=50em,
+						node distance=0em]
+						
+\tikzstyle{blockzybo} = [draw,
+						dashed,
+						red,
+						rectangle,
+						text width=45em,
+						minimum height=30em,
+						node distance=0em]						
+						
+						
+\tikzstyle{blocktall} = [draw,
+						rectangle,
+						text width=6em,
+						text centered,
+						minimum height=9em,
+						node distance=10em]
+
+
+\begin{tikzpicture}
+%[scale=1,every note/.style={1}]
+
+
+
+%% Surround block
+%\node [blockhuge,yshift=-10em,xshift=30em](surroundblock){};
+\node [blockzybo,yshift=-10em,xshift=13.5em](Zybo){};
+\node [xshift=-6.2em,yshift=-24em](){Zybo Board};
+
+%% D and Q blocks:
+\node [block](IQ){$I_q$ Controller};
+\node [block, below of=IQ,yshift=5em](ID){$I_d$ Controller};
+
+
+%% Inverse Clark Park block:
+\node [blocktall, right of=ID, yshift=2.5em](ITrans){Inverse Clarke Park Transform};
+
+
+%% Pwm block
+\node [blocktall, right of=ITrans](PWM){PWM};
+
+
+%% Driver block
+\node [blocktall, right of=PWM](DRVR){Driver};
+
+
+%% Three Phase Inverter
+\node [blocktall, right of=DRVR,xshift=2em](TPI){Three Phase Inverter};
+
+
+%% Motor block
+\node [elli, right of=TPI,fill=gray!30!white](Motor){Motor};
+
+%% Output block
+\node [circlesmall, right of=Motor](Output){};
+
+%% Encoder
+\node [block, below of=Motor,yshift=-2em](Encoder){Encoder};
+
+%% Current Calculation
+\node [blocktall, below of=DRVR,yshift=-2em](Calc){Current Calculation};
+
+%% Clark Park
+\node [blocktall, left of=Calc](ABC){Clarke Park Transform};
+
+
+%%%%%%%%%%%%% ARROWS BELOW THIS LINE %%%%%%%%%%%%%%
+%% Input Arrows
+\path[line](IQ.east) |- node[xshift=1.5em,yshift=0.5em]{q} ([yshift=2.5em]ITrans.west);
+\path[line](ID.east) |- node[xshift=1.5em,yshift=0.5em]{d} ([yshift=-2.5em]ITrans.west);
+\path[line]([xshift=-5em,yshift=1em]IQ.west) -- node[xshift=-1.6em,yshift=0.5em]{$q_{ref}$} ([yshift=1em]IQ.west);
+\path[line]([xshift=-5em,yshift=1em]ID.west) -- node[xshift=-1.6em,yshift=0.5em]{$d_{ref}$} ([yshift=1em]ID.west);
+
+
+%% Itrans to PWM arrows
+\path[line](ITrans.east) |- node[xshift=1.5em,yshift=0.5em]{a} ([yshift=2em]PWM.west);
+\path[line](ITrans.east) |- node[xshift=1.5em,yshift=0.5em]{b} (PWM.west);
+\path[line](ITrans.east) |- node[xshift=1.5em,yshift=0.5em]{c} ([yshift=-2em]PWM.west);
+
+
+%% PWM to DRVR
+\path[line](PWM.east) |- node[xshift=1.5em,yshift=0.5em]{$A_+$} ([yshift=3em,]DRVR.west);
+\path[line](PWM.east) |- node[xshift=1.5em,yshift=0.45em]{$A_-$} ([yshift=2em,]DRVR.west);
+\path[line](PWM.east) |- node[xshift=1.5em,yshift=0.5em]{$B_+$}([yshift=0.5em,]DRVR.west);
+\path[line](PWM.east) |- node[xshift=1.5em,yshift=0.45em]{$B_-$}([yshift=-0.5em,]DRVR.west);
+\path[line](PWM.east) |- node[xshift=1.5em,yshift=0.5em]{$C_+$}([yshift=-2em,]DRVR.west);
+\path[line](PWM.east) |- node[xshift=1.5em,yshift=0.45em]{$C_-$} ([yshift=-3em,]DRVR.west);
+
+%% DRVR to Inverter
+\path[line](DRVR.east) |- node[xshift=1.5em,yshift=0.5em]{$A_+$}([yshift=3em,]TPI.west);
+\path[line](DRVR.east) |- node[xshift=1.5em,yshift=0.45em]{$A_-$} ([yshift=2em,]TPI.west);
+\path[line](DRVR.east) |- node[xshift=1.5em,yshift=0.5em]{$B_+$}([yshift=0.5em,]TPI.west);
+\path[line](DRVR.east) |- node[xshift=1.5em,yshift=0.45em]{$B_-$} ([yshift=-0.5em,]TPI.west);
+\path[line](DRVR.east) |- node[xshift=1.5em,yshift=0.5em]{$C_+$}([yshift=-2em,]TPI.west);
+\path[line](DRVR.east) |- node[xshift=1.5em,yshift=0.45em]{$C_-$} ([yshift=-3em,]TPI.west);
+
+%% Inverter to Motor
+\path[line](TPI.east) |- node[xshift=.5em,yshift=0.45em]{$I_a$} (Motor.150);
+\path[line](TPI.east) |- node[xshift=.5em,yshift=0.45em]{$I_b$}(Motor.west);
+\path[line](TPI.east) |- node[xshift=.5em,yshift=0.45em]{$I_c$}(Motor.210);
+
+%% Motor to Output
+\path[line](Motor) -- node[yshift=0.5em]{To Gear}(Output);
+
+%% Motor to Encoder
+\path[line](Motor) -- node[xshift=0.8em]{$\theta_m$}(Encoder);
+
+%% Encoder to 2x Clark Park + PWM
+\path[line](Encoder.south) -|++(0,-2) --++(-14.76,0) |-node[circle,fill,inner sep=2pt]{}node[xshift=-0.8em]{$\theta_i$} ++(0,4.8) -|  (PWM.south);
+\path[line](Encoder.south) -|++(0,-2) -| (ITrans.south);
+\path[line](Encoder.south) -|++(0,-2) -| node[circle,fill,inner sep=2pt]{} node[yshift=-0.8em]{$\theta_i$} (ABC.south);
+
+%% Calc to Clark park
+\path[line](Calc.150) --node[yshift=0.5em]{$I_a$} (ABC.30);
+\path[line](Calc) --node[yshift=0.5em]{$I_b$} (ABC.east);
+\path[line](Calc.210) --node[yshift=0.5em]{$I_c$} (ABC.330);
+
+
+%% Clark Park Transform to DQ inputs
+\path[line](ABC.150) --node[xshift=-0.7em,yshift=0.5em]{$I_d$}++(-7.5,0) |- ([yshift=-1em]ID.west);
+\path[line](ABC.210) --node[yshift=0.5em]{$I_q$}++(-8,0) |- ([yshift=-1em]IQ.west);
+
+%% Inverter to current calc (on the lines to the motor)
+\path[line](TPI.24) --node[circle,fill,inner sep=2pt,xshift=0.7em]{}++(0.5,0) |-node[xshift=-12em,yshift=0.5em]{$I_a$} (Calc.30);
+\path[line](TPI.east) -- node[circle,fill,inner sep=2pt,xshift=1.15em]{}++(0.8,0) |-node[xshift=-13em,yshift=0.5em]{$I_b$} (Calc.330);
+
+
+\end{tikzpicture}
+
+
+%%% Helping code from previous work:
+
+%%Flux reference:
+%\node [blockmed, left of=controller2,yshift=1em,xshift=5em](fluxref){Flux Reference};
+%
+%%Current Calculation:
+%\node [block, left of=transform](calc){Current Calculation};
+%
+%%Inputs x5:
+%\node [blocksmall, left of=calc,yshift=1em,xshift=6em](ia){$I_a$};
+%\node [blockmed, above of=ia,yshift=-10em](torque){Torque Reference};
+%\node [blocksmall, below of=ia,yshift=13em](ib){$I_b$};
+%\node [blocksmall, below of=ib,yshift=10em](theta){Motor Position};
+%\node [blockmed, below of=theta,yshift=10em](enable){Enable};
+%
+%%Input arrows:
+%\path[line](torque) -| (controller1);
+%\path[line](ia) -- ([yshift=1em]calc.west);
+%\path[line](ib) -- ([yshift=-1em]calc.west);
+%\path[line](theta) -| ([xshift=-1.5em]transform.south);
+%\path[line](fluxref) -- ([yshift=1em]controller2.west);
+%
+%%Enable arrows:
+%\path[line](enable) -- node[circle,fill,inner sep=2pt,xshift=10.4em](){} ++(8.5,0) -| ++(0,3.5) -- node[yshift=0.4em,xshift=-0.8em]{En} ([yshift=-1em]controller1.west);
+%\path[line](enable) -- ([yshift=-1em]controller2.west);
+%
+%%transform to controller arrows:
+%\path[line]([yshift=1em]transform.east) -- node[yshift=0.5em]{$I_q$} ([yshift=1em]controller1.west);
+%\path[line]([xshift=1.5em]transform.south) |-++(0,-1) -| node[yshift=0.5em,xshift=-2em]{$I_d$} (controller2.north);
+%
+%%Current to clark park arrows:
+%\path[line]([yshift=1.2em]calc.east) -- node[yshift=0.5em]{$I_a$} ([yshift=1.2em]transform.west);
+%\path[line](calc) -- node[yshift=0.5em]{$I_b$} (transform);
+%\path[line]([yshift=-1.2em]calc.east) -- node[yshift=0.5em]{$I_c$} ([yshift=-1.2em]transform.west);
+%
+%%output from controllers
+%\path[line](controller1.east) -- node[xshift=2.5em]{$V_{sq}$} ([xshift=3em]controller1.east);
+%\path[line](controller2.east) -- node[xshift=2.5em]{$V_{sd}$} ([xshift=3em]controller2.east);
+
+
+\end{document}
