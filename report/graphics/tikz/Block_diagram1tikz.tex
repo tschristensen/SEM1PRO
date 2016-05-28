@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{standalone}
 \usepackage{tikz}
 \usepackage{amsmath}
 \usetikzlibrary{shapes,shadows,arrows}
@@ -9,15 +9,18 @@
 \tikzstyle{block} = [draw, rectangle,text width=6em, text centered , minimum height=15mm, node distance=10em]
 \tikzstyle{blocksmall} = [draw, rectangle, text width=4em, text centered, minimum height=7mm, node distance=15em]
 \tikzstyle{blockmed} = [draw, rectangle, text width=6em, text centered, minimum height=7mm, node distance=15em]
-\tikzstyle{blockhuge} = [draw, dashed, rectangle, text width=28em, minimum height=22em, node distance=15em]
+\tikzstyle{blockhuge} = [draw, dashed, rectangle, text width=41em, minimum height=22em, node distance=15em]
+\tikzstyle{blocktall} = [draw, rectangle, text width=5em, text centered, minimum height=45mm, node distance=15em]
 
 \begin{tikzpicture}[scale=1,every note/.style={1}]
 %surround block
-\node [blockhuge,yshift=-2.5em](surroundblock){};
+\node [blockhuge,yshift=-2.5em,xshift=6em](surroundblock){};
 
 %Controlle blocks:
 \node [block, xshift=10em](controller1){Controller};
 \node [block, below of=controller1](controller2){Controller};
+\node [blocktall, right of=controller1,xshift=-5em,yshift=-5em](sat){Saturation};
+
 
 %Clark Park block:
 \node [block, left of=controller1](transform){Clarke Park Transform};
@@ -56,9 +59,11 @@
 \path[line]([yshift=-1.2em]calc.east) -- node[yshift=0.5em]{$I_c$} ([yshift=-1.2em]transform.west);
 
 %output from controllers
-\path[line](controller1.east) -- node[xshift=2.5em]{$V_{sq}$} ([xshift=3em]controller1.east);
-\path[line](controller2.east) -- node[xshift=2.5em]{$V_{sd}$} ([xshift=3em]controller2.east);
+\path[line](controller1.east) -- node[yshift=1em]{$q_{output}$} (sat.120);
+\path[line](controller2.east) -- node[yshift=1em]{$d_{output}$} (sat.240);
 
+\path[line](sat.60) -- node[yshift=1em,xshift=-0.4cm]{$q_{output}$} ([xshift=2cm]sat.60);
+\path[line](sat.300) -- node[yshift=1em,xshift=-0.4cm]{$d_{output}$} ([xshift=2cm]sat.300);
 
 \end{tikzpicture}
 
