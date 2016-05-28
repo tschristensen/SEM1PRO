@@ -1,5 +1,6 @@
 %!TEX root = ../main.tex
-\section{Embedded Design}
+\section{Embedded Design}\label{sec:Embedded_Design}
+\todo[inline]{Thomas: Describe the encoders of the motor.}
 An embedded system is needed to handle a wide range of task. 
 It is a requirement for the project that the Zybo board should be used as the embedded system in the project.
 The board features a Zynq Z-7010 chip from Xilinx, which has an integrated dual-core ARM Cortex-A9 processor and a Xilinx 7-series field programmable gate array (FPGA).
@@ -38,22 +39,31 @@ khaOS was chosen before other RTCS as the group had knowledge about the system f
 The software functionalities was grouped into tasks based on functionality and desired frequency.
 A task diagram of the complete system on the Zybo can be seen in figure \ref{fig:task_diagram}.
 
+
+%\begin{figure}[!h]
+%  \includestandalone[width=\textwidth]{graphics/taskdiagram}
+%  \caption[Task diagram]{Task diagram showing software tasks as green circles, shared variables as yellow boxes, IP cores as blue boxes, I/O periphirals as limegreen boxes, external signals as orange boxes and external components in red. The PS and PL areas are marked accordingly and arrows show the data and signal direction.}
+%  \label{fig:task_diagram }
+%\end{figure}
+
 \begin{figure}[!h]
+<<<<<<< HEAD
+  \includegraphics[width=\textwidth]{graphics/taskdiagram}
+  \caption[Task diagram]{Task diagram showing software tasks as green circles, shared variables as yellow boxes, IP cores as blue boxes, I/O periphirals as limegreen boxes, external signals as orange boxes and external components in red. The PS and PL areas are marked accordingly and arrows show the data and signal direction. $C_p$ denotes various controller parameters.}
+  \label{fig:task_diagram}
+=======
 	\centering
 	\includegraphics[width=1\linewidth]{graphics/TaskDiagram}
-	\caption[Task diagram.]{Task diagram of the complete system on the Zybo. Inside ARM rectangle circles are separate tasks while boxes are shared variables. In the PL all the FPGA components are shown. Outside the rectangle all the signals to and from the outside world are shown. SHOULD BE REWRITTEN!!!}
+	\caption[Task diagram.]{Task diagram of the complete system on the Zybo. Inside ARM rectangle circles are separate tasks while boxes are shared variables. In the FPGA area all the FPGA components are shown. Outside the rectangle all the signals to and from the outside world are shown.}
 	\label{fig:task_diagram}
+>>>>>>> 595bc194fcc54493d5ea27523ce39a0b3dcf2893
 \end{figure}
-\todo[inline]{Thomas: Task diagram: Vsq\_ref+Vsd\_ref stretch to fit entire word on one line. Also, the TX/RX buffers should be labeled to match the text}
 
-As can be seen various signals are coming from the outside world through the FPGA into the ARM processor.
-The signals from the current sensors and the the pedal will go to the ADC on the Zybo board. 
-The ADC task will poll values from the ADC registers and update the $I_a$,$I_b$ and Torque reference variables.  
-The UART RX and UART TX tasks are simply tasks that handle communication to a connected computer through the UART protocol.
-UART TX task will read from the TX buffer and transmit the data, while the UART RX will read data coming from the connected computer and put it in the RX buffer.
+As can be seen various signals are coming from the outside world through the PL into the PS.
+All tasks, IP cores and I/O periphirals will be desribed in the coming sections.
 
-\subsubsection{PWM generator}
-The PWM generator is placed in the FPGA and is developed using Xilinx System Generator in Matlab Simulink.
+\subsubsection{Three phase PWM generator}
+The PWM generator is placed in the PL and is developed using Xilinx System Generator in Matlab Simulink.
 The PWM generator is made to have an adjustable frequency and dutycycle.
 It was choosen to make a center aligned PWM generator as this introduces less harmonic distortion than edge aligned PWM \cite{power_switching_converters}. 
 Furthermore center aligned PWM also produces a symmetrical PWM signal, with a defined midpoint in the PWM-wave where the current can be sampled correctly.
@@ -180,6 +190,7 @@ This could easily be extended to a \texttt{read} or perhaps a \texttt{shutdown} 
 
 \subsubsection{Controller task}
 
+\todo[inline]{REMEMBER TO USE ENABLE SIGNAL TO RESET INTEGARTOR - MIKKEL}
 \begin{figure}[!h]
 	\centering
 		\includegraphics[width=0.9\linewidth,trim=3cm 15cm 0 2cm]{graphics/controller_tasktikz}
