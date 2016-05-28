@@ -1,0 +1,50 @@
+\documentclass{article}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usetikzlibrary{shapes,shadows,arrows}
+\begin{document}
+\tikzstyle{decision} = [diamond,draw]
+\tikzstyle{line} = [draw,-stealth, thick]
+\tikzstyle{elli} = [draw, ellipse,minimum height=8mm,text width=5em, text centered]
+\tikzstyle{block} = [draw, rectangle,text width=6em, text centered , minimum height=15mm, node distance=10em]
+\tikzstyle{blocksmall} = [draw, rectangle, text width=4em, text centered, minimum height=7mm, node distance=15em]
+\tikzstyle{blockmed} = [draw, rectangle, text width=6em, text centered, minimum height=7mm, node distance=15em]
+\tikzstyle{blockhuge} = [draw, dashed, rectangle, text width=25em, minimum height=16em, node distance=15em]
+\tikzstyle{blocktall} = [draw, rectangle, text width=6em, text centered, minimum height=35mm, node distance=15em]
+
+\begin{tikzpicture}
+%surround block
+\node [blockhuge,yshift=-1em](surroundblock){};
+
+%Central blocks:
+\node [blocktall, xshift=-7em](inverse){Inverse Clarke Park Transform};
+\node [blocktall, right of=inverse](pwm){Pulse Width Modulation};
+
+%input blocks:
+\node [blocksmall,left of=inverse,yshift=3em,xshift=5em](vsq){$V_{sq}$};
+\node [blocksmall,below of=vsq,yshift=12em](vsd){$V_{sd}$};
+\node [blocksmall,below of=vsd,yshift=12em](theta){$\theta$};
+\node [blocksmall,below of=theta,yshift=11em](enable){Enable};
+
+%Input arrows:
+\path[line](vsq.east) -- ([yshift=3em]inverse.west);
+\path[line](vsd.east) -- (inverse.west);
+\path[line](theta.east) -- ([yshift=-3em]inverse.west);
+\path[line](enable.east) -| (pwm.south);
+
+%Inverse to pwm arrows:
+\path[line]([yshift=3em]inverse.east) -- node[yshift=0.5em]{$V_a$} ([yshift=3em]pwm.west);
+\path[line](inverse.east) -- node[yshift=0.5em]{$V_b$} (pwm.west);
+\path[line]([yshift=-3em]inverse.east) -- node[yshift=0.5em]{$V_c$} ([yshift=-3em]pwm.west);
+
+%output arrows:
+\path[line]([yshift=3em]pwm.east) -- node[xshift=3.5em]{Duty A} ([yshift=3em, xshift=3em]pwm.east);
+\path[line]([yshift=1em]pwm.east) -- node[xshift=3.5em]{Duty B} ([yshift=1em, xshift=3em]pwm.east);
+\path[line]([yshift=-1em]pwm.east) -- node[xshift=3.5em]{Duty C} ([yshift=-1em, xshift=3em]pwm.east);
+\path[line]([yshift=-3em]pwm.east) -- node[xshift=3.5em]{Enable} ([yshift=-3em, xshift=3em]pwm.east);
+
+
+
+\end{tikzpicture}
+
+\end{document}
