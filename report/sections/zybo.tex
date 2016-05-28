@@ -52,8 +52,6 @@ The ADC task will poll values from the ADC registers and update the $I_a$,$I_b$ 
 The UART RX and UART TX tasks are simply tasks that handle communication to a connected computer through the UART protocol.
 UART TX task will read from the TX buffer and transmit the data, while the UART RX will read data coming from the connected computer and put it in the RX buffer.
 
-
-
 \subsubsection{PWM generator}
 The PWM generator is placed in the FPGA and is developed using Xilinx System Generator in Matlab Simulink.
 The PWM generator is made to have an adjustable frequency and dutycycle.
@@ -217,6 +215,15 @@ The IP core outputs a clock to the RMB28MD chip and reads data from a datapin.
 It then makes the data available on the AXI4LITE bus, where it can be read from software. 
 
 \subsection{SPI communication}
+
+\todo[inline]{Thomas: I haven't described our timing issues, it seemed a better thing to do it in this section?}
+\begin{figure}[!h]
+	\centering
+		\includegraphics[width=1\linewidth]{graphics/spi_timing}
+	\caption[SPI timing requirements.]{SPI timing requirements.From datasheet? How to cite?}
+	\label{fig:spi_timing}
+\end{figure}
+
 As described earlier the Zybo board will need to set certain parameters on the DRV8301 chip using SPI communication. 
 The Zynq chip has two SPI controllers in the PS area of the chip, which can be setup to communicate with external devices.
 By investigation the Zynq datasheet \cite{zynq_reference} it  was found that it was not possible to configure the SPI controller to meet the requirements of the DRV8301. 
@@ -233,7 +240,7 @@ SPI 1 on the Zynq was used as it can be ported to MIO channels 10 to 15, which c
 The SPI controller was initialized in software and was configured to be in master mode, manuel chip select mode and manuel start mode by writing to the configuration register Config\_reg0.
 In order to comply with the SPI specifications of the DRV8301 it was configured with the XSPIPS\_CLK\_PHASE\_1\_OPTION in order to make data valid on falling edges of the clock. 
 The discharge of a capacitor is utialized to make a delay on the Slave Select signal, by putting a XX capacitor and XX resistor in series with the signal.
-The transmission of 0b0001000000110000 were measured by an oscilloscope and can be seen in figure \ref{fig:spi_graph}.
+The transmission of \texttt{0b0001000000110000} were measured by an oscilloscope and can be seen in figure \ref{fig:spi_graph}.
 \todo[inline]{can 0b0001000000110000 be written more beautifull?? :) Mikkel}
 
 \begin{figure}[!h]

@@ -51,12 +51,12 @@ Num1=[2*J_pro 2*Kv*L];
 Den1=[2*J_pro*L 2*Kv*L+2*J_pro*R 3*Kt^2+2*Kv*R];
 Ds=tf(Num1,Den1);
 
-Tset=0.01;
+Tset=0.05;
  
 alpha=(1.5*(1+3))/Tset;
 Kp=(3*alpha-Kv/J_pro-(R/(2*L)))*L/26.4;
 Ki=(3*alpha^2-((Kp*Kv)/(2*J_pro)-(Kv*R)/(J_pro*L)-(3*Kt^2)/(2*J_pro*L)))*L/26.4;
 
-% Kp = (9/Tset - R/L)*L/26.4;
-% Ki = (4.5/Tset)^2*L/26.4;
+%Kp = -(9/Tset - R/L)*L/26.4;
+%Ki = (4.5/Tset)^2*L/26.4;
 

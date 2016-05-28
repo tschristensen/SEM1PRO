@@ -1,14 +1,47 @@
-
+%
 \section{Three phase inverter}
+<<<<<<< HEAD
+This section will describe the design of the three-phase inverter used to drive the PMAC motor in this project.
+This includes the calculations and considerations done  
+Initially, a short overview of the principle of operation of a three-phase inverter is given.
 
+\subsection{Principle of Operation of the Three-Phase Inverter}
+A three-phase inverter enables the use of a DC supply in variable frequency control of a three-phase load.
+In this project the DC supply is a battery and the load, a PMAC motor.
+Figure \ref{fig:threephaseinverter} is a simulink model showing the most basic three-phase inverter.
+As can be seen, the inverter three half-bridges for a total of six switches.
+Each pair of switches can never be on at the same time as this would result in a short circuit of the power rail.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=\linewidth,trim=0cm 5cm 0cm 5cm]{graphics/threephaseinverter}
+	\caption{Simulink model of a simple three-phase inverter.}
+	\label{fig:threephaseinverter}
+\end{figure}
+
+It is possible to have eight different configurations that do not violate this restriction.
+Of these six are said to be active while two are inactive, that is, no current is flowing during these configurations.
+\begin{table}[!h]
+\centering
+	\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+		\hline
+						   & Q$_0$ & Q$_1$ & Q$_2$ & Q$_3$ & Q$_4$ & Q$_5$ & Q$_6$ & Q$_7$\\ \hline
+						 A & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 1\\ 
+		  $\bar{\text{A}}$ & 1 & 0 & 1 & 0 & 1 & 0 & 1 & 0\\ 
+  						 B & 0 & 0 & 1 & 1 & 0 & 0 & 1 & 1\\ 
+		  $\bar{\text{B}}$ & 1 & 1 & 0 & 0 & 1 & 1 & 0 & 0\\ 
+  						 C & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0\\ 
+		  $\bar{\text{C}}$ & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 1\\ \hline
+	\end{tabular}
+\end{table}
 
 \subsection{Choosing the MOSFETs}
 \label{sec:mosfet}
 Before choosing the MOSFETs one will have to keep in mind the application parameters.
-Firstly the battery voltage of the Super-B(SB12V20P-FC)\todo{Erlingur - Super B datasheet} will on full charge have nominal voltage of 52.8V and a maximum end of charge voltage at 60.8V. 
+Firstly the voltage of the batteries\cite{superB} will on full charge have nominal voltage of 52.8V and a maximum end of charge voltage at 60.8V.
 The MOSFETs will therefor need to be able to handle a minimum drain to source voltage, $V_{DSS}$, of 60.8V. 
 Secondly, the current drawn by the motor can reach a maximum peak of 300A.
-Thirdly, the motor driver(DRV8301)\todo{Erlingur - DRV8301 datasheet} will supply a gate voltage, $V_{GS}$, of 9.5V to 11.5V. 
+Thirdly, the motor driver\cite{DRV8301} will supply a gate voltage, $V_{GS}$, of 9.5V to 11.5V. 
 The MOSFETs will therefor need to be fully operating at $V_{GS} = 9.5V$ and be able to handle the driver supplied range.
 The three main requirements are listed in table \ref{tab:req1}\\
 
@@ -28,11 +61,11 @@ The three main requirements are listed in table \ref{tab:req1}\\
 
 Do to high currents through the MOSFETs, the heat dissipation is assumed to be high as well. 
 To prevent overheating and burning out the MOSFETs they will be mounted on to a heat sink. 
-Therefore a through hole package will be suitable for this application. The chosen package is the TO-247. And the MOSFET IRFP4468PBF is chosen\todo{Erlingur - why this package and MOSFET?}.
+Therefore a through hole package will be suitable for this application. The chosen package is the TO-247. And the MOSFET International rectifier power MOSFET IRFP4468PBF is chosen\todo{Erlingur - why this package and MOSFET?}.
 
 \begin{table}[h!]
 	\centering
-	\caption{Some important parameters from the IRFP4468PBF MOSFET datasheet... missing citation. all parameters are found at junction temperature $T_J = 25^{\circ}$C}
+	\caption{Some important parameters from the IRFP4468PBF MOSFET datasheet\cite{IRF4468PbF}. All parameters are found at junction temperature $T_J = 25^{\circ}$C}
 \begin{tabular}{|l|l|c|c|c|c|}
 	\hline
 	\multicolumn{1}{|c|}{Symbol} & \multicolumn{1}{|c|}{Parameter} & Min. & Typ. &
@@ -58,7 +91,7 @@ Therefore a through hole package will be suitable for this application. The chos
 The MOSFET parameters in table~\ref{tab:MOSdata} seems to add up to all the requirements in table~\ref{tab:req1}. \todo{well not really. Even the silicon limit isn't enought to handle 300 A comfortably.}
 However the TO-247 package has a continuous drain current limit of 195A that is only around two third of the minimum current requirement. 
 This problem will be solved using two MOSFETs in parallel. 
-Using the parallel setup, the two MOSFETs will share the current equally so that each will have a maximum peak current of 150A \todo{Martin: Because if one draws more current than the other, it will raise temperature, then rds-on and then reduce current.}.
+Using the parallel setup, the two MOSFETs are assumed to share the current equally so that each will have a maximum peak current of 150A \todo{Martin: Because if one draws more current than the other, it will raise temperature, then rds-on and then reduce current.}.
 As will be later discussed, the setup will also decrease the conduction losses but increase the switching losses\todo{Erlingur - How will it increase the switching loss. Martin: because switching loss is dependent on switching time, current and voltage. with two in parallel, the switching time will go up, but the current will go down. And then there are two mosfets switching, so the switching loss should be approximately double}.
 
 
@@ -119,7 +152,7 @@ I_{Q,rms} = \dfrac{I_{out,rms}}{\sqrt{2}} = \dfrac{I_{out}}{\sqrt{2}\sqrt{2}} = 
 As mentioned earlier each switch will consist of two MOSFETs. Therefor the Drain current of each MOSFET becomes
 
 \begin{equation}
-I_{Qi,rms}=\dfrac{I_{Q,rms}}{2} = \dfrac{I_{out}}{4}
+I_{Qi,rms}=\dfrac{I_{Q,rms}}{n} = \dfrac{I_{out}}{2n}
 \label{I_Qi}
 \end{equation}
 
@@ -138,7 +171,7 @@ If assumed that the junction temperature will be around $100^{\circ}C$ one can e
 Then $R_{DS(on),@100^{\circ}C}$ will have the value
 
 \begin{equation*}
-R_{DS(on),@100^{\circ}C} =  1.6 R_{DS(on),@25^{\circ}C}
+R_{DS(on),@T_J^{\circ}C} =  \alpha R_{DS(on),@25^{\circ}C}
 \end{equation*}
 
 then the conduction loss can be estimated using~\ref{eq:p_c} and \ref{I_Qi}
@@ -149,7 +182,7 @@ P_{C} = R_{DS(on),@100^{\circ}C} I_{Qi,rms}^2
 
 \subsection{Switching loss}
 The switching loss happens when the MOSFETs go from the on state to the off state and vice versa. This loss can be found with experiments. 
-When determining the switching loss only from calculations, some assumptions have to be made.
+An experiment will however not be carried out at this point but the loss will be estimated with calculations and assumptions.
 We assume that the gate to source capacitance $C_{GS}$ is the same for on and off time. 
 The gate to source current is defined by equation~\ref{eq:I_gs}. 
 
@@ -170,7 +203,7 @@ The voltage rise and fall times $t_{rv}$ and $t_{fv}$ are defined in figure~\ref
 The current rise and fall times,  $t_{ri}$ and $t_{fi}$, are depended on $C_{GS}$ and are defined in equation~\ref{eq:I_gs} as $dt$
 
 \begin{equation}
-I_{gs} = C\dfrac{dV}{dt} \rightarrow dt = C\dfrac{dV}{I_{gs}}
+I_{gs} = nC\dfrac{dV}{dt} \rightarrow dt = nC\dfrac{dV}{I_{gs}}
 \label{eq:I_gs}
 \end{equation}
 
@@ -178,7 +211,7 @@ I_{gs} = C\dfrac{dV}{dt} \rightarrow dt = C\dfrac{dV}{I_{gs}}
 dV = V_{GS(I_0)} - V_{GS(th)}
 \end{equation}
 
-The gate to source current is known. The driver supports up to 2.3A sink and 1.7A source current.\todo{Erlingur - needs some more explanations} 
+The gate to source current is known. The driver supports up to 2.3A sink and 1.7A source current.\todo{Erlingur - needs more explanation}
 
 \begin{figure}
 	\centering

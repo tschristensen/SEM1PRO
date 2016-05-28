@@ -1,7 +1,7 @@
 \newpage
 \section{Controller Design}
 \label{sec:controller_design}
-Controlling the PMSM motor will be done using the principles of vector control, where the controller produces a change to the PWM inverter input. This is done by monitoring the two of the three current inputs to the motor and transforming them using the dq0 transform. This transform yields a d and q DC value and a zero, which are respectively referred to a torque demand and a flux demand. \newline
+Controlling the PMSM motor will be done using the principles of vector control\todo{Martin: Field Oriented Control. Should Clarke Park be explained, or just referenced?}, where the controller produces a change to the PWM inverter input. This is done by monitoring the two of the three current inputs to the motor and transforming them using the dq0 transform. This transform yields a d and q DC value and a zero, which are respectively referred to a torque demand and a flux demand. \newline
 
 The requirement for this project outlines that the motor must be torque controlled, hence the flux demand will be a zero while the torque demand will be defined by the speeder pedal. After the dq values have been compared to the reference/demand values the error is fed to a PID controller which will adjust the output accordingly. This output is transformed using the inverse dq0 transform, which yields a three phase AC signal that can be fed into the inverter and yield a new motor speed. \newline
 
@@ -211,7 +211,7 @@ Replacing $G(s)$ and rearranging to get the form of a characteristics equation t
 \frac{I_m}{I_{ref}}=\frac{s^2\frac{K_p}{L}+s(\frac{K_i}{L}+\frac{K_pK_v}{J})+\frac{K_iK_v}{J_r}}{s^3+s^2(\frac{R}{2L}+\frac{K_v}{J}+\frac{K_p}{L})+s(\frac{3K_t^2}{2JL}+\frac{K_vR}{JL}+\frac{K_i}{L}+\frac{K_pK_v}{JL})+\frac{K_iK_v}{JL}}
 \label{eq:transfer_function_full}
 \end{equation}
-
+\todo{Martin: I'm quite happy, that I didn't have to put this fucking equation in}
 %2nd order transfer function: dont delete
 %\begin{equation}
 %\dfrac{I_m}{I_{ref}}=\dfrac{L_a(K_i+K_ps)}{s^2+s(\frac{R_a}{L_a}+\frac{1}{L_a}K_p)+\frac{1}{L_a}K_i+\frac{3K_t^2}{2JL_a}}
@@ -221,7 +221,7 @@ Replacing $G(s)$ and rearranging to get the form of a characteristics equation t
 This increases the order of the transfer function by one and adds a zero and a pole to the system. Where these lie again depends on the component and the controller values.
 This third order transfer function will be used to derive the controller values.
 
-\subsection{Full Order Controller Values}
+\subsection{Full Order Controller Values}\label{sub:full_order_controller_values}
 To find the controller values the Stephen Dodds Settling Time Formula for $5\%$ settling time is used. The desired characteristics polynomial of a transfer function for the settling time formula to work is
 
 \begin{equation}
@@ -236,10 +236,10 @@ This yields the following third order equation for a third order system.
 s^3+3\alpha s^2+3\alpha^2s+\alpha^3
 \end{equation}
 
-Based on the transfer function in equation ref and a settling time of 0.1 seconds, alpha will be defined by the following equation. This value is used to find the Kp and Ki values for the controller.
+Based on the transfer function in equation ref and a settling time of 0.05 seconds, alpha will be defined by the following equation. This value is used to find the Kp and Ki values for the controller.
 
 \begin{equation}
-\alpha=\frac{1.5(1+n)}{T_s^{5\%}}=\frac{6}{0.1}=60
+\alpha=\frac{1.5(1+n)}{T_s^{5\%}}=\frac{6}{0.05}=120
 \label{eq:Dodds_settlingtime}
 \end{equation}
 
@@ -297,7 +297,7 @@ s^3+s^2(a_2+b_2K_p)+s(a_1+b_1K_i)+a_0+b_0 = s^3+d_2s^2+d_1s+d_0
 %a_1+b_1K_i=d_1 \rightarrow K_i\frac{d_1-a_1}{b_1}
 %\end{equation}
 
-These equations yield the following controller values when inserting the known motor parameters, equation \ref{eq:Kpvalue} and \ref{eq:Kivalue}.
+These equations yield the following controller values when inserting the known motor parameters. This is with a settling time of 0.05 seconds. Equation \ref{eq:Kpvalue} and \ref{eq:Kivalue}.
 \begin{equation}
 K_p=0.0111
 \label{eq:Kpvalue}
@@ -331,7 +331,7 @@ The same procedure as for the full order system will be used for this transfer f
 
 There are no zeros as the numerator has no s values and there is one real pole at $R_a+L_as=0 \rightarrow s=0$. Which equals to (0,0) in the pole-zero map. This means that as the gain increases this pole becomes faster and faster (moves to the left). With the pole right on the imaginary axis the transfer function itself is marginally damped, and will be stable by itself. It is basically a constant value determined by the initial conditions. The controller is still needed to set a reference value though. With no mechanical part there is no decay at all, but a test will have to be performed to see how well a controller can react to the disturbance of the mechanical part.
 
-\subsection{Reduced Order Controller Values}
+\subsection{Reduced Order Controller Values}\label{sub:reduced_order_controller_values}
 Finding the controller values for this model is done as it was for the full order model. However an IP controller will be used instead to avoid adding a zero to the transfer function compared to the PI controller.
 
  The IP controller places the $K_p$ value in a feedback loop resulting in the following diagram on figure \ref{fig:IPcontroller1}.
