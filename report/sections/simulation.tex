@@ -458,7 +458,8 @@ This is shown on figure~\ref{fig:Sim_results_pi_phase_voltage}
 
 The reason for stepping voltage instead of a smooth curve is the limited resolution of the encoder. 
 This is not an issue, because these steps will induce a high frequency noise, that the inductance of the motor will choke.
-Figure~\ref{fig:Sim_results_pi_phase_voltage} shows that the voltage waveforms span the whole range, even at speeds where the controller output is outside the $\mathrm{\pm} 1.15$. \\
+Figure~\ref{fig:Sim_results_pi_phase_voltage} shows that the voltage waveforms span the whole range, even at speeds where the controller output is outside the $\mathrm{\pm} 1.15$.
+This works independently from the controller, and will work both for the PI and IP controller. \\
 
 When the throttle is released after 5 s, the power should ideally not become negative, as the inverter is not designed to handle regenerative braking.
 This means, that it is not known what happens if the motor tries to push power back to the battery.
@@ -567,9 +568,106 @@ It would not brake anything, but it's not great \\
 
 The brake is released at 7 seconds, at which point, the wheel speed experiences a large step. 
 The controller responds with a negative torque.
-The total energy of this negative torque pulse is $\mathrm{-58 \si{\joule}}$, which, like the power undershoot on figure~\ref{fig:Sim_results_pi05_large_power_undershoot}, is deemed too much
+The total energy of this negative torque pulse is $\mathrm{-58 \si{\joule}}$, which, like the power undershoot on figure~\ref{fig:Sim_results_pi05_large_power_undershoot}, is deemed too much.
+
+The IP controller will also be simulated in the full system to determine how well it handles the events.
+In order to do that, the wire going into the Kp gain block must be connected with the feedback wire, instead of the output of the subtraction 'circle'
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.5\linewidth]{graphics/ip_controller_in_full_system}
+	\caption{Input to Kp gain blocks are connected to the Idq feedback wire instead of the output of the subtraction 'circle'}
+	\label{fig:ip_controller_in_full_system}
+\end{figure}
+
+Like the PI controller, the parameters are calculated using a settling time of $\mathrm{50 \si{\milli \second}}$.
+The parameters are divided by half the battery voltage, and shown in equation~\ref{eq:IP_controller_constants}.
+
+\begin{equation}
+K_P = -2.65e-5 \\%1515151515156e-05
+K_I = 1.23e-2 %0.012272727272727
+\label{eq:IP_controller_constants}
+\end{equation}
+
+The reason, $\mathrm{K_P}$ is negative is that it goes to the summing circle from figure~\ref{fig:sim_controller_diagram}, instead of a subtraction circle.\\
+
+Figure~\ref{fig:Sim_results_ip_Idq} shows 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.7\linewidth]{graphics/Sim_results_ip_Idq}
+	\caption{d and q axis current with a positive and negative step with the IP controller}
+	\label{fig:Sim_results_ip_Idq}
+\end{figure}
 
 
+
+\todo[inline]{Martin: Maybe a paragraph to seperate the controller simulations}
+
+Since neither of the two controller designs work optimally, the PI controller will be redesigned with a settling time of $\mathrm{10 \si{\milli \second}}$.
+The controller is designed for a load of $\mathrm{200 \si{\kilogram}}$.
+The control parameters in equation~\ref{eq:10ms_settling_time_param} are divided by half the battery voltage
+
+\begin{equation}
+K_P = 1.64 \\%1.637719093817946
+K_I = 2.6e-3 %0.002604159942864
+\label{eq:10ms_settling_time_param}
+\end{equation}
+
+The reason for not using this settling time was, that it provided a large overshoot, which was also evident in this more elaborate simulator.
+Introducing a rate limiter block in the Discrete controller subsystem between the q setpoint port and the saturation block will reduce the overshoot to less than 1 \%.
+This block is displayed on figure~\ref{eq:IP_controller_constants}.
+The rising and falling rates are set to $\mathrm{10 \si{\kilo \ampere \per \second}}$ and $\mathrm{-10 \si{\kilo \ampere \per \second}}$.
+This is fast enough, that a driver would not notice.
+
+\todo[inline]{Martin: Need a non-slipping test here}
+
+The slip test has been run with this faster settling time, using the throttle and brake input from figure~\ref{fig:torque_setpoint_waveform}.
+The slip and current during acceleration is displayed on figure~\ref{fig:slip_and_current01}
+
+\begin{figure}[H]
+	\begin{subfigure}[b]{0.49\linewidth}
+		\centering
+		\includegraphics[width=\linewidth,]{graphics/sim_results_pi01_slip_acceleration}
+		\caption{Wheel slip during acceleration}
+		\label{fig:sim_results_pi01_slip_acceleration}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.49\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{graphics/sim_results_pi01_slip_acceleration_current}
+		\caption{d and q axis current during slip}
+		\label{fig:sim_results_pi01_slip_acceleration_current}
+	\end{subfigure}
+	\caption{}
+	\label{fig:slip_and_current01}
+\end{figure}
+
+The slip reaches a maximum speed difference of $\mathrm{11.85 \si{\meter \per \second}}$ after $\mathrm{0.31\si{\second}}$.
+This means, that the rise time is only 60 \% of the slower controller, even though the rate limiter has been introduced.
+Unlike on figure~\ref{fig:sim_results_pi_slip_acceleration_current}, there is almost no oscillation on figure~\ref{fig:sim_results_pi01_slip_acceleration_current}.\\
+
+Figure~\ref{fig:slip_and_current_braking01} shows the braking and blocking event.
+
+\begin{figure}[H]
+	\begin{subfigure}[b]{0.49\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{graphics/sim_results_pi01_slip_braking}
+		\caption{Wheel slip during acceleration}
+		\label{fig:sim_results_pi01_slip_abraking}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.49\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{graphics/sim_results_pi01_slip_braking_current}
+		\caption{d and q axis current during slip}
+		\label{fig:sim_results_pi01_slip_braking_current}
+	\end{subfigure}
+	\caption{}
+	\label{fig:slip_and_current_braking01}
+\end{figure}
+
+During the non-blocking braking sequence period ranging from $\mathrm{5.36 \si{s}}$ until $\mathrm{6 \si{s}}$, the q-current is almost zero.
+When the wheel starts blocking, the controller inadvertently does produce some q-axis current, but the magnitude is reduced from 40 to 5A. This also means, that the wheel will stop more quickly, which means the total power loss is significantly lower. 
+Similarly, when the brake is released again, there is a negative q-axis current, but it is so much smaller and shorter, that the small amount of negative power it causes, will not be a major problem.
 
 \subsection{Plecs model}\label{sub:sim_plecs_electrical}
 As previously mentioned, the Plecs model differs vastly from the Simulink model in the electrical network, as it more closely resembles the real analog circuit. 
