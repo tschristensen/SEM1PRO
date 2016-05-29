@@ -1,4 +1,4 @@
-%
+%!TEX root = ../main.tex
 \section{Three phase inverter}
 This section will describe the design of the three-phase inverter used to drive the PMAC motor in this project.
 This includes the calculations and considerations done  
@@ -89,38 +89,35 @@ Therefore a through hole package will be suitable for this application. The chos
 
 The MOSFET parameters in table~\ref{tab:MOSdata} seems to add up to all the requirements in table~\ref{tab:req1}. \todo{well not really. Even the silicon limit isn't enought to handle 300 A comfortably.}
 However the TO-247 package has a continuous drain current limit of 195A that is only around two third of the minimum current requirement. 
-This problem will be solved using two MOSFETs in parallel. 
-Using the parallel setup, the two MOSFETs are assumed to share the current equally so that each will have a maximum peak current of 150A \todo{Martin: Because if one draws more current than the other, it will raise temperature, then rds-on and then reduce current.}.
-As will be later discussed, the setup will also decrease the conduction losses but increase the switching losses\todo{Erlingur - How will it increase the switching loss. Martin: because switching loss is dependent on switching time, current and voltage. with two in parallel, the switching time will go up, but the current will go down. And then there are two mosfets switching, so the switching loss should be approximately double}.
+This problem can be solved using at least two MOSFETs in parallel. 
+Using the parallel setup, the MOSFETs are assumed to share the current equally. 
+If one would draw more current than the others, the temperature would rise causing $R_{DS(on)}$ to rise as seen in figure~\ref{fig:tj_rds}. 
+That will then result in reduced current.
+As will be later discussed, parallel setup will also have effect on the total power loss.
 
 
-\subsection{Power Losses}
+\subsection{Power Loss}
 
-To estimate the temperature, the power loss must be estimated. 
-The total power loss, $P_{loss}$ of a switching device can be estimated using equation~\ref{eq:p_loss} where $P_C$ and $P_{SW}$ are conduction- and switching losses respectively.  
+
+The total power loss, $P_{loss}$ of a switching device can be estimated using equation~\ref{eq:p_loss} where $P_c$ and $P_{sw}$ are conduction- and switching losses respectively.  
 
 \begin{equation}
 P_{loss} = P_{c} + P_{sw}
 \label{eq:p_loss}
 \end{equation}
 
-Conduction loss of a single MOSFET can be calculated using equation~\ref{eq:p_c} and the switching loss with equation~\ref{eq:P_sw}
-
-\begin{equation}
-P_{c} = R_{DS(on)} I_{D,rms}^2
-\label{eq:p_c}
-\end{equation}
-
 For simplicity the power loss will be estimated from a single phase of the inverter circuit seen in figure~\ref{fig:single_phase}. 
 The Current $I_{out}$ is drawn by some load $R_{load}$ that will absorb the load power $P_{load}$ which is given by equation\ref{eq:p_load}. 
-Since there are two switches, the load power must be delivered equally from both. Thus the output power, $P_{Q}$, of each switch is given by equation~\ref{eq:P_Q}  
+Since there are two switches, $Q_1$ and $Q_2$, the load power must be delivered equally from both. Thus the output power, $P_{Q}$, of each switch is given by equation~\ref{eq:P_Q}  
 
-\begin{figure}[h!]
+
+\begin{figure}[!h]
 	\centering
-	\includegraphics[scale = 0.6]{graphics/single_phase}
-	\caption{Single phase}
-	\label{fig:single_phase}
+  \includestandalone[width=0.2\textwidth]{graphics/mosfets}
+  \caption{Single phase}
+  \label{fig:single_phase}
 \end{figure}
+
 
 \begin{equation}
 P_{load} = R_{load} I_{out,rms}^2
@@ -128,31 +125,51 @@ P_{load} = R_{load} I_{out,rms}^2
 \end{equation}
 
 \begin{equation}
-P_{Q} = \dfrac{P_{load}}{2} = R_{load} I_{Q,rms}^2
+P_{Q} = \dfrac{P_{load}}{2} = R_{load} I_{Qi,rms}^2
 \label{eq:P_Q}
 \end{equation}
 
-With insertion of equation~\ref{eq:p_load} into~\ref*{eq:P_Q} and solving for $I_{Q,rms}$, equation~\ref{eq:I_qrms} is formed.
+With insertion of equation~\ref{eq:p_load} into~\ref*{eq:P_Q} and solving for $I_{Qi,rms}$, equation~\ref{eq:I_qrms} is formed.
 
 \begin{equation}
-\dfrac{R_{load} I_{out,rms}^2}{2} = R_{load} I_{Q,rms}^2 \rightarrow I_{Q,rms} = \dfrac{I_{out,rms}}{\sqrt{2}} 
+\dfrac{R_{load} I_{out,rms}^2}{2} = R_{load} I_{Qi,rms}^2 \rightarrow I_{Qi,rms} = \dfrac{I_{out,rms}}{\sqrt{2}} 
 \label{eq:I_qrms}
 \end{equation}
-Which then again can be expressed as
+Which then again can be expressed as in equation~\ref{eq:I_qi}.
 
 \begin{equation}
-I_{Q,rms} = \dfrac{I_{out,rms}}{\sqrt{2}} = \dfrac{I_{out}}{\sqrt{2}\sqrt{2}} = \dfrac{I_{out}}{2}
+I_{Qi,rms} = \dfrac{I_{out,rms}}{\sqrt{2}} = \dfrac{I_{out}}{\sqrt{2}\sqrt{2}} = \dfrac{I_{out}}{2}
+\label{eq:I_qi}
 \end{equation}
-As mentioned earlier each switch will consist of two MOSFETs. Therefor the Drain current of each MOSFET becomes
+
+As mentioned earlier each switching setup will consist of $n$ number of MOSFETs in parallel. Therefor the Drain current of each parallel MOSFET becomes $I_{Pi,rms}$ in equation~\ref{eq:I_pi}.
 
 \begin{equation}
-I_{Qi,rms}=\dfrac{I_{Q,rms}}{n} = \dfrac{I_{out}}{2n}
-\label{I_Qi}
+I_{Pi,rms}=\dfrac{I_{Qi,rms}}{n} = \dfrac{I_{out}}{2n}
+\label{eq:I_pi}
 \end{equation}
+
+
+
+\subsubsection{Conduction loss}
+
+
+Conduction loss of the MOSFETs can be calculated using equation~\ref{eq:p_c}
+
+\begin{equation}
+P_{c} = R_{DS(on)} I_{Pi,rms}^2
+\label{eq:p_c}
+\end{equation}
+
 
 Although listed in the datasheet, the drain to source resistance $R_{DS(on)}$ only applies to the  $T_J = 25^{\circ}$C condition. 
 The resistance will vary with the junction temperature $T_J$. 
-The relation between $T_J$ and $R_{DS(on)}$ can be seen in figure~\ref{fig:tj_rds} from where the multiplication factor can be estimated\todo{Erlingur-put the eq in}.
+The relation between $T_J$ and $R_{DS(on)}$ can be seen in figure~\ref{fig:tj_rds} from where the multiplication factor $\alpha$ in equation~\ref{eq:Rdstj} can be estimated.
+
+\begin{equation}
+R_{DS(on),@T_J} =  \alpha R_{DS(on),@25^{\circ}C}
+\label{eq:Rdstj}
+\end{equation}
 
 \begin{figure}[h!]
 	\centering
@@ -161,60 +178,79 @@ The relation between $T_J$ and $R_{DS(on)}$ can be seen in figure~\ref{fig:tj_rd
 	\label{fig:tj_rds}
 \end{figure}
 
-If assumed that the junction temperature will be around $100^{\circ}C$ one can estimate the factor being somewhere close to 1.6. 
-Then $R_{DS(on),@100^{\circ}C}$ will have the value
-
-\begin{equation*}
-R_{DS(on),@T_J^{\circ}C} =  \alpha R_{DS(on),@25^{\circ}C}
-\end{equation*}
-
-then the conduction loss can be estimated using~\ref{eq:p_c} and \ref{I_Qi}
-
-\begin{equation*}
-P_{C} = R_{DS(on),@100^{\circ}C} I_{Qi,rms}^2
-\end{equation*}
-
-\subsection{Switching loss}
-The switching loss happens when the MOSFETs go from the on state to the off state and vice versa. This loss can be found with experiments. 
-An experiment will however not be carried out at this point but the loss will be estimated with calculations and assumptions.
-We assume that the gate to source capacitance $C_{GS}$ is the same for on and off time. 
-The gate to source current is defined by equation~\ref{eq:I_gs}. 
+If assumed that the junction temperature will be around $100^{\circ}C$ one can estimate the factor being somewhere close to $\alpha = 1.6$. 
+The conduction loss for each MOSFET in parallel can then be estimated using equations~\ref{eq:p_c}, \ref{eq:I_pi} and \ref{eq:Rdstj} to form equation~\ref{eq:P_cp}.
 
 \begin{equation}
-P_{sw} = \dfrac{1}{2} V_{in} I_{0} (t_{c,on} + t_{c,off} ) f_{s}
+P_{c} = R_{DS(on),@100^{\circ}C} I_{Pi,rms}^2 =  R_{DS(on),@100^{\circ}C} \bigg(\dfrac{I_{out}}{2n}\bigg)^2
+\label{eq:P_cp}
+\end{equation}
+
+\subsubsection{Switching loss}
+The switching loss happens when the MOSFETs go from the on state to the off state and vice versa. \todo{Erlingur - need to explain better}
+This loss can be found with experiments or estimated from calculations. 
+An experiment will not be carried out at this point but the loss will be estimated with calculations and assumptions using equation~\ref{eq:P_sw}.
+
+\begin{equation}
+P_{sw} = \dfrac{1}{2} V_{in} I_0 (t_{c,on} + t_{c,off} ) f_{s}
 \label{eq:P_sw}
 \end{equation}
 
-where $I_0$ is the MOSFET drain current $I_{Qi,rms}$
+
+Where $I_0$ is the drain current, $I_{Pi,rms}$, of each MOSFET from equation~\ref{eq:I_pi} and. 
+The times $t_{c,on} $ and $ t_{c,off} $ are the combined on and off time respectively and are defined in figure~\ref{fig:sw_loss} as equation~\ref{eq:time_on} and~\ref{eq:time_off}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale = 0.5]{graphics/sw_losses}
+	\caption{MOSFET switching losses}
+	\label{fig:sw_loss}
+\end{figure}
 
 \begin{eqnarray}
-t_{c,on} = t_{ri} + t_{fv}\\
+t_{c,on} = t_{ri} + t_{fv}
+\label{eq:time_on}\\
 t_{c,off} = t_{rv} + t_{fi}
-\label{eq:times}
+\label{eq:time_off}
 \end{eqnarray}
 
-The voltage rise and fall times $t_{rv}$ and $t_{fv}$ are defined in figure~\ref{fig:sw_time_wavef}.
-The current rise and fall times,  $t_{ri}$ and $t_{fi}$, are depended on $C_{GS}$ and are defined in equation~\ref{eq:I_gs} as $dt$
 
-\begin{equation}
-I_{gs} = nC\dfrac{dV}{dt} \rightarrow dt = nC\dfrac{dV}{I_{gs}}
-\label{eq:I_gs}
-\end{equation}
 
-\begin{equation}
-dV = V_{GS(I_0)} - V_{GS(th)}
-\end{equation}
+The $V_{DS}$ rise and fall times $t_{rv}$ and $t_{fv}$ in figure~\ref{fig:sw_loss} are defined in the MOSFET datasheet~\cite{IRF4468PbF} as the rise and fall times $t_r$ and $t_f$ seen in figure~\ref{fig:sw_time_wavef}. The times are listed in table~\ref{tab:tf_tr}. equation~\ref{eq:tfv_tr} and \ref{eq:trv_tf} show the relation.
 
-The gate to source current is known. The driver supports up to 2.3A sink and 1.7A source current.\todo{Erlingur - needs more explanation}
-
-\begin{figure}
+\begin{figure}[h!]
 	\centering
-	\includegraphics[scale = 0.7]{graphics/sw_time_wavef}
-	\caption{Switching Time Waveforms where $t_r = t_{rv}$ and $t_f = t_{fv}$ }
+	\includegraphics[scale = 0.5]{graphics/sw_time_wavef}
+	\caption{Switching Time Waveforms where }
 	\label{fig:sw_time_wavef}
 \end{figure}
 
-\begin{figure}
+\begin{table}[h!]
+	\centering
+	\caption{$V_{GS}$ rise and fall time taken from datasheet}
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		Symbol & Parameter & Typ. & Units\\
+		\hline
+		$t_r$ & Rise Time & 230 & ns\\
+		$t_f$ & Fall Time & 260 & ns\\
+		\hline
+	\end{tabular}
+	\label{tab:tf_tr}
+\end{table}
+
+
+\begin{eqnarray}
+t_{fv} = t_r\label{eq:tfv_tr}\\
+t_{rv} = t_f\label{eq:trv_tf}
+\end{eqnarray}
+
+The turn on and off characteristics of the MOSFETs are shown in figure~\ref{fig:turn_on_off}. 
+From there one can see that the current rise and fall times, $t_{ri}$ and $t_{fi}$ respectively, are the same times as it takes the gate voltage $V_{GS}$ to rise from $V_{GS(th)}$ to $V_{GS(I_0)}$ for the on state and opposite for the off state.
+
+
+
+\begin{figure}[h!]
 	\centering
 	\begin{subfigure}[b]{0.4\textwidth}
 		\includegraphics[width=\textwidth]{graphics/mos_turn_on}
@@ -228,38 +264,57 @@ The gate to source current is known. The driver supports up to 2.3A sink and 1.7
 		\label{fig:Turn_off}
 	\end{subfigure}
 	\caption{the turn on and off characteristics of the MOSFETs.}
+	\label{fig:turn_on_off}
 \end{figure}
 
-\begin{figure}
+The gate to source current, $I_(gs)$ is defined in equation\ref{eq:I_gs} where $dt$ are the current rise and fall times $t_{ri}$ and $t_{fi}$ respectively. 
+$dV$ is the difference between $V_{GS(th)}$ and $V_{GS(I_0)}$ as seen in equation~\ref{eq:dv}.
+
+\begin{equation}
+I_{gs} = nC\dfrac{dV}{dt} 
+\label{eq:I_gs}
+\end{equation}
+
+\begin{equation}
+dV = |V_{GS(I_0)} - V_{GS(th)}|
+\label{eq:dv}
+\end{equation}
+
+However the gate to source current is known. The motor driver sources up to $1.7A$ when in the on state and sinks up to $2A$ when in off state\cite{DRV8301}. Equation~\ref{eq:I_gs} can then be rearranged for $dt$ as shown in equation~\ref{eq:dt}.
+
+\begin{equation}
+dt = nC\dfrac{dV}{I_{gs}}
+\label{eq:dt}
+\end{equation}
+
+
+
+\subsection{Total Power loss}
+
+The power losses are calculated for up to 10 MOSFETs in parallel using equations~\ref{eq:P_c}, \ref{eq:P_sw} and~\ref{eq:p_loss} where the switching frequency is $f_s = 20kHz$. Figures~\ref{fig:ploss_single} and~\ref{fig:ploss_comb} show the results.
+
+
+\begin{figure}[h!]
 	\centering
-	\includegraphics[scale = 0.6]{graphics/sw_losses}
-	\caption{MOSFET switching losses}
+	\includegraphics[scale = 0.5]{graphics/pwr_loss_single}
+	\caption{Power losses of a single MOSFET in a parallel setup as a function of number of MOSFETs}
+	\label{fig:ploss_single}
 \end{figure}
 
-\begin{table}
+In Figure~\ref{fig:ploss_single} the losses are calculated for each MOSFET in a parallel setup of $n$ MOSFETs. 
+One will notice, as former stated, that the number of MOSFETs in parallel, effects the power loss much.
+The conduction loss will decrease fast and will become close to nothing when $n$ increases. This happens because the current is equally divided between the MOSFETs, thus, each MOSFET has less current flowing through. The switching loss however increases with $n$ and will become dominant. In that case the gate capacitance will increase by a factor of $n$ causing the switching loss to increase.
+\begin{figure}[h!]
 	\centering
-	\caption{rise and fall time taken from datasheet}
-	\begin{tabular}{|c|c|c|c|}
-		\hline
-		Symbol & Parameter & Typ. & Units\\
-		\hline
-		$t_r$ & Rise Time & 230 & ns\\
-		$t_f$ & Fall Time & 260 & ns\\
-		\hline
-	\end{tabular}
-\end{table}
+	\includegraphics[scale = 0.5]{graphics/pwr_loss_comb}
+	\caption{Combined power losses of each parallel setup as a function of number of MOSFETs}
+	\label{fig:ploss_comb}
+\end{figure}
 
-\todo{Erlingur - describe the figures and make table of the resaults}
+From the combined power loss shown in figure~\ref{fig:ploss_comb}, it is clear that the total power loss is smallest when $n = 2$ or $P_{loss} \approx 95W$. The design will have two MOSFETs in parallel switching each phase. The total power loss will then become for all three phases, six parallel setups.
 
-\begin{table}
-	\centering
-	\caption{text}
-	\begin{tabular}{|c|c|c|}
-		content...
-	\end{tabular}
-	\label{tab:results}
-\end{table}
+\begin{equation*}
+P_{loss} = 95*6 = 570W
+\end{equation*}
 
 
-
-\pagebreak
