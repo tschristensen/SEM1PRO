@@ -332,6 +332,23 @@ From the combined power loss shown in figure~\ref{fig:ploss_comb}, it is clear t
 \begin{equation*}
 P_{loss} = 95*6 = 570W
 \end{equation*}
-
-
 \todo[inline]{Martin: We should write something about the Driver and the capacitor choices}
+
+\subsection{Inverter layout}
+The layout of the inverter was mostly done by the other group though discussion about design and assembly were made between the two groups.
+In this section the overall principles of the layout is described.
+As the inverter has to work with large currents and fast switching, all parasitic inductors should be avoided.
+This is generally done by avoiding long wires as they contain a considerable inductance. 
+It was not possible to avoid wires completely and therefore the inverter has some wires which are kept short and are twisted together to minimize inductance. 
+The inverter should have a large groundplane to avoid difference in potential across the ground. 
+The developed layout can be seen in figure \ref{fig:inverter_design}.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{graphics/inverter_placeholder}
+	\caption{Placehodler....}
+	\label{fig:inverter_design}
+\end{figure}
+As it can be seen it was chosen to build the inverter on a large heatsink, where also the Zybo, digital and analog board are mounted. 
+Below the heatsink three fans were places to produce airflow on the heatsink for better heat dissipation.
+\clearpage
