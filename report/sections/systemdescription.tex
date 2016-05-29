@@ -9,12 +9,10 @@ The Go-Kart itself consists of a pre assembled aluminium frame with wheels, stee
 Behind the seat a plate is attached to fit all of the power electronics and drive systems that are designed throughout this project.
 To the right of the driver a mount is positioned for the motor.
 The mount is protected by a metal cover. 
-In order to properly transfer energy to the rear wheels, a gearing is placed between the motor and the rear axle.
+In order to transfer rotation to the rear wheels, a gearing is placed between the motor and the rear axle.
 A conventional disc brake comes pre-installed on the kart with the break pedal connected using hydraulic fluid.
-The speeder pedal is also installed, but nothing is attached to it, so it has no function initially.
+The speeder pedal is also installed, but with no mechanical effect on the system.
 
-\todo[inline]{It has no mechanical effetct? but will work with the sevcon - Mikkel}
-\todo[inline]{Thomas: Surely this is no longer the case?}
 \begin{figure}[!h]
 	\centering
 	\begin{subfigure}[t]{.35\linewidth}
@@ -34,14 +32,11 @@ The speeder pedal is also installed, but nothing is attached to it, so it has no
 \todo{better pic of motor}
 
 \subsection{Battery Supply}
-\todo[inline]{Thomas: We need to discuss whether units should be in math mode or in text!}
 The batteries provided for this project are called: "SB12V20P-FC Super B
 Lightweight Lithium Ion starter battery". \todo{cite datasheet}
-Four of these batteries will be put in series, yielding a combined nominal voltage of 52.8V and a discharge current of 560A. The discharge current can go up to as much as 1200A for a second.
-The batteries are relatively small at $\approx 238x120x82mm$ and $3.2kg$ of weight each.
+Four of these batteries will be put in series, yielding a combined nominal voltage of 52.8V and a discharge current of 560A. The discharge current can go up to as much as 1200\si{\ampere} for a second.
+The batteries are relatively small at $\approx 238x120x82\si{\milli\meter}$ and $3.2\si{\kg}$ of weight each.
 The batteries will be providing all the required power for the go-kart, including the motor and all control and drive circuits.
-
-\todo[inline]{We will put in extra batteries for the fans though - Mikkel}
 
 \subsection{PMAC Motor}
 The PMAC motor provided is a three phase motor capable of producing 6 hp continuously, and 19 hp for a minute, up to a maximum rotational speed of 5000 rpm. It has a high efficiency of 90 percent and a stall torque of 38 Nm. Its typical uses is, among other things, marine, robotics and gokarts.
@@ -51,15 +46,12 @@ The power curve of the motor is also likely different from a gasoline engine, bu
 
 
 \subsection{Torque Pedal}
-The torque pedal or "speeder" is provided as well. 
+The foot pedal or "speeder" will be used to control the torque produced by the motor and will henceforth be referred to as torque pedal. 
 It consists of a levered variable resistor with the equivalent diagram seen in figure \ref{fig:Torque_pedal_diagram}.
 
 The torque pedal will be used to control the speed by increasing or lowering the resistance, resulting in a change in voltage on the return wire. 
 By measurement, it is found to have a variable resistance of 0k to 7.5k.
-It is also found to be inaccurate in the decimals while holding a position, meaning some kind of filter might be necessary.
-
-\todo[inline]{Inaccurate in the decimals? How is this measured? Maybe your hand was shaking? But yeah, we might need filtering - Mikkel}
-
+By nature a variable resistor will be noisy therefore filtering the signal will be necessary.
 
 \begin{figure}[!h]
 	\centering

@@ -1,0 +1,69 @@
+mdl = plecs('get', '', 'CurrentCircuit');
+
+scopepath = [mdl '/Cooling Power'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\Cooling Power.trace')
+
+scopepath = [mdl '/Heatsink Temperature'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\Heatsink Temperature.trace')
+
+scopepath = [mdl '/Highside A'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\Highside A.trace')
+
+scopepath = [mdl '/Lowside A'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\Lowside A.trace')
+
+scopepath = [mdl '/Inverter loss'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\Inverter loss.trace')
+
+scopepath = [mdl '/Inverter Efficiency'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\Inverter Efficiency.trace')
+
+scopepath = [mdl '/Motor Loss'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\Motor Loss.trace')
+
+scopepath = [mdl '/Power Out'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\Power Out.trace')
+
+scopepath = [mdl '/Phase current'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\Phase current.trace')
+
+scopepath = [mdl '/dq mag'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\dq mag.trace')
+
+scopepath = [mdl '/dq current'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\dq current.trace')
+
+scopepath = [mdl '/dq phase'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\dq phase.trace')
+
+scopepath = [mdl '/Torque'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\Torque.trace')
+
+scopepath = [mdl '/Speed'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\Speed.trace')
+
+scopepath = [mdl '/DC Current'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\DC Current.trace')
+
+scopepath = [mdl '/Bus Voltage'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\Bus Voltage.trace')
+
+scopepath = [mdl '/Current Ripple'];
+
+plecs('scope', scopepath, 'SaveTraces', 'C:\Users\Martin Andersen\Documents\Plecs Traces\Current Ripple.trace')
