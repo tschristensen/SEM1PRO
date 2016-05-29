@@ -304,8 +304,8 @@ INPUT /usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries
 INPUT /usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex
 INPUT /usr/share/texlive/texmf-dist/tex/latex/chngcntr/chngcntr.sty
 INPUT /usr/share/texlive/texmf-dist/tex/latex/chngcntr/chngcntr.sty
-INPUT /usr/share/texlive/texmf-dist/tex/latex/preprint/fullpage.sty
-INPUT /usr/share/texlive/texmf-dist/tex/latex/preprint/fullpage.sty
+INPUT /usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
+INPUT /usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.aux
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.aux
 OUTPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.aux
@@ -1012,8 +1012,6 @@ INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/conclusion.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/conclusion.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/bib.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/bib.tex
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/appendix/extendedlayout.tex
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/appendix/extendedlayout.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.aux
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.out
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.out

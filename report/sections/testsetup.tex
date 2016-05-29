@@ -5,7 +5,7 @@ This section will describe how the system was implemented and tested on both a t
 \subsection{Test Setup}
 In order to test subparts of the complete system a test setup was introduced.
 It consists of a permanent magnet motor of the type PM5113 with a RMB28MD encoder module mounted with a small distance to the end of the shaft.
-The setup furthermore consists of a 74HCT14 level shift interface board and a ??\todo{Thomas: Questionmark?} dual H-bridge and can be seen in figure \ref{fig:small_motor_setup}.
+The setup furthermore consists of a 74HCT14 level shift interface board and a dual H-bridge and can be seen in figure \ref{fig:small_motor_setup}.
 The setup was made and soldered by the supervisors of the project.
 The full setup with H-bridge can be used to test the functionality of the Embedded System.
 The motor and encoder can be used to test the full system.
@@ -16,8 +16,6 @@ The motor and encoder can be used to test the full system.
 	\caption[Block diagram of test setup.]{Block diagram of test setup with PM5113 motor.}
 	\label{fig:small_motor_setup}
 \end{figure}
-
-\todo[inline]{The figure is wrong!! signal should go two times in the level shifter - Mikkel}
 
 \subsection{PWM generating}
 To test whether or not the Clarke Park transformation and the PWM generating on the Zybo board was working correctly a test was conducted.
