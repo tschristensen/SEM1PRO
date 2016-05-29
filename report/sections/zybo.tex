@@ -56,7 +56,7 @@ The PWM generator is placed in the PL and is developed using Xilinx System Gener
 The generator is made to have adjustable frequency and duty cycle.
 It was chosen to generate center aligned PWM as this introduces less harmonic distortion than edge aligned PWM \cite{power_switching_converters}. 
 Furthermore center aligned PWM has the benefit of producing symmetrical PWM.
-Symmetrical PWM has a well defined midpoint where the current can be sampled correctly. \todo[inline]{Thomas: Do you ever touch on why it is difficult to sample correctly?}
+Symmetrical PWM has a well defined midpoint where the current can be sampled correctly. 
 The high limit for the counter can be calculated for a given frequency, $f$, by the following:
 $$H = L + \frac{f_{Zybo}}{f\cdot 2}$$
 Where H is the high limit, L is the low limit and $f_{zybo}$ is the Zybo clock frequency.
