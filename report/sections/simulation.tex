@@ -1,6 +1,6 @@
 %!TEX root = ../main.tex
 \section{Simulation}\label{sec:Simulations}
-Simulation tools have been a great help, not only in understanding the electromechanical system, and design a controller from it, but also in estimating requirements for the electric components.
+Simulation tools have been a great help, not only in understanding the electromechanical system, and design a controller from it, but also in estimating requirements for the electrical components.
 Both Simscape and Plecs Standalone have been used, as they excel at different purposes. 
 Simscape is used to test the controller on a system with as much realism as possible to make sure the go-kart works intuitively, whereas Plecs is used to simulate the inverter to determine whether there will be heating issues during operation.
 
@@ -31,7 +31,7 @@ The mechanical system consists of a mass of the go-kart with driver, turbulent a
 Figure~\ref{fig:mechanical_full} shows the block diagram of the mechanical part, that the motor will drive.
 \todo{Thomas: So, a model of the kart? Martin: Yeah a very simple one.}
 Starting from the left, the Permanent Magnet Synchronous Motor is the motor and the Ideal Rotational Motion Sensor is used for the Clarke-Park transformations. 
-The first inertia block contains both the inertia of the motor, which is 0.0052, and the motor-side gear. 
+The first inertia block contains both the inertia of the motor, which is 0.0052, \todo[inline]{potatoes? add a unit!} and the motor-side gear \todo[inline]{which is unknown for the motor side gear?}. 
 Inertias on the same rod can be added together, so instead of having an inertia for the motor, and one for the motor-side gear, one inertia is enough
 The inertia of the gear depends on its size. 
 Assuming, that the gear is a disc, the mass is calculated by:
@@ -41,7 +41,7 @@ m_{G1} = \rho \pi r^2 \cdot h
 \label{eq:mass of disc}
 \end{equation}
 
-where $\rho$ is the mass density of iron of $7870 \dfrac{kg}{m^3}$, r is the radius, and h is the thickness of 7 mm.
+where $\rho$ is the mass density of iron of $7870 \dfrac{kg}{m^3}$, \todo[inline]{use tfrac for in-text fractions? this one is quite big atm.} r is the radius, and h is the thickness of 7 mm.
 Radius is defined by the number of teeth of the gear, G, and the pitch, which is the distance between two adjacent teeth, which is 12.5 mm.
 Hence the radius can be calculated by equation~\ref{eq:radius_from_G}
 \begin{equation}
@@ -59,13 +59,13 @@ J_G = \frac{mr^2}{2} = \frac{\rho \pi r^2 \cdot h \cdot r^2}{2} = G^4 \frac{\rho
 \end{equation}
 
 This equation is used to dertermine the inertia of the two cogs, the motor-side cog, G1, has 12 teeth, and the wheel-side cog, G2, has 50 teeth. 
-This ratio, G2/G1 is put into the block "Gear Box". \\
+This ratio, G2/G1 is put into the block "Gear Box".\todo[inline]{in what figure? reference}
 
 The mass is set to 150 - 250 kg, depending on the driver, and this includes the mass of the car.
 This is done to test different situations -- a high mass would have more stable speeds, but also cause more power loss in the inverter, whereas a lower mass would be more prone to wheel spin.\\
 
-Win resistance has a significant effect on the speed of the kart, especially at higher speeds.
-Wind resistance is of a gokart is primarily turbulent, and can be calculated by equation~\ref{eq:wind_resistance}.
+Wind resistance has a significant effect on the speed of the kart, especially at higher speeds.
+Wind resistance of a gokart is primarily turbulent, and can be calculated by equation~\ref{eq:wind_resistance}.
 
 \begin{equation}
 \label{eq:wind_resistance}
@@ -74,7 +74,7 @@ F=-\frac{1}{2} \rho A c v^2
 
 where $\rho$ is the density of air, $A$ is the frontal area, $c$ is the drag coefficient and $v$ is the speed. 
 The frontal area has been approximated to two boxes with the combined area of 0.6\si{\metre\squared}.\todo[inline]{Martin: add a picture of a go kart with two boxes across it, the lower one being 1 m wide, and 0.4 m high, and the second one being 0.5 m wide an 0.4 m high.} 
-The density of air is approximately 1.225 \si{\kilogram\per\metre\cubed}, $c$ is approximately 0.8, according to a paper about air resistance found online. \todo[inline]{Thomas: Ofcourse you have a reference to this paper? If not, find one and add it to the bib.tex file. Martin: Yes, but it's a long address, I don't know where I'd put it because we literally only use one number: http://www.torvergata-karting.it/filemanager/download/191/The\%20evaluation\%20of\%20aerodynamic\%20drag\%20of\%20go-karts\%20by\%20means\%20of\%20coast\%20down\%20test\%20and\%20CFD\%20analysis.pdf}
+The density of air is approximately 1.225 \si{\kilogram\per\metre\cubed}, $c$ is approximately 0.8, according to a paper about air resistance found online. \todo[inline]{Thomas: Ofcourse you have a reference to this paper? If not, find one and add it to the bib.tex file. Martin: Yes, but it's a long address, I don't know where I'd put it because we literally only use one number: http://www.torvergata-karting.it/filemanager/download/191/The\%20evaluation\%20of\%20aerodynamic\%20drag\%20of\%20go-karts\%20by\%20means\%20of\%20coast\%20down\%20test\%20and\%20CFD\%20analysis.pdf - Morten: add it with name and author in the back. cite it here. The link is not needed}
 The constants are multiplied into one constant called $c\_drag$, as shown in equation~\ref{eq:cdrag}
 
 \begin{equation}
@@ -100,6 +100,7 @@ This inertia can then be added to the inertia $J\_G2$. Same rules apply for a ge
 \label{eq:inertia_reflect}
 J_{ref} = \frac{G1^2}{G2^2} J
 \end{equation}
+\todo[inline]{Morten: I don't get what Jref is completely.}
 
 This inertia is then added to the inertia of the motor and $\mathrm{J_{G1}}$:
 
@@ -109,7 +110,7 @@ J = (mr^2+J_{G2}) \cdot \big(\tfrac{G1}{G2}\big)^2 + J_{G1}+J_M
 
 For a mass of 250 kg, this comes to 0.282\si{\kilogram\metre\squared}.
 
-In equation~\ref{eq:cdrag}, speed can be replaced with angular velocity and a gain, and force can be replaced by torque and a gain. So the equation becomes this:
+In equation~\ref{eq:cdrag}, speed can be replaced with angular velocity and a gain, and force can be replaced by torque and a gain. So the equation becomes this: \todo[inline]{Morten: Reference !}
 
 \begin{equation}
 \frac{T G2}{r G1} = c_{drag} \big(\omega r \tfrac{G1}{G2}\big)^2
@@ -135,6 +136,7 @@ This can be ported to Plecs, where all the used mechanical parts exist.
 Only difference is, that the inertia block is placed inline with the wire, and not as an appendage.
 \todo{Thomas: These are technical details that are completely irrelevant in relation to the simulations. Martin: Yeah but it does look different.}
 Finally, for the Simscape model, the tire is modelled by a friction block in series with the rotor, and the brake is modelled in a subsystem, as seen on figure~\ref{fig:simulations_mechanical_simscape}.
+\todo[inline]{Morten: Why is plecs mentioned here. the models i see are simscape?}
 
 \begin{figure}[H]
 	\begin{center}
@@ -144,20 +146,21 @@ Finally, for the Simscape model, the tire is modelled by a friction block in ser
 	\end{center}
 \end{figure}
 
-The tire block consists of static and dynamic.
+The tyre block consists of static and dynamic.
 Tyre slip is a comprehensive area of study, so the rotational friction block isn't necessarily accurate. 
-However, it does enable sudden changes in motor speed and load, similar to spinning and locking the wheels
+However, it does enable sudden changes in motor speed and load, similar to spinning and locking the wheels.
 The brake subsystem is a PI controlled ideal torque source, which will attempt to bring the go kart to a halt when the brake is pressed.
 Without a PI controller, there is a strong possibility that the brake would suddenly make the motor go backwards.
 Lastly the inertia is split into the inertia of the motor and gears on the left of the tyre, and the inertia due to the mass of the car on the right.
 Since the brake block is still connected directly to the rod of the motor, a gain block is used to scale down the torque through the gear. 
+\todo[inline]{Morten: last sentence. i don't understand where this gain is. Overall this paragraph has a lot of information, maybe a newline in between.}
 
 \subsection{Motor Model}\label{sub:motor_model_simscape}
 The Permanent Magnet Synchronous Motor is found in Simscape $\rightarrow$ SimPowerSystem $\rightarrow$ Simscape Components $\rightarrow$ Machines $\rightarrow$ Permanent Magnet Rotor. 
-\todo[inline]{Thomas: Irrelevant}
+\todo[inline]{Thomas: Irrelevant. Morten: Agreed!}
 This is a quite simple model, with only four parameters: Number of pole pairs, flux linkage of the magnet, inductance and armature resistance. 
 A similar block can be found in Plecs under Electrical $\rightarrow$ Machines. 
-\todo[inline]{Thomas: Again, Irrelevant}
+\todo[inline]{Thomas: Again, Irrelevant. Morten: somewhat, this intro should be rewritten slightly. doesn't matter how they are found.}
 This model has the same parameters as in Simscape, but also inertia and friction.
 
 \begin{table}[h]
@@ -178,15 +181,17 @@ This model has the same parameters as in Simscape, but also inertia and friction
 	\caption{Parameters used in simulations.}
 	\label{tab:motor_parameters_in_simulations}
 \end{table}
+\todo[inline]{Morten: Fix table with correct lowercases for Ld Lq etc. and correct greek letters for phi etc.}
 
-One thing to note in both cases is that the flux linkage is divided by the number of pole pairs.
+
+One thing to note in both  cases is that the flux linkage is divided by the number of pole pairs. \todo[inline]{Morten: i don't really get why we are looking at this. Must have better flow from the preveious section}
 The reason for this is likely a matter of definitions, and the relation has been deduced using simulations. 
 Armature resistance and inductances are per-phase, and the values used are found in section~\ref{sub:1117_param}.
 
 \subsection{Electrical Network and control}\label{sub:sim_electrical}
 This is where the Simulink and Plecs block diagram differ a lot. 
 The purpose of using Simulink is that it is quick and easy to change multiple parameters in order to develop and test a controller. 
-The advantage in Plecs is its ability to simulate switch mode power electronics, where there is a vast ratio between the minimum timestep defined by the switching frequencies, and the duration of the simulation. \todo[inline]{I am not sure i understand why this ratio is important? Martin: Different simulators have different methods. Plecs simulates right before and right after a switching event, that means 4 time steps per period per switch. Highside and lowside transistors switch at the same time, so a three phase inverter at 20 kHz means the whole circuit needs to be solved (at least) 240.000 times per second. Simulink does not solve switches as easy, so the number is significantly higher.}
+The advantage in Plecs is its ability to simulate switch mode power electronics, where there is a vast ratio between the minimum timestep defined by the switching frequencies, and the duration of the simulation. \todo[inline]{I am not sure i understand why this ratio is important? Martin: Different simulators have different methods. Plecs simulates right before and right after a switching event, that means 4 time steps per period per switch. Highside and lowside transistors switch at the same time, so a three phase inverter at 20 kHz means the whole circuit needs to be solved (at least) 240.000 times per second. Simulink does not solve switches as easy, so the number is significantly higher. Morten: worth mentoining in the text?}
 The sparse electrical network along with the discrete controller and modulation blocks have been shown in figure~\ref{fig:simulations_electrical}.
 
 \begin{figure}[h]
@@ -237,7 +242,7 @@ This can be seen on figure~\ref{fig:simulations_zybo}.
 
 The Clarke-Park and PWM generation blocks are running in variable time steps, and the Discrete controller runs with a fixed step of 0.1 \si{\milli\second}.
 The signal builder block is used to shape the torque requested by the pedal.
-This torque is converted into the current used in the controller by multiplying with $\tfrac{3}{2 KT_T}$. 
+This torque is converted into the current used in the controller by multiplying with $\tfrac{3}{2 KT_T}$. \todo[inline]{Morten I write kt as $K_t$ we should uniform it.}
 The Clarke-Park block converts $\mathrm{I_{AB}}$ to $\mathrm{I_{dq}}$. 
 
 \begin{equation}
@@ -274,12 +279,12 @@ The block diagram of the discrete controller is shown on figure~\ref{fig:sim_con
 
 The two independent current controllers are drawn in blue boxes. 
 The feedback comes from the Idq port on the left.
-The constants, Kp and Ki, are calculated in chapter~\ref{sec:controller_design}, and divided by half the battery voltage.
+The constants, Kp and Ki, are calculated in chapter~\ref{sec:controller_design}, and divided by half the battery voltage. \todo[inline]{Morten: did this change? i think you said something}
 This is done, because the controller designs produce a voltage, whereas the simulink controller produces a percentage of half the battery voltage.
 Similarly the implemented controller in chapter~\ref{sec:Embedded_Design} produces a range from -1 to 1, so the controller constants need to be scaled acordingly
-\todo[inline]{Martin: I'm actually not sure about the implemented controller.}
+\todo[inline]{Martin: I'm actually not sure about the implemented controller. Morten: who knows. i don't either}
 The integrator block uses trapezoidal integration, and the output is limited to $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$.
-This is to ensure, that the integrator does not wind up\todo{Martin: Is there a better term for when the integrator keeps becoming larger, because the output is saturated somewhere?}.
+This is to ensure, that the integrator does not wind up\todo{Martin: Is there a better term for when the integrator keeps becoming larger, because the output is saturated somewhere? Morten: Diverges? (reverse convergence)}.
 The saturation block to the left of the q current controller limits the input to between 0 and a maximum current.
 The PI controllers produce duty cycle values in the range of $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, although it is possible to exceed this range at this point in the diagram.\\
 
@@ -428,7 +433,7 @@ The simulation will be run with both PI and IP controllers, with values describe
 
 \subsubsection{PI controller}\label{sub:PI05}
 
-At first, a simulation will be run where the throttle is pressed fully from 0.12 s to 5 s, and then released.
+At first, a simulation will be run where the throttle is pressed fully from 0.12 s to 5 s, \todo[inline]{Morten: Similar to the one used in controller design section. where Kp and Ki values also are taken from} and then released.
 The load is 200 kg, which is enough to guard against wheel spin.
 The resultant current along the d and q axes have been plotted in figure~\ref{fig:Sim_results_pi_Idq}.
 
@@ -440,7 +445,7 @@ The resultant current along the d and q axes have been plotted in figure~\ref{fi
 \end{figure}
 
 Much like on figure~\ref{fig:Output_Full}, the current steps up nicely with almost no overshoot. 
-There is also a small steady state error of about 2 \%.
+There is also a small steady state error of about 2 \%. \todo[inline]{Morten: Which was expected based on the controller design where the steady state error was 5A or 1-2\%}
 The noise on both the d and q current at 1.8\si{\second} is caused by the quantization of the encoder. 
 It seems to cause a resonation when the motor is runing at 2250 RPM, that the Clake-park transformation can't handle.
 Meanwhile, the d-axis current is kept very low, at least until 2.6 seconds, when the voltage starts saturating. 
@@ -540,7 +545,7 @@ The controller will then have to match the of the full inertia.
 This transition can be seen on figure~\ref{fig:sim_results_pi_slip_acceleration_current} as a small torque undershoot.\\
 
 This controller handles wheel spin as well as could have been expected.
-It does noting to reduce slip, but the transition from slipping and non-slipping is handled rather well.\\
+It does nothing to reduce slip, but the transition from slipping and non-slipping is handled rather well.\\
 
 Figure~\ref{fig:slip_and_current_braking} shows the wheel slip and current for the timespan going from $\mathrm{5 \si{\second}}$ to $\mathrm{7.5 \si{\second}}$
 
@@ -561,7 +566,7 @@ Figure~\ref{fig:slip_and_current_braking} shows the wheel slip and current for t
 	\label{fig:slip_and_current_braking}
 \end{figure}
 
-The brake steps to $\mathrm{66 \si{\newton \meter}}$ at $\mathrm{5.36 \si{\second}}$, and ramps up until it hits a limit of $\mathrm{102 \si{\newton \meter}}$ at $\mathrm{6 \si{\second}}$.
+The brake steps to 66 \si{\newton\meter} at $\mathrm{5.36 \si{\second}}$, and ramps up until it hits a limit of $\mathrm{102 \si{\newton \meter}}$ at $\mathrm{6 \si{\second}}$. \todo[inline]{Morten: needs correct math names. also in the next bit}
 During this time, it can be seen, that the q-axis current is positive, which means, the motor produces some forward torque when the brake is active. 
 This is a flaw in the controller, that it doesn't settle quickly enough
 This results in an energy waste of $\mathrm{150 \si{\watt}}$.
@@ -582,7 +587,7 @@ In order to do that, the wire going into the Kp gain block must be connected wit
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.5\linewidth]{graphics/ip_controller_in_full_system}
-	\caption{Input to Kp gain blocks are connected to the Idq feedback wire instead of the output of the subtraction 'circle'}
+	\caption{Input to Kp gain blocks are connected to the Idq feedback wire instead of the output of the subtraction 'circle'} \todo[inline]{Morten: is this sentence finished?}
 	\label{fig:ip_controller_in_full_system}
 \end{figure}
 
@@ -607,7 +612,7 @@ Figure~\ref{fig:Sim_results_ip_Idq} shows the d and q-axis current as the contro
 \end{figure}
 
 By comparison to the PI controller, the IP controller does significantly worse.
-The steady state error of the q-controller is 10 \%, while the has a stead state error of $\mathrm{16\si{\ampere}}$.
+The steady state error of the q-controller is 10 \%, while the has a stead state error of $\mathrm{16\si{\ampere}}$. \todo[inline]{Moten: Sentence incomplete!}
 What's even worse is, that the q-axis current goes below zero before the throttle is released after $\mathrm{5\si{\second}}$.
 That means, that when driving the go-kart at full throttle, the speed of the go-kart will start oscillating quite notably.
 At 5 seconds, the throttle is released, at which point the current should be zero. 
@@ -666,7 +671,7 @@ Figure~\ref{fig:slip_and_current_braking_ip} displays the slip and current when 
 \end{figure}
 
 From 5 to 6.3\si{\second}, the wheel does not start locking. 
-However, the d and q-axis current is still oscillating from the current step displayed on figure~\ref{fig:sim_results_ip_slip_acceleration_current}, so it's hard to determine if how the controller handles non-blocking braking.
+However, the d and q-axis current is still oscillating from the current step displayed on figure~\ref{fig:sim_results_ip_slip_acceleration_current}, so it's hard to determine if how the controller handles non-blocking braking. \todo[inline]{Morten: some gramatical errors here.}
 At 6.3\si{\second}, the brakes lock, at which time, both the d and q-axis current oscillate.
 This causes the wheel deceleration to be halted at 6.5\si{\second}, as seen on figure~\ref{fig:sim_results_ip_slip_abraking}.
 Because of the slow settling time of the controller, it takes 1.1 seconds for the wheels to block completely. 
@@ -677,6 +682,7 @@ The same happens when the brake is released again.//
 
 Since neither of the two controller designs work optimally, the PI controller will be redesigned with a settling time of $\mathrm{10 \si{\milli \second}}$.
 The controller is designed for a load of $\mathrm{200 \si{\kilogram}}$.
+\todo[inline]{Morten: weird spacing in the equation and e-3 is not raised}
 The control parameters in equation~\ref{eq:10ms_settling_time_param} are divided by half the battery voltage
 
 \begin{equation}
@@ -789,8 +795,14 @@ A faster controller was calculated with tremendous results.
 	\label{tab:simulink_conclusion}
 \end{table}
 
+\todo[inline]{Morten: some colors would be perfect for this table}
+
 Both the PI controllers could work, but the faster response gives very precise current control. 
-\todo[inline]{Martin: Morten, maybe you can write something clever about why the ip controller is so bad}
+\todo[inline]{Martin: Morten, maybe you can write something clever about why the ip controller is so bad. Morten: ok will try ! this next bit is new}
+
+Based on the controller analysis in section \ref{sec:controller_design} where the IP controller was designed based on a reduced order model without any mechanical part, it must be concluded that the slow pole that was not included in the model, as seen on figure \ref{fig:PZmap_full} in that same section, is too important to remove by reducing the order of the model, resulting in an unstable result in this full simulation. 
+The IP controller itself adds a pole to the system which moves the remaining fast pole to become a complex conjugate pair that will result in a decaying oscillating response to a step. This oscillation proves to be too much when adding the slow poles of the mechanical system. As it has been proven now, this controller is not able to account for the mechanical system as a disturbance, which is unsurprising really giving the scope of the mechanics involved.
+\todo[inline]{Morten: First sentence is very long and stupid? help :P}
 
 \subsection{Plecs model}\label{sub:sim_plecs_electrical}
 As previously mentioned, the Plecs model differs vastly from the Simulink model in the electrical network, as it more closely resembles the real analog circuit. 
@@ -849,7 +861,7 @@ CthG has a thermal capacity of 2100 \si{\kelvin \per \joule}, which is based on 
 C_{th} = v \cdot C_{Rv}
 \label{eq:thermal_capacity}
 \end{equation}
-\todo{Martin: Can we quote wikipedia?}
+\todo{Martin: Can we quote wikipedia? Morten: no. at least use the sources that are on the bottom of the wiki page.}
 
 where $C_{Rv}$ is the volumetric heat capacity of aliminium, which is 2.422. 
 For a heatsink of 30x30x1 cm, the heat capacity is then 2180 \si{\kelvin \per \joule}.
@@ -868,7 +880,7 @@ L_{wire} = 12.5 \si{\nano \henry \per \centi \meter} \cdot 5 \si{\meter}
 
 The battery wire is a 150 square mm wire, at five meters long including the connection to all the batteries. 
 The 200 \si{\micro \ohm} is the resistance of the relay.
-12.5 \si{\nano \henry \per \centi \meter} is a good estimate, used by Morten Nymann.\\
+12.5 \si{\nano \henry \per \centi \meter} is a good estimate, used by Morten Nymann.\\ \todo[inline]{Morten: whos that?- add professor of blabla f.eks.}
 
 The E caps represent the electrolytic capacitor bank, consisting of 8 2200\si{\micro \farad} capacitors in parallel. 
 Bank ESR is the parallel ESR of these 8 capacitors, of 12.25 \si{\milli \ohm}.
@@ -909,7 +921,7 @@ The efficiency quickly reaches above 90 \%, which is quite good. \\
 However, there is a loss in the ESR of the E caps.
 The current ripple is displayed on figure~\ref{fig:plecs_current_ripple}
 
-\todo[inline]{Martin: Maybe this should be omitted, since we so far do not have anything about capacitor choices}
+\todo[inline]{Martin: Maybe this should be omitted, since we so far do not have anything about capacitor choices. Morten: maybe. leave it for now. Or simply explain why we don't have anythign about the caps}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.7\linewidth]{graphics/plecs_current_ripple}
@@ -957,7 +969,7 @@ It was tried to add a ESL inductor to the capacitors, but that caused the simula
 
 
 \subsection{Simulation of the Over-Current Protection Circuit}
-\todo[inline]{Thomas: I'm not sure the placement of this makes sense..}
+\todo[inline]{Thomas: I'm not sure the placement of this makes sense.. Morten: it is a bit out of context from the stuff above. but it is as a simulation so i guess its fine.}
 In order to verify the functionality of the OCP circuit discussed in section \ref{sec:ocpcircuit}, simulations of the circuit were conducted in LTSpice\footnote{LTSpice: Free simulation software by Linear Technologies.}.
 The results of the simulation will be discussed in the order of the circuit.
 As mentioned, only two of the phases are measured and the third will have to be calculated. 
