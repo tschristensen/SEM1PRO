@@ -3,7 +3,7 @@
 \section{Electronics Design}
 \label{sec:electronics}
 \todo[inline]{We should have a very broad introduction somewhere. With diagrams of all the electric board. We should write somewhere that we chose the 3-phase driver and why.  - Mikkel.}
-
+\todo[inline]{Mikkel: Powerboard is in another afsnit??}
 This section is dedicated to describing the electronics designed throughout this report.
 This includes an analog, a digital and a power board, as well as a driver board.
 Each of these boards, the choice of components and the layout will be discussed in appropriate detail in the following sections.
@@ -23,14 +23,14 @@ The only crossover between the GNDD and GNDA will happen in the DRV8301 (see sec
 The latter occurs at the over-current event signal which is generated on the analog board but used in the digital system.
 An analog signal is fed to the SN74LVC1G17, a buffer with built-in Schmitt-trigger circuitry which is supplied from the digital 3.3\si{\volt} rail.\\
 A simplified overview of the grounding planes can be seen on figure \ref{fig:groundplanes}.
-
+\todo[inline]{Mikkel: Little bit confusing?}
 \begin{figure}[!h]
 	\centering
 	\includegraphics{graphics/ground_plane}
 	\caption{Simplified view of the electronics with the ground planes marked.}
 	\label{fig:groundplanes}
 \end{figure}
-
+\todo[inline]{Mikkel: I don't think all the TEN20-4823WIN ect. names should be here.}
 As it is undesirable to have the potentially noisy GNDP present on the boards, it is constrained to one corner of the digital board.
 Here it is used to supply the TEN20-4823WIN and the TVN5-4811WI isolated dc-dc converters that generate the $\pm15$\si{\volt} and 5\si{\volt} rails respectively.
 The previously mentioned 3.3\si{\volt} rail is generated on the Zybo board.
@@ -46,7 +46,7 @@ Mainly the over-current protection, but also the torque pedal scaling is present
 \label{sec:ocpcircuit}
 In order to protect the system, it is necessary to create some form of over-current protection, OCP.
 Two choices immediately present themselves:
-
+\todo[inline]{Mikkel:Shut down the drivers= shut down gatesignals to FETS?.}
 \begin{enumerate}
 	\item The DRV8301 is equipped with current sensing circuitry that allows the chip to automatically shut down the drivers when an over-current event, OCE, occurs.
 	\item External circuitry that, based on the measurements done by the current transducers, detects an OCE and turns off the drive signals by driving the EN\_GATE signal of the DRV8301 low. 
@@ -163,6 +163,7 @@ While these current sensors are not strictly part of the analog board, the circu
 The LF 205-S utilises the Hall effect in order to measure the current flowing through a wire.
 Figure \ref{fig:lf205function} depicts an equivalent circuit of the functionality of the transducer.
 As can be seen, the LF 205-S functions like a transformer.
+\todo[inline]{Mikkel: where is the figure?}
 As per the datasheet this transformer has a 1:2000 turns ratio, therefore the secondary current, $I_S$ can be found as:
 \begin{equation}
 	\frac{I_S}{I_P}=\frac{N_P}{N_S} \quad \Rightarrow \quad I_S = \frac{I_P}{N_S}
@@ -171,7 +172,7 @@ Essentially, the LF 205-S generates a current proportional to the current flowin
 By changing the value of the resistor $R_m$, the resulting voltage drop can be dictated.
 
 In section \todo[inline]{Thomas: Section documenting the maximum current to be expected in each phase.} the maximum current to be expected in each phase is found to be 300$A$.
-As described in section \todo[inline]{Thomas: section on the zybo adc}, the ADC on the Zynq chip can work on signals in the ranges 0\si{\volt}-1\si{\volt} or $\pm0.5$\si{\volt}.
+As will be described in section \ref{sec:emb}, the ADC on the Zynq chip can work on signals in the ranges 0\si{\volt}-1\si{\volt} or $\pm0.5$\si{\volt}.
 Since the current is sinusoidal it can be negative.
 Choosing the range $\pm0.5$\si{\volt} therefore simplifies the circuitry needed to read the value correctly.
 Consequently $R_m$ needs to be set such that the maximum expected current results in the maximum allowed voltage.
@@ -180,6 +181,7 @@ Thus:
 \begin{equation}
 	R_m = \frac{0.45}{I_{Pmax}/N_S} = 3\Omega
 \end{equation}
+\todo[inline]{Mikkel: Should be updated with the real meaning of bipolar.}
 
 \subsubsection{Torque Pedal Downscale}
 The torque pedal is simply a variable resistor, $R_{tp}=7.5$\si{\kilo\ohm}. \todo[inline]{Thomas: Verify resistor value on final system}
@@ -204,10 +206,11 @@ The resistance of the pedal is assumed to change linearly, which means the volta
 Voltage at the point TP as a function of pedal is:
 
 \begin{equation}
-V_{TP}(R_P) = V_{CC} \frac{R_P}{R1 + PEDAL} \frac{R3}{R3 + R2}
+V_{TP}(R_P) = V_{CC} \frac{R_P}{R1 + R_P} \frac{R3}{R3 + R2}
 \label{eq:pedal_voltage}
 \end{equation}
-
+\todo[inline]{Mikkel: Do we need so much whitespace in this figure?}
+\todo[inline]{Mikkel: IS there a reason why numbers on resistors are not subscripted?.}
 By isolating $\mathrm{R_P}$, it's possible to calculate what its resistance is. 
 The resistance of $\mathrm{R_P}$ varies from $0$ to 7.5\si{\kilo\ohm}, as the pedal is pressed down. 
 Hence, equation~\ref{eq:pedal_back_calc} will give a value proportional to the torque requested by the driver
@@ -237,11 +240,13 @@ This signal is produced by the torque pedal.
 When the user actuates the pedal a switch is connected to ground. 
 By reading the drive enable signal it is therefore possible to determine when the controller should be running, allowing a means for avoiding integral windup.
 Since this signal is left floating when the pedal is not active, it can be routed directly to the Zybo, using the internal pull-up resistors.
+\todo[inline]{Mikkel: It has nothing to do with windup, but reset .}
 \todo[inline]{Thomas: Is the torque pedal active low or active high? Correct two places above to reflect the correct case}
 \subsubsection{Driver Enable Circuit}
 \label{sec:nor}
 The DRV8301 is equipped with a pin called \texttt{EN\_GATE}.
 If, while running, this pin is pulled low, the drive signals are immediately shut down.
+\todo[inline]{Mikkel: Gate signals.}
 This feature allows for fast and reliable shut down of the motor in case of any detected faults.
 There are two different types of faults detected within the system, the aforementioned OCE and an over-temperature event, OTE.
 In addition to these two a signal is routed from the Zybo which enables the digital part of the system to disable/enable the motor, should the need arise.
@@ -285,7 +290,7 @@ The third and final board created in this project is the driver board.
 This board is made exclusively to house the DRV8301, the driver chip chosen for this project.
 The reason for the seemingly superfluous board is that there is no equipment available capable of creating the small footprint of the chip.
 Therefore this board is made by an external fabricator.\\
-
+\todo[inline]{Mikkel: Can nobody make it? ;).}
 The DRV8301 is a three-phase gate driver with a built-in buck converter.
 Additionally it features both dead time control as well as over-current protection.
 This chip is made specifically with driving PMAC motors in mind, making it an ideal candidate for this project.
