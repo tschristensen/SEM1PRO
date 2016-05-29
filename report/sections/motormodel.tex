@@ -48,7 +48,7 @@ A state space model is derived from the physical representation of a PMSM motor,
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\linewidth,trim=4cm 7cm 4cm 0cm]{graphics/full_order_with_resistances_to_pdf}
+	\includegraphics[width=.95\linewidth]{graphics/full_order_with_resistances_to_pdf}
 	\caption{PMSM motor state space model.}
 	\label{fig:State_space_model1}
 \end{figure}
@@ -59,7 +59,7 @@ Reducing this model to use transfer functions for the electrical and mechanical 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\linewidth,trim=4cm 7cm 4cm 0cm]{graphics/full_order_as_tf_without_resistances_to_pdf}
+	\includegraphics[width=.95\linewidth]{graphics/full_order_as_tf_without_resistances_to_pdf}
 	\caption{PMSM motor model without torque load and wind resistance.}
 	\label{fig:State_space_model3}
 \end{figure}
@@ -70,7 +70,7 @@ Whether this is a correct assumption will be tested with a simulation of either 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\linewidth,trim=4cm 7cm 4cm 0cm]{graphics/electrical_reduced_order_to_pdf}
+	\includegraphics[width=.95\linewidth]{graphics/electrical_reduced_order_to_pdf}
 	\caption{Reduced order PMSM motor model.}
 	\label{fig:State_space_model_reduced_order}
 \end{figure}
@@ -80,13 +80,13 @@ A pole-zero map of both models will be used to see whether the pole is as expect
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[t]{.45\linewidth}
-		\includegraphics[width=\textwidth,trim=4cm 9cm 4cm 9cm]{graphics/full_order_model_pz_map}
+		\includegraphics[width=\textwidth]{graphics/full_order_model_pz_map}
 		\caption{PZ map of full order model}
 		\label{fig:PZmap_full}
 	\end{subfigure}
 	\hspace{0.5cm}
 	\begin{subfigure}[t]{.45\linewidth}
-		\includegraphics[width=\textwidth,trim=4cm 9cm 4cm 9cm]{graphics/reduced_order_model_pz_map}
+		\includegraphics[width=\textwidth]{graphics/reduced_order_model_pz_map}
 		\caption{PZ map of reduced order model}
 		\label{fig:PZmap_Reduced}
 	\end{subfigure}
@@ -120,7 +120,7 @@ The two state space models will be simulated with MatLab Simulink to see how muc
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1\linewidth,trim=5cm 6cm 5cm 6cm]{graphics/mechanical_reduced_order_to_pdf}
+	\includegraphics[width=1\linewidth]{graphics/mechanical_reduced_order_to_pdf}
 	\caption{Reduced order PMSM motor model version 2.}
 	\label{fig:State_space_model_reduced_order_v2}
 \end{figure}
@@ -129,7 +129,7 @@ This model is basically an LR circuit where the output is the current between L 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.55\linewidth,trim=5cm 4cm 5cm 4cm]{graphics/reduced_order_model_v2_pz_map}
+	\includegraphics[width=.55\linewidth]{graphics/reduced_order_model_v2_pz_map}
 	\caption{PZ map of the reduced order model version 2}
 	\label{fig:PZmap_reduced_v2}
 \end{figure}
@@ -153,7 +153,7 @@ A control loop is added to the model, figure \ref{fig:State_space_model4}. It mu
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\linewidth,trim=3cm 4cm 3cm 4cm]{graphics/full_order_as_tf_with_controller_to_pdf}
+	\includegraphics[width=.95\linewidth]{graphics/full_order_as_tf_with_controller_to_pdf}
 	\caption{Full PMAC motor model with a current control loop.}
 	\label{fig:State_space_model4}
 \end{figure}
@@ -166,14 +166,14 @@ The model of figure \ref{fig:State_space_model4} can be rearranged to simplify t
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\linewidth,trim=3cm 4cm 3cm 4cm]{graphics/full_order_rearranged_to_pdf}
+	\includegraphics[width=.95\linewidth]{graphics/full_order_rearranged_to_pdf}
 	\caption{PMSM motor model rearranged to simplify the transfer function.}
 	\label{fig:State_space_model5}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\linewidth,trim=4cm 3cm 4cm 3cm]{graphics/plant_with_pi_to_pdf}
+	\includegraphics[width=.95\linewidth]{graphics/plant_with_pi_to_pdf}
 	\caption{PMAC motor model as a plant with PI control}
 	\label{fig:State_space_model6}
 \end{figure}
@@ -309,7 +309,7 @@ The pole-zero map for the transfer function including the controller confirms th
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.55\linewidth,trim=4cm 3cm 4cm 3cm]{graphics/full_order_w_pid_to_pdf}
+	\includegraphics[width=.55\linewidth]{graphics/full_order_w_pid_to_pdf}
 	\caption{PZ map with the controller}
 	\label{fig:PZmap_Control_full}
 \end{figure}
@@ -336,7 +336,7 @@ Finding the controller values for this model is done as it was for the full orde
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\linewidth,trim=4cm 3cm 4cm 3cm]{graphics/plant_with_ip_to_pdf}
+	\includegraphics[width=.95\linewidth]{graphics/plant_with_ip_to_pdf}
 	\caption{Reduced order system with an IP controller}
 	\label{fig:IPcontroller1}
 \end{figure}
@@ -369,7 +369,7 @@ The transfer function including these values result in the pzmap of figure \ref{
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.55\linewidth,trim=4cm 3cm 4cm 3cm]{graphics/reduced_order_model_w_ip_controller_to_pdf}
+	\includegraphics[width=.55\linewidth]{graphics/reduced_order_model_w_ip_controller_to_pdf}
 	\caption{PZ map of the reduced order system with an IP controller}
 	\label{fig:PZmapIPcontroller1}
 \end{figure}
