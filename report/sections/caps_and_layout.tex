@@ -1,0 +1,46 @@
+%!TEX root = ../main.tex
+\subsection{Capacitors}\label{sub:Capacitors}
+This section attempts to determine the ammount of capacitance needed in the inverter. At first the AC characteristics will be determined, and then the transient characteristics.
+
+In order to keep the voltage of the inverter constant, a bank of capacitors will be mounted at the end of the wires going fro the battery to the inverter.
+High capacity aluminum electrolytic capacitors will be used to reduce handle low frequency noise, and film capacitors will be used to handle the higher frequencies.
+The shunt capacitors will act as a low pass filter together with the inductance of the wires going from the battery to the inverter. 
+In order to determine the size of the capacitors, the parameters of the wire must first be determined \\
+
+The wire acts as a resistor and an inductor in series. The resistance is determined by equation~\ref{eq:wire_resistance}. 
+
+\begin{equation}
+R_{w} = \frac{\rho l}{A}
+\label{eq:wire_resistance}
+\end{equation} 
+
+where $\rho$ is electrical resistivity of the wire, l is the length, and A is the cross section area.\\
+The inductance of a wire loop can be estimated by~\ref{eq:inductance_guestimate}\cite{wire_inductance}
+
+\begin{equation}
+L_w = \mu _0 l \Big(\ln \big(\tfrac{8l}{r}\big) - 2\big)
+\label{eq:inductance_guestimate}
+\end{equation}
+
+where l is the length, and r is the cross section area of the wire. 
+Resistance is a quite accurate, but induction is a fairly rough guesstimate.
+The inductance of the wire applies to a circular wire without, whereas the wire used is strapped to the steel frame of the gokart. //
+
+The length of the wire is approximately 4 meters m, and the cross section area is 35 \si{\milli \meter \squared}, hence the radius is 3.3 \si{\milli \meter}.
+These values yield values listed in equation~\ref{eq:wire_parameters}.
+
+\begin{equation}
+\begin{split}
+R_w = 1.9 \si{\milli \ohm} \\
+L_w = 36 \si{\micro\henry}
+\label{eq:wire_parameters}
+\end{split}
+\end{equation}
+
+A capacitor size should be chosen, so that the capacitors do not resonate with the inductor.
+The chosen capacitors are 8 2200~\si{\micro\farad} electrolytic capacitors, and 8 4.7~\si{\micro\farad} film capacitors.
+The large capacitance of the 8 electrolytic capacitors would reduce the voltage ripple caused by the switching of the high side transistors. 
+The capacitors are rated for a RMS current of 4.06 A each, which is 32.48 A in total. 
+However, simulating repetitive current pulses puts the current ripple in the order of 150 A.
+
+\subsection{Construction of the inverter}\label{sub:construction_of_inverters}
