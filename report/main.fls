@@ -463,6 +463,9 @@ INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/driver_enable_signa
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/lls.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/lls.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/lls.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/irrelay.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/irrelay.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/irrelay.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/drv8301pinout.png
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/drv8301pinout.png
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/drv8301pinout.png
@@ -522,9 +525,6 @@ INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/tikz/Block_diagram1
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/PwmTask2.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/PwmTask2.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/PwmTask2.pdf
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/spi_timing.png
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/spi_timing.png
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/spi_timing.png
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/spi.eps
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/spi.eps
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/spi.eps
@@ -534,6 +534,15 @@ INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/spi.eps
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/spi-eps-converted-to.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/spi-eps-converted-to.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/spi-eps-converted-to.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/timing.eps
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/timing.eps
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/timing.eps
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/timing-eps-converted-to.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/timing-eps-converted-to.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/timing.eps
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/timing-eps-converted-to.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/timing-eps-converted-to.pdf
+INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/timing-eps-converted-to.pdf
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/threephaseinverter.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/threephaseinverter.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/threephaseinverter.pdf
