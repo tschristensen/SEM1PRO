@@ -25,7 +25,6 @@
 
 \usepackage{todonotes}
 \usepackage{listings}
-\usepackage{standalone}
 
 \usepackage{chngcntr} %Change the counters of objects. Used to make figure/table and equation counting specific to the section they are in.
 \counterwithin{figure}{section}
@@ -122,6 +121,7 @@
 \clearpage
 \newpage
 \pagenumbering{arabic}
+<<<<<<< HEAD
 \input{sections/introduction}
 \input{sections/requirements}
 \input{sections/systemdescription}
@@ -132,6 +132,18 @@
 \input{sections/PMACmotor}
 \input{sections/motormodel}
 \input{sections/simulation}
+=======
+%\input{sections/introduction}
+%\input{sections/requirements}
+%\input{sections/systemdescription}
+%\input{sections/systemdiagram}
+%\input{sections/boardlayout}
+%\input{sections/zybo}
+%\input{sections/threephaseinverter}
+\input{sections/PMACmotor}
+\input{sections/motormodel}
+%\input{sections/simulation}
+>>>>>>> bb4893ca9bbf5f8493e1ae8b19d737a1a3946f33
 \input{sections/testsetup}
 \input{sections/conclusion}
 \newpage

@@ -108,7 +108,7 @@ P_{loss} = P_{c} + P_{sw}
 
 For simplicity the power loss will be estimated from a single phase of the inverter circuit seen in figure~\ref{fig:single_phase}. 
 The Current $I_{out}$ is drawn by some load $R_{load}$ that will absorb the load power $P_{load}$ which is given by equation\ref{eq:p_load}. 
-Since there are two switches, the load power must be delivered equally from both. Thus the output power, $P_{Q}$, of each switch is given by equation~\ref{eq:P_Q}  
+Since there are two switches, $Q_1$ and $Q_2$, the load power must be delivered equally from both. Thus the output power, $P_{Q}$, of each switch is given by equation~\ref{eq:P_Q}  
 
 
 \begin{figure}[!h]
@@ -289,18 +289,32 @@ dt = nC\dfrac{dV}{I_{gs}}
 
 
 
+\subsection{Total Power loss}
 
-\todo{Erlingur - describe the figures and make table of the resaults}
+The power losses are calculated for up to 10 MOSFETs in parallel using equations~\ref{eq:P_c}, \ref{eq:P_sw} and~\ref{eq:p_loss} where the switching frequency is $f_s = 20kHz$. Figures~\ref{fig:ploss_single} and~\ref{fig:ploss_comb} show the results.
 
-\begin{table}[h!]
+
+\begin{figure}[h!]
 	\centering
-	\caption{text}
-	\begin{tabular}{|c|c|c|}
-		content...
-	\end{tabular}
-	\label{tab:results}
-\end{table}
+	\includegraphics[scale = 0.5]{graphics/pwr_loss_single}
+	\caption{Power losses of a single MOSFET in a parallel setup as a function of number of MOSFETs}
+	\label{fig:ploss_single}
+\end{figure}
+
+In Figure~\ref{fig:ploss_single} the losses are calculated for each MOSFET in a parallel setup of $n$ MOSFETs. 
+One will notice, as former stated, that the number of MOSFETs in parallel, effects the power loss much.
+The conduction loss will decrease fast and will become close to nothing when $n$ increases. This happens because the current is equally divided between the MOSFETs, thus, each MOSFET has less current flowing through. The switching loss however increases with $n$ and will become dominant. In that case the gate capacitance will increase by a factor of $n$ causing the switching loss to increase.
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale = 0.5]{graphics/pwr_loss_comb}
+	\caption{Combined power losses of each parallel setup as a function of number of MOSFETs}
+	\label{fig:ploss_comb}
+\end{figure}
+
+From the combined power loss shown in figure~\ref{fig:ploss_comb}, it is clear that the total power loss is smallest when $n = 2$ or $P_{loss} \approx 95W$. The design will have two MOSFETs in parallel switching each phase. The total power loss will then become for all three phases, six parallel setups.
+
+\begin{equation*}
+P_{loss} = 95*6 = 570W
+\end{equation*}
 
 
-
-\pagebreak
