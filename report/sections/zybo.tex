@@ -193,8 +193,7 @@ The resistance of the torque pedal potentiometer is calculated from the measured
 
 $I_a$, $I_b$, $I_c$ and $\theta$ are then used to perform a Clarke Park transformation and obtaining the values of $I_d$ and $I_q$. 
 $I_d$ and $I_q$ should be controlled towards a set point by two separate controllers.
-The point for $I_d$ is 0 as will be explained later?? .
-\todo[inline]{Thomas: I can't wait to see this explanation! Where is it!?} 
+The point for $I_d$ is 0 as will be explained in section  \ref{sec:controller_design}. 
 The point, $q_{set}$, for $I_q$ should be related to the maximum allowed current, $q_{max}$, and the position of the torque pedal in percent, $pedal_\%$:
 \begin{equation}
 	q_{set} = pedal_\% \cdot q_{max}
@@ -252,9 +251,6 @@ The global enable variable is checked and passed to the enable pin.
 	\caption[Block diagram of PWM task.]{Block diagram showing the functionality of the PWM task.}
 	\label{fig:pwm_task}
 \end{figure}
-
-\todo[inline]{Where should we talk about the concept of dq and the meaning of it? -MIkkel}
-\todo[inline]{Third harmonic injection and why. DO we write about it and where???? -MIkkel}
 
 \subsubsection{ADC}
 The Zynq chip contains a dual 12-bit, 1 Mega sample per second (MSPS) Analog-to-Digital Converter (ADC) \cite{adc}.
@@ -365,7 +361,7 @@ SPI 1 on the Zynq is used as it can be ported to MIO channels 10 to 15, which ca
 The SPI controller is initialized in software and is configured to be in master mode, manual chip select mode and manual start mode by writing to the configuration register Config\_reg0.
 In order to comply with the SPI specifications of the DRV8301 it was configured with the XSPIPS\_CLK\_PHASE\_1\_OPTION in order to make data valid on falling edges of the clock. 
 The discharge of a capacitor is utilized to make a delay on the Slave Select signal, by putting a XX capacitor and XX resistor in series with the signal.
-\todo[inline]{Thomas: Are they in series?}
+\todo[inline]{Thomas: Are they in series? + numbers instead of XX XX}
 The transmission of \texttt{0b0001000000110000} was measured using an oscilloscope and can be seen in figure \ref{fig:spi_graph}.
 
 \begin{figure}[!h]
