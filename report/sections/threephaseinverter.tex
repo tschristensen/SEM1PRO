@@ -1,47 +1,57 @@
 %!TEX root = ../main.tex
 \section{Three phase inverter}
 This section will describe the design of the three-phase inverter used to drive the PMAC motor in this project.
-This includes the calculations and considerations done  
+This includes the calculations and considerations done.
 Initially, a short overview of the principle of operation of a three-phase inverter is given.
 
 \subsection{Principle of Operation of the Three-Phase Inverter}
 A three-phase inverter enables the use of a DC supply in variable frequency control of a three-phase load.
 In this project the DC supply is a battery and the load, a PMAC motor.
 Figure \ref{fig:threephaseinverter} is a simulink model showing the most basic three-phase inverter.
-As can be seen, the inverter three half-bridges for a total of six switches.
-Each pair of switches can never be on at the same time as this would result in a short circuit of the power rail.
+As can be seen, the inverter consists of three half-bridges for a total of six switches.
+Each pair of switches can never be on at the same time as this would result in shorting the battery.
 
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=\linewidth,trim=0cm 5cm 0cm 1cm]{graphics/threephaseinverter}
-	\caption{Simulink model of a simple three-phase inverter.}
+	\caption{Simulink model of a simple three-phase inverter for a balanced load.}
 	\label{fig:threephaseinverter}
 \end{figure}
+
+This type of inverter only works with a balanced load, such as the PMAC motor.
+A balanced three-phase load implies, that the sum of current in the three phases is zero, and no current through a neutral wire.
+As the inverter does not have a connection to the neutral point of the load, it could not supply an unbalanced load, such as those in UPS'es and solar cells.
+\todo[inline]{Martin: added something about it being a balanced load}
 
 Several schemes exist to control the switches.
 Throughout this project a PWM modulation technique using sinusoids as references is used.
 Figure \ref{fig:countercarrier} is a depiction of the modulation technique.
 A counter is continuously counting up and down, creating a triangle wave.
+\todo[inline]{Martin: This is not about the software, so how we generate the PWM isn necessary}
 This is called the carrier wave.
 The carrier wave is compared to a sinusoidal reference signal.
 The frequency of the sinusoidal will be the fundamental frequency of the output voltage.
+\todo[inline]{Martin: Not sure what you mean by output voltage}
 Whenever the reference cross the carrier wave, the gate voltages of the relevant half-bridge invert, of course taking into account the necessary dead time to avoid short circuiting the power rail.
 
-\begin{figure}
+\begin{figure}[h!]
 	\centering
 	\includegraphics[width=\linewidth]{graphics/countercarrier}
 	\caption{Naturally sampled PWM using a sinusoid as fundamental frequency.}
 	\label{fig:countercarrier}
 \end{figure}
+\todo[inline]{Martin: Maybe get a darker color for the lower plot}
+\todo[inline]{Martin: We should extend this to a three phase inverter, as this is only one half bridge, and that is not even a DC inverter}
 
 \subsection{Choosing the MOSFETs}
 \label{sec:mosfet}
 Before choosing the MOSFETs one will have to keep in mind the application parameters.
 Firstly the voltage of the batteries\cite{superB} will on full charge have nominal voltage of 52.8V and a maximum end of charge voltage at 60.8V.
-The MOSFETs will therefor need to be able to handle a minimum drain to source voltage, $V_{DSS}$, of 60.8V. 
+\todo[inline]{Martin: The end of charge voltage is the maximum. 52.8 is the average, used to indicate power capacity of the battery}
+The MOSFETs will therefor need to be able to handle a minimum drain to source voltage, $V_{DS}$, of 60.8V. 
 Secondly, the current drawn by the motor can reach a maximum peak of 300A.
 Thirdly, the motor driver\cite{DRV8301} will supply a gate voltage, $V_{GS}$, of 9.5V to 11.5V. 
-The MOSFETs will therefor need to be fully operating at $V_{GS} = 9.5V$ and be able to handle the driver supplied range.
+The MOSFETs will therefor need to be fully conducting at $V_{GS} = 9.5V$ and be able to handle the driver supplied range.
 The three main requirements are listed in table \ref{tab:req1}\\
 
 \begin{table}[h!]
@@ -58,7 +68,7 @@ The three main requirements are listed in table \ref{tab:req1}\\
 	\label{tab:req1}
 \end{table}
 
-Do to high currents through the MOSFETs, the heat dissipation is assumed to be high as well. 
+Due to high currents through the MOSFETs, the heat dissipation is assumed to be high as well. 
 To prevent overheating and burning out the MOSFETs they will be mounted on to a heat sink. 
 Therefore a through hole package will be suitable for this application. The chosen package is the TO-247. And the MOSFET International rectifier power MOSFET IRFP4468PBF is chosen\todo{Erlingur - why this package and MOSFET?}.
 
@@ -87,7 +97,7 @@ Therefore a through hole package will be suitable for this application. The chos
 \label{tab:MOSdata}
 \end{table}
 
-The MOSFET parameters in table~\ref{tab:MOSdata} seems to add up to all the requirements in table~\ref{tab:req1}. \todo{well not really. Even the silicon limit isn't enought to handle 300 A comfortably.}
+The MOSFET parameters in table~\ref{tab:MOSdata} seems to add up to all the requirements in table~\ref{tab:req1}. \todo{Martin: well not really. Even the silicon limit isn't enought to handle 300 A comfortably.}
 However the TO-247 package has a continuous drain current limit of 195A that is only around two third of the minimum current requirement. 
 This problem can be solved using at least two MOSFETs in parallel. 
 Using the parallel setup, the MOSFETs are assumed to share the current equally. 
@@ -98,7 +108,6 @@ As will be later discussed, parallel setup will also have effect on the total po
 
 \subsection{Power Loss}
 
-
 The total power loss, $P_{loss}$ of a switching device can be estimated using equation~\ref{eq:p_loss} where $P_c$ and $P_{sw}$ are conduction- and switching losses respectively.  
 
 \begin{equation}
@@ -107,7 +116,7 @@ P_{loss} = P_{c} + P_{sw}
 \end{equation}
 
 For simplicity the power loss will be estimated from a single phase of the inverter circuit seen in figure~\ref{fig:single_phase}. 
-The Current $I_{out}$ is drawn by some load $R_{load}$ that will absorb the load power $P_{load}$ which is given by equation\ref{eq:p_load}. 
+The current $I_{out}$ is drawn by some load $R_{load}$ that will absorb the load power $P_{load}$ which is given by equation\ref{eq:p_load}. 
 Since there are two switches, $Q_1$ and $Q_2$, the load power must be delivered equally from both. Thus the output power, $P_{Q}$, of each switch is given by equation~\ref{eq:P_Q}  
 
 
@@ -129,7 +138,9 @@ P_{Q} = \dfrac{P_{load}}{2} = R_{load} I_{Qi,rms}^2
 \label{eq:P_Q}
 \end{equation}
 
-With insertion of equation~\ref{eq:p_load} into~\ref*{eq:P_Q} and solving for $I_{Qi,rms}$, equation~\ref{eq:I_qrms} is formed.
+\todo[inline]{Martin: Don't consider the Rload when looking at I\_Q}
+
+With insertion of equation~\ref{eq:p_load} into~\ref{eq:P_Q} and solving for $I_{Qi,rms}$, equation~\ref{eq:I_qrms} is formed.
 
 \begin{equation}
 \dfrac{R_{load} I_{out,rms}^2}{2} = R_{load} I_{Qi,rms}^2 \rightarrow I_{Qi,rms} = \dfrac{I_{out,rms}}{\sqrt{2}} 
@@ -142,6 +153,8 @@ I_{Qi,rms} = \dfrac{I_{out,rms}}{\sqrt{2}} = \dfrac{I_{out}}{\sqrt{2}\sqrt{2}} =
 \label{eq:I_qi}
 \end{equation}
 
+\todo[inline]{Martin: I think there's a shorter way to this conclusion: Since each mosfet is on half the time, it is safe to assume that half the current out must be cunducted by each mosfet}
+
 As mentioned earlier each switching setup will consist of $n$ number of MOSFETs in parallel. Therefor the Drain current of each parallel MOSFET becomes $I_{Pi,rms}$ in equation~\ref{eq:I_pi}.
 
 \begin{equation}
@@ -149,9 +162,7 @@ I_{Pi,rms}=\dfrac{I_{Qi,rms}}{n} = \dfrac{I_{out}}{2n}
 \label{eq:I_pi}
 \end{equation}
 
-
-
-\subsubsection{Conduction loss}
+\subsubsection{Conduction loss}\label{sub:Cunduction_loss}
 
 
 Conduction loss of the MOSFETs can be calculated using equation~\ref{eq:p_c}
@@ -162,12 +173,12 @@ P_{c} = R_{DS(on)} I_{Pi,rms}^2
 \end{equation}
 
 
-Although listed in the datasheet, the drain to source resistance $R_{DS(on)}$ only applies to the  $T_J = 25^{\circ}$C condition. 
+Although listed in the datasheet, the drain to source resistance $R_{DS(on)}$ only applies to the  $T_J = 25 \si{\degree \celsius}$ condition. 
 The resistance will vary with the junction temperature $T_J$. 
 The relation between $T_J$ and $R_{DS(on)}$ can be seen in figure~\ref{fig:tj_rds} from where the multiplication factor $\alpha$ in equation~\ref{eq:Rdstj} can be estimated.
 
 \begin{equation}
-R_{DS(on),@T_J} =  \alpha R_{DS(on),@25^{\circ}C}
+R_{DS(on),@T_J} =  \alpha R_{DS(on),@25\si{\degree \celsius}}
 \label{eq:Rdstj}
 \end{equation}
 
@@ -178,16 +189,17 @@ R_{DS(on),@T_J} =  \alpha R_{DS(on),@25^{\circ}C}
 	\label{fig:tj_rds}
 \end{figure}
 
-If assumed that the junction temperature will be around $100^{\circ}C$ one can estimate the factor being somewhere close to $\alpha = 1.6$. 
+If assumed that the junction temperature will be around $100 \si{\degree \celsius}$ one can estimate the factor being somewhere close to $\alpha = 1.6$. 
 The conduction loss for each MOSFET in parallel can then be estimated using equations~\ref{eq:p_c}, \ref{eq:I_pi} and \ref{eq:Rdstj} to form equation~\ref{eq:P_cp}.
 
 \begin{equation}
-P_{c} = R_{DS(on),@100^{\circ}C} I_{Pi,rms}^2 =  R_{DS(on),@100^{\circ}C} \bigg(\dfrac{I_{out}}{2n}\bigg)^2
+P_{c} = R_{DS(on),@100\si{\degree \celsius}} I_{Pi,rms}^2 =  R_{DS(on),@100\si{\degree \celsius}} \bigg(\dfrac{I_{out}}{2n}\bigg)^2
 \label{eq:P_cp}
 \end{equation}
+\todo[inline]{Martin: Is this instantaneous power loss, or continious}
 
 \subsubsection{Switching loss}
-The switching loss happens when the MOSFETs go from the on state to the off state and vice versa. \todo{Erlingur - need to explain better}
+Whenever any MOSFET is switching from its on state to its off state or vice versa, a small amount of energy is lost, as the MOSFET passes through its active region.
 This loss can be found with experiments or estimated from calculations. 
 An experiment will not be carried out at this point but the loss will be estimated with calculations and assumptions using equation~\ref{eq:P_sw}.
 
@@ -196,8 +208,7 @@ P_{sw} = \dfrac{1}{2} V_{in} I_0 (t_{c,on} + t_{c,off} ) f_{s}
 \label{eq:P_sw}
 \end{equation}
 
-
-Where $I_0$ is the drain current, $I_{Pi,rms}$, of each MOSFET from equation~\ref{eq:I_pi} and. 
+where $I_0$ is the drain current, $I_{Pi,rms}$, of each MOSFET from equation~\ref{eq:I_pi} and $\mathrm{V_{in}}$ is the supply voltage for the inverter. 
 The times $t_{c,on} $ and $ t_{c,off} $ are the combined on and off time respectively and are defined in figure~\ref{fig:sw_loss} as equation~\ref{eq:time_on} and~\ref{eq:time_off}
 
 \begin{figure}[h!]
@@ -214,9 +225,10 @@ t_{c,off} = t_{rv} + t_{fi}
 \label{eq:time_off}
 \end{eqnarray}
 
+\todo[inline]{Martin: Should be an explaination of what the subscribts mean.}
 
-
-The $V_{DS}$ rise and fall times $t_{rv}$ and $t_{fv}$ in figure~\ref{fig:sw_loss} are defined in the MOSFET datasheet~\cite{IRF4468PbF} as the rise and fall times $t_r$ and $t_f$ seen in figure~\ref{fig:sw_time_wavef}. The times are listed in table~\ref{tab:tf_tr}. equation~\ref{eq:tfv_tr} and \ref{eq:trv_tf} show the relation.
+The $V_{DS}$ rise and fall times $t_{rv}$ and $t_{fv}$ in figure~\ref{fig:sw_loss} are defined in the MOSFET datasheet~\cite{IRF4468PbF} as the rise and fall times $t_r$ and $t_f$ seen in figure~\ref{fig:sw_time_wavef}. The times are listed in table~\ref{tab:tf_tr}.
+Equation~\ref{eq:tfv_tr} and \ref{eq:trv_tf} show the relation.
 
 \begin{figure}[h!]
 	\centering
@@ -287,11 +299,11 @@ dt = nC\dfrac{dV}{I_{gs}}
 \label{eq:dt}
 \end{equation}
 
-
+\todo[inline]{Martin: I assume, that n is still number of mosfets in parallel? This also assumes, that we can charge the gates with a constant current, which we cant with a gate resistor of 4.5 Ohm}
 
 \subsection{Total Power loss}
 
-The power losses are calculated for up to 10 MOSFETs in parallel using equations~\ref{eq:P_c}, \ref{eq:P_sw} and~\ref{eq:p_loss} where the switching frequency is $f_s = 20kHz$. Figures~\ref{fig:ploss_single} and~\ref{fig:ploss_comb} show the results.
+The power losses are calculated for up to 10 MOSFETs in parallel using equations~\ref{eq:P_cp}, \ref{eq:P_sw} and~\ref{eq:p_loss} where the switching frequency is $f_s = 20kHz$. Figures~\ref{fig:ploss_single} and~\ref{fig:ploss_comb} show the results.
 
 
 \begin{figure}[h!]
@@ -318,3 +330,4 @@ P_{loss} = 95*6 = 570W
 \end{equation*}
 
 
+\todo[inline]{Martin: We should write something about the Driver and the capacitor choices}
