@@ -14,8 +14,7 @@ An analysis of the complete system yielded the functionalities listed below for 
 \begin{itemize}
 \item Digital inputs and outputs
 \item Generating PWM
-\item Measuring voltage output from LEM sensors and foot pedal
-\todo[inline]{Thomas: it is a voltage being measured, but we are indirectly measuring a current?}
+\item Measuring voltage output from LEM sensors and torque pedal
 \item UART communication with external PC
 \item Control algorithms for dq-control
 \item Read position from encoder
@@ -24,18 +23,13 @@ An analysis of the complete system yielded the functionalities listed below for 
 
 As can be seen on the list there are multiple tasks that needs to be handled. 
 Optimally, these tasks should be run at different speeds.
-For instance, the PWM switching frequency should be 20\si{\kilo\hertz} as described in section ????.
-\todo[inline]{Thomas: Section that describes pwm switching losses?}
+For instance, the PWM switching frequency should be 20\si{\kilo\hertz} as described in section \ref{sec:inverter}.
 As this is quite fast it should be handled in PL. 
 The rest can be handled in PS.
 In order to more easily run tasks at different frequencies it was chosen to use khaOS, a Run To Complete Scheduler (RTCS) system made by Karsten Holm Andersen.
-\todo[inline]{Thomas: Are there any papers on khaOS that we could reference?}
 Using an RTCS simplifies scheduling tasks to run at different frequencies.
-\todo[inline]{Thomsa: An/A RTCS?!}
 
 As an RTCS has no way to preempt tasks it leaves the responsibility of preserving real time performance of the system to the programmer.
-When the software is finished tests should be performed to verify real time performance.
-\todo[inline]{Thomas: I would assume that the software is finished when i read a report on the software?}
 khaOS was chosen before other RTCS as the group had prior knowledge about the system from an Embedded Systems course.
 
 \subsection{Architecture}
@@ -65,8 +59,7 @@ Furthermore center aligned PWM has the benefit of producing symmetrical PWM.
 Symmetrical PWM has a well defined midpoint where the current can be sampled correctly. \todo[inline]{Thomas: Do you ever touch on why it is difficult to sample correctly?}
 The high limit for the counter can be calculated for a given frequency, $f$, by the following:
 $$H = L + \frac{f_{Zybo}}{f\cdot 2}$$
-Where H is the high limit, L is the low limit and $f_{zybo}$ is the AXI-clock frequency.
-\todo[inline]{Thomas: This is the first time AXI is mentioned - reader is unaware of what that means.}
+Where H is the high limit, L is the low limit and $f_{zybo}$ is the Zybo clock frequency.
 The PWM counter system can be seen in figure \ref{fig:pwm_counter}.
 The counter block will count up or down depending on the input. 
 The output from the counter value will go into to two compare blocks along with the high and low limits.
@@ -82,13 +75,12 @@ The counter out signal can be seen in figure \ref{fig:pwm_graph}.
 This signal is then fed into the PWM generator shown in figure \ref{fig:pwm}. 
 The duty cycle is given to the PWM generator as data type u32, an integer type.
 Therefore the dutycycle is given in a range of 0 to 1000, giving a resolution of 0.1\%.
+The switching limit is the value, where when the counter value equals, switches the polarity of the PWM output.
 The switching limit is calculated from the following:
-\todo[inline]{Thomas: Switching limit being the value of the counter where the switch happens?}
 $$l = (1 - \frac{d}{1000}) \cdot r$$
 Where l is the switching limit, d is the dutycycle in the range 0 - 1000 and r is the counter range.
 A register will then make sure that the switching limit is only applied when the counter is lowest.
-This is important as otherwise the dutycycle may be corrupted.
-\todo[inline]{Thomas: How and why?}
+This is important as otherwise the dutycycle may be corrupted by misaligning the PWM.
 The compare block will make the PWM signal by comparing the switcing limit to the counter value.
 The counter signal and output of the PWM generator can be seen in figure \ref{fig:pwm_graph}.
 As the PWM generator should be able to do three independent PWM signal there are three of the systems shown in figure \ref{fig:pwm}, one for each phase.
@@ -100,12 +92,6 @@ As the PWM generator should be able to do three independent PWM signal there are
 	\label{fig:pwm}
 \end{figure}
 
-<<<<<<< HEAD
-=======
-\todo[inline]{Thomas: The first two blocks in \ref{fig:pwm} seem to be broken?}
-\todo[inline]{Thomas: I would like it if the signals in the diagrams were given space-less names: counter\_out}
-
->>>>>>> fc976f2978e24ae58fd6434c622b02ccd02d0a17
 \begin{figure}[!h]
 	\begin{center}
 		\includegraphics[width=\linewidth]{graphics/pwm_plot}
@@ -133,14 +119,11 @@ The basic functionality of the interface task can be seen in the flowchart of fi
 	\caption[Interface task.]{Flow chart illustrating the basic functionality of the interface task.}
 	\label{fig:interface}
 \end{figure}
-\todo[inline]{Is the inrush relay explained somewhere?? -MIkkel, \ref{sec:irrelay}}
 
 At startup the interface task switches on the inrush relay for a certain time.
 Afterwards the main relay is switched on and the inrush relay is switched off after some time to ensure that the main relay is conducting.
-Then the task will read all signals from the digital board and, if they are all good, the global enable variable will be set high.
-If one or more of the drive signals indicate a fault, the task will change the enable variable to low.
-\todo[inline]{Thomas: What are these drive signals?}
-
+Then the task will read all signals from the digital board and, if \texttt{EN\_GATE} is high, the global enable variable will be set high.
+If \texttt{EN\_GATE} is low, indicating a fault, the task will change the enable variable to low.
 Alongside the functionality shown in figure \ref{fig:interface}, the interface will act as master for the two UART tasks.
 This enables the setting of values within the system as well as potentially reading the current status of the system.
 All communication through the UART interface is done through the \texttt{rx\_buffer} and \texttt{tx\_buffer} arrays shown in listing \ref{lis:uartvars}.
@@ -185,8 +168,6 @@ if(rx_flag)
 
 Once the value is set a message is returned to the user, informing of the successful setting.
 \texttt{rx\_flag} is cleared and the buffer is emptied by setting \texttt{rx\_tail} to zero.
-
-\todo[inline]{Thomas: Not sure the lines below are relevant, but i felt like writing it...}
 The system is made with expandability in mind, currently only a \texttt{set} command is implemented.
 This could easily be extended to a \texttt{read} or perhaps a \texttt{shutdown} command.
 
@@ -211,10 +192,8 @@ $I_c$ is calculated based on the assumption that the three currents form a balan
 The resistance of the torque pedal potentiometer is calculated from the measured voltage and equation \ref{eq:pedal_back_calc}.
 
 $I_a$, $I_b$, $I_c$ and $\theta$ are then used to perform a Clarke Park transformation and obtaining the values of $I_d$ and $I_q$. 
-\todo[inline]{TThomas: Is the dq transform presented anywhere?}
 $I_d$ and $I_q$ should be controlled towards a set point by two separate controllers.
-The point for $I_d$ is 0 as will be explained later?? .
-\todo[inline]{Thomas: I can't wait to see this explanation! Where is it!?} 
+The point for $I_d$ is 0 as will be explained in section  \ref{sec:controller_design}. 
 The point, $q_{set}$, for $I_q$ should be related to the maximum allowed current, $q_{max}$, and the position of the torque pedal in percent, $pedal_\%$:
 \begin{equation}
 	q_{set} = pedal_\% \cdot q_{max}
@@ -256,14 +235,12 @@ if(total_output_magnitude > MAX_TOTAL_OUTPUT){
 \end{lstlisting}
 
 \subsubsection{PWM task}
-\todo[inline]{do I need code here ? - Mikkel}
 The basic functionality of the PWM task can be seen in the block diagram of figure \ref{fig:pwm_task}.
+The task needs to take the outputs from the controller task and transform it into duty cycles that can be feed to the PWM generator in the PL area of the Zybo. 
 The PWM task is separate from the controller task as it might be preferable to have the two tasks run at different frequencies.
-\todo[inline]{Thomas: Why is that preferable?}
 The task reads the rotor position from the encoder and access the global variables \texttt{d\_output} and \texttt{q\_output}. 
 This information is used to perform inverse Clarke Park transformation.
-Afterwards third harmonic injection is performed and if the values are higher or lower than the maximum bounds they are saturated.
-\todo[inline]{Thomas: By definition, it is saturated.. Do you mean that they are limited?}
+Afterwards third harmonic injection is performed and if the values are higher or lower than the maximum bounds they are limited.
 The global enable variable is checked and passed to the enable pin.
 
 
@@ -274,10 +251,6 @@ The global enable variable is checked and passed to the enable pin.
 	\caption[Block diagram of PWM task.]{Block diagram showing the functionality of the PWM task.}
 	\label{fig:pwm_task}
 \end{figure}
-
-\todo[inline]{Where should we talk about the concept of dq and the meaning of it? -MIkkel}
-\todo[inline]{Third harmonic injection and why? -MIkkel}
-\todo[inline]{Thomas: I am not sure what to do about this section but it doesn't convey it's purpose very well.. I have no idea what the task does, other than it is related to PWM...}
 
 \subsubsection{ADC}
 The Zynq chip contains a dual 12-bit, 1 Mega sample per second (MSPS) Analog-to-Digital Converter (ADC) \cite{adc}.
@@ -363,13 +336,12 @@ It then makes the data available on the AXI4LITE bus, where it can be read from 
 
 \subsection{SPI communication}
 
-\todo[inline]{Thomas: I haven't described our timing issues, it seemed a better thing to do it in this section?}
-\begin{figure}[!h]
-	\centering
-	\includegraphics[width=1\linewidth]{graphics/spi_timing}
-	\caption[SPI timing requirements.]{SPI timing requirements.From datasheet? How to cite?}
-	\label{fig:spi_timing}
-\end{figure}
+%\begin{figure}[!h]
+%	\centering
+%	\includegraphics[width=1\linewidth]{graphics/spi_timing}
+%	\caption[SPI timing requirements.]{SPI timing requirements.From datasheet? How to cite?}
+%	\label{fig:spi_timing}
+%\end{figure}
 
 As described earlier the Zybo board will need to set certain parameters on the DRV8301 chip using SPI communication. 
 The Zynq chip has two SPI controllers in the PS area of the chip, which can be setup to communicate with external devices.
@@ -389,7 +361,7 @@ SPI 1 on the Zynq is used as it can be ported to MIO channels 10 to 15, which ca
 The SPI controller is initialized in software and is configured to be in master mode, manual chip select mode and manual start mode by writing to the configuration register Config\_reg0.
 In order to comply with the SPI specifications of the DRV8301 it was configured with the XSPIPS\_CLK\_PHASE\_1\_OPTION in order to make data valid on falling edges of the clock. 
 The discharge of a capacitor is utilized to make a delay on the Slave Select signal, by putting a XX capacitor and XX resistor in series with the signal.
-\todo[inline]{Thomas: Are they in series?}
+\todo[inline]{Thomas: Are they in series? + numbers instead of XX XX}
 The transmission of \texttt{0b0001000000110000} was measured using an oscilloscope and can be seen in figure \ref{fig:spi_graph}.
 
 \begin{figure}[!h]
@@ -400,9 +372,45 @@ The transmission of \texttt{0b0001000000110000} was measured using an oscillosco
 \end{figure}
 
 \subsection{Task frequencies}
+Table \ref{tabl:task_freq} shows the frequencies at which the task are run.
+The PWM task will be run at 20 \si{\kilo\hertz} as this allows for updates of dutycycles at the same frequency as the PWM generator.
+The controller task will run at 5 \si{\kilo\hertz} as will be explained in section \ref{sec:controller_design}.
+The most essential functionality of the interface task is to update the enable variable. 
+As the driver chip shuts down the inverter in case of an overcurrent event it is not very time critical to do so.
+Therefore it was chosen to run the interface task at 1\si{\kilo\hertz}.
+The UART tasks are not in any way crucial and can therefore be run at a low frequency, though it has to be fast enough for the user to feel that the system is responding, 100\si{\hertz} was chosen.
 
-\subsection{Timing TEST or whatever}
+\begin{table}[]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor[HTML]{C0C0C0} 
+\textbf{Task} & \textbf{Frequency} 				\\ \hline
+PWM     	  & 20\si{\kilo\hertz}               \\ \hline
+Controller    & 5\si{\kilo\hertz}               \\ \hline
+Interface     & 1\si{\kilo\hertz}              \\ \hline
+UART          & 100\si{\hertz}            		\\ \hline
+\end{tabular}
+\caption{Table showing the frequency of each task.}
+\label{tabl:task_freq}
+\end{table}
 
-\todo[inline]{Write about the task frequencies}
+\subsection{Timing}
+To ensure the real time performance of the system a timing test was performed. 
+An output pin was set high when entering a task and low, when exiting the task. 
+PWM, controller and interface were connected to separate pins while the two UART tasks were connected to the same pin.
+The voltage on the pins were measured by an oscilloscope and the measurement can be seen in figure \ref{fig:timing}.
+In the first graph the tasks are in normal operation and it can be seen that the real time performance is maintained and that there is time left for expanding the tasks.
+In the lower graph, the interface task is programmed to output a string to the UART transmit task, giving extra work to both tasks.
+It is seen that the real time performance is still maintained even in, what is believed to be, a worst case operation.
+The delay between the PWM task and the controller task can, at time of writing, not be explained.
+However, it does not interfere with the functionality of the program and will, due to time constraints, not be investigated further.
 
-%\subsection{Conclusion}
+\begin{figure}[!h]
+	\begin{center}
+		\includegraphics[width=\linewidth]{graphics/timing}
+		\caption{Timing}
+		\label{fig:timing}
+	\end{center}
+\end{figure}
+\clearpage

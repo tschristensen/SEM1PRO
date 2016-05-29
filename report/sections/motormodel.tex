@@ -1,6 +1,6 @@
 \newpage
 \section{Controller Design}\label{sec:controller_design}
-Controlling the PMSM\todo[inline]{Erlingur - what ever we want to call the motor. } motor will be done using the principles of vector control\todo{Martin: Field Oriented Control. Should Clarke Park be explained, or just referenced?}, where the controller produces a change to the PWM inverter input. This is done by monitoring the two of the three current inputs to the motor and transforming them using the dq0 transform. This transform yields a d and q DC value and a zero, which are respectively referred to a torque demand and a flux demand. \newline
+Controlling the PMAC motor will be done using the principles of vector control\todo{Martin: Field Oriented Control. Should Clarke Park be explained, or just referenced?}, where the controller produces a change to the PWM inverter input. This is done by monitoring the two of the three current inputs to the motor and transforming them using the dq0 transform. This transform yields a d and q DC value and a zero, which are respectively referred to a torque demand and a flux demand. \newline
 
 The requirement for this project outlines that the motor must be torque controlled, hence the flux demand will be a zero while the torque demand will be defined by the speeder pedal. After the dq values have been compared to the reference/demand values the error is fed to a PID controller which will adjust the output accordingly. This output is transformed using the inverse dq0 transform, which yields a three phase AC signal that can be fed into the inverter and yield a new motor speed. \newline
 
@@ -15,15 +15,9 @@ In reality it is not a torque value that must be a reference for the controller,
 	\label{fig:control_process_sec8}
 \end{figure}
 
-<<<<<<< HEAD
-To properly control this, a mathematical model of the PMSM motor from section 7 is required to derive controller values for the two PID controllers. To model the PMSM motor an equivalent circuit of the motor will be used. For an AC electrical motor the equivalent circuit can be represented by the diagram presented on figure \ref{fig:PMSM_Equivalent_d_axis} and \ref{fig:PMSM_Equivalent_q_axis}.\newline
-=======
-\todo[inline]{MORTEN: have to change picture to have the correct signs and values compared to the stuff below. must be a little more scientific than it is now. Ask me! - will do it myself! i got le visio installed}
+To properly control this, a mathematical model of the PMAC motor from section 7 is required to derive controller values for the two controllers labeled "$I_q$ Controller" and "$I_d$ Controller" in figure \ref{fig:control_process_sec8}. To model the PMAC motor an equivalent circuit of the motor will be used. For an AC electrical motor the equivalent circuit can be represented by the diagram presented on figure \ref{fig:PMSM_Equivalent_d_axis} and \ref{fig:PMSM_Equivalent_q_axis}.\newline
 
-To properly control this, a mathematical model of the PMSM motor from section 7 is required to derive controller values for the two PID controllers\todo[inline]{erlingur - which two PID cpntrollers? in the figure?}. To model the PMSM motor an equivalent circuit of the motor will be used. For an AC electrical motor the equivalent circuit can be represented by the diagram presented on figure \ref{fig:PMSM_Equivalent_d_axis} and \ref{fig:PMSM_Equivalent_q_axis}.\newline
->>>>>>> fc976f2978e24ae58fd6434c622b02ccd02d0a17
-
-The figures show that the PMSM motor can be represented as an electrical diagram with the physical properties represented by inductors and resistors. The connection between  the rotor and stator works like a transformer, with coils generating a change in either part to represent the stator to rotor relation. The coils on the rotor move with respect to those on the stator, so there is a variation in the amount of interaction between them. The circuit is split into two parts, one for the torque and one for the flux. Which is exactly what is done through the dq0 transform. \newline
+These figures show that the PMAC motor can be represented as an electrical diagram with the physical properties represented by inductors and resistors. The connection between  the rotor and stator works like a transformer, with coils generating a change in either part to represent the stator to rotor relation. The coils on the rotor move with respect to those on the stator, so there is a variation in the amount of interaction between them. The circuit is split into two parts, one for the torque and one for the flux. Which is exactly what is done through the dq0 transform. \newline
 
 \begin{figure}[!h]
 	\centering
@@ -41,36 +35,28 @@ The figures show that the PMSM motor can be represented as an electrical diagram
 	\caption{PMAC Motor $I_d $ and $I_q$ equivalent diagrams.\cite{pmac_equivalent_diagram}}
 \end{figure}
 
-The components shown are: the mutual inductance $l_s$, $L_md$ and $L_mq$. Armature resistance $R_s$ and flux leakage for both d and q axes.
+The components shown are: the mutual inductance $l_s$, $L_md$ and $L_mq$. Armature resistance $R_s$ and flux leakage for both d and q axes. The most important values here are the q-axis inductor and resistance which directly affect how much torque is gained from inputting current to the PMAC motor.
 
-What can be learned from this electrical equivalent diagram is that the magnet on the rotor side, on the d-axis diagram figure \ref{fig:PMSM_Equivalent_d_axis}, can be seen as a current source $i_m$. A change in flux of this magnet will induce a force resulting in current in the magnet. This is shown with the $R_m$ resistor. Through this it is apparent that the d-axis is the flux part of the motor, while q is the current.
+Another thing that can be learned from this electrical equivalent diagram is that the magnet on the rotor side, on the d-axis diagram figure \ref{fig:PMSM_Equivalent_d_axis}, can be seen as a current source $i_m$. A change in flux of this magnet will induce a force resulting in current in the magnet. This is shown with the $R_m$ resistor. Through this it is apparent that the d-axis is the flux part of the motor, while q is the current.
 
 To current control the motor, the model and controller will be developed for the q-axis of this equivalent diagram. The q-axis by itself resembles the equivalent circuit of a DC motor very much and this can be used to design a mathematical model of the motor.
 
-\todo[inline]{Morten: Some of this text might need better explaining.}
-
 \subsection{State Space Model}
-A state space model is derived from the physical representation of a PMSM motor, figure \ref{fig:State_space_model1}, consisting of an electrical part on the left and a mechanical part on the right side of the model. The model is made in MatLab Simulink\todo[inline]{Erlingur - Not sure, but when referring to Matlab Simulink you might need a citation }. The model is very similar to that of a DC motor when interpreted like this. A wind resistance has been added to show how it affects the torque of the motor. The value of the wind resistance is the rotational speed squared multiplied by a drag value\todo[inline]{Erlingur - might need to show the drag force eq}. This value will be a negative number, which is then added to the torque output to slow down the motor. The drag can be approximated by looking at the gearings of the kart and the motors own drag coefficient.
+A state space model is derived from the physical representation of a PMAC motor, figure \ref{fig:State_space_model1}, consisting of an electrical part on the left and a mechanical part on the right side of the model. The model is made in MatLab Simulink\todo[inline]{Erlingur - Not sure, but when referring to Matlab Simulink you might need a citation }. The model is very similar to that of a DC motor when interpreted like this. A wind resistance has been added to show how it affects the torque of the motor. The value of the wind resistance is the rotational speed squared multiplied by a drag value\todo[inline]{Erlingur - might need to show the drag force eq}. This value will be a negative number, which is then added to the torque output to slow down the motor. The drag can be approximated by looking at the gearings of the kart and the motors own drag coefficient.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.95\linewidth]{graphics/full_order_with_resistances_to_pdf}
-	\caption{PMSM motor state space model.}
+	\caption{PMAC motor state space model.}
 	\label{fig:State_space_model1}
 \end{figure}
 
-<<<<<<< HEAD
-\todo[inline]{Morten: this and the next two pictures will not trim correctly. it cuts off the text no matter what i do. help!}
-
-Reducing this model to use transfer functions for the electrical and mechanical parts results in a more simple model with fewer loops. This model removes torque load and wind resistance. It is shown on figure \ref{fig:State_space_model3}. It can be used to find controller values if the torque load and wind resistance are seen as outside disturbances. The controller should be able to handle the amount of disturbance that can be found in these values. The wind resistance will get proportionally larger the faster the kart is moving, but for this first model it will not be taken into account. In the electric part of the circuit a new value $TS$ has been added to the denominator of the transfer function, this value is the electromagnetic time constant of the stator, defined as $TS=L_a/R_a$. The constant defined $J_{pro}$ is the projected inertia of the kart, based on the expected weight with a driver and also adding the inertia of each gearing cog.
-=======
-Reducing this model\todo[inline]{Erlingur - what model? should refer to the figure here} to use transfer functions for the electrical and mechanical parts results in a more simple model with fewer loops. This model removes torque load and wind resistance. It is shown on figure \ref{fig:State_space_model3}. It can be used to find controller values if the torque load and wind resistance are seen as outside disturbances. The controller should be able to handle the amount of disturbance that can be found in these values. The wind resistance will get proportionally larger the faster the kart is moving, but for this first model it will not be taken into account. In the electric part of the circuit a new value $TS$ has been added to the denominator of the transfer function, this value is the electromagnetic time constant of the stator, defined as $TS=L_a/R_a$. The constant defined $J_{pro}$ is the projected inertia of the kart, based on the expected weight with a driver and also adding the inertia of each gearing cog.
->>>>>>> fc976f2978e24ae58fd6434c622b02ccd02d0a17
+Reducing the model of figure \ref{fig:State_space_model1} to use transfer functions for the electrical and mechanical parts results in a more simple model with fewer loops. This model removes torque load and wind resistance. It is shown on figure \ref{fig:State_space_model3}. It can be used to find controller values if the torque load and wind resistance are seen as outside disturbances. The controller should be able to handle the amount of disturbance that can be found in these values. The wind resistance will get proportionally larger the faster the kart is moving, but for this first model it will not be taken into account. In the electric part of the circuit a new value $TS$ has been added to the denominator of the transfer function, this value is the electromagnetic time constant of the stator, defined as $TS=L_a/R_a$. The constant defined $J_{pro}$ is the projected inertia of the kart, based on the expected weight with a driver and also adding the inertia of each gearing cog.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.95\linewidth]{graphics/full_order_as_tf_without_resistances_to_pdf}
-	\caption{PMSM motor model without torque load and wind resistance.}
+	\caption{PMAC motor model without torque load and wind resistance.}
 	\label{fig:State_space_model3}
 \end{figure}
 
@@ -81,7 +67,7 @@ Whether this is a correct assumption will be tested with a simulation of either 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.95\linewidth]{graphics/electrical_reduced_order_to_pdf}
-	\caption{Reduced order PMSM motor model.}
+	\caption{Reduced order PMAC motor model.}
 	\label{fig:State_space_model_reduced_order}
 \end{figure}
 
@@ -131,7 +117,7 @@ The two state space models will be simulated with MatLab Simulink to see how muc
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1\linewidth]{graphics/mechanical_reduced_order_to_pdf}
-	\caption{Reduced order PMSM motor model version 2.}
+	\caption{Reduced order PMAC motor model version 2.}
 	\label{fig:State_space_model_reduced_order_v2}
 \end{figure}
 
@@ -177,7 +163,7 @@ The model of figure \ref{fig:State_space_model4} can be rearranged to simplify t
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.95\linewidth]{graphics/full_order_rearranged_to_pdf}
-	\caption{PMSM motor model rearranged to simplify the transfer function.}
+	\caption{PMAC motor model rearranged to simplify the transfer function.}
 	\label{fig:State_space_model5}
 \end{figure}
 
