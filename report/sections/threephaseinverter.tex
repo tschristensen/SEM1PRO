@@ -5,6 +5,7 @@ This includes the calculations and considerations done
 Initially, a short overview of the principle of operation of a three-phase inverter is given.
 
 \subsection{Principle of Operation of the Three-Phase Inverter}
+\todo[inline]{Thomas: I have to question whether this is the appropriate title for this section?}
 A three-phase inverter enables the use of a DC supply in variable frequency control of a three-phase load.
 In this project the DC supply is a battery and the load, a PMAC motor.
 Figure \ref{fig:threephaseinverter} is a simulink model showing the most basic three-phase inverter.
@@ -19,13 +20,15 @@ Each pair of switches can never be on at the same time as this would result in a
 \end{figure}
 
 Several schemes exist to control the switches.
-Throughout this project a PWM modulation technique using sinusoids as references is used.
+Throughout this project a PWM modulation technique using sinusoids as reference is used.
 Figure \ref{fig:countercarrier} is a depiction of the modulation technique.
 A counter is continuously counting up and down, creating a triangle wave.
 This is called the carrier wave.
 The carrier wave is compared to a sinusoidal reference signal.
 The frequency of the sinusoidal will be the fundamental frequency of the output voltage.
 Whenever the reference cross the carrier wave, the gate voltages of the relevant half-bridge invert, of course taking into account the necessary dead time to avoid short circuiting the power rail.
+This technique produces naturally sampled PWM, a desirable trait due to the lower harmonic distortion when compared to other types of PWM.
+Additionally, the speed of the motor can be easily changed simply by changing the fundamental frequency.
 
 \begin{figure}
 	\centering

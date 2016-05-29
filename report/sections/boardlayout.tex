@@ -36,7 +36,6 @@ Here it is used to supply the TEN20-4823WIN and the TVN5-4811WI isolated dc-dc c
 The previously mentioned 3.3\si{\volt} rail is generated on the Zybo board.
 The driver chip (The DRV8301 is discussed in more detail in section \ref{sec:driverboard}), is also supplied from the power rail, and as such GNDP is extended to a corner of the driver board.
 Limiting the extent of GNDP is also the reasoning behind generating the $\pm15V$ rail on the digital board, even though it is used exclusively on the analog board.
-An extended discussion of the grounding planes as well as the actual layout can be found in appendix \ref{app:boardlayout}.
 
 \subsection{Analog Board}
 The analog board houses, as the name implies, all of the analog signal processing.
@@ -231,6 +230,7 @@ C$_1$ is placed in order to filter this noise.
 \subsection{Digital Board}
 The digital board is used mostly as an interconnection board between the various electronic components in the system.
 The logic levels of the different systems are managed here along with the enable signal for the DRV8301.
+Additionally this board houses the in-rush relay.
 
 \subsubsection{Drive Enable Signal}
 This signal is produced by the torque pedal.
@@ -277,6 +277,23 @@ $V_{out}$ of this device is equal to $V_{cc}$, while $V_{in}$ can be any voltage
 	\includegraphics[width=.5\linewidth,trim=0cm 1cm 0cm 1cm]{graphics/lls}
 	\caption[Logic level shifter circuit.]{The 74AHC125 quad-buffer used to shift the logic level of the encoder from 5\si{\volt} down to the $3.3$\si{\volt} required by the Zybo. Due to an oversight, a buffer with an enable on each port was bought. This feature is unnecessary and they are always enabled.}
 	\label{fig:lls}
+\end{figure}
+
+\subsubsection{In-rush Relay}
+When first switching on the entire system, a considerable amount of current is required to charge the capacitors used on the inverter.
+In order to protect the batteries and the system in general, it is necessary to limit the amount of current that is flowing to the capacitors until the voltage drop across them is reasonably small.
+The main relay, when closed, acts as a short circuit between the batteries and the inverter.
+Instead of closing this relay immediately, an additional relay is set in parallel.
+This is the in-rush relay.
+In series with the in-rush relay is placed a resistor which is dimensioned to limit the current sufficiently.
+This circuit can be seen in figure \ref{fig:irrelay}.
+\todo[inline]{Thomas: I guess we would like to actuyally have this calculation...}
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=.5\linewidth,trim=0cm 4.5cm 0cm 0cm]{graphics/irrelay}
+	\caption[In-rush relay.]{In-rush relay circuit. A small relay is driven from the Zybo in order to pre-charge the capacitors before switching the main relay.}
+	\label{fig:irrelay}
 \end{figure}
 
 \subsection{Driver Board}
