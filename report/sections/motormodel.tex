@@ -1,6 +1,6 @@
 \newpage
 \section{Controller Design}\label{sec:controller_design}
-Controlling the PMSM motor will be done using the principles of vector control\todo{Martin: Field Oriented Control. Should Clarke Park be explained, or just referenced?}, where the controller produces a change to the PWM inverter input. This is done by monitoring the two of the three current inputs to the motor and transforming them using the dq0 transform. This transform yields a d and q DC value and a zero, which are respectively referred to a torque demand and a flux demand. \newline
+Controlling the PMSM\todo[inline]{Erlingur - what ever we want to call the motor. } motor will be done using the principles of vector control\todo{Martin: Field Oriented Control. Should Clarke Park be explained, or just referenced?}, where the controller produces a change to the PWM inverter input. This is done by monitoring the two of the three current inputs to the motor and transforming them using the dq0 transform. This transform yields a d and q DC value and a zero, which are respectively referred to a torque demand and a flux demand. \newline
 
 The requirement for this project outlines that the motor must be torque controlled, hence the flux demand will be a zero while the torque demand will be defined by the speeder pedal. After the dq values have been compared to the reference/demand values the error is fed to a PID controller which will adjust the output accordingly. This output is transformed using the inverse dq0 transform, which yields a three phase AC signal that can be fed into the inverter and yield a new motor speed. \newline
 
@@ -15,7 +15,13 @@ In reality it is not a torque value that must be a reference for the controller,
 	\label{fig:control_process_sec8}
 \end{figure}
 
+<<<<<<< HEAD
 To properly control this, a mathematical model of the PMSM motor from section 7 is required to derive controller values for the two PID controllers. To model the PMSM motor an equivalent circuit of the motor will be used. For an AC electrical motor the equivalent circuit can be represented by the diagram presented on figure \ref{fig:PMSM_Equivalent_d_axis} and \ref{fig:PMSM_Equivalent_q_axis}.\newline
+=======
+\todo[inline]{MORTEN: have to change picture to have the correct signs and values compared to the stuff below. must be a little more scientific than it is now. Ask me! - will do it myself! i got le visio installed}
+
+To properly control this, a mathematical model of the PMSM motor from section 7 is required to derive controller values for the two PID controllers\todo[inline]{erlingur - which two PID cpntrollers? in the figure?}. To model the PMSM motor an equivalent circuit of the motor will be used. For an AC electrical motor the equivalent circuit can be represented by the diagram presented on figure \ref{fig:PMSM_Equivalent_d_axis} and \ref{fig:PMSM_Equivalent_q_axis}.\newline
+>>>>>>> fc976f2978e24ae58fd6434c622b02ccd02d0a17
 
 The figures show that the PMSM motor can be represented as an electrical diagram with the physical properties represented by inductors and resistors. The connection between  the rotor and stator works like a transformer, with coils generating a change in either part to represent the stator to rotor relation. The coils on the rotor move with respect to those on the stator, so there is a variation in the amount of interaction between them. The circuit is split into two parts, one for the torque and one for the flux. Which is exactly what is done through the dq0 transform. \newline
 
@@ -44,7 +50,7 @@ To current control the motor, the model and controller will be developed for the
 \todo[inline]{Morten: Some of this text might need better explaining.}
 
 \subsection{State Space Model}
-A state space model is derived from the physical representation of a PMSM motor, figure \ref{fig:State_space_model1}, consisting of an electrical part on the left and a mechanical part on the right side of the model. The model is made in MatLab Simulink. The model is very similar to that of a DC motor when interpreted like this. A wind resistance has been added to show how it affects the torque of the motor. The value of the wind resistance is the rotational speed squared multiplied by a drag value. This value will be a negative number, which is then added to the torque output to slow down the motor. The drag can be approximated by looking at the gearings of the kart and the motors own drag coefficient.
+A state space model is derived from the physical representation of a PMSM motor, figure \ref{fig:State_space_model1}, consisting of an electrical part on the left and a mechanical part on the right side of the model. The model is made in MatLab Simulink\todo[inline]{Erlingur - Not sure, but when referring to Matlab Simulink you might need a citation }. The model is very similar to that of a DC motor when interpreted like this. A wind resistance has been added to show how it affects the torque of the motor. The value of the wind resistance is the rotational speed squared multiplied by a drag value\todo[inline]{Erlingur - might need to show the drag force eq}. This value will be a negative number, which is then added to the torque output to slow down the motor. The drag can be approximated by looking at the gearings of the kart and the motors own drag coefficient.
 
 \begin{figure}[H]
 	\centering
@@ -53,9 +59,13 @@ A state space model is derived from the physical representation of a PMSM motor,
 	\label{fig:State_space_model1}
 \end{figure}
 
+<<<<<<< HEAD
 \todo[inline]{Morten: this and the next two pictures will not trim correctly. it cuts off the text no matter what i do. help!}
 
 Reducing this model to use transfer functions for the electrical and mechanical parts results in a more simple model with fewer loops. This model removes torque load and wind resistance. It is shown on figure \ref{fig:State_space_model3}. It can be used to find controller values if the torque load and wind resistance are seen as outside disturbances. The controller should be able to handle the amount of disturbance that can be found in these values. The wind resistance will get proportionally larger the faster the kart is moving, but for this first model it will not be taken into account. In the electric part of the circuit a new value $TS$ has been added to the denominator of the transfer function, this value is the electromagnetic time constant of the stator, defined as $TS=L_a/R_a$. The constant defined $J_{pro}$ is the projected inertia of the kart, based on the expected weight with a driver and also adding the inertia of each gearing cog.
+=======
+Reducing this model\todo[inline]{Erlingur - what model? should refer to the figure here} to use transfer functions for the electrical and mechanical parts results in a more simple model with fewer loops. This model removes torque load and wind resistance. It is shown on figure \ref{fig:State_space_model3}. It can be used to find controller values if the torque load and wind resistance are seen as outside disturbances. The controller should be able to handle the amount of disturbance that can be found in these values. The wind resistance will get proportionally larger the faster the kart is moving, but for this first model it will not be taken into account. In the electric part of the circuit a new value $TS$ has been added to the denominator of the transfer function, this value is the electromagnetic time constant of the stator, defined as $TS=L_a/R_a$. The constant defined $J_{pro}$ is the projected inertia of the kart, based on the expected weight with a driver and also adding the inertia of each gearing cog.
+>>>>>>> fc976f2978e24ae58fd6434c622b02ccd02d0a17
 
 \begin{figure}[H]
 	\centering
@@ -112,7 +122,7 @@ The two state space models will be simulated with MatLab Simulink to see how muc
 	\end{subfigure}
 	\caption{Matlab Simulink of each model with the same input}
 \end{figure}
-
+\todo[inline]{Erligur - the x and y axises are missing labels. }
  A problem shows up by these simulations. The speed looks fine for the reduced order model but the current starts at a high value. The current starts out as a simple multiplication of the input voltage multiplied by the $1/R$ gain to equal $4000A$. The amplitude of speed and current are not important at this time, as that will be controlled later, but since the model does not ramp up the current like the  full order model, a controller will not be derived for this reduced order model.
 
 \subsubsection{Reduced Order Model 2 - No Mechanical}
@@ -142,14 +152,14 @@ The slow pole is gone, this is an important pole because it is as slow as it is,
 	\caption{Full order vs reduced order model version 2. Time[s]/Current[A]}
 	\label{fig:Full_Vs_Reduced2}
 \end{figure}
-
-This shows that the current ramps up and stays there. It has a slope at time zero+, unlike the other reduced order model. This model could be used with a controller, but will require some simulations with the motor after a controller has been developed, the downward slope of the full order model is caused by the mechanical system getting saturated by current, this should not change how each model is affected by current control, because a fast and robust controller is desired.
+\todo[inline]{Erlingur - same thing with missing labels on axises}
+This \todo[inline]{Erlingur - In general, when you start a "conversation" about a figure, you should refer to it. this is confusing thus the reader needs to go back to find out what "this" is referring to}shows that the current ramps up and stays there. It has a slope at time zero+, unlike the other reduced order model. This model could be used with a controller, but will require some simulations with the motor after a controller has been developed, the downward slope of the full order model is caused by the mechanical system getting saturated by current, this should not change how each model is affected by current control, because a fast and robust controller is desired.
 
 
 \subsection{Controlling Current}
-The motor must be current controlled in order to limit the torque. If the motor was speed controlled, as is often used in motor control, it could demand a much higher current than possible by the circuit, requiring a limiter on the current input instead, or otherwise it could result in destroying the drive circuit. A current control also means that the speeder pedal will be a current reference, translating into a torque reference, resulting in an even motor speed even if the kart is driving on a uneven plane such as a hill.
+The motor must be current controlled in order to limit the torque. If the motor was speed controlled, as is often used in motor control, it could demand a much higher current than possible by the circuit, requiring a limiter on the current input instead, or otherwise\todo[inline]{Erlingur - maybe instead of "otherwise" it shæuld be "or in worst case"?} it could result in destroying the drive circuit. A current control also means that the speeder pedal will be a current reference, translating into a torque reference, resulting in an even motor speed even\todo[inline]{erlingur - should this be a constant speed, there are to any even?} if the kart is driving on a uneven plane such as a hill.
 
-A control loop is added to the model, figure \ref{fig:State_space_model4}. It must be current controlled to control the torque. This means that a feedback loop is added from inside the motor model and fed back to the controller. On this figure it is shown with the full order system.
+A control loop is added to the model, figure \ref{fig:State_space_model4}. It must be current controlled to control the torque. This means that a feedback loop is added from inside the motor model and fed back to the controller. On this figure it is shown with the full order system.\todo[inline]{Erlingur - The reference should be here, same as before. Maybe it is just me but I don't like "on this figure" that is something that belongs in the captions}
 
 \begin{figure}[H]
 	\centering
@@ -220,7 +230,7 @@ This increases the order of the transfer function by one and adds a zero and a p
 This third order transfer function will be used to derive the controller values.
 
 \subsection{Full Order Controller Values}\label{sub:full_order_controller_values}
-To find the controller values the Stephen Dodds Settling Time Formula for $5\%$ settling time is used. The desired characteristics polynomial of a transfer function for the settling time formula to work is
+To find the controller values the Stephen Dodds Settling Time Formula for $5\%$ settling time is used\todo[inline]{Erlingur - citation, and refer to the eq, it has not been introduced before, I think.}. The desired characteristics polynomial of a transfer function for the settling time formula to work is
 
 \begin{equation}
 s^n+d_{n-1}s^{n-1}+\cdot \cdot \cdot +d_1s+d_0
@@ -304,7 +314,7 @@ K_p=0.0111
 K_i=1.7566
 \label{eq:Kivalue}
 \end{equation}
-
+\todo[inline]{Erlingur - maybe I am not noticing, but I think that a lot of the above eq's are not referred to in the text }
 The pole-zero map for the transfer function including the controller confirms that a new pole and zero has been added. All poles and zeroes lie on the real axis, meaning they affect the system by altering the decay. The system is stable with these values since they are all on the left side of the imaginary axis. See figure \ref{fig:PZmap_Control_full}.
 
 \begin{figure}[H]
@@ -364,8 +374,8 @@ Solving for the alpha values $K_p$ and $K_p$ can be found:
 \begin{equation}
 \alpha^2=\frac{K_i}{L_a} \rightarrow K_i=0.324
 \end{equation}
-
-The transfer function including these values result in the pzmap of figure \ref{fig:PZmapIPcontroller1}. Since there is no zero in the transfer function, there wont be one when adding an IP controller. The added pole becomes a complex conjugate pair as there is nothing to keep them on the real axis. This means that the system is stable but might have oscillation. This will be tested in a simulation in the next section.
+\todo[inline]{Erlingur - same thing with the eq's a lot of numbered eq's that are not referred to inthe text}
+The transfer function including these values result in the pzmap of figure \ref{fig:PZmapIPcontroller1}. Since there is no zero\todo[inline]{Erlingur - "Since there are no zeros" maybe?} in the transfer function, there wont be one when adding an IP controller. The added pole becomes a complex conjugate pair as there is nothing to keep them on the real axis. This means that the system is stable but might have oscillation. This will be tested in a simulation in the next section.
 
 \begin{figure}[H]
 	\centering
@@ -376,6 +386,7 @@ The transfer function including these values result in the pzmap of figure \ref{
 
 
 \subsection{Control Simulation}
+\todo[inline]{Erlingur - MAybe there should be a table with the gains?}
 Testing the $K_p$ and $K_i$ values of either controller should result in a stable current output from the electrical part of the motor, which is desired to control the torque. This simulation will add the $K_p$ and $K_i$ values to the control loop and review the outcome.
 
 Figure \ref{fig:Input_ref} is the input reference signal which simulates the speeder pedal being fully actuated, then held for a few seconds and then released over two seconds. Full actuation is set to $300A$ and the run time is set at 10 seconds.
@@ -387,7 +398,7 @@ Figure \ref{fig:Input_ref} is the input reference signal which simulates the spe
 	\label{fig:Input_ref}
 \end{figure}
 
-Figures \ref{fig:Output_Full} and \ref{fig:Output_LC} shows how both models perform with the controller values found above and the input signal. The full order model has a small steady state error of slightly less than $5A$ while the reduced order model is spot on. The response time for both is higher than the $0.05$ value set for the settling time formula though. The full order model settles in $0.9s$ while the reduced model settles is $0.13s$. They both handle the control as they should, with no overshoot at the start, or undershoot at the end of the breaking.
+Figures \ref{fig:Output_Full} and \ref{fig:Output_LC}\todo[inline]{Erlingur - it is enough to refer to the whole figure no need to to a) and b) at this point } shows how both models perform with the controller values found above and the input signal. The full order model has a small steady state error of slightly less than $5A$ while the reduced order model is spot on. The response time for both is higher than the $0.05$ value set for the settling time formula though. The full order model settles in $0.9s$ while the reduced model settles is $0.13s$. They both handle the control as they should, with no overshoot at the start, or undershoot at the end of the breaking.
 
 \begin{figure}[H]
 	\centering
@@ -409,7 +420,7 @@ The controller to be used for the kart will be determined by running a more in d
 
 
 \subsection{Discretization}
-Discretizing the controller is required to use it in the embedded software. To do this, the values of $K_p$ and $K_i$ can be used as they are, but for both a PI and IP controller the integrator must be discretized. An integrator in discrete is done by using a numerical integration method. The choice here will be the Trapezoidal method, which has the output equation given as: 
+Discretizing the controller is required to use it in the embedded software\todo[inline]{Erlingur - maybe explain why, just a "do to something"}. To do this, the values of $K_p$ and $K_i$ can be used as they are, but for both a PI and IP controller the integrator must be discretized. An integrator in discrete is done by using a numerical integration method. The choice here will be the Trapezoidal method, which has the output equation given as: 
 
 \begin{equation}
 y_{n+1} = y_{n} + \frac{1}{2}h \left( f(t_n,y_n)+f(t_{n+1},y_{n+1}) \right)

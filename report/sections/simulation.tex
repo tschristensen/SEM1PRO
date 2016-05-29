@@ -790,18 +790,171 @@ A faster controller was calculated with tremendous results.
 \end{table}
 
 Both the PI controllers could work, but the faster response gives very precise current control. 
+\todo[inline]{Martin: Morten, maybe you can write something clever about why the ip controller is so bad}
 
 \subsection{Plecs model}\label{sub:sim_plecs_electrical}
 As previously mentioned, the Plecs model differs vastly from the Simulink model in the electrical network, as it more closely resembles the real analog circuit. 
 It is shown on figure~\ref{fig:plecs_electrical}.
-\todo[inline]{Thomas: This needs something more.. Martin: ya think? Thomas: I think...}
+\todo[inline]{Thomas: This needs something more.. Martin: ya think? Thomas: I think... Martin: OK Fine then}
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width = \textwidth]{graphics/Plecs_electrical.pdf}
+		\includegraphics[width = \textwidth]{graphics/Plecs_electrical}
 		\caption{Block diagram for the svm plecs simlations.}
 		\label{fig:plecs_electrical}
 	\end{center}
 \end{figure}
+
+The simulation utilizes the fast PI controller form page~\pageref{sub:PI01}. 
+It simulates the switching inverter utilizing ideal switches as opposed to more realistic mosfets with limited current rate of change. 
+Because of the ideal switching, it is not necessary to include antiparallel diodes, nor deadtime.
+This contributes to faster simulation, as it is only necessary to solve the circuit right before and right after each switching.
+This still means, that 240.000 solutions have to be found for each second, so simulation time is significantly longer than when using simulink.\\ 
+
+Figure~\ref{fig:plecs_electrical} shows the three phase inverter.
+The blue rectangle around each mosfet is a heatsink, that absorbs all the power loss within it.
+These are used to emulate the case of the transistors. 
+Each of these have a heat capacity of 0.01 \si{\kelvin \per \joule } \\ 
+Each transistor represent one pair of transistors, where the on-resistance is zero.
+The transistors have the same thermal model, with look tables for switch-on and switch-off energies based on equation~\ref{eq:P_sw}.
+The energy lost per switch is calculated by equation~\ref{eq:plecs_switching_losses}.
+
+\begin{equation}
+E_{on} = \frac{1}{2} V_{DS} \cdot |I_D| \cdot t_{c,on} \\
+E_{off} = \frac{1}{2} V_{DS} \cdot |I_D| \cdot  t_{c,off}
+\label{eq:plecs_switching_losses} 
+\end{equation}
+
+Because the a negative current would cause the same loss, as a positive current, the absolute is taken of the drain current.
+All losses are calculated for two mosfets in parallel, conducting the combined current.
+Figure~\ref{fig:turn-on_loss_lut} shows the 2D lookup table of turn on losses as a graph.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.6\linewidth]{graphics/turn-on_loss_lut}
+	\caption{Turn on losses calculated from equation~\ref{eq:plecs_switching_losses}.}
+	\label{fig:turn-on_loss_lut}
+\end{figure}
+
+Conduction loss is dependent on the temperature of the mosfet. This does however not change the on-resistance in the circuit -- that is not possible to do, likely because it would make simulations much more complicated.
+It should be noted, that the heatsink-box includes all losses inside, meaning it includes both the loss specified in the thermal model, but also the loss due to a non-zero on-resistance. 
+This is part of the reason, the on-resistance has been set to zero, the other part being faster simulation. \\
+
+All heatsink boxes are connected through a thermal resistor (the blue ones) to a shunt thermal capacitor (CthG).
+The thermal resistance of 0.145 \si{\joule \per \kelvin} represents the case-to-sink thermal resistance as read from the datasheet.
+The datasheet value was divided by two, because there are two TO-247 houses conducting the heat.
+CthG along with Heatsink Thermal Resistance models the 30x30 heatsink used to mount the inverter. 
+CthG has a thermal capacity of 2100 \si{\kelvin \per \joule}, which is based on its size and the thermal capacity of aluminium, acording to~\ref{eq:thermal_capacity}.
+
+\begin{equation}
+C_{th} = v \cdot C_{Rv}
+\label{eq:thermal_capacity}
+\end{equation}
+\todo{Martin: Can we quote wikipedia?}
+
+where $C_{Rv}$ is the volumetric heat capacity of aliminium, which is 2.422. 
+For a heatsink of 30x30x1 cm, the heat capacity is then 2180 \si{\kelvin \per \joule}.
+
+The battery is modelled with a DC voltage source of 52.8 \si{\volt}.
+In series with this is a non-ideal wire modelled by a resistor of 0.77 \si{\milli \ohm}, and an inductor of 6 \si{\micro \henry}.
+This has been calculated by~\ref{eq:wire_calculation}.
+
+\begin{equation}
+\begin{split}
+R_{wire} = \frac{1.7e-8 \si{\ohm \meter} \cdot 5 \si{\meter}}{50 \si{\milli \meter \squared}}  + 200 \si{ \micro \ohm}\\
+L_{wire} = 12.5 \si{\nano \henry \per \centi \meter} \cdot 5 \si{\meter}
+\label{eq:wire_calculation}
+\end{split}
+\end{equation}
+
+The battery wire is a 150 square mm wire, at five meters long including the connection to all the batteries. 
+The 200 \si{\micro \ohm} is the resistance of the relay.
+12.5 \si{\nano \henry \per \centi \meter} is a good estimate, used by Morten Nymann.\\
+
+The E caps represent the electrolytic capacitor bank, consisting of 8 2200\si{\micro \farad} capacitors in parallel. 
+Bank ESR is the parallel ESR of these 8 capacitors, of 12.25 \si{\milli \ohm}.
+Bank EPR is a gigaohm resistor needed for the simulation -- it will not run without it, because the wire inductor might not have a DC path to ground.
+F caps represent the film capacitors. These are significantly smaller, but have no ESR, and handle higher frequencies better than the electrolytic.\\
+
+The controller is modeled on the bottom half of figure~\ref{fig:plecs_electrical}. 
+Other than the PI controllers, it contains parallel scale down and overmodulation.
+However, overmodulation uses a different method than third harmonic injection, which reduces switchings.\\
+
+The test will be performed with a mass of 250 \si{\kilogram}.
+The current setpoint definced in the Signal Builder block goes to 300 and remains there for 10 seconds.
+The simulation will be used to estimate voltage ripple from the capacitor bank, the AC current going into the electrolytic capacitors and the loss in the mosfets.
+
+Figure~\ref{fig:plecs_power_loss} shows the heat transfer to the heatsink.
+As there is a very low heat capacity in each of the mosfets, it's safe to assume, that this represents the total loss in the inverter
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.7\linewidth]{graphics/plecs_power_loss}
+	\caption{Power loss in the Mosfets}
+	\label{fig:plecs_power_loss}
+\end{figure}
+
+The loss reaches a maximum of 500 \si{\watt}, which is lower than anticipated.
+This might be because, the Plecs simulation takes into account for switchings that are not worst case scenario. 
+Figure~\ref{fig:plecs_inverter_efficiency} displays the efficiency of the inverter. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.7\linewidth]{graphics/plecs_inverter_efficiency}
+	\caption{Efficiency of the inverter calculated from the electrical power going into the motor and the power lost in the mosfets}
+	\label{fig:plecs_inverter_efficiency}
+\end{figure}
+
+The efficiency of the inverter increases, as the power going out increases.
+The efficiency quickly reaches above 90 \%, which is quite good. \\
+However, there is a loss in the ESR of the E caps.
+The current ripple is displayed on figure~\ref{fig:plecs_current_ripple}
+
+\todo[inline]{Martin: Maybe this should be omitted, since we so far do not have anything about capacitor choices}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.7\linewidth]{graphics/plecs_current_ripple}
+	\caption{Current ripple in the electrolytic capacitors, in RMS}
+	\label{fig:plecs_current_ripple}
+\end{figure}
+
+The large current ripple would result in up to 190 \si{\watt} of loss, which is a lot more than anticipated.
+Not only is this power loss damaging for the efficiency of the inverter, it also produces a lot of heat, that is not absorbed by the heatsink.
+A reason for this high number is likely the ideal switching used in Plecs. 
+Because of this, the current from the supply can step from zero to 300 A instantaneously. 
+In a more realistic simulation, stray inductances would limit the current slew rate. \\
+Figure~\ref{fig:plecs_voltage_ripple} displays the voltage ripple of the capacitor bus.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.7\linewidth]{graphics/plecs_voltage_ripple}
+	\caption{Voltage supplying the inverter ripples quite little.}
+	\label{fig:plecs_voltage_ripple}
+\end{figure}
+
+The voltage ripple is quite low, less than 5 V, which means the inverter is supplied with an almost constant voltage, and the AC output is not begin disrutbed by much.\\
+Figure~\ref{fig:plecs_heatsink_temperature} displays the heatsink temperature  during the full throttle test
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.7\linewidth]{graphics/plecs_heatsink_temperature}
+	\caption{Temperature of the heatsink only increases 1 degree over 10 \si{\second}}
+	\label{fig:plecs_heatsink_temperature}
+\end{figure}
+
+The temperature only increases 0.8 \si{\degree \celsius} during the test, so it easily handles the 500 \si{\watt} of heat generated by the mosfets. 
+The reason for this limited temperature increase is the size of the thermal capacitance, rather than the low thermal resistance.\\
+
+\subsubsection{Conclusion of Plecs simulations}\label{sub:plec_conclusion} 
+It is possible to drive a PMAC motor with three phases of naturally sampled PWM. 
+20 \si{\kilo \hertz} does not cause large current ripple for this particular motor.
+The inverter has a large thermal capacity, meaning that it would keep cool for the duration, it is being used. 
+However, according to plecs, the current ripple in the electrolytic capacitors greatly exceeds what they are rated for.
+It was tried to add a ESL inductor to the capacitors, but that caused the simulation to become much slower to the point where it would not run at all.
+
+
+
+
+
 
 \subsection{Simulation of the Over-Current Protection Circuit}
 \todo[inline]{Thomas: I'm not sure the placement of this makes sense..}
