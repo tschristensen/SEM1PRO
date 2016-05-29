@@ -29,10 +29,10 @@ No current measurements were done, meaning that the only feedback was the angle.
 Each of the signals from the output pins of the Zybo board were, in addition to the H-bridge, connected to an electric lowpass filter consisting of a 10 \si{\kilo\ohm} resistor and a 22 \si{\nano\farad} capacitor. 
 The voltage across the capacatior was measured by an oscilloscope as the power supply for the H-bridge was turned on.
 The measured phase voltages can be seen in figure \ref{fig:small_motor_phases}.
+As the observant reader will notice there are no third harmonic on the graphs, this is because third harmonic injection were not included at the time of the test. 
 It can be seen that the three phase voltages are created correctly by the Zybo board.
 It can also be seen that the rotor is accelerated within a fraction of an electrical revolution, which is expected as there is no torque load. 
 
-\todo[inline]{I am pretty sure this is before third harmonic injection was working! - Mikkel}
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=1\linewidth]{graphics/small_motor_phases}
@@ -54,21 +54,17 @@ As shown in section \ref{sec:electricsimulation}, the general behaviour of the O
 The errors found on the analog and digital boards are mostly related to layout and unintentional short circuits.
 For this reason it is the conviction of the group that one or two revisions of the boards would be necessary to fully debug them.
 
-\subsection{Collected System Test}
-\todo[inline]{Morten. This section is not very scientific, i don't know much of the tests that were done.}
-
-A test of all the products must be performed to determine if it works as intended when combined.
-
-Problems during assembly with ground planes
-
-problem with overcurrent protection
-
-New boards made with (hulprint??)
-
-Working product for powering a small AC motor
-
-Not enough time to test the product with the go-kart
-
+\subsection{Power Board}
+To ensure that the power board was working correctly a test of it was performed. 
+As described in the previous section the developed digital and analog board were not made to function because of time constraints. 
+Instead two simple boards were developed for testing purposes. 
+They only housed the bare minimum functionality of the original boards. 
+That being scaling of output from LEM sensors and torque pedal, routing of signals to/from the DRV8301 and a CR circuit for delaying the SPI slave select signal. 
+\todo[inline]{More Martin? - Mikkel}
+The already tested embedded system on the Zybo was connected and prpgrammed to run the motor.  
+The motor span and ensured that the power board was working correctly. 
+Several exciting measurements on the powerboard comes into mind, but were not done because of time constraints.
+\todo[inline]{Too emotional. I know. Can somebody fix - Mikkel.}
 
 
 
