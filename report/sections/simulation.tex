@@ -426,6 +426,8 @@ The reason this third harmonic injection is only enabled when the magnitude is l
 As stated earlier, the simulink simulation is used to test how the controller handles the five events stated on page~\pageref{sec:Simulations}.
 The simulation will be run with both PI and IP controllers, with values described in sections~\ref{sub:full_order_controller_values} and~\ref{sub:reduced_order_controller_values}. \\
 
+\subsubsection{PI controller}\label{sub:PI05}
+
 At first, a simulation will be run where the throttle is pressed fully from 0.12 s to 5 s, and then released.
 The load is 200 kg, which is enough to guard against wheel spin.
 The resultant current along the d and q axes have been plotted in figure~\ref{fig:Sim_results_pi_Idq}.
@@ -439,6 +441,8 @@ The resultant current along the d and q axes have been plotted in figure~\ref{fi
 
 Much like on figure~\ref{fig:Output_Full}, the current steps up nicely with almost no overshoot. 
 There is also a small steady state error of about 2 \%.
+The noise on both the d and q current at 1.8\si{\second} is caused by the quantization of the encoder. 
+It seems to cause a resonation when the motor is runing at 2250 RPM, that the Clake-park transformation can't handle.
 Meanwhile, the d-axis current is kept very low, at least until 2.6 seconds, when the voltage starts saturating. 
 A small error (of up to -20 A) is not a big issue, as this is likely to occur if the position encoder is not perfectly aligned.
 When saturation occurs, the current drops off almost exponentially. 
@@ -570,6 +574,8 @@ The brake is released at 7 seconds, at which point, the wheel speed experiences 
 The controller responds with a negative torque.
 The total energy of this negative torque pulse is $\mathrm{-58 \si{\joule}}$, which, like the power undershoot on figure~\ref{fig:Sim_results_pi05_large_power_undershoot}, is deemed too much.
 
+\subsubsection{IP controller}\label{sub:IP05}
+
 The IP controller will also be simulated in the full system to determine how well it handles the events.
 In order to do that, the wire going into the Kp gain block must be connected with the feedback wire, instead of the output of the subtraction 'circle'
 
@@ -591,7 +597,7 @@ K_I = 1.23e-2 %0.012272727272727
 
 The reason, $\mathrm{K_P}$ is negative is that it goes to the summing circle from figure~\ref{fig:sim_controller_diagram}, instead of a subtraction circle.\\
 
-Figure~\ref{fig:Sim_results_ip_Idq} shows 
+Figure~\ref{fig:Sim_results_ip_Idq} shows the d and q-axis current as the controller is given a positive and a negative step.
 
 \begin{figure}[H]
 	\centering
@@ -600,9 +606,74 @@ Figure~\ref{fig:Sim_results_ip_Idq} shows
 	\label{fig:Sim_results_ip_Idq}
 \end{figure}
 
+By comparison to the PI controller, the IP controller does significantly worse.
+The steady state error of the q-controller is 10 \%, while the has a stead state error of $\mathrm{16\si{\ampere}}$.
+What's even worse is, that the q-axis current goes below zero before the throttle is released after $\mathrm{5\si{\second}}$.
+That means, that when driving the go-kart at full throttle, the speed of the go-kart will start oscillating quite notably.
+At 5 seconds, the throttle is released, at which point the current should be zero. 
+The current is already at $\mathrm{-22\si{\ampere}}$ at this point, and the negative step does not seem to alter the oscillation in any way.
+The negative torque causes a negative power, as shown in figure~\ref{fig:Sim_results_ip_power}
 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.7\linewidth]{graphics/Sim_results_ip_power}
+	\caption{Negative power caused by oscillation}
+	\label{fig:Sim_results_ip_power}
+\end{figure}
 
-\todo[inline]{Martin: Maybe a paragraph to seperate the controller simulations}
+A power of this magnitude is likely to cause serious damage to the inverter, if it's lost in the inverter, and not used to charge the battery.
+The total energy being delivered back in the timespan shown on figure~\ref{fig:Sim_results_ip_power} to the inverter is 1614J.\\
+Figure~\ref{fig:slip_and_current_ip} displays the wheel slip and current when the wheels are spinning.
+
+\begin{figure}[H]
+	\begin{subfigure}[b]{0.49\linewidth}
+		\centering
+		\includegraphics[width=\linewidth,]{graphics/sim_results_ip_slip_acceleration}
+		\caption{Wheel slip during acceleration}
+		\label{fig:sim_results_ip_slip_acceleration}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.49\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{graphics/sim_results_ip_slip_acceleration_current}
+		\caption{d and q axis current during slip}
+		\label{fig:sim_results_ip_slip_acceleration_current}
+	\end{subfigure}
+	\caption{}
+	\label{fig:slip_and_current_ip}
+\end{figure}
+
+Compared with the PI controller, this controller takes a lot longer to reach maximum slip. 
+This is due to the large steady state error, which is even larger than on figure~\ref{fig:Sim_results_ip_Idq}.
+That is likely due to the faster acceleration, where the IP controller can't 'keep up'.\\
+Once the wheel stop slipping, the controller experiences a new current step, which causes oscillations on both the d and q-axis current.\\
+Figure~\ref{fig:slip_and_current_braking_ip} displays the slip and current when braking and blocking the wheels.
+
+\begin{figure}[H]
+	\begin{subfigure}[b]{0.49\linewidth}
+		\centering
+		\includegraphics[width=\linewidth,]{graphics/sim_results_ip_slip_braking}
+		\caption{Wheel slip during acceleration}
+		\label{fig:sim_results_ip_slip_abraking}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.49\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{graphics/sim_results_ip_slip_braking_current}
+		\caption{d and q axis current during slip. It's getting hard to see what's what}
+		\label{fig:sim_results_ip_slip_braking_current}
+	\end{subfigure}
+	\caption{}
+	\label{fig:slip_and_current_braking_ip}
+\end{figure}
+
+From 5 to 6.3\si{\second}, the wheel does not start locking. 
+However, the d and q-axis current is still oscillating from the current step displayed on figure~\ref{fig:sim_results_ip_slip_acceleration_current}, so it's hard to determine if how the controller handles non-blocking braking.
+At 6.3\si{\second}, the brakes lock, at which time, both the d and q-axis current oscillate.
+This causes the wheel deceleration to be halted at 6.5\si{\second}, as seen on figure~\ref{fig:sim_results_ip_slip_abraking}.
+Because of the slow settling time of the controller, it takes 1.1 seconds for the wheels to block completely. 
+This cause a tremendous waste of energy.
+The same happens when the brake is released again.//
+
+\subsubsection{PI controller with faster settling time}\label{sub:PI01}
 
 Since neither of the two controller designs work optimally, the PI controller will be redesigned with a settling time of $\mathrm{10 \si{\milli \second}}$.
 The controller is designed for a load of $\mathrm{200 \si{\kilogram}}$.
@@ -620,7 +691,28 @@ This block is displayed on figure~\ref{eq:IP_controller_constants}.
 The rising and falling rates are set to $\mathrm{10 \si{\kilo \ampere \per \second}}$ and $\mathrm{-10 \si{\kilo \ampere \per \second}}$.
 This is fast enough, that a driver would not notice.
 
-\todo[inline]{Martin: Need a non-slipping test here}
+Figure~\ref{fig:Sim_results_pi01_Idq} shows the positive and negative current step.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.7\linewidth]{graphics/Sim_results_pi01_Idq}
+	\caption{d and q axis current is a lot more precise than on figure~\ref{fig:Sim_results_pi_Idq}}
+	\label{fig:Sim_results_p01i_Idq}
+\end{figure}
+
+The faster controller is much more precise.
+The rate limiter ensures, that the overshoot is less than 1 percent.
+The steady state error is so small compared to the noise, that it's hard to determine what it is.
+There is a small current overshoot when the pedal is released of only -3\si{\ampere}. The power caused by this is shown on figure~\ref{fig:Sim_results_pi01_power}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width = 0.7\linewidth]{graphics/Sim_results_pi01_power}
+	\caption{A short and small current undershoot of only 0.6 \si{\joule}}
+	\label{fig:Sim_results_pi01_power}
+\end{figure}
+
+The power undershoot is significantly smaller, and lasts for a shorter time, meaning that the energy returned to the inverter is reduced from 25 \si{\joule} to just 600 \si{\milli \joule}.
 
 The slip test has been run with this faster settling time, using the throttle and brake input from figure~\ref{fig:torque_setpoint_waveform}.
 The slip and current during acceleration is displayed on figure~\ref{fig:slip_and_current01}
@@ -668,6 +760,36 @@ Figure~\ref{fig:slip_and_current_braking01} shows the braking and blocking event
 During the non-blocking braking sequence period ranging from $\mathrm{5.36 \si{s}}$ until $\mathrm{6 \si{s}}$, the q-current is almost zero.
 When the wheel starts blocking, the controller inadvertently does produce some q-axis current, but the magnitude is reduced from 40 to 5A. This also means, that the wheel will stop more quickly, which means the total power loss is significantly lower. 
 Similarly, when the brake is released again, there is a negative q-axis current, but it is so much smaller and shorter, that the small amount of negative power it causes, will not be a major problem.
+
+\subsubsection{Conclusion of controller comparison}\label{sub:simulink_conclusion}
+
+The control parameters have been tested on a highly detailed physics simulator, with the conclusion, that neither the PI controller based on the mechanical system, nor the IP controller based on a reduced order system works satisfactorily.
+A faster controller was calculated with tremendous results.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|c || c | c | c |}
+		\hline
+		{Event} & {PI controller} & {IP controller} & Fast {PI controller} \\
+		\hline
+		{Torque step} & {Handles well} & {Slow, steady state error} & {Excellent}\\
+		\hline
+		{Speed limit} & {Great. Same for all} & {Great. Same for all} & {Great. Same for all} \\
+		\hline
+		{Torque release} & {Small power returned}& {Oscillation}& {Great response}  \\
+		\hline
+		{Braking} & {Small torque} &{Large torque} & {Near zero torque}\\
+		\hline
+		{Blocking} & { Wastes energy } & {Wastes more energy} & {Great response} \\
+		\hline
+		{Wheelspin} & { Decent response } & { Slow response } & {Great Response}\\
+		\hline
+	\end{tabular}
+	\caption{Table comparing the abilities of the three tested controllers}
+	\label{tab:simulink_conclusion}
+\end{table}
+
+Both the PI controllers could work, but the faster response gives very precise current control. 
 
 \subsection{Plecs model}\label{sub:sim_plecs_electrical}
 As previously mentioned, the Plecs model differs vastly from the Simulink model in the electrical network, as it more closely resembles the real analog circuit. 

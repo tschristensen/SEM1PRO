@@ -1,9 +1,8 @@
 %!TEX root = ../main.tex
 \section{Embedded Design}\label{sec:Embedded_Design}
-\todo[inline]{Thomas: Describe the encoders of the motor.}
 An embedded system is needed to handle a wide range of task. 
 It is a requirement for the project that the Zybo board should be used as the embedded system in the project.
-The board features a Zynq Z-7010 chip from Xilinx, which has an integrated dual-core ARM Cortex-A9 processor and a Xilinx 7-series field programmable gate array (FPGA).
+The'Zybo board features a Zynq Z-7010 chip from Xilinx, which has an integrated dual-core ARM Cortex-A9 processor and a Xilinx 7-series field programmable gate array (FPGA).
 The Zybo board itself consists among other of several buttons, switches, LEDs and connections for USB, Ethernet, HDMI and several PMOD connectors. 
 Furtheron the FPGA part will be referred to as the Programmable Logic (PL) and the ARM processor as the Processing System (PS). 
 
@@ -14,11 +13,11 @@ An analysis of the complete system yielded the functionalities listed below for 
 \begin{itemize}
 \item Digital inputs and outputs
 \item Generating PWM
-\item Measuring voltage output from LEM sensors
+\item Measuring voltage output from LEM sensors and foot pedal
 \todo[inline]{Thomas: it is a voltage being measured, but we are indirectly measuring a current?}
 \item UART communication with external PC
 \item Control algorithms for dq-control
-\item Read position from encoder circuit
+\item Read position from encoder
 \item SPI communication as master
 \end{itemize}
 
@@ -48,7 +47,7 @@ A task diagram of the complete system on the Zybo can be seen in figure \ref{fig
 
 \begin{figure}[!h]
   \includegraphics[width=\textwidth]{graphics/taskdiagram}
-  \caption[Task diagram]{Task diagram showing software tasks as green circles, shared variables as yellow boxes, IP cores as blue boxes, I/O periphirals as limegreen boxes, external signals as orange boxes and external components in red. The PS and PL areas are marked accordingly and arrows show the data and signal direction. $C_p$ denotes various controller parameters.}
+  \caption[Task diagram]{Task diagram showing software tasks as green circles, shared variables as yellow boxes, IP cores as blue boxes, I/O periphirals as limegreen boxes, external signals as orange boxes and external components as red boxes. The PS and PL areas are marked accordingly and arrows show the data and signal direction. $C_p$ denotes various controller parameters.}
   \label{fig:task_diagram}
 \end{figure}
 
@@ -60,9 +59,9 @@ The PWM generator is placed in the PL and is developed using Xilinx System Gener
 The PWM generator is made to have an adjustable frequency and dutycycle.
 It was choosen to make a center aligned PWM generator as this introduces less harmonic distortion than edge aligned PWM \cite{power_switching_converters}. 
 Furthermore center aligned PWM also produces a symmetrical PWM signal, with a defined midpoint in the PWM-wave where the current can be sampled correctly.
-The high limit for the counter can to be calculated for a given frequency, $f$, by the following:
+The high limit for the counter can be calculated for a given frequency, $f$, by the following:
 $$H = L + \frac{f_{Zybo}}{f\cdot 2}$$
-Where H is the high limit, L is the low limit and $f_{zybo}$ is the clock frequency of the Zynq-7010. 
+Where H is the high limit, L is the low limit and $f_{zybo}$ is the AXI-clock frequency. 
 The PWM counter system can be seen in figure \ref{fig:pwm_counter}.
 The counter block will count up or down depending on the input. 
 The output from the counter value will go into to two compare blocks along with the high and low limits.
@@ -70,7 +69,7 @@ The compare blocks will produce a high signal when the counter value is equal to
 These signals are then fed to a an m-code blocks which contains a simple state machine which determines if the counter should count up or down.
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=0.7\linewidth]{graphics/counter}
+	\includegraphics[width=0.8\linewidth]{graphics/counter}
 	\caption[Block diagram of counter in PWM generator.]{Simulink block diagram of the counter in the PWM generator.}
 	\label{fig:pwm_counter}
 \end{figure}
@@ -79,7 +78,7 @@ The counter signal is then fed into a PWM mechanism shown in figure \ref{fig:pwm
 The dutycycle is given to the PWM generator in the datatype u32, an integer type and therefore the dutycycle is given in a range of 0 to 1000, giving a resolution of 0.1\%.
 The switching limit will be calculated from the following:
 $$l = (1 - \frac{d}{1000}) \cdot r$$
-Where l is switching limit, d is the dutycycle in the range 0 - 1000 and is the counter range.
+Where l is the switching limit, d is the dutycycle in the range 0 - 1000 and r is the counter range.
 A register will then make sure that the switching limit is only passed on when the counter is at its lowest.
 It is important to do so as otherwise the dutycycle can be corrupted.
 The compare block will make the PWM signal by comparing the switcing limit to the counter value.
@@ -88,7 +87,7 @@ As the PWM generator should be able to do three independent PWM signal there are
 
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=0.8\linewidth]{graphics/pwm_system}
+	\includegraphics[width=1\linewidth]{graphics/pwm_system}
 	\caption[Block diagram of PWM generator.]{Simulink block diagram of the PWM mechanism in the PWM generator.}
 	\label{fig:pwm}
 \end{figure}
@@ -104,20 +103,32 @@ As the PWM generator should be able to do three independent PWM signal there are
 
 
 \subsubsection{Interface task}
-The interface task is the task that has to read external signals, output digital signals and control the other tasks.
-The UART tasks will be controlled through two buffers, while the controller and PWM task will have to read the enable variable updated by the interface task.
+The interface task has to read external signals, output digital signals and control the other tasks.
+The task needs to update the enable variable that the controller and PWM task reads.
 The basic funcionality of the interface task can be seen in the flowchart of figure \ref{fig:interface}.
+
+%\begin{figure}[!h]
+%	\centering
+%	\includegraphics[width=0.7\linewidth]{graphics/interface_task}
+%	\caption[Block diagram of PWM generator.]{Simulink block diagram of the counter in the PWM generator.}
+%	\label{fig:interface}
+%\end{figure}
+
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=0.7\linewidth]{graphics/interface_task}
-	\caption[Block diagram of PWM generator.]{Simulink block diagram of the counter in the PWM generator.}
+	\includestandalone[width=0.5\textwidth]{graphics/interface_flow}
+	\caption[Interface task.]{Flow chart illustrating the basic funtionality of the interface task.}
 	\label{fig:interface}
 \end{figure}
-\todo[inline]{Can there be less whitespace in the figure? -MIkkel}
 \todo[inline]{Is the inrush relay explained somewhere?? -MIkkel}
 
-An interface to a PC is established using UART.
-This interface enables the setting of values within the system as well as potentially reading the current status of the system.
+At startup the interface task needs to turn on the inrush relay for a certain time.
+Afterwards the main relay needs to be turned on and the inrush relay is turned off after some time to be sure that the main relay is conducting.
+Then the task will read all signals from the the digital board and if they are all good the global enable variable will be changed to high.
+If one or more of the drive signals indicate a fault, the task will change the enable variable to low.
+
+Alongside the functionality of figure \ref{fig:interface} the interface will act as master for the two UART tasks.
+This enables the setting of values within the system as well as potentially reading the current status of the system.
 All communication through the UART interface is done through the \texttt{rx\_buffer} and \texttt{tx\_buffer} arrays shown in listing \ref{lis:uartvars}.
 Currently three parameters can be set within the system:
 \begin{itemize}
@@ -133,7 +144,7 @@ This is a non-reentrant function that will return all the characters until the f
 Every consecutive call to the function with \texttt{NULL} as the first parameter will continue the search through the same array.
 With the command split into tokens it is parsed using a simple if-structure, comparing each argument in the command using \texttt{strcmp()} until a value can be set.
 
-\begin{lstlisting}[captionpos=b,style=customCpp, caption={Something clever!.}, label=lis:cutcommand, escapeinside={(*@}{@*)}]
+\begin{lstlisting}[captionpos=b,style=customCpp, caption={Something clever!.THOMASSSS!}, label=lis:cutcommand, escapeinside={(*@}{@*)}]
 if(rx_flag)
 {
   char* cmd = strtok(rx_buffer, DELIMITER);
@@ -168,15 +179,15 @@ This could easily be extended to a \texttt{read} or perhaps a \texttt{shutdown} 
 \subsubsection{Controller task}
 \begin{figure}[!h]
 	\centering
-		\includegraphics[width=0.9\linewidth,trim=3cm 15cm 0 2cm]{graphics/controller_tasktikz}
+	\includestandalone[width=0.9\textwidth]{graphics/tikz/Block_diagram1tikz}
+%		\includegr%aphics[width=0.9\linewidth,trim=3cm 15cm 0 2cm]{graphics/controller_tasktikz}
 	\caption[Block diagram of controller task.]{Block diagram showing the functionality of the controller task.}
 	\label{fig:controller_task}
 \end{figure}
 
 The basic functionality of the controller task can be seen in figure \ref{fig:controller_task}.
-\todo[inline]{This figure needs to be updated.!!}
-The task polls data from the ADC in order to get raw data for $I_a$, $I_b$ and the foot pedal.
-The raw data from the ADC are then calculated into voltages and the two currents are calculated based by the equation:
+The task polls data from the ADC in order to get the raw data for $I_a$, $I_b$ and the foot pedal.
+The raw data from the ADC is then calculated into voltages and the two currents are calculated based by the equation:
 \begin{equation}
 	 I = \frac{V_{measured}}{R_m} \cdot NS
 \end{equation}
@@ -190,14 +201,14 @@ The setpoint for $I_d$ is 0 as will be explained later?? .
 \todo[inline]{Where?} 
 The setpoint, $q_{set}$, for $I_q$ should be related to the maximum allowed current, $q_{max}$, and the position of the foot pedal in percent, $pedal_\%$:
 \begin{equation}
-	q_{set} = pedal_\% \cdot q_{max};
+	q_{set} = pedal_\% \cdot q_{max}
 \end{equation}
 It was choosen to use two PI controllers as will be described in section \ref{sec:controller_design}.
 The code for one of the controllers can be seen in listing \ref{lis:controller_code}.
 As can been seen in line 2 trapezoidal integration is used. 
-Lines 4-8 performs anti windup and lines 9-14 uses the output if enable is high and performs integrator reset if low.
+Lines 4-8 performs anti windup and lines 9-14 calculates the output if enable is high and performs integrator reset if low.
 
-\begin{lstlisting}[captionpos=b,style=customCpp, caption={[C code constituting a PI controller.]C code constituting a PI controller with trapezoidal integration, anti windup and integration reset.}, label=lis:controller_code]
+\begin{lstlisting}[captionpos=b,style=customCpp, caption={[C code constituting a PI controller.]C code constituting a PI controller with trapezoidal integration, anti windup and integrator reset.}, label=lis:controller_code]
 d_error = d_set - I_d_measured;
 d_integral = d_integral + (d_previous_error + d_error)*0.5*dt;
 
@@ -229,12 +240,13 @@ if(total_output_magnitude > MAX_TOTAL_OUTPUT){
 \end{lstlisting}
 
 \subsubsection{PWM task}
+\todo[inline]{do I need code here ? - Mikkel}
 The PWM tasks basic functionality can be seen in the block diagram of figure \ref{fig:pwm_task}.
 The PWM task is a seperate task from the controller task as it might be preferrable to have the two tasks run at different frequencies.
 The task reads the rotor position from the encoder and access the global variables $d_{output}$ and $q_{output}$. 
 It uses this information to perform inverse Clarke Park transformation.
 Afterwards third harmonic injection is performed and if the values are higher or lower than the maximum bounds they are saturated.
-The global enable variable is checked and if high the physical enable pin is set high.
+The global enable variable is checked and passed to the physcial enable pin.
 
 
 \begin{figure}[!h]
@@ -260,12 +272,12 @@ When using simultaneous sampling the phase relationship is preserved.
 When unipolar mode is enabled the input range between $V_p$ and $V_n$ is 1 \si{\volt} and the input voltage must always be positive.
 Setting the ADC in event mode, means that the ADC will only sample when there is a rising edge on its CONVST pin. 
 The CONVST pin is connected to the top signal of the PWM generator meaning that the ADC will sample in the center of the PWM pulse.
-This is done to avoid sampling any current spikes. 
+This is done to sample the current correctly. 
 Channels 6 and 14 are paired together in simultaneous mode, meaning that they will be sampled simultaneous.
 Therefore the outputs from the two LEM sensors will be connected to these. 
 The torque pedal signal will be routed to channel 7 which will be sampled after channel 6 and 14.
 The top signal from the PWM generator will start the sampling and therefore it will also set the sampling frequency.
-As the PWM frequency is 20 \si{\kilo\hertz} the PWM frequency will be so as well.
+As the PWM frequency is 20 \si{\kilo\hertz} the ADC sampling frequency will be so as well.
 
 \subsubsection{UART RX/TX}
 In order to facilitate communication between the Zybo board and a PC, a small UART connection is established.
@@ -328,7 +340,7 @@ The Zybo board needs to interface the RMB28MD encoder that is mounted on the mot
 The RMB28MD is an absolute encoder with sine/cosine, SSI and incremental output. 
 It was choosen to use the SSI output as an IP core reading the position by SSI communication was made available by the supervisors of the group.
 Reading the position throug SSI yields a resolution of 8bit per mechanical revolution. 
-The physical RMB28MD encoder signals are interfaceb by a IP Core made by the supervisors.
+The physical RMB28MD encoder signals are interfaced by an IP Core..
 The IP core outputs a clock to the RMB28MD chip and reads data from a datapin. 
 It then makes the data available on the AXI4LITE bus, where it can be read from software by the PWM task. 
 
@@ -359,7 +371,6 @@ The SPI controller was initialized in software and was configured to be in maste
 In order to comply with the SPI specifications of the DRV8301 it was configured with the XSPIPS\_CLK\_PHASE\_1\_OPTION in order to make data valid on falling edges of the clock. 
 The discharge of a capacitor is utialized to make a delay on the Slave Select signal, by putting a XX capacitor and XX resistor in series with the signal.
 The transmission of \texttt{0b0001000000110000} were measured by an oscilloscope and can be seen in figure \ref{fig:spi_graph}.
-\todo[inline]{can 0b0001000000110000 be written more beautifull?? :) Mikkel}
 
 \begin{figure}[!h]
 	\centering
@@ -369,6 +380,7 @@ The transmission of \texttt{0b0001000000110000} were measured by an oscilloscope
 \end{figure}
 
 
+\subsection{Task frequencies}
 
 \subsection{Timing TEST or whatever}
 
