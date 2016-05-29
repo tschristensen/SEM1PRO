@@ -1,4 +1,4 @@
-\documentclass[a4paper,10pt]{article}
+\documentclass[a4paper,10pt, twoside]{article}
 \usepackage[utf8]{inputenc}
 \setcounter{tocdepth}{2} %Only show sections and subsections in toc.
 
@@ -48,7 +48,7 @@
   }%
 }
 
-\usepackage{fullpage}
+\usepackage[inner=4cm,outer=2cm]{geometry}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{dred}{rgb}{0.545,0,0}
@@ -122,23 +122,20 @@
 \clearpage
 \newpage
 \pagenumbering{arabic}
-%\input{sections/introduction}
-%\input{sections/requirements}
-%\input{sections/systemdescription}
-%\input{sections/systemdiagram}
+\input{sections/introduction}
+\input{sections/requirements}
+\input{sections/systemdescription}
+\input{sections/systemdiagram}
 \input{sections/boardlayout}
 \input{sections/zybo}
-%\input{sections/threephaseinverter}
-%\input{sections/PMACmotor}
+\input{sections/threephaseinverter}
+\input{sections/PMACmotor}
 \input{sections/motormodel}
 \input{sections/simulation}
-%\input{sections/testsetup}
-%\input{sections/conclusion}
+\input{sections/testsetup}
+\input{sections/conclusion}
 \newpage
 \input{bib}
 \newpage
-\appendix
-\input{appendix/extendedlayout}
-
 \end{document}
 
