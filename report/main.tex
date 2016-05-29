@@ -1,7 +1,8 @@
-\documentclass[a4paper,10pt]{article}
+\documentclass[a4paper,10pt, twoside]{article}
 \usepackage[utf8]{inputenc}
 \setcounter{tocdepth}{2} %Only show sections and subsections in toc.
 
+\usepackage{colortbl}
 \usepackage{siunitx} %Package for SI units
 \sisetup{per-mode=fraction}
 
@@ -24,7 +25,7 @@
 \usepackage{standalone}
 \usepackage{circuitikz} 	%Utility to draw circuits in tikz
 
-\usepackage{todonotes}
+\usepackage[]{todonotes}
 \usepackage{listings}
 \usepackage{multirow}
 
@@ -49,7 +50,7 @@
   }%
 }
 
-\usepackage{fullpage}
+\usepackage[inner=4cm,outer=2cm]{geometry}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{dred}{rgb}{0.545,0,0}
@@ -130,6 +131,7 @@
 \input{sections/boardlayout}
 \input{sections/zybo}
 \input{sections/threephaseinverter}
+\input{sections/caps_and_layout}
 \input{sections/PMACmotor}
 \input{sections/motormodel}
 \input{sections/simulation}
@@ -138,8 +140,5 @@
 \newpage
 \input{bib}
 \newpage
-\appendix
-\input{appendix/extendedlayout}
-
 \end{document}
 

@@ -1,16 +1,16 @@
 %!TEX root = ../main.tex
 
 \section{Hardware Description}
-The project includes many parts that must be combined to make the kart actually drive. 
-A short description of each part is made to provide an overview of the system.
+Many parts are involved in making the go-kart drive.
+This section will give a short description of each part in order to make an overview of the system.
 
 \subsection{Go-Kart Frame}
 The Go-Kart itself consists of a pre assembled aluminium frame with wheels, steering column, break pedal and seat all pre-attached to the frame. 
-Behind the seat a plate is attached to fit all of the power electronics and drive systems that are designed throughout this project.
+A plate is atteched behind the seat to fit all of the power electronics and drive systems that are designed throughout this project.
 To the right of the driver a mount is positioned for the motor.
 The mount is protected by a metal cover. 
 In order to transfer rotation to the rear wheels, a gearing is placed between the motor and the rear axle.
-A conventional disc brake comes pre-installed on the kart with the break pedal connected using hydraulic fluid.
+A conventional disc brake comes pre-installed on the kart with the break pedal connected using a hydraulic connection.
 The speeder pedal is also installed, but with no mechanical effect on the system.
 
 \begin{figure}[!h]
@@ -34,19 +34,19 @@ The speeder pedal is also installed, but with no mechanical effect on the system
 \subsection{Battery Supply}
 The batteries provided for this project are called: "SB12V20P-FC Super B
 Lightweight Lithium Ion starter battery". \todo{cite datasheet}
-Four of these batteries will be put in series, yielding a combined nominal voltage of 52.8V and a discharge current of 560A. The discharge current can go up to as much as 1200\si{\ampere} for a second.
-The batteries are relatively small at $\approx 238x120x82\si{\milli\meter}$ and $3.2\si{\kg}$ of weight each.
+Four of these batteries will be put in series, yielding a combined nominal voltage of 52.8V and a discharge current of 560A. 
+The discharge current can go as high as 1200\si{\ampere} for one second.
 The batteries will be providing all the required power for the go-kart, including the motor and all control and drive circuits.
 
 \subsection{PMAC Motor}
-The PMAC motor provided is a three phase motor capable of producing 6 hp continuously, and 19 hp for a minute, up to a maximum rotational speed of 5000 rpm. It has a high efficiency of 90 percent and a stall torque of 38 Nm. Its typical uses is, among other things, marine, robotics and gokarts.
+The PMAC motor provided is a three phase motor capable of producing 6 hp continuously and a peak power of 19 hp for a minute, at a maximum rotational speed of 5000 rpm. 
+It has a high efficiency of 90 percent and a stall torque of 38 Nm. Its typical uses are, among other things, marine, robotics and go-karts.
 At 19 hp and 5000 rpm, it is comparable with engines typically used for go karts recreational use, but its speed is significantly lower.
-The power curve of the motor is also likely different from a gasoline engine, but there's no way to compare them.
-\todo[inline]{Is power curve relevant?  - Mikkel}
+\todo[inline]{Thomas: Is recreational use legal?}
 
 
 \subsection{Torque Pedal}
-The foot pedal or "speeder" will be used to control the torque produced by the motor and will henceforth be referred to as torque pedal. 
+The foot pedal or "speeder" will be used to control the torque produced by the motor and will henceforth be referred to as a torque pedal. 
 It consists of a levered variable resistor with the equivalent diagram seen in figure \ref{fig:Torque_pedal_diagram}.
 
 The torque pedal will be used to control the speed by increasing or lowering the resistance, resulting in a change in voltage on the return wire. 
@@ -71,7 +71,8 @@ By nature a variable resistor will be noisy therefore filtering the signal will 
 \end{figure}
 
 \subsection{Switches and Wiring}
-The wiring of the kart frame is not pre-assembled, but has been provided by the supervisors of the project, as this is standardized across multiple projects. 
+The wiring of the kart frame is not pre-assembled, but has been provided by the supervisors of the project, as this is standardized across multiple projects.
+\todo[inline]{Thomas: What other projects use this go-kart?}
 A diagram of the wiring can be seen on figure \ref{fig:Kart_wiring_diagram}.\newline
 
 The diagram shows the Sevcon Gen4 controller as the centrepiece surrounded by the other active parts. 

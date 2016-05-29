@@ -2,11 +2,10 @@
 
 \section{Electronics Design}
 \label{sec:electronics}
-\todo[inline]{We should have a very broad introduction somewhere. With diagrams of all the electric board. We should write somewhere that we chose the 3-phase driver and why.  - Mikkel.}
-\todo[inline]{Mikkel: Powerboard is in another afsnit??}
 This section is dedicated to describing the electronics designed throughout this report.
-This includes an analog, a digital and a power board, as well as a driver board.
+This includes an analog, a digital and a driver board.
 Each of these boards, the choice of components and the layout will be discussed in appropriate detail in the following sections.
+While the power board is referenced throughout this section, the discussion of the power board can be found in section \ref{sec:powerboard}.
 One aspect of the layout specifically is important; the grounding layout.
 As this discussion provides a convenient means of giving an overview of the various components, the grounding will be discussed initially:
 
@@ -21,18 +20,16 @@ This will surely compromise the integrity of more crucial signals such as the cu
 GNDD will also carry significant noise from the digital circuitry and should also be kept separate from GNDA.
 The only crossover between the GNDD and GNDA will happen in the DRV8301 (see section \ref{sec:driverboard}) and in the NOR circuitry described in section \ref{sec:nor}.
 The latter occurs at the over-current event signal which is generated on the analog board but used in the digital system.
-An analog signal is fed to the SN74LVC1G17, a buffer with built-in Schmitt-trigger circuitry which is supplied from the digital 3.3\si{\volt} rail.\\
+An analog signal is fed to the SN74LVC1G17, a buffer with built-in Schmitt-trigger circuitry which is supplied from the digital 3.3\si{\volt} rail, thereby connecting the grounds.\\
 A simplified overview of the grounding planes can be seen on figure \ref{fig:groundplanes}.
-\todo[inline]{Mikkel: Little bit confusing?}
 \begin{figure}[!h]
 	\centering
 	\includegraphics{graphics/ground_plane}
-	\caption{Simplified view of the electronics with the ground planes marked.}
+	\caption[Simplified view of the electronics.]{Simplified view of the electronics with the ground planes marked. Red is digital ground, green is analog ground and blue is power ground.}
 	\label{fig:groundplanes}
 \end{figure}
-\todo[inline]{Mikkel: I don't think all the TEN20-4823WIN ect. names should be here.}
 As it is undesirable to have the potentially noisy GNDP present on the boards, it is constrained to one corner of the digital board.
-Here it is used to supply the TEN20-4823WIN and the TVN5-4811WI isolated dc-dc converters that generate the $\pm15$\si{\volt} and 5\si{\volt} rails respectively.
+Here it is used to supply the isolated DC-DC converters that generate the $\pm15$\si{\volt} and 5\si{\volt} rails respectively.
 The previously mentioned 3.3\si{\volt} rail is generated on the Zybo board.
 The driver chip (The DRV8301 is discussed in more detail in section \ref{sec:driverboard}), is also supplied from the power rail, and as such GNDP is extended to a corner of the driver board.
 Limiting the extent of GNDP is also the reasoning behind generating the $\pm15V$ rail on the digital board, even though it is used exclusively on the analog board.
@@ -45,9 +42,8 @@ Mainly the over-current protection, but also the torque pedal scaling is present
 \label{sec:ocpcircuit}
 In order to protect the system, it is necessary to create some form of over-current protection, OCP.
 Two choices immediately present themselves:
-\todo[inline]{Mikkel:Shut down the drivers= shut down gatesignals to FETS?.}
 \begin{enumerate}
-	\item The DRV8301 is equipped with current sensing circuitry that allows the chip to automatically shut down the drivers when an over-current event, OCE, occurs.
+	\item The DRV8301 is equipped with current sensing circuitry that allows the chip to automatically shut down the gate drivers when an over-current event, OCE, occurs.
 	\item External circuitry that, based on the measurements done by the current transducers, detects an OCE and turns off the drive signals by driving the EN\_GATE signal of the DRV8301 low. 
 \end{enumerate}
 
@@ -69,7 +65,7 @@ The output of this amplifier is given by:
 	V_{out} = \left(1+\frac{R_4}{R_3}\right)\left(V_1\frac{R_2}{R_1+R_2}+V_2\frac{R_1}{R_2+R_1}\right)
 \end{equation}
 
-No amplification of the signals is wanted, thus the resistances are all set to $R=20k\Omega$. \todo{Thomas:Need correct values from Klaus/Martin}
+No amplification of the signals is wanted, thus the resistances are all set to $R=10\si{\kilo\ohm}$.
 With all three phase signals available it is possible to process them to detect any OCE's. 
 
 \begin{figure}
@@ -110,7 +106,6 @@ Figure \ref{fig:rectifier} shows the voltages at these points.
 	\caption{The condition of the signal at points $V_i$, $V_r$ and $V_o$ in the full wave rectifier.}
 	\label{fig:rectifier}
 \end{figure}
-\todo[inline]{Thomas: It was my intention to explain the function of this full-wave rectifier but it somehow illudes me}
 \paragraph{Thresholding:}
 \label{sec:schmitt}
 As explained in section \ref{sec:lemsensor}, the input signal to the OCP circuit is dimensioned such that the maximum current in either of the phases will result in a voltage of 0.5\si{\volt}.
@@ -144,9 +139,6 @@ $R_7$ and $R_8$ can now be isolated using \ref{eq:vhigh} and \ref{eq:vlow}:
 Resulting in $R_7 = 150$\si{\kilo\ohm} and $R_8 = 2542.37$\si{\ohm}.
 Since 2542.37\si{\ohm} is hardly a standard value, the nearest standard value is chosen such that $R_8=2550$\si{\ohm}.
 
-\todo[inline]{Thomas: What do these rounded values result in, in terms of hysteresis}
-\todo[inline]{Thomas: I think there is an error in the calculations vs the text - it seems the values result in 0.475 when we discussed 0.45 volt hysteresis.}
-
 \paragraph{Inverter:}
 Due to the NOR-stage described in section \ref{sec:nor}, it is necessary to invert the signal.
 A simple comparator is used to achieve this effect.
@@ -160,17 +152,14 @@ This is discussed in further detail in later sections.
 \label{sec:lemsensor}
 While these current sensors are not strictly part of the analog board, the circuitry related to them is and therefore it was chosen to include their description here.
 The LF 205-S utilises the Hall effect in order to measure the current flowing through a wire.
-Figure \ref{fig:lf205function} depicts an equivalent circuit of the functionality of the transducer.
-As can be seen, the LF 205-S functions like a transformer.
-\todo[inline]{Mikkel: where is the figure?}
-As per the datasheet this transformer has a 1:2000 turns ratio, therefore the secondary current, $I_S$ can be found as:
+As per the datasheet the internal transformer has a 1:2000 turns ratio, therefore the secondary current, $I_S$ can be found as:
 \begin{equation}
 	\frac{I_S}{I_P}=\frac{N_P}{N_S} \quad \Rightarrow \quad I_S = \frac{I_P}{N_S}
 \end{equation}
 Essentially, the LF 205-S generates a current proportional to the current flowing through the device, the primary current; $I_P$.
 By changing the value of the resistor $R_m$, the resulting voltage drop can be dictated.
 
-In section \todo[inline]{Thomas: Section documenting the maximum current to be expected in each phase.} the maximum current to be expected in each phase is found to be 300$A$.
+In section \ref{sec:inverter} the maximum current to be expected in each phase is found to be 300$A$.
 As will be described in section \ref{sec:emb}, the ADC on the Zynq chip can work on signals in the ranges 0\si{\volt}-1\si{\volt} or $\pm0.5$\si{\volt}.
 Since the current is sinusoidal it can be negative.
 Choosing the range $\pm0.5$\si{\volt} therefore simplifies the circuitry needed to read the value correctly.
@@ -180,10 +169,13 @@ Thus:
 \begin{equation}
 	R_m = \frac{0.45}{I_{Pmax}/N_S} = 3\Omega
 \end{equation}
-\todo[inline]{Mikkel: Should be updated with the real meaning of bipolar.}
 
+It has later been discovered that bi-polar does not allow for voltages to be below the digital ground.
+For this reason unipolar mode is used instead.
+In order to properly read the values, 0.5\si{\volt} is added to the signal using a summing amplifier.
+ 
 \subsubsection{Torque Pedal Downscale}
-The torque pedal is simply a variable resistor, $R_{tp}=7.5$\si{\kilo\ohm}. \todo[inline]{Thomas: Verify resistor value on final system}
+The torque pedal is simply a variable resistor, $R_{tp}=7.5$\si{\kilo\ohm}. 
 As the pedal is actuated the resistance changes.
 Figure \ref{fig:torquepedaldownscale} is a depiction of the circuit used to read the position of the torque pedal.
 
@@ -192,11 +184,12 @@ The analog input of the ADC in the FPGA, however, is limited to 0-1\si{\volt}.
 Therefore it is necessary to downscale the voltage.
 Intuitively this could be done using simply a voltage divider, but since the torque pedal functions as a voltage divider, the varying resistance distribution of the torque pedal would influence the voltage divider.
 For this reason a voltage follower is used to isolate the two circuits.
-In addition, a 5.1\si{\volt} zener diode is clamping the signal to ground in order to protect the ADC of the FPGA.
-\todo{capacitor for noise}
+In addition, a 5.1\si{\volt} zener diode is clamping the signal to ground in order to protect the ADC of the Zybo.
+Due to the mechanical nature of this signal it is expected to be reasonably noisy, therefore a filtering capacitor is placed on the output.
+This will act as a low-pass filter, stabilising the output signal.
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=.75\linewidth]{graphics/torque_pedal_downscale}
+	\includegraphics[width=.75\linewidth,trim=0cm 1.5cm 0cm 2cm]{graphics/torque_pedal_downscale}
 	\caption{Circuit used to scale the voltage from the torque pedal from $0V\rightarrow5V$ to $0V\rightarrow1V$.}
 	\label{fig:torquepedaldownscale}
 \end{figure}
@@ -205,17 +198,15 @@ The resistance of the pedal is assumed to change linearly, which means the volta
 Voltage at the point TP as a function of pedal is:
 
 \begin{equation}
-V_{TP}(R_P) = V_{CC} \frac{R_P}{R1 + R_P} \frac{R3}{R3 + R2}
+V_{TP}(R_P) = V_{CC} \frac{R_P}{R1 + R_P}\cdot \frac{R3}{R3 + R2}
 \label{eq:pedal_voltage}
 \end{equation}
-\todo[inline]{Mikkel: Do we need so much whitespace in this figure?}
-\todo[inline]{Mikkel: IS there a reason why numbers on resistors are not subscripted?.}
 By isolating $\mathrm{R_P}$, it's possible to calculate what its resistance is. 
 The resistance of $\mathrm{R_P}$ varies from $0$ to 7.5\si{\kilo\ohm}, as the pedal is pressed down. 
 Hence, equation~\ref{eq:pedal_back_calc} will give a value proportional to the torque requested by the driver
 
 \begin{equation}
-R_P = \frac{V_{TP} R1 \cdot (R2 + R3)}{R3 \cdot (V_{CC} - T_{TP}) -  V_{TP} \cdot R2}
+R_P = \frac{V_{TP}\cdot R1 \cdot (R2 + R3)}{R3 \cdot (V_{CC} - T_{TP}) -  V_{TP} \cdot R2}
 \label{eq:pedal_back_calc}
 \end{equation}
 
@@ -238,15 +229,12 @@ Additionally this board houses the in-rush relay.
 \subsubsection{Drive Enable Signal}
 This signal is produced by the torque pedal.
 When the user actuates the pedal a switch is connected to ground. 
-By reading the drive enable signal it is therefore possible to determine when the controller should be running, allowing a means for avoiding integral windup.
+By reading the drive enable signal it is therefore possible to determine when the controller should be running.
 Since this signal is left floating when the pedal is not active, it can be routed directly to the Zybo, using the internal pull-up resistors.
-\todo[inline]{Mikkel: It has nothing to do with windup, but reset .}
-\todo[inline]{Thomas: Is the torque pedal active low or active high? Correct two places above to reflect the correct case}
 \subsubsection{Driver Enable Circuit}
 \label{sec:nor}
 The DRV8301 is equipped with a pin called \texttt{EN\_GATE}.
-If, while running, this pin is pulled low, the drive signals are immediately shut down.
-\todo[inline]{Mikkel: Gate signals.}
+If, while running, this pin is pulled low, the gate signals are immediately shut down.
 This feature allows for fast and reliable shut down of the motor in case of any detected faults.
 There are two different types of faults detected within the system, the aforementioned OCE and an over-temperature event, OTE.
 In addition to these two a signal is routed from the Zybo which enables the digital part of the system to disable/enable the motor, should the need arise.
@@ -292,11 +280,13 @@ Instead of closing this relay immediately, an additional relay is set in paralle
 This is the in-rush relay.
 In series with the in-rush relay is placed a resistor which is dimensioned to limit the current sufficiently.
 This circuit can be seen in figure \ref{fig:irrelay}.
-\todo[inline]{Thomas: I guess we would like to actuyally have this calculation...}
+It has been decided that charging the capacitors to 90\% in two seconds is acceptable.
+In order to do this, the series resistor should be 50\si{\ohm}.
+This results in approximately 1\si{\ampere} current.
 
 \begin{figure}[!h]
 	\centering
-	%\includegraphics[width=.5\linewidth,trim=0cm 4.5cm 0cm 0cm]{graphics/irrelay}
+	\includegraphics[width=.5\linewidth,trim=0cm 4.5cm 0cm 0cm]{graphics/irrelay}
 	\caption[In-rush relay.]{In-rush relay circuit. A small relay is driven from the Zybo in order to pre-charge the capacitors before switching the main relay.}
 	\label{fig:irrelay}
 \end{figure}
@@ -305,9 +295,8 @@ This circuit can be seen in figure \ref{fig:irrelay}.
 \label{sec:driverboard}
 The third and final board created in this project is the driver board.
 This board is made exclusively to house the DRV8301, the driver chip chosen for this project.
-The reason for the seemingly superfluous board is that there is no equipment available capable of creating the small footprint of the chip.
+The reason for the seemingly superfluous board is that there is no equipment available to the group capable of creating the small footprint of the chip.
 Therefore this board is made by an external fabricator.\\
-\todo[inline]{Mikkel: Can nobody make it? ;).}
 The DRV8301 is a three-phase gate driver with a built-in buck converter.
 Additionally it features both dead time control as well as over-current protection.
 This chip is made specifically with driving PMAC motors in mind, making it an ideal candidate for this project.
@@ -412,7 +401,7 @@ The OC\_ADJ\_SET allows setting the value of $V_{ds}$ appropriate for the type o
 As previously mentioned, this value is equal $V_{ds}=0.96$\si{\volt}.
 Figure \ref{fig:vdstable} shows the different values that can be set as the threshold.
 Since 0.96\si{\volt} is not available, the nearest value below is chosen.
-Choosing a value above would result in an OC limit higher than the 300\si{\ampere} specified.	\todo[inline]{Thomas: Are we sure that it is 300 ampere in the calculations? why not 150 when the fets are parallelised?}
+Choosing a value above would result in an OC limit higher than the 300\si{\ampere} specified.
 For this reason, the threshold is set to $V_{ds}=0.926$\si{\volt} by setting OC\_ADJ\_SET in control register 1 equal to 23.
 
 \begin{figure}
