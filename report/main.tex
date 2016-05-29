@@ -8,6 +8,7 @@
 \usepackage{textcomp} %Vertically centered tilde (~)
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{standalone}
 
 \usepackage[font={small}]{caption}
 \usepackage{subcaption}
@@ -20,7 +21,7 @@
 
 \usepackage{tikz} 			%Utility to draw nice figures
 \usetikzlibrary{shapes.geometric, arrows}
-
+\usepackage{standalone}
 \usepackage{circuitikz} 	%Utility to draw circuits in tikz
 
 \usepackage{todonotes}
@@ -108,7 +109,6 @@
 
 \begin{document}
 \input{sections/titlepage.tex}
-
 \newpage
 \pagenumbering{Roman}
 \input{sections/abstract}
@@ -125,11 +125,11 @@
 %\input{sections/requirements}
 %\input{sections/systemdescription}
 %\input{sections/systemdiagram}
-%\input{sections/boardlayout}
-%\input{sections/zybo}
+\input{sections/boardlayout}
+\input{sections/zybo}
 %\input{sections/threephaseinverter}
 %\input{sections/PMACmotor}
-\input{sections/motormodel}
+%\input{sections/motormodel}
 %\input{sections/simulation}
 %\input{sections/testsetup}
 %\input{sections/conclusion}
@@ -137,7 +137,7 @@
 \input{bib}
 \newpage
 \appendix
-%\input{appendix/extendedlayout}
+\input{appendix/extendedlayout}
 
 \end{document}
 
