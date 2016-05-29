@@ -8,7 +8,6 @@
 \usepackage{textcomp} %Vertically centered tilde (~)
 \usepackage{amsmath}
 \usepackage{graphicx}
-\usepackage{standalone}
 
 \usepackage[font={small}]{caption}
 \usepackage{subcaption}
@@ -21,7 +20,7 @@
 
 \usepackage{tikz} 			%Utility to draw nice figures
 \usetikzlibrary{shapes.geometric, arrows}
-\usepackage{standalone}
+
 \usepackage{circuitikz} 	%Utility to draw circuits in tikz
 
 \usepackage{todonotes}
@@ -109,6 +108,7 @@
 
 \begin{document}
 \input{sections/titlepage.tex}
+
 \newpage
 \pagenumbering{Roman}
 \input{sections/abstract}
@@ -121,18 +121,18 @@
 \clearpage
 \newpage
 \pagenumbering{arabic}
-%\input{sections/introduction}
-%\input{sections/requirements}
-%\input{sections/systemdescription}
-%\input{sections/systemdiagram}
-%\input{sections/boardlayout}
-%\input{sections/zybo}
+\input{sections/introduction}
+\input{sections/requirements}
+\input{sections/systemdescription}
+\input{sections/systemdiagram}
+\input{sections/boardlayout}
+\input{sections/zybo}
 \input{sections/threephaseinverter}
-%\input{sections/PMACmotor}
-%\input{sections/motormodel}
+\input{sections/PMACmotor}
+\input{sections/motormodel}
 \input{sections/simulation}
-%\input{sections/testsetup}
-%\input{sections/conclusion}
+\input{sections/testsetup}
+\input{sections/conclusion}
 \newpage
 \input{bib}
 \newpage

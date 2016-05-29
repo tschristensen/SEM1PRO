@@ -7,12 +7,12 @@ Figure \ref{fig:blockdiagram1} shows a simplified diagram of the wiring, where t
 The highlighted green component is the Zybo board.
 The PMAC motor, the driver and the inverter are all placed to the right of the controller board.
 Both the driver and inverter are parts of the Sevcon Gen4 controller and as such, they must be developed.
-The two blocks next to the motor are the LEM current sensors. 
+The two blocks next to the motor are LEM current sensors. 
 Two of these are sufficient as the third current can be calculated using Kirchoff's current law.
-The encoder is measuring the rotational position of the motor and feeding it to the controller.
+The encoder is measuring the rotational position of the rotor and feeding it to the controller.
 All three encoder signals might not be needed but they will be routed to have the opportunity to do so. \newline
 
-To the left of the zybo the different safety systems are placed.
+To the left of the Zybo the different safety systems are placed.
 These will ensure that starting, stopping and emergency procedures are handled safely, preferably without any burned components.
 On top are the different switches, the key switch, the emergency switch and the enable switch.
 Below these is the undervoltage protection circuit which ensures that the kart is only driving when sufficient power is supplied. 
@@ -25,9 +25,13 @@ The final parts to the left are the torque pedal for the kart and the battery su
 	\label{fig:blockdiagram1}
 \end{figure}
 \todo[inline]{Thomas: Changes to the graphic: Zybo, not Zynq - In the encoder block, GND overlaps with edge of block, Wires to LEM sensors look messy - is it possible to flip all blocks to have text correctly oriented everywhere - more distance needed between text in green block and edge of block - weird dot on GND wire of battery undervoltage detection - make all wires same thickness - minimize whitespace, especially vertically.}
+\todo[inline]{Mikkel: ADC is not +- 0.5 volt anymore}
+\todo[inline]{Mikkel: We use some other ports on the encodder now.}
 A more technical diagram of the drive control process can be seen on figure \ref{fig:blockdiagram2}
 This diagram shows that the input to the controller will be d and q values gained from performing a dq transform, also known as the Clarke-Park Transform.
 \todo[inline]{Thomas: I'm not quite sure that i understand what this means..}
+\todo[inline]{Mikkel: This needs to be explained a bit better. May I give it a try? }
+\todo[inline]{Mikkel: To the figure: The Zybo does not handle the driver.}
 These are calculations done from a three phase AC voltage that turns them into two DC voltage phases and a zero phase. 
 dq is used to control the motor speed because it allows for simplified calculations compared to using the three AC signals. \newline
 
@@ -46,7 +50,10 @@ Based on the two diagrams seen in figures \ref{fig:blockdiagram1} and \ref{fig:b
 \subsection{Electronics}
 The electronics include the circuit boards that are required to fulfil the task.
 Three boards are developed, an analog board, a digital board and a small board to house the gate driver.
+\todo[inline]{Mikkel: Maybe we should just talk about what problems that has to be handled and not how we did it yet.}
 These three boards must implement the functions listed here:
+\todo[inline]{Mikkel: Battery undervoltage protection is done by the supervisors?.}
+\todo[inline]{Mikkel: Currente transducer = LEM right? Maybe it is better to write this}
 \begin{itemize}
 \item The battery undervoltage protection circuit / Overcurrent protection.
 \item Current transducer. The transducer itself will be placed on the power wires to the motor, however the circuitry for reading the signal is placed on these boards.
@@ -64,11 +71,11 @@ The Zybo board features a Zynq 7010 chip with a dual core 64-bit Arm processor.
 Also included in the chip is an FPGA area (Programmable logic or PL).
 The PL will be used to create the logic required for generating the PWM signals needed to regulate the PMAC motor. 
 The Zybo board will need to implement the functions listed here:
-
+\todo[inline]{Mikkel: I don't think it should be specific yet. Only a listing of task to do..}
 \begin{itemize}
-\item Creation of PWM signals. The motor will require a 3-phase control signal in order to run, this is created using 3-phase PWM.
-\item Controller. The digital controller used to control the entire system will be implemented using the processer in the system (Programmable system or PS). 
-\item Interface for peripherals. A number of switches, LED's, Enables and fault signals are used in the control of the motor. The Zybo must implement the necessary interfaces in order to properly handle these signals.
+\item Creation of PWM signals. The motor will require a three phase sinusoidal signal in order to run, this is created using PWM.
+\item Controller. The digital controller used to control the entire system will be implemented using the processer in the system
+\item Interface for peripherals. A number of switches, LED's, enable and fault signals are used in the control of the motor. The Zybo must implement the necessary interfaces in order to properly handle these signals.
 \item Conversion of the analog signal created by the current transducers into a digital signal which can be used in controlling the motor.
 \item Decoding the input from the encoder.
 \item Interface to a PC in order to update controller values or read relevant information.
@@ -89,11 +96,13 @@ Listing the functionality of the power electronics:
 \item Don't burn or fail.
 \end{itemize} 
 \todo[inline]{Morten: Any more?}
+\todo[inline]{Mikkel: More!}
 
 The development of the power electronics is discussed in more detail in section \ref{sec:power}.
 \todo[inline]{Thomas: This part is a bit weak, I am sure there are more requirements - perhaps Erlingur knows something about it?}
 
 \subsection{PMAC Motor}
+\todo[inline]{Mikkel: Propel? And I think this section should be more like the other}
 Clearly, the function of the motor is to propel the go-kart forwards.
 It is equipped with an encoder which can, through SPI, provide the position of the rotor.
 Additionally, as mentioned previously, it is also necessary to measure the current running through each of the phases of the motor.
