@@ -100,12 +100,6 @@ As the PWM generator should be able to do three independent PWM signal there are
 	\label{fig:pwm}
 \end{figure}
 
-<<<<<<< HEAD
-=======
-\todo[inline]{Thomas: The first two blocks in \ref{fig:pwm} seem to be broken?}
-\todo[inline]{Thomas: I would like it if the signals in the diagrams were given space-less names: counter\_out}
-
->>>>>>> fc976f2978e24ae58fd6434c622b02ccd02d0a17
 \begin{figure}[!h]
 	\begin{center}
 		\includegraphics[width=\linewidth]{graphics/pwm_plot}
@@ -400,6 +394,27 @@ The transmission of \texttt{0b0001000000110000} was measured using an oscillosco
 \end{figure}
 
 \subsection{Task frequencies}
+Table \ref{tabl:task_freq} shows the frequencies at which the task are run.
+The PWM task will be run at 20 \si{\kilo\hertz} as it can the update the dutycycles at the same rate as the PWM generator outputs.
+The controller task will run at 5 \si{\kilo\hertz} as will be explained in section \ref{sec:controller_design}.
+The most essential functionality of the interface task is to update the enable variable. 
+As the driver chip shuts down the inverter in case of an overcurrent event it is not very time critical to do so.
+Therefore it was chosen to run the interface task at 1\si{\kilo\hertz}.
+
+\begin{table}[]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor[HTML]{C0C0C0} 
+\textbf{Task} & \textbf{Frequency} 				\\ \hline
+PWM     	  & 20\si{\kilo\hertz}               \\ \hline
+Controller    & 5\si{\kilo\hertz}               \\ \hline
+Interface     & 1\si{\kilo\hertz}              \\ \hline
+Uart          & 100\si{\hertz}            		\\ \hline
+\end{tabular}
+\caption{Table showing the frequency of each task.}
+\label{tabl:task_freq}
+\end{table}
 
 \subsection{Timing TEST or whatever}
 
