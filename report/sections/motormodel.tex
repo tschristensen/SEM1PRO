@@ -30,18 +30,17 @@ The figures show that the PMSM motor can be represented as an electrical diagram
 	\centering
 	\begin{subfigure}[t]{.5\linewidth}
 		\includegraphics[width=\textwidth]{graphics/d_axis_equivalent}
-		\caption{PMSM motor equivalent circuit, d-axis}
+		\caption{PMAC motor equivalent circuit, d-axis}
 		\label{fig:PMSM_Equivalent_d_axis}
 	\end{subfigure}
 	\hspace{1cm}
 	\begin{subfigure}[t]{.30\linewidth}
 		\includegraphics[width=\textwidth]{graphics/q_axis_equivalent}
-		\caption{PMSM motor equivalent circuit, q-axis}
+		\caption{PMAC motor equivalent circuit, q-axis}
 		\label{fig:PMSM_Equivalent_q_axis}
 	\end{subfigure}
-	\caption{Source: http://goo.gl/EM8LoN}
+	\caption{PMAC Motor $I_d $ and $I_q$ equivalent diagrams.\cite{pmac_equivalent_diagram}}
 \end{figure}
-\todo{Morten: add source to cites or make it yourself!}
 
 The components shown are: the mutual inductance $l_s$, $L_md$ and $L_mq$. Armature resistance $R_s$ and flux leakage for both d and q axes.
 
@@ -60,18 +59,24 @@ A state space model is derived from the physical representation of a PMSM motor,
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\linewidth]{graphics/State_space_model1}
+	%\includegraphics[width=.95\linewidth,trim=4cm 7cm 4cm 7cm]{graphics/full_order_with_resistances}
 	\caption{PMSM motor state space model.}
 	\label{fig:State_space_model1}
 \end{figure}
 
+<<<<<<< HEAD
 Reducing this model
 \todo[inline]{Erlingur - what model? should refer to the figure here} 
 to use transfer functions for the electrical and mechanical parts results in a more simple model with fewer loops. This model removes torque load and wind resistance. It is shown on figure \ref{fig:State_space_model3}. It can be used to find controller values if the torque load and wind resistance are seen as outside disturbances. The controller should be able to handle the amount of disturbance that can be found in these values. The wind resistance will get proportionally larger the faster the kart is moving, but for this first model it will not be taken into account. In the electric part of the circuit a new value $TS$ has been added to the denominator of the transfer function, this value is the electromagnetic time constant of the stator, defined as $TS=L_a/R_a$. The constant defined $J_{pro}$ is the projected inertia of the kart, based on the expected weight with a driver and also adding the inertia of each gearing cog.
+=======
+\todo[inline]{Morten: this and the next two pictures will not trim correctly. it cuts off the text no matter what i do. help!}
+
+Reducing this model to use transfer functions for the electrical and mechanical parts results in a more simple model with fewer loops. This model removes torque load and wind resistance. It is shown on figure \ref{fig:State_space_model3}. It can be used to find controller values if the torque load and wind resistance are seen as outside disturbances. The controller should be able to handle the amount of disturbance that can be found in these values. The wind resistance will get proportionally larger the faster the kart is moving, but for this first model it will not be taken into account. In the electric part of the circuit a new value $TS$ has been added to the denominator of the transfer function, this value is the electromagnetic time constant of the stator, defined as $TS=L_a/R_a$. The constant defined $J_{pro}$ is the projected inertia of the kart, based on the expected weight with a driver and also adding the inertia of each gearing cog.
+>>>>>>> 70f2e63add82d4110c7abe3eacdf9e38fd61088c
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\linewidth]{graphics/State_space_model3}
+	\includegraphics[width=.95\linewidth,trim=4cm 7cm 4cm 0cm]{graphics/full_order_as_tf_without_resistances_to_pdf}
 	\caption{PMSM motor model without torque load and wind resistance.}
 	\label{fig:State_space_model3}
 \end{figure}
@@ -82,7 +87,7 @@ Whether this is a correct assumption will be tested with a simulation of either 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\linewidth]{graphics/State_space_reduced_order}
+	%\includegraphics[width=.95\linewidth,trim=4cm 7cm 4cm 0cm]{graphics/electrical_reduced_order_to_pdf}
 	\caption{Reduced order PMSM motor model.}
 	\label{fig:State_space_model_reduced_order}
 \end{figure}
@@ -92,13 +97,13 @@ A pole-zero map of both models will be used to see whether the pole is as expect
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[t]{.45\linewidth}
-		\includegraphics[width=\textwidth]{graphics/PZmap_FullOrder}
+		\includegraphics[width=\textwidth,trim=4cm 9cm 4cm 9cm]{graphics/full_order_model_pz_map}
 		\caption{PZ map of full order model}
 		\label{fig:PZmap_full}
 	\end{subfigure}
 	\hspace{0.5cm}
 	\begin{subfigure}[t]{.45\linewidth}
-		\includegraphics[width=\textwidth]{graphics/PZmap_ReducedOrder}
+		\includegraphics[width=\textwidth,trim=4cm 9cm 4cm 9cm]{graphics/reduced_order_model_pz_map}
 		\caption{PZ map of reduced order model}
 		\label{fig:PZmap_Reduced}
 	\end{subfigure}
@@ -113,13 +118,13 @@ The two state space models will be simulated with MatLab Simulink to see how muc
 	\centering
 	\begin{subfigure}[t]{.45\linewidth}
 		\includegraphics[width=\textwidth]{graphics/Full_Vs_Reduced1_Current}
-		\caption{Simulation of current for full and reduced order models.}
+		\caption{Simulation of current for full and reduced order models. Time[s]/Current[A]}
 		\label{fig:Full_Vs_Reduced1_Current}
 	\end{subfigure}
 	\hspace{0.5cm}
 	\begin{subfigure}[t]{.45\linewidth}
 		\includegraphics[width=\textwidth]{graphics/Full_Vs_Reduced1_Speed}
-		\caption{Simulation of speed for full and reduced order models (almost stacked on each other).}
+		\caption{Simulation of speed for full and reduced order models (almost stacked on each other). Time[s]/Speed[rad/s].}
 		\label{fig:Full_Vs_Reduced1_Speed}
 	\end{subfigure}
 	\caption{Matlab Simulink of each model with the same input}
@@ -132,7 +137,7 @@ The two state space models will be simulated with MatLab Simulink to see how muc
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.75\linewidth]{graphics/State_space_reduced_order_v2}
+	\includegraphics[width=1\linewidth,trim=5cm 6cm 5cm 6cm]{graphics/mechanical_reduced_order_to_pdf}
 	\caption{Reduced order PMSM motor model version 2.}
 	\label{fig:State_space_model_reduced_order_v2}
 \end{figure}
@@ -141,7 +146,7 @@ This model is basically an LR circuit where the output is the current between L 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.55\linewidth]{graphics/PZmap_ReducedOrder_V2}
+	\includegraphics[width=.55\linewidth,trim=5cm 4cm 5cm 4cm]{graphics/reduced_order_model_v2_pz_map}
 	\caption{PZ map of the reduced order model version 2}
 	\label{fig:PZmap_reduced_v2}
 \end{figure}
@@ -151,7 +156,7 @@ The slow pole is gone, this is an important pole because it is as slow as it is,
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.55\linewidth]{graphics/Full_Vs_Reduced2_Current}
-	\caption{Fulld order vs reduced order model version 2}
+	\caption{Full order vs reduced order model version 2. Time[s]/Current[A]}
 	\label{fig:Full_Vs_Reduced2}
 \end{figure}
 
@@ -173,8 +178,8 @@ A control loop is added to the model, figure \ref{fig:State_space_model4}. It mu
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\linewidth]{graphics/State_space_model4}
-	\caption{Full PMSM motor model with a current control loop.}
+	\includegraphics[width=.95\linewidth,trim=3cm 4cm 3cm 4cm]{graphics/full_order_as_tf_with_controller_to_pdf}
+	\caption{Full PMAC motor model with a current control loop.}
 	\label{fig:State_space_model4}
 \end{figure}
 
@@ -186,15 +191,15 @@ The model of figure \ref{fig:State_space_model4} can be rearranged to simplify t
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\linewidth]{graphics/State_space_model5}
+	\includegraphics[width=.95\linewidth,trim=3cm 4cm 3cm 4cm]{graphics/full_order_rearranged_to_pdf}
 	\caption{PMSM motor model rearranged to simplify the transfer function.}
 	\label{fig:State_space_model5}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\linewidth]{graphics/State_space_model6}
-	\caption{PMSM motor model as a plant with PI control}
+	\includegraphics[width=.95\linewidth,trim=4cm 3cm 4cm 3cm]{graphics/plant_with_pi_to_pdf}
+	\caption{PMAC motor model as a plant with PI control}
 	\label{fig:State_space_model6}
 \end{figure}
 
@@ -331,7 +336,7 @@ The pole-zero map for the transfer function including the controller confirms th
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.55\linewidth]{graphics/PZmap_ControlFullOrder}
+	\includegraphics[width=.55\linewidth,trim=4cm 3cm 4cm 3cm]{graphics/full_order_w_pid_to_pdf}
 	\caption{PZ map with the controller}
 	\label{fig:PZmap_Control_full}
 \end{figure}
@@ -358,7 +363,7 @@ Finding the controller values for this model is done as it was for the full orde
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.95\linewidth]{graphics/IPcontroller}
+	\includegraphics[width=.95\linewidth,trim=4cm 3cm 4cm 3cm]{graphics/plant_with_ip_to_pdf}
 	\caption{Reduced order system with an IP controller}
 	\label{fig:IPcontroller1}
 \end{figure}
@@ -393,7 +398,7 @@ in the transfer function, there wont be one when adding an IP controller. The ad
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.55\linewidth]{graphics/PZmap_ControlReducedOrder}
+	\includegraphics[width=.55\linewidth,trim=4cm 3cm 4cm 3cm]{graphics/reduced_order_model_w_ip_controller_to_pdf}
 	\caption{PZ map of the reduced order system with an IP controller}
 	\label{fig:PZmapIPcontroller1}
 \end{figure}
