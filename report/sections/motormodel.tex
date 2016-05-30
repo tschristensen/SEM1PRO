@@ -46,7 +46,11 @@ These figures show that the PMAC motor can be represented as an electrical diagr
 	\caption{PMAC Motor $I_d $ and $I_q$ equivalent diagrams.\cite{pmac_equivalent_diagram}}
 \end{figure}
 
-The components shown are: the mutual inductance $l_s$, $L_md$ and $L_mq$. Armature resistance $R_s$ and flux leakage for both d and q axes. The most important values here are the q-axis inductor and resistance which directly affect how much torque is gained from inputting current to the PMAC motor.
+The components shown are: the mutual inductance $l_s$, $L_{md}$ and $L_{mq}$. Armature resistance $R_s$ and flux leakage for both d and q axes. The most important values here are the q-axis inductor and resistance which directly affect how much torque is gained from inputting current to the PMAC motor. During this section the components above will be named as follows.
+
+\begin{equation}
+R_{sq}=R_a, \quad L_{md}+L_{mq}=L_a=L_q \quad 
+\end{equation}
 
 Another thing that can be learned from this electrical equivalent diagram is that the magnet on the rotor side, on the d-axis diagram figure \ref{fig:PMSM_Equivalent_d_axis}, can be seen as a current source $i_m$. A change in flux of this magnet will induce a force resulting in current in the magnet. This is shown with the $R_m$ resistor. Through this it is apparent that the d-axis is the flux part of the motor, while q is the current.
 
@@ -195,15 +199,15 @@ Using 'Masons Rule', as found in the book cited \cite{feedback} p. 900-908, the 
 From \ref{fig:State_space_model1} the transfer function can be derived for the plant, load torque and wind resistance excluded. Using Masons Rule this yields equation \ref{eq:full_order_tf}.
 
 \begin{equation}
-\frac{I_q}{I_{q-ref}}=G(s)=\frac{2 J_m s + 2 K_v}{s^2(2 J_m L_a) + s(2 K_v L_a + 2 J_m R_a)+3 K_t^2 + 2K_v R_a}
+\frac{I_q}{I_{q-ref}}=G(s)=\frac{2 J_{pro} s + 2 K_v}{s^2(2 J_{pro} L_a) + s(2 K_v L_a + 2 J_{pro} R_a)+3 K_t^2 + 2K_v R_a}
 \label{eq:full_order_tf}
 \end{equation}
 
-Analysing this transfer function it can be seen that we have a second order system, with possibly one zero and one or two poles. The zero will be located at the root of the nominator: $2J_ms+2K_v=0 \rightarrow s=\frac{-K_v}{J_m}$. Which will probably be a very small real number, as inertia should be much larger than the viscous friction. 
+Analysing this transfer function it can be seen that we have a second order system, with possibly one zero and one or two poles. The zero will be located at the root of the nominator: $2J_{pro}s+2K_v=0 \rightarrow s=\frac{-K_v}{J_{pro}}$. Which will probably be a very small real number, as inertia should be much larger than the viscous friction. 
 The pole(s) will be located at the roots of the denominator. The denominator can be reduced by dividing everything with $2J_{pro}L_a$. yielding the transfer function in equation \ref{eq:big_guy_huh}.
 
 \begin{equation}
-\frac{I_q}{I_{q-ref}}=G(s)=\frac{\frac{1}{L_a}s+\frac{K_v}{J_pro}}{
+\frac{I_q}{I_{q-ref}}=G(s)=\frac{\frac{1}{L_a}s+\frac{K_v}{J_{pro}}}{
 s^2+s \left( \frac{K_v}{J_{pro}}+\frac{R_a}{L_a} \right) +\frac{3}{2}\frac{K_t^2}{J_{pro}L_a}+\frac{K_vR_a}{J_{pro}L_a}}
 \label{eq:big_guy_huh}
 \end{equation}
@@ -214,7 +218,7 @@ Replacing $G(s)$ and rearranging to get the form of a characteristics equation t
 
 %old equation. please leave (Morten)
 \begin{equation}
-\frac{I_m}{I_{ref}}=\frac{s^2\frac{K_p}{L}+s(\frac{K_i}{L}+\frac{K_pK_v}{J})+\frac{K_iK_v}{J_r}}{s^3+s^2(\frac{R}{2L}+\frac{K_v}{J}+\frac{K_p}{L})+s(\frac{3K_t^2}{2JL}+\frac{K_vR}{JL}+\frac{K_i}{L}+\frac{K_pK_v}{JL})+\frac{K_iK_v}{JL}}
+\frac{I_m}{I_{ref}}=\frac{s^2\frac{K_p}{L_a}+s(\frac{K_i}{L_a}+\frac{K_pK_v}{J_{pro}})+\frac{K_iK_v}{J_{pro}}}{s^3+s^2(\frac{R_a}{2L_a}+\frac{K_v}{J_{pro}}+\frac{K_p}{L_a})+s(\frac{3K_t^2}{2J_{pro}L_a}+\frac{K_vR_a}{J_{pro}L_a}+\frac{K_i}{L_a}+\frac{K_pK_v}{J_{pro}L_a})+\frac{K_iK_v}{J_{pro}L_a}}
 \label{eq:transfer_function_full}
 \end{equation}
 
@@ -254,7 +258,7 @@ Based on the transfer function in equation ref and a settling time of 0.05 secon
 
 Finding the controller values using the characteristics equation yields equation \ref{eq:big_guy_with_cont}
 \begin{equation}
-s^3+s^2\left(\frac{R}{2L}+\frac{K_v}{J}+\frac{K_p}{L}\right)+s\left( \frac{3K_t^2}{2JL}+\frac{K_vR}{JL}+\frac{K_i}{L}+\frac{K_pK_v}{JL}\right)+\frac{K_iK_v}{JL}
+s^3+s^2\left(\frac{R_a}{2L_a}+\frac{K_v}{J_{pro}}+\frac{K_p}{L_a}\right)+s\left( \frac{3K_t^2}{2J_{pro}L_a}+\frac{K_vR}{J_{pro}L_a}+\frac{K_i}{L_a}+\frac{K_pK_v}{J_{pro}L_a}\right)+\frac{K_iK_v}{J_{pro}L_a}
 \label{eq:big_guy_with_cont}
 \end{equation}
 
@@ -273,7 +277,7 @@ From the characteristics equation the values of a and b can be found. Setting th
 %a_ 0&=0  &b_0&=\frac{K_v}{J_mL_a}\nonumber
 %\end{align}
 
-Solving the above equation for $d_2$ and $d_1$ 
+Solving the above equation for $d_2$ and $d_1$ yields the equation two equations \ref{eq:solved_d1} and \ref{eq:solved_d2}.
 
 
 \begin{equation}
@@ -284,16 +288,18 @@ s^3+s^2(a_2+b_2K_p)+s(a_1+b_1K_i)+a_0+b_0 = s^3+d_2s^2+d_1s+d_0
 
 %Old calculations of kp=0.0039 and Ki=0.4606. please leave it.
 \begin{equation}
-3 \alpha= \frac{R}{2L}+ \frac{K_v}{J}+ \frac{K_p}{L}
+3 \alpha= \frac{R_a}{2L_a}+ \frac{K_v}{J_{pro}}+ \frac{K_p}{L_a}
+\label{eq:solved_d1}
 \end{equation}
 \begin{equation}
-\rightarrow K_p=(3 \alpha - \frac{K_v}{J_m}- \frac{R_a}{2L})L
+\rightarrow K_p=(3 \alpha - \frac{K_v}{J_{pro}}- \frac{R_a}{2L_a})L_a
 \end{equation}\newline
 \begin{equation}
-3 \alpha^2= \frac{2K_t^2}{2JL}+ \frac{K_vR}{JL}+ \frac{K_i}{L}+ \frac{K_pK_v}{2J}
+3 \alpha^2= \frac{2K_t^2}{2J_{pro}L_a}+ \frac{K_vR_a}{J_{pro}L_a}+ \frac{K_i}{L_a}+ \frac{K_pK_v}{2J_{pro}}
+\label{eq:solved_d2}
 \end{equation}
 \begin{equation}
-\rightarrow K_i=(3 \alpha^2- \frac{K_pK_v}{2J}- \frac{K_vR}{JL}- \frac{3K_t^2}{2JL})L
+\rightarrow K_i=(3 \alpha^2- \frac{K_pK_v}{2J_{pro}}- \frac{K_vR}{J_{pro}L_a}- \frac{3K_t^2}{2J_{pro}L_a})L_a
 \end{equation}
 
 
@@ -332,7 +338,7 @@ The pole-zero map for the transfer function including the controller confirms th
 The same procedure as for the full order system will be used for this transfer function. The overall transfer function using the diagram of figure \ref{fig:State_space_model_reduced_order_v2} and Masons Rule\cite{Feedback} becomes equation \ref{eq:small_trans}.
 
 \begin{equation}
-\frac{I_q}{V_{in}}=H(s)=\frac{1}{R_a+L_qs}
+\frac{I_q}{V_{in}}=H(s)=\frac{1}{R_a+L_as}
 \label{eq:small_trans}
 \end{equation}
 
