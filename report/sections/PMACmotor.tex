@@ -8,7 +8,7 @@ Initially the functionality of the motor will be described, then certain motor p
 Lastly a parking test will be performed to determine the angle of the encoder mounted on the motor. 
 The motor used to drive the go-kart is an 8-pole non-salient permanent magnet synchronous motor. 
 
-\subsection{Clarke-Park}
+\subsection{Clarke Park Transform}
 \label{sec:clarkepark}
 The Clarke Park transform is integral to the type of control desired for the PMAC motor, so it must be understood. It is done by 'transforming the stator currents into a rotating reference frame that is locked to the rotation of the rotor' (\cite{electric_motor_and_drives} p.221). The transform starts by viewing the three phase star connection of the PMAC motor and displaying each phase as ABC (or W U and V as seen on figure \ref{fig:dq_transform_ref_frames} from the book cited \cite{electric_motor_and_drives}). This ABC current is first transform into a stationary frame of only two phases called the $\alpha \beta$ transform and then further transformed into dq0. When in dq0 form the reference frame rotates with the angular velocity $\omega$ of the motor, while being referenced to the stationary frame of the $\alpha \beta$ frame. This transform yields a d and q DC value and a zero, which are respectively referred to a torque and a flux demand in the controller.\newline
 
@@ -18,6 +18,67 @@ The Clarke Park transform is integral to the type of control desired for the PMA
 	\caption{Clarke Park Transform reference frames. Source: \cite{electric_motor_and_drives}}
 	\label{fig:dq_transform_ref_frames}
 \end{figure}
+
+The Clarke Park transform is integral to the type of control desired for the PMAC motor, so it must be understood. It is done by 'transforming the stator currents into a rotating reference frame that is locked to the rotation of the rotor' (\cite{electric_motor_and_drives} p.221). The transform starts by viewing the three phase star connection of the PMAC motor and displaying each phase as ABC (or W U and V as seen on figure \ref{fig:dq_transform_ref_frames} from the book cited \cite{electric_motor_and_drives}). This ABC current is first transform into a stationary frame of only two phases called the $\alpha \beta$ \todo{along horizontal and vertial axes of the three phase stationary windings}transform\todo{ed} and then further transformed into dq0\todo{zero isn't necessary for a balanced load, and if it's not mentioned in alpha beta, it should not be mentioned here.}. When in dq0 form the \todo{what?}reference frame rotates with the angular velocity $\omega$ of the motor, while being referenced to the stationary frame of the $\alpha \beta$ frame. This transform yields a d and q DC value and a zero, which are respectively referred to a torque and a flux demand in the controller.\newline
+
+\todo{clarke park transformation can only be done for current, voltage and flux linkage.}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.65\linewidth]{graphics/ABC_to_dq_ref_frame}
+	\caption{Clarke Park Transform reference frames. Source: \cite{electric_motor_and_drives}}
+	\label{fig:dq_transform_ref_frames}
+\end{figure}
+
+Clarke-park:
+\begin{equation}
+\left[ \begin{array}{c}
+I_d \\ I_q
+\end{array} \right]
+=
+\frac{2}{3}
+\begin{bmatrix}
+\cos (\Phi) & \cos(\Phi - \gamma) & \cos( \Phi + \gamma) \\
+-\sin (\Phi) & -\sin(\Phi - \gamma) & -\sin( \Phi + \gamma)
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+I_A \\
+I_B \\
+I_C
+\end{bmatrix}
+%\label{eq:sim_clark-park}
+\end{equation}
+
+where $\gamma = \tfrac{2 \pi}{3}$. 
+
+inverse clarke-park:
+
+Inverse Clark-Park transformation is done by equation~\ref{eq:sim_inverse_clark-park}.
+
+\begin{equation}
+\left[ \begin{array}{c}
+I_A \\ I_B \\I_C
+\end{array} \right]
+=
+\begin{bmatrix}
+\cos (\Phi) & -\sin (\Phi) \\
+\cos(\Phi - \gamma) & -\sin(\Phi - \gamma) \\
+\cos(\Phi + \gamma) & -\sin( \Phi + \gamma) 
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+I_d \\
+I_q
+\end{bmatrix}
+%\label{eq:sim_inverse_clark-park}
+\end{equation}
+
+The requirement for this project outlines that the motor must be torque controlled, hence the flux demand will be zero while the torque demand will be defined by the speeder pedal. After the dq values have been compared to the reference/demand values the error is fed to a controller which will adjust the output accordingly. This output is transformed using the inverse dq0 transform, which yields a three phase AC signal that can be fed into the inverter and yield a new motor speed. \newline
+
+Illustrating this, the block diagram presented in section 4 can be retrieved. Figure \ref{fig:control_process_sec8}. This shows how the current of the three phase AC values are retrieved from the motor input, transformed to dq0 and then compared to reference values. The $i_d$ value will be zero as it is the flux reference, while the $i_q$ value will be set by the speeder pedal as a torque reference. The controller acts upon these and the dq values are transformed back to ABC three phase AC and fed to the inverter.
+
+In reality it is not a torque value that must be a reference for the controller, but a current value, as the current determines the torque. Taking this into account will be part of creating a functional model of the motor.
 
 \subsection{Motor description}\label{sub:motor_descrpition}
 The motor used is a 3-phase Wye-connected, 8-pole non-salient permanent magnet AC motor, the Motenergy ME1117.
@@ -53,7 +114,7 @@ This is achieved by converting the measured mechanical angle of the rotor to ele
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width = .35\linewidth]{graphics/motor_6p}
-		\caption{Simplified motor model showing the stator field as green arrows}
+		\caption{Simplified motor model showing the stator field as green arrows.}
 		\label{fig:motor_6p}
 	\end{center}
 \end{figure}
@@ -65,13 +126,7 @@ By constantly placing the stator field ahead of the rotor, the motor will start 
 Thus it is necessary to know the position of the rotor in order to determine the angle of the stator field.
 For that measurement, an encoder will be used.
 
-\subsection{Motor Parameterization}\label{sub:1117_param}
-Due to the sparse information available from the manufacturer of the motor, it is necessary to measure some of the parameters of the motor. 
-It will also be necessary to determine exactly what these parameters define, since the manufacturer has not defined certain things such as what current measurement is related to torque through $K_T$.
-Parameters to determine are the back-EMF constant, $K_E$, the armature resistance, $R_a$, and the armature inductance, $L_a$.
-Each of the following sections describe the procedure used to find each of these parameters. 
-
-\subsubsection{Back-EMF and Torque Constant}\label{sub:KE-KT}
+\subsection{Definition of Back-EMF Constant and Torque Constant}
 The parameters $K_E$ and $K_T$ must be the same for a PMAC motor, since they are dependent on the flux produced in the permanent magnet of the rotor. 
 Another reason, that they are the same is, that the motor converts electrical energy to mechanical energy, and electrical energy is the product of current and voltage, and (rotational) mechanical energy is the product of torque and angular velocity. 
 A mismatch between $K_E$ and $K_T$ implies, that power appears or disappears, which cannot happen. 
@@ -173,21 +228,28 @@ Figure~\ref{fig:torque_contribution_dphi} shows torque contribution from each of
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 10cm]{graphics/torque_contribution_dphi}
-	\caption{Torque contribution of each phase as a function of the phase difference}
+	\caption{Torque contribution of each phase as a function of the phase difference.}
 	\label{fig:torque_contribution_dphi}
 \end{figure}
-
-Adding these three contributions gives equation~\ref{eq:torque_fucntion_angle}.
-
-If $d\theta = 90 \si{\degree}$, equation~\ref{eq:torque_fucntion_angle} becomes:
-
+	
+	Adding these three contributions gives equation~\ref{eq:torque_fucntion_angle}.
+	
+	If $d\theta = 90 \si{\degree}$, equation~\ref{eq:torque_fucntion_angle} becomes:
+	
 \begin{equation}
-T = \frac{3}{2}K_t \cdot I
-\label{eq:torque_function_90deg}
+	T = \frac{3}{2}K_t \cdot I
+	\label{eq:torque_function_90deg}
 \end{equation}
-
+	
 It is easier to measure $K_E$ than $K_T$ and they are defined as the same. \\
 
+\subsection{Motor Parameterization}\label{sub:1117_param}
+Due to the sparse information available from the manufacturer of the motor, it is necessary to measure some of the parameters of the motor. 
+It will also be necessary to determine exactly what these parameters define, since the manufacturer has not defined certain things such as what current measurement is related to torque through $K_T$.
+Parameters to determine are the back-EMF constant, $K_E$, the armature resistance, $R_a$, and the armature inductance, $L_a$.
+Each of the following sections describe the procedure used to find each of these parameters. 
+
+\subsubsection{Measuring Back-EMF Constant}\label{sub:KE-KT}
 To find $K_E$, a hand-held power drill is used to rotate the motor at a constant speed. 
 An oscilloscope with a differential probe is used to measure the voltage between two of the phases. 
 Because of the high input impedance of the differential probe, there is no current and thus the armature inductance and resistance can be neglected. 
@@ -196,7 +258,7 @@ The peak-peak voltage and the corresponding frequency is noted in the table belo
 \begin{table}[!h]
 \begin{center}
 \begin{tabular}{S|S}
-	{Frequency }[\si{\hertz}]  & {Voltage } [\si{\volt}$_{\text{pp}}$] \\
+\rowcolor[HTML]{C0C0C0}	{Frequency }[\si{\hertz}]  & {Voltage } [\si{\volt}$_{\text{pp}}$] \\
 	\hline
 	23.49 & 9.7  \\
 	38.32 & 15.3\\
@@ -207,7 +269,7 @@ The peak-peak voltage and the corresponding frequency is noted in the table belo
 	72.13 & 28.3
 \end{tabular}
 \end{center}
-\caption{Measured line-line voltage at electrical frequencies}
+\caption{Measured line-line voltage at electrical frequencies.}
 \label{tab:KE_measurements}
 \end{table}
 
@@ -249,7 +311,7 @@ The results are shown in the table below:
 \begin{table}[h]
 	\begin{center}
 	\begin{tabular}{r | c | c | c}
-		{Terminals} 	& {V} [\si{\volt}]	& {I} [\si{\ampere}]	& {R} [\si{\milli\ohm}] \\
+\rowcolor[HTML]{C0C0C0}		{Terminals} 	& {V} [\si{\volt}]	& {I} [\si{\ampere}]	& {R} [\si{\milli\ohm}] \\
 		\hline
 		{AB} 			& 0.217 		& 17.93 		& 12.10  \\
 		\hline
@@ -318,7 +380,7 @@ The average inductance varies a bit with different frequencies, and 20 kHz is ac
 \begin{table}[H]
 	\begin{center}
 	\begin{tabular}{S | S | S}
-		{Frequency} [\si{\kilo\hertz}] 	& 	{Average inductance} [\si{\milli\henry}] & 	{Current ripple} [\si{\ampere}] \\
+\rowcolor[HTML]{C0C0C0}		{Frequency} [\si{\kilo\hertz}] 	& 	{Average inductance} [\si{\milli\henry}] & 	{Current ripple} [\si{\ampere}] \\
 		\hline
 		5			&	0.946					&	16.83 \\
 		\hline
@@ -355,7 +417,7 @@ The phases A, B and C correspond to the terminals with the names M1, M2 and M3 e
 	\sisetup{table-space-text-post=\si{\degree}}
 	\begin{tabular}{|S | S | S | S|}
 		\hline
-		{Quadrant} & {Phase A } & {Phase B } & {Phase C } \\
+\rowcolor[HTML]{C0C0C0}		{Quadrant} & {Phase A } & {Phase B } & {Phase C } \\
 		\hline
 		{First} & {43.6\si{\degree}} & {75.9\si{\degree}} & {16.9\si{\degree}} \\
 		\hline

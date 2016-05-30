@@ -165,7 +165,7 @@ In the Simscape model, the tyre is modelled by a friction block in series with t
 The tyre block consists of static and dynamic friction.
 Tyre slip is a comprehensive area of study, so the rotational friction block isn't necessarily accurate. 
 However, it does enable sudden changes in motor speed and load, similar to spinning and locking the wheels.
-The tyre consists of static, dynamic and viscous friction. The static and dynamic frictions are are calculated by equation~\ref{eq:static_dynamic_friction}
+The tyre block consists of static, dynamic and viscous friction. The static and dynamic frictions are are calculated by equation~\ref{eq:static_dynamic_friction}
 
 \begin{equation}
 F_f = F_N \cdot c_f \cdot dm
@@ -175,25 +175,13 @@ F_f = F_N \cdot c_f \cdot dm
 where 
 
 \begin{equation}
-F_N = mg
+F_N = mg \cdot dm
 \end{equation}
 
-\begin{table}[!h]
-	\centering
-	\begin{tabular}{r | l}
-		Static friction coefficient, $\mathrm{c_s}$ & 1 \\
-		\hline
-		Dynamic friction coefficient, $\mathrm{c_d}$ & 0.7 \\
-		\hline
-		Weight distribution, dm & 0.6
-	\end{tabular}
-	\caption{Table of friction values}
-	\label{tab:friction_values}
-\end{table}
-
-
-The constant, $dm$ is the weight distribution of the gokart, so that $dm=0$ means the entire mass of the gokart is on the front wheels, and $dm=1$ means the whole weight distribution is on the driving wheels.
-The constants used for simulations are listed in table~\ref{tab:friction_values}
+and $c_f$ is either the static or dynamic friction, depending on if the wheels are slipping. 
+The constant, dm is the distribution of mass so that $dm=0$ means the entire mass of the gokart is on the front wheels, and $dm=1$ means the whole weight distribution is on the driving wheels.
+The viscous friction is zero.
+The static friction coefficient is 1, the dynamic friction is 0.7, and the mass distribution is 0.6.
 
 The brake subsystem is a PI controlled ideal torque source, which will attempt to bring the go kart to a halt when the brake is pressed.
 Without a PI controller, there is a strong possibility that the brake would suddenly make the motor go backwards instead of stopping.\\
@@ -209,7 +197,7 @@ The parameters used for simulations are listed in table~\ref{tab:motor_parameter
 	\centering
 	\begin{tabular}{| S | S |}
 		\hline
-		{Parameters} &  {Value} \\
+		\rowcolor[HTML]{C0C0C0}{Parameters} &  {Value} \\
 		\hline
 		{Flux linkage} & {$0.0183$} \\
 		\hline
@@ -256,16 +244,15 @@ output = \left\lfloor \Bigg( \frac{\phi \cdot 256}{2 \pi} + 0.5 \Bigg) \% 256\ri
 \end{equation}
 
 where \% is the modulo function. 
-The purpose of that is to wrap \todo{Wrap is the common way of saying, if a number goes outside a range, it restarts from the other end of the range, like an integer overflow is (often) handled in coding.} the output to a value between 0 and 255, which can be used for look-up tables. 
+The purpose of that is to wrap the output to a value between 0 and 255, which can be used for look-up tables. 
 The round down function rounds a number, effectively quantizing the output. 
 The reason for using round down rather than just round is to ensure, that the number ranges from 0 to 255. 
-To combat the inaccuracy of the round down function, 0.5 is added. 
-The parking test in section~\ref{sub:parking_test}, does not have accuracy of less than one, so in reality, there is likely an inaccuracy of $\mathrm{\pm 1}$
-It has been attempted to use the quantizer block, but that causes stiffness to the point where the simulations almost stall. 
+The rounding error is minimized by adding 0.5. 
+It has been attempted to use the quantizer block, but that causes stiffness to the point where the simulation almost stalls. 
 The output is sent to the Zybo block, which will be explained in section~\ref{sub:sim_zybo}.\\
 
 The Zybo subdiagram generates duty cycles for each phase ranging from -1 to 1. 
-This value is then multiplied with 26.4 to represent half the battery voltage, and then saturated to ensure, that the ideal voltage sources do not provide more voltage than possible.
+This value is then multiplied with 26.4\si{\volt} to represent half the battery voltage, and then saturated to ensure, that the ideal voltage sources do not provide more voltage than possible.
 \subsubsection{Zybo block}\label{sub:sim_zybo}
 The Zybo block consists of three other subsystems, corresponding with some of the blocks on the actual Zybo; Clarke-Park, Discrete controller and PWM generation.
 This can be seen on figure~\ref{fig:simulations_zybo}.
@@ -273,40 +260,16 @@ This can be seen on figure~\ref{fig:simulations_zybo}.
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width = 12cm]{graphics/simulations_zybo}
-		\caption{Block diagram describing the digital part of the system}
+		\caption{Block diagram describing the Zybo part of the system}
 		\label{fig:simulations_zybo}
 	\end{center}
 \end{figure}
 
-The Clarke-Park and PWM generation blocks are running in variable time steps, and the Discrete controller runs with a fixed step of 0.1 \si{\milli\second}.
+The Clarke Park transform and PWM generation blocks are running in variable time steps, and the discrete controller runs with a fixed step of 0.1 \si{\milli\second}.
 The signal builder block is used to shape the torque requested by the pedal.
 This torque is converted into the current used in the controller by multiplying with $\tfrac{3}{2 K_t}$.
-The Clarke-Park block converts $\mathrm{I_{AB}}$ to $\mathrm{I_{dq}}$. 
-
-\todo{The equation should be moved to clarke-park section}
-
-\begin{equation}
-\left[ \begin{array}{c}
-	I_d \\ I_q
-\end{array} \right]
-=
-\frac{2}{3}
-\begin{bmatrix}
-\cos (\Phi) & \cos(\Phi - \gamma) & \cos( \Phi + \gamma) \\
--\sin (\Phi) & -\sin(\Phi - \gamma) & -\sin( \Phi + \gamma)
-\end{bmatrix}
-\cdot
-\begin{bmatrix}
-I_A \\
-I_B \\
-I_C
-\end{bmatrix}
-\label{eq:sim_clark-park}
-\end{equation}
-
-where $\gamma = \tfrac{2 \pi}{3}$. 
+The Clarke Park block converts $I_{AB}$ to $I_{dq}$. 
 Due to the limitations of the encoder, the system only measures 64 different electrical angles.
-To improve calculation speed, all six trigonometric functions in equation~\ref{eq:sim_clark-park} have been pre-calculated and saved to six lookup tables. \\
 
 The block diagram of the discrete controller is shown on figure~\ref{fig:sim_controller_diagram}.
 
@@ -318,33 +281,21 @@ The block diagram of the discrete controller is shown on figure~\ref{fig:sim_con
 \end{figure}
 
 The two independent current controllers are drawn in blue boxes. 
-The feedback comes from the Idq port on the left.
-The constants, $\mathrm{K_p}$ and $\mathrm{K_i}$, are calculated in chapter~\ref{sec:controller_design}, and divided by half the battery voltage.
+The feedback comes from the $I_{dq}$ port on the left.
+The constants, $K_p$ and $K_i$, are calculated in chapter~\ref{sec:controller_design}, and divided by half the battery voltage.
 This is done, because the controllers designed in chapter~\ref{sec:controller_design} produce a voltage, whereas the simulink controller produces a percentage of half the battery voltage, i.e. between -1 and 1.
 Similarly the implemented PWM block in section~\ref{sub:Architecture} takes integers in the range from 0 to 1000, so the controller constants need to be scaled accordingly\\
-The integrator block uses trapezoidal integration, and the output is limited to $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$.
-This is to ensure, that the integrator does not wind up\todo{Martin: Is there a better term for when the integrator keeps becoming larger, because the output is saturated somewhere? Morten: Diverges? (reverse convergence)}.
+The integrator block uses trapezoidal integration, and the output is limited to $\pm \tfrac{2}{\sqrt{(3)}}$.
+This is to ensure, that the integrator does not wind up.
 The saturation block to the left of the q current controller on figure~\ref{fig:sim_controller_diagram} limits the input to between 0 and a maximum current.
 The PI controllers produce duty cycle values in the range of $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, although it is possible to exceed this range at this point in the diagram.\\
 
 It is necessary to ensure, that the controller does not produce values outside the range that can be generated using PWM. 
 The obvious solution is to put a saturation block after each of the controllers, but a large value value from both controllers will still cause saturations.
 In order to limit both controller outputs without disturbing the controllers, both output values is reduced by the same factor. 
-If the magnitude of the dq-duty cycle vector must not exceed $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, when using third harmonic injection. 
+The magnitude of the dq-duty cycle vector must not exceed $\tfrac{2}{\sqrt{3}}$, when using third harmonic injection. 
 For this reason, the magnitude of the two controller outputs is calculated in the red box. 
-If the magnitude is larger than $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, the Parallel scale down subsystem is processed. 
-The functionality is explained in listing~\ref{code:parallel_scale_down}.
-
-\todo[inline]{Martin: Probably explained in zybo.tex?}
-\begin{lstlisting}[style=customMATLAB, label={code:parallel_scale_down}, caption = Matlab code for parallel scale down function]
-d = dq(1) * 2 / sqrt(3); 	% Split the input vector
-q = dq(2) * 2 / sqrt(3); 	% into two values
-
-d = d/Magnitude;		% Divide d with magnitude
-q = q/Magnitude;		% Divide q with magnitude
-
-Out1 = [d q];
-\end{lstlisting}
+If the magnitude is larger than $\tfrac{2}{\sqrt{3}}$, the Parallel scale down subsystem is processed. 
 
 For comparison, the d and q axis duty cycles have been simulated and are shown on figure~\ref{fig:parallel_scale_down_graphs}: 
 
@@ -365,33 +316,9 @@ For comparison, the d and q axis duty cycles have been simulated and are shown o
 \end{figure}
 
 The graphs are simulated with a car mass of 200\si{\kilogram}, and settling time of 0.01s.
-At 2.5s, the magnitude of the dq-vectors exceeds $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, at which point both the d and q output is scaled down. 
+At 2.5s, the magnitude of the dq-vectors exceeds $\tfrac{2}{\sqrt{(3)}}$, at which point both the d and q output is scaled down. 
 On figure~\ref{fig:after_saturation}, this transition is almost invisible along the q-curve. 
 As the torque produced by the motor is reduced due to saturation of the supply, the need for a large negative d-duty is reduced, as both d and q current is reduced.
-This will be explained further on.
-\todo{Martin: will it though?}
-
-Inverse Clark-Park transformation is done by equation~\ref{eq:sim_inverse_clark-park}.
-
-\begin{equation}
-\left[ \begin{array}{c}
-I_A \\ I_B \\I_C
-\end{array} \right]
-=
-\begin{bmatrix}
-\cos (\Phi) & -\sin (\Phi) \\
-\cos(\Phi - \gamma) & -\sin(\Phi - \gamma) \\
-\cos(\Phi + \gamma) & -\sin( \Phi + \gamma) 
-\end{bmatrix}
-\cdot
-\begin{bmatrix}
-I_d \\
-I_q
-\end{bmatrix}
-\label{eq:sim_inverse_clark-park}
-\end{equation}
-
-The trigonometric functions used in equation~\ref{eq:sim_inverse_clark-park} are the same as in equation~\ref{eq:sim_clark-park}, so if using lookup-tables, the tables could be reused here. 
 
 \begin{figure}[H]
 	\centering
@@ -400,9 +327,9 @@ The trigonometric functions used in equation~\ref{eq:sim_inverse_clark-park} are
 	\label{fig:sim_PWM_generation}
 \end{figure}
 
-The majority of this block diagram calculates the inverse Clarke-Park transformation, and in the upper right corner, the third harmonic injection is calculated using the knowledge given in the paper 'A Novel Third Harmonic Injection Method for Closed Loop Control of PMSM Motors' \cite{third_harmonic_injection}. \\
+The majority of this block diagram calculates the inverse Clarke-Park transformation, and in the upper right corner, the third harmonic injection is calculated using the knowledge given in \cite{third_harmonic_injection}. \\
 
-\todo[inline]{Martin:Third harmonic should be earlier in the report}
+
 The issue is that, when using field oriented control, the stator voltage does not remain at a constant angle relative to the rotor angle.
 That means, that calculating the third harmonic isn't as simple as multiplying the rotor position with three. 
 Doing this will result in the the third harmonic being out of phase with the three sinusoidal voltage waveforms as speed increases.
@@ -447,7 +374,7 @@ V_{th} = \frac{1}{6} \sin(3 \Theta) = \frac{1}{6} \sin\Bigg(3 \sin^{-1} \Big(\fr
 \label{eq:v_th} 
 \end{equation}
 
-This third harmonic sinus is added to each of the phases, as shown in equation~\ref{eq:equations_14}
+This third harmonic sinusoidal is added to each of the phases, as shown in equation~\ref{eq:equations_14}
 
 \begin{equation}
 \begin{bmatrix}
@@ -468,18 +395,19 @@ This allows the controller to go beyond the full range of the voltage without sa
 
 The reason this third harmonic injection is only enabled when the magnitude is larger than zero is to avoid dividing by a negative number in equation~\ref{eq:equation_11}.
 
-\subsection{Simulink Simulation Results}\label{sub:simulink_results}
+\subsection{Simulation Results}\label{sub:simulink_results}
 
-As stated earlier, the simulink simulation is used to test how the controller handles the five events stated on page~\pageref{sec:Simulations}.
+As stated earlier, the Simulink simulation is used to test how the controller handles the five events stated on page~\pageref{sec:Simulations}.
 The simulation will be run with both PI and IP controllers, with values described in sections~\ref{sub:full_order_controller_values} and~\ref{sub:reduced_order_controller_values}. \\
 
 \subsubsection{PI controller}\label{sub:PI05}
-
+Throughout this section the PI controller developed in section \ref{sec:}
 At first, a simulation will be run where the throttle is pressed fully from 0.12s to 5s, and then released.
 This input is similar to the one used in chapter~\ref{sec:controller_design}.
-The load is 200kg, which is enough to guard against wheel spin.
+The mass is 200kg.
 The resultant current along the d and q axes have been plotted in figure~\ref{fig:Sim_results_pi_Idq}.
 
+\todo[inline]{Input signal needed}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{graphics/Sim_results_pi_Idq}
@@ -825,7 +753,7 @@ A faster controller was calculated with tremendous results.
 	\centering
 	\begin{tabular}{|c || c | c | c |}
 		\hline
-		{Event} & {PI controller} & {IP controller} & Fast {PI controller} \\
+\rowcolor[HTML]{C0C0C0}		{Event} & {PI controller} & {IP controller} & Fast {PI controller} \\
 		\hline
 		{Torque step} & {Handles well} & {Slow, steady state error} & {Excellent}\\
 		\hline

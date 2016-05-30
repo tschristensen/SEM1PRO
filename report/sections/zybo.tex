@@ -359,7 +359,20 @@ The correct solution to the problem is to develop an SPI driver, but due to time
 SPI 1 on the Zynq is used as it can be ported to MIO channels 10 to 15, which can be accessed through the PMOD connectors of the Zybo board. 
 The SPI controller is initialized in software and is configured to be in master mode, manual chip select mode and manual start mode by writing to the configuration register Config\_reg0.
 In order to comply with the SPI specifications of the DRV8301 it was configured with the XSPIPS\_CLK\_PHASE\_1\_OPTION in order to make data valid on falling edges of the clock. 
-The discharge of a capacitor is utilized to make a delay on the Slave Select signal, by putting a XX capacitor and XX resistor in series with the signal.
+The time constant of an RC filter is used to delay the voltage Slave Select signal, according to equation~\ref{eq:RC_discharge}
+
+\begin{equation}
+V_{IL} = V\cdot e^{\frac{-t}{\tau}}
+\label{eq:RC_discharge}
+\end{equation}
+
+Where $V_{IL}$ is the low input threshold for digital pins on the driver, $V$ is the supply voltage of the driver and $\tau = R\cdot C$.
+The voltage drops exponentially, and the time it takes to reach $V_{IL}$ should be at least 40ns, so to be safe, the filter will be designed with 80ns in mind.
+With a resistor of 1\si{\kilo\ohm}, yields a capacitor of 56\si{\pico\farad}.
+A capacitor of 33\si{\pico\farad} was chosen 
+
+
+ of a capacitor is utilized to make a delay on the Slave Select signal, by putting a XX capacitor and XX resistor in series with the signal.
 \todo[inline]{Thomas: Are they in series? + numbers instead of XX XX}
 The transmission of \texttt{0b0001000000110000} was measured using an oscilloscope and can be seen in figure \ref{fig:spi_graph}.
 
@@ -408,7 +421,7 @@ However, it does not interfere with the functionality of the program and will, d
 \begin{figure}[!h]
 	\begin{center}
 		\includegraphics[width=\linewidth]{graphics/timing}
-		\caption{Timing}
+		\caption{Timing.}
 		\label{fig:timing}
 	\end{center}
 \end{figure}
