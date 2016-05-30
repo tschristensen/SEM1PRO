@@ -1,3 +1,4 @@
+%!TEX root = ../main.tex
 \newpage
 \section{Controller Design}\label{sec:controller_design}
 Controlling the PMAC motor will be done using the principles of field oriented control, which uses the Clarke Park Transform (dq0 transform) to transform three phase AC into two phase DC for much easier regulation. Controlling the PMAC motor is done by producing a change to the PWM inverter input. This is done by monitoring two of the three current inputs to the motor and transforming them using the dq0 transform. \newline
@@ -454,10 +455,14 @@ y_{n+1} = y_{n} + \frac{1}{2}h \left( f(t_n,y_n)+f(t_{n+1},y_{n+1}) \right)
 
 Here n is the time step, t is the time and y is the function to integrate. The Trapezoidal method yields a more precise method than forward or backwards Euler methods, due to it being 2nd order precise ($O(h^2)$), but it takes twice the computation power.
 
-\subsection{Third Harmonic Integration}
-As explained in parts of the embedded section ref third harmonics integration is used to enhance the gain from the MOSFETS this is done to improve the yield to heat ratio. Third harmonics integration adds as much as 15 percent more power to the output of the mosfets by just calculating some mathematical equations.
-
-\todo[inline]{Morten: I don't feel like i have the time to study this.. can we put something together quick?}
-
+\subsection{Third Harmonic Injection}
+To utialize the voltage range of the power supply better, it was decided to use third harmonic injection.
+Adding a $\frac{1}{6}$ of the third harmonic will result in 15 \% more line to line voltage. 
+The resulting waveforms can be seen in section \ref{sec:Simulations}.
+Studies of literature \cite{third_harmonic_injection} presented an uncomplicated way of adding the third harmonic: 
+\begin{equation}
+	t_h = \frac{1}{6}\cdot \sin{(3\cdot \arcsin{(\frac{a}{\sqrt{d^2+q^2}})}})
+\end{equation}
+Where $t_h$ is the portion of the third harmonic that needs to be added to each phase, d and q are from the Clarke Park transform and a is phase a.
 
 \clearpage
