@@ -121,6 +121,8 @@ The two state space models will be simulated with MatLab Simulink to see how muc
 	\caption{Matlab Simulink of each model with the same input}
 \end{figure}
 
+\todo[inline]{Martin: Is this for the inductor removed, or the mechanical part removed?}
+
  A problem shows up by these simulations. The speed looks fine for the reduced order model but the current starts at a high value. The current starts out as a simple multiplication of the input voltage multiplied by the $1/R$ gain to equal $4000A$. The amplitude of speed and current are not important at this time, as that will be controlled later, but since the model does not ramp up the current like the  full order model, a controller will not be derived for this reduced order model.
 
 \subsubsection{Reduced Order Model 2 - No Mechanical}

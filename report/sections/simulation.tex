@@ -173,7 +173,37 @@ Finally, for the Simscape model, the tyre is modelled by a friction block in ser
 
 The tyre block consists of static and dynamic friction.
 Tyre slip is a comprehensive area of study, so the rotational friction block isn't necessarily accurate. 
-However, it does enable sudden changes in motor speed and load, similar to spinning and locking the wheels.\\
+However, it does enable sudden changes in motor speed and load, similar to spinning and locking the wheels.
+The tyre consists of static, dynamic and viscous friction. The static and dynamic frictions are are calculated by equation~\ref{eq:static_dynamic_friction}
+
+\begin{equation}
+F_f = F_N \cdot c_f \cdot dm
+\label{eq:static_dynamic_friction}
+\end{equation}
+
+where 
+
+\begin{equation}
+F_N = mg
+\end{equation}
+
+The constant, dm is the weight distribution of the gokart, so that dm=0 means the entire mass of the gokart is on the front wheels, and dm=1 means the whole weight distribution is on the driving wheels.
+The constants used for simulations are listed in table~\ref{tab:friction_values}
+
+\begin{table}
+	\centering
+	\begin{tabular}{r | l}
+		Static friction coefficient, $\mathrm{c_s}$ & 1 \\
+		\hline
+		Dynamic friction coefficient, $\mathrm{c_d}$ & 0.7 \\
+		\hline
+		Weight distribution, dm & 0.6
+	\end{tabular}
+	\caption{Table of friction values}
+	\label{tab:friction_values}
+\end{table}
+
+
 The brake subsystem is a PI controlled ideal torque source, which will attempt to bring the go kart to a halt when the brake is pressed.
 Without a PI controller, there is a strong possibility that the brake would suddenly make the motor go backwards instead of stopping.\\
 Lastly the inertia is split into two inertia blocks, one containing motor and gear inertia on the left of the tyre, and the inertia due to the mass of the car on the right.
@@ -271,6 +301,8 @@ The signal builder block is used to shape the torque requested by the pedal.
 This torque is converted into the current used in the controller by multiplying with $\tfrac{3}{2 K_t}$.
 The Clarke-Park block converts $\mathrm{I_{AB}}$ to $\mathrm{I_{dq}}$. 
 
+\todo{The equation should be moved to clarke-park section}
+
 \begin{equation}
 \left[ \begin{array}{c}
 	I_d \\ I_q
@@ -321,6 +353,7 @@ For this reason, the magnitude of the two controller outputs is calculated in th
 If the magnitude is larger than $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, the Parallel scale down subsystem is processed. 
 The functionality is explained in listing~\ref{code:parallel_scale_down}.
 
+\todo[inline]{Martin: Probably explained in zybo.tex?}
 \begin{lstlisting}[style=customMATLAB, label={code:parallel_scale_down}, caption = Matlab code for parallel scale down function]
 d = dq(1) * 2 / sqrt(3); 	% Split the input vector
 q = dq(2) * 2 / sqrt(3); 	% into two values
@@ -387,6 +420,7 @@ The trigonometric functions used in equation~\ref{eq:sim_inverse_clark-park} are
 
 The majority of this block diagram calculates the inverse Clarke-Park transformation, and in the upper right corner, the third harmonic injection is calculated using the knowledge given in the paper 'A Novel Third Harmonic Injection Method for Closed Loop Control of PMSM Motors' \cite{third_harmonic_injection}. \\
 
+\todo[inline]{Martin:Third harmonic should be earlier in the report}
 The issue is that, when using field oriented control, the stator voltage does not remain at a constant angle relative to the rotor angle.
 That means, that calculating the third harmonic isn't as simple as multiplying the rotor position with three. 
 Doing this will result in the the third harmonic being out of phase with the three sinusoidal voltage waveforms as speed increases.
@@ -459,8 +493,9 @@ The simulation will be run with both PI and IP controllers, with values describe
 
 \subsubsection{PI controller}\label{sub:PI05}
 
-At first, a simulation will be run where the throttle is pressed fully from 0.12 s to 5 s, \todo[inline]{Morten: Similar to the one used in controller design section. where Kp and Ki values also are taken from} and then released.
-The load is 200 kg, which is enough to guard against wheel spin.
+At first, a simulation will be run where the throttle is pressed fully from 0.12s to 5s, and then released.
+This input is similar to the one used in chapter~\ref{sec:controller_design}.
+The load is 200kg, which is enough to guard against wheel spin.
 The resultant current along the d and q axes have been plotted in figure~\ref{fig:Sim_results_pi_Idq}.
 
 \begin{figure}[H]
@@ -471,15 +506,20 @@ The resultant current along the d and q axes have been plotted in figure~\ref{fi
 \end{figure}
 
 Much like on figure~\ref{fig:Output_Full}, the current steps up nicely with almost no overshoot. 
-There is also a small steady state error of about 2 \%. \todo[inline]{Morten: Which was expected based on the controller design where the steady state error was 5A or 1-2\%}
-The noise on both the d and q current at 1.8\si{\second} is caused by the quantization of the encoder. 
-It seems to cause a resonation when the motor is runing at 2250 RPM, that the Clake-park transformation can't handle.
-Meanwhile, the d-axis current is kept very low, at least until 2.6 seconds, when the voltage starts saturating. 
-A small error (of up to -20 A) is not a big issue, as this is likely to occur if the position encoder is not perfectly aligned.
+There is also a small steady state error of about 2 \%, which is expected.
+There is a small current noise on $\mathrm{I_q}$ and especially $\mathrm{I_d}$, which is caused by the quantization of the encoder.
+Using a higher frequency for the discrete controller reduce this ripple. 
+For these simulations, 10\si{\kilo\hertz} has been used
+Lower frequencies can be used with acceptably low noise noise, up to 0.5\si{\kilo \hertz}.
+The extra noise on both the d and q current at 1.8\si{\second} is imaging error, caused by the quantization of the encoder and the frequency of the controller.
+For controller frequency, the error happens when the motor is running at 2250 RPM.
+Lower frequencies mean, that the error happens at lower motor speeds. \\
+The d-axis current is kept very close to zero, at least until 2.6 seconds, when the voltage starts saturating. 
+A small error (of up to -20 A) is not a big issue, as this is likely to occur anyway if the position encoder is not perfectly aligned.\\
 When saturation occurs, the current drops off almost exponentially. 
-As the speed increases, the voltage needed to produce torque lowers until it's only enough to compensate for the drag.
+This makes sense, because as the speed increases, the voltage needed to produce torque lowers until it's only enough to compensate for the drag.
 At 5 seconds, when the throttle is released, both the d and q current ripples a bit. 
-This is due to the way saturation is handled, but it's not a major ground for concern.
+This is due to the way saturation is handled, but the ripple is not a major ground for concern.
 
 The voltage waveforms must not be saturated, and should remain sinusoidal with third harmonic injection.
 This is shown on figure~\ref{fig:Sim_results_pi_phase_voltage}
@@ -493,10 +533,10 @@ This is shown on figure~\ref{fig:Sim_results_pi_phase_voltage}
 
 The reason for stepping voltage instead of a smooth curve is the limited resolution of the encoder. 
 This is not an issue, because these steps will induce a high frequency noise, that the inductance of the motor will choke.
-Figure~\ref{fig:Sim_results_pi_phase_voltage} shows that the voltage waveforms span the whole range, even at speeds where the controller output is outside the $\mathrm{\pm} 1.15$.
+Figure~\ref{fig:Sim_results_pi_phase_voltage} shows that the voltage waveforms span the whole range, even at speeds where the controller output is outside the $\mathrm{\pm}1.15$.
 This works independently from the controller, and will work both for the PI and IP controller. \\
 
-When the throttle is released after 5 s, the power should ideally not become negative, as the inverter is not designed to handle regenerative braking.
+When the throttle is released after 5s, the power should ideally not become negative, as the inverter is not designed to handle regenerative braking.
 This means, that it is not known what happens if the motor tries to push power back to the battery.
 Figure~\ref{fig:Sim_results_pi_phase_power} shows a short power undershoot occurring when the controller input goes from full to zero.
 
@@ -507,8 +547,8 @@ Figure~\ref{fig:Sim_results_pi_phase_power} shows a short power undershoot occur
 	\label{fig:Sim_results_pi_phase_power}
 \end{figure}
 
-The power peaks at $\mathrm{-400 \si{\watt}}$ for a short time.
-Integrating the power from 5.06 to 5.5 s gives an energy of $\mathrm{-25 \si{\joule}}$.
+The power peaks at -400\si{\watt} for a short time.
+Integrating the power from 5.06to 5.5s gives an energy of -25\si{\joule}.
 This is not likely to cause problems, as this energy easily could be lost in the inverter.
 The issue is larger when releasing the throttle while the kart is accelerating. 
 This is shown on figure~\ref{fig:Sim_results_pi05_large_power_undershoot}.
@@ -520,10 +560,10 @@ This is shown on figure~\ref{fig:Sim_results_pi05_large_power_undershoot}.
 	\label{fig:Sim_results_pi05_large_power_undershoot}
 \end{figure}
 
-Integrating this undershoot yields $\mathrm{-62 \si{\joule}}$. 
+Integrating this undershoot yields -62\si{\joule}. 
 This is not a major concern, however it causes a ripple in the speed, that might be felt. \\
 
-To simulate wheel spin and wheel lock, the mass of the go-kart has been lowered to 150 kg, and the weight distribution has been reduced to 50 \% on the rear wheels.
+To simulate wheel spin and wheel lock, the mass of the go-kart has been lowered to 150kg, and the weight distribution has been reduced to 0.5.
 Torque input is initially set to full for one second, and then declining to zero for the next 4 seconds, as shown in figure~\ref{fig:torque_setpoint_waveform}.
 After this, the brake will be active, and finally the motor will be producing torque again.
 
@@ -592,7 +632,7 @@ Figure~\ref{fig:slip_and_current_braking} shows the wheel slip and current for t
 	\label{fig:slip_and_current_braking}
 \end{figure}
 
-The brake steps to 66 \si{\newton\meter} at $\mathrm{5.36 \si{\second}}$, and ramps up until it hits a limit of $\mathrm{102 \si{\newton \meter}}$ at $\mathrm{6 \si{\second}}$. \todo[inline]{Morten: needs correct math names. also in the next bit}
+The brake steps to 66Nm at 5.36\si{\second}, and ramps up until it hits a limit of 102Nm at 6\si{\second}.
 During this time, it can be seen, that the q-axis current is positive, which means, the motor produces some forward torque when the brake is active. 
 This is a flaw in the controller, that it doesn't settle quickly enough
 This results in an energy waste of $\mathrm{150 \si{\watt}}$.
@@ -613,8 +653,7 @@ In order to do that, the wire going into the Kp gain block must be connected wit
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.5\linewidth]{graphics/ip_controller_in_full_system}
-	\caption{Input to Kp gain blocks are connected to the Idq feedback wire instead of the output of the subtraction 'circle'} \todo[inline]{Morten: is this sentence finished?}
-	\label{fig:ip_controller_in_full_system}
+	\caption{Input to $\mathrm{K_p}$ gain blocks are connected to the $\mathrm{I_{dq}}$ feedback wire instead of the output of the subtraction 'circle'.}
 \end{figure}
 
 Like the PI controller, the parameters are calculated using a settling time of $\mathrm{50 \si{\milli \second}}$.
@@ -638,7 +677,7 @@ Figure~\ref{fig:Sim_results_ip_Idq} shows the d and q-axis current as the contro
 \end{figure}
 
 By comparison to the PI controller, the IP controller does significantly worse.
-The steady state error of the q-controller is 10 \%, while the has a stead state error of $\mathrm{16\si{\ampere}}$. \todo[inline]{Moten: Sentence incomplete!}
+The steady state error of the q-controller is 10\%, while the d-controller has a steady state error of $\mathrm{16\si{\ampere}}$.
 What's even worse is, that the q-axis current goes below zero before the throttle is released after $\mathrm{5\si{\second}}$.
 That means, that when driving the go-kart at full throttle, the speed of the go-kart will start oscillating quite notably.
 At 5 seconds, the throttle is released, at which point the current should be zero. 
@@ -697,28 +736,29 @@ Figure~\ref{fig:slip_and_current_braking_ip} displays the slip and current when 
 \end{figure}
 
 From 5 to 6.3\si{\second}, the wheel does not start locking. 
-However, the d and q-axis current is still oscillating from the current step displayed on figure~\ref{fig:sim_results_ip_slip_acceleration_current}, so it's hard to determine if how the controller handles non-blocking braking. \todo[inline]{Morten: some gramatical errors here.}
+However, the d and q-axis current are still oscillating from the current step displayed on figure~\ref{fig:sim_results_ip_slip_acceleration_current}, so it's hard to determine how the controller handles non-blocking braking.
 At 6.3\si{\second}, the brakes lock, at which time, both the d and q-axis current oscillate.
-This causes the wheel deceleration to be halted at 6.5\si{\second}, as seen on figure~\ref{fig:sim_results_ip_slip_abraking}.
+Because of the forward torque produced by the motor, the wheel deceleration is halted at 6.5\si{\second}, as seen on figure~\ref{fig:sim_results_ip_slip_abraking}.
 Because of the slow settling time of the controller, it takes 1.1 seconds for the wheels to block completely. 
 This cause a tremendous waste of energy.
-The same happens when the brake is released again.//
+The same happens when the brake is released again, only this time, the energy is transferred from the motor to the battery.//
 
 \subsubsection{PI controller with faster settling time}\label{sub:PI01}
 
 Since neither of the two controller designs work optimally, the PI controller will be redesigned with a settling time of $\mathrm{10 \si{\milli \second}}$.
 The controller is designed for a load of $\mathrm{200 \si{\kilogram}}$.
-\todo[inline]{Morten: weird spacing in the equation and e-3 is not raised}
 The control parameters in equation~\ref{eq:10ms_settling_time_param} are divided by half the battery voltage
 
 \begin{equation}
-K_P = 1.64 \\%1.637719093817946
-K_I = 2.6e-3 %0.002604159942864
+\begin{split}
+K_P &= 1.64 \\%1.637719093817946
+K_I &= 2.6 \cdot 10^{-3} %0.002604159942864
+\end{split}
 \label{eq:10ms_settling_time_param}
 \end{equation}
 
 The reason for not using this settling time was, that it provided a large overshoot, which was also evident in this more elaborate simulator.
-Introducing a rate limiter block in the Discrete controller subsystem between the q setpoint port and the saturation block will reduce the overshoot to less than 1 \%.
+Introducing a rate limiter block in the Discrete controller subsystem between the q setpoint port and the saturation block will reduce the overshoot to less than 1\%.
 This block is displayed on figure~\ref{eq:IP_controller_constants}.
 The rising and falling rates are set to $\mathrm{10 \si{\kilo \ampere \per \second}}$ and $\mathrm{-10 \si{\kilo \ampere \per \second}}$.
 This is fast enough, that a driver would not notice.
@@ -729,13 +769,14 @@ Figure~\ref{fig:Sim_results_pi01_Idq} shows the positive and negative current st
 	\centering
 	\includegraphics[width = 0.7\linewidth]{graphics/Sim_results_pi01_Idq}
 	\caption{d and q axis current is a lot more precise than on figure~\ref{fig:Sim_results_pi_Idq}}
-	\label{fig:Sim_results_p01i_Idq}
+	\label{fig:Sim_results_pi01_Idq}
 \end{figure}
 
-The faster controller is much more precise.
+The faster $\mathrm{I_{q}}$-controller is much more precise.
 The rate limiter ensures, that the overshoot is less than 1 percent.
 The steady state error is so small compared to the noise, that it's hard to determine what it is.
-There is a small current overshoot when the pedal is released of only -3\si{\ampere}. The power caused by this is shown on figure~\ref{fig:Sim_results_pi01_power}
+However, the $\mathrm{I_{d}}$-controller is more noisy, but still close to zero.
+There is a small current undershoot when the pedal is released of only -3\si{\ampere}. The power caused by this is shown on figure~\ref{fig:Sim_results_pi01_power}
 
 \begin{figure}[H]
 	\centering
@@ -824,15 +865,18 @@ A faster controller was calculated with tremendous results.
 \todo[inline]{Morten: some colors would be perfect for this table}
 
 Both the PI controllers could work, but the faster response gives very precise current control. 
-\todo[inline]{Martin: Morten, maybe you can write something clever about why the ip controller is so bad. Morten: ok will try ! this next bit is new}
+\todo[inline]{Martin: Morten, maybe you can write something clever about why the ip controller is so bad. Morten: ok will try ! this next bit is new. Martin: Tried to rewrite some of it.}
 
-Based on the controller analysis in section \ref{sec:controller_design} where the IP controller was designed based on a reduced order model without any mechanical part, it must be concluded that the slow pole that was not included in the model, as seen on figure \ref{fig:PZmap_full} in that same section, is too important to remove by reducing the order of the model,nresulting in an unstable result in this full simulation. syse IP controller itself adds a pole to the system which moves the remaining fast pole to become a complex conjugate pair that will result in a decaying oscillating response to a step. This oscillation proves to be too much when adding the slow poles of the mechanical system. As it has been proven now, this controller is not able to account for the mechanical system as a disturbance, which is unsurprising really giving the scope of the mechanics involved.
-\todo[inline]{Morten: First sentence is very long and stupid? help :P}
+The IP controller was designed in section~\ref{sec:controller_design} based on a reduced order system without any mechanical part. 
+Evidently, the motor along with the mass of the gokart has a slow pole, that the IP controller does not handle.
+The IP controller adds a pole to the systems, which makes the fast pole on figure~\ref{fig:PZmap_reduced_v2} complex conjugate poles that can oscillate.
+This oscillation proves to be too much when adding the slow poles of the mechanical system.
+As it has been proven now, this controller is not able to account for the mechanical system as a disturbance, which is unsurprising really giving the scope of the mechanics involved.
 
 \subsection{Plecs model}\label{sub:sim_plecs_electrical}
 As previously mentioned, the Plecs model differs vastly from the Simulink model in the electrical network, as it more closely resembles the real analog circuit. 
 It is shown on figure~\ref{fig:plecs_electrical}.
-\todo[inline]{Thomas: This needs something more.. Martin: ya think? Thomas: I think... Martin: OK Fine then}
+\todo[inline]{Thomas: This needs something more.. Martin: ya think? Thomas: I think... Martin: OK Fine then. Martin: Better now?}
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width = \textwidth]{graphics/Plecs_electrical}
@@ -863,11 +907,11 @@ E_{off} = \frac{1}{2} V_{DS} \cdot |I_D| \cdot  t_{c,off}
 
 Because the a negative current would cause the same loss, as a positive current, the absolute is taken of the drain current.
 All losses are calculated for two mosfets in parallel, conducting the combined current.
-Figure~\ref{fig:turn-on_loss_lut} shows the 2D lookup table of turn on losses as a graph.
+Figure~\ref{fig:turn-on_loss_lut} shows the 2D lookup table of turn on losses as a graph, with current and voltage on the floor axes, and energy on the vertical axis.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width = 0.6\linewidth]{graphics/turn-on_loss_lut}
+	\includegraphics[width = 0.7\linewidth]{graphics/turn-on_loss_lut}
 	\caption{Turn on losses calculated from equation~\ref{eq:plecs_switching_losses}.}
 	\label{fig:turn-on_loss_lut}
 \end{figure}
@@ -885,34 +929,19 @@ CthG along with Heatsink Thermal Resistance models the 30x30 heatsink used to mo
 CthG has a thermal capacity of 2100 \si{\kelvin \per \joule}, which is based on its size and the thermal capacity of aluminium, acording to~\ref{eq:thermal_capacity}.
 
 \begin{equation}
-C_{th} = v \cdot C_{Rv}
+C_{th} = v \cdot \rho_m C_{p}
 \label{eq:thermal_capacity}
 \end{equation}
-\todo{Martin: Can we quote wikipedia? Morten: no. at least use the sources that are on the bottom of the wiki page.}
 
-where $C_{Rv}$ is the volumetric heat capacity of aliminium, which is 2.422. 
+where $C_{p}$ is the specific heat capacity of aliminium, which is 910 \si{\joule\per\kilogram\kelvin}\todo{Reference in footnote: http://www.engineeringtoolbox.com/specific-heat-metals-d_152.html}, and $\mathrm{\rho_m}$ is the mass density of aluminium\todo{Reference in footnote: http://www.coolmagnetman.com/magconda.htm}. 
 For a heatsink of 30x30x1 cm, the heat capacity is then 2180 \si{\kelvin \per \joule}.
 
+\todo[inline]{Martin: I think maybe Erlingur has written about this.}
+
 The battery is modelled with a DC voltage source of 52.8 \si{\volt}.
-In series with this is a non-ideal wire modelled by a resistor of 0.77 \si{\milli \ohm}, and an inductor of 6 \si{\micro \henry}.
-This has been calculated by~\ref{eq:wire_calculation}.
-
-\begin{equation}
-\begin{split}
-R_{wire} = \frac{1.7e-8 \si{\ohm \meter} \cdot 5 \si{\meter}}{50 \si{\milli \meter \squared}}  + 200 \si{ \micro \ohm}\\
-L_{wire} = 12.5 \si{\nano \henry \per \centi \meter} \cdot 5 \si{\meter}
-\label{eq:wire_calculation}
-\end{split}
-\end{equation}
-
-The battery wire is a 150 square mm wire, at five meters long including the connection to all the batteries. 
-The 200 \si{\micro \ohm} is the resistance of the relay.
-12.5 \si{\nano \henry \per \centi \meter} is a good estimate, used by Morten Nymann.\\ \todo[inline]{Morten: whos that?- add professor of blabla f.eks.}
-
-The E caps represent the electrolytic capacitor bank, consisting of 8 2200\si{\micro \farad} capacitors in parallel. 
-Bank ESR is the parallel ESR of these 8 capacitors, of 12.25 \si{\milli \ohm}.
+In series with this is a non-ideal wire as described in section~\ref{sub:Capacitors}
 Bank EPR is a gigaohm resistor needed for the simulation -- it will not run without it, because the wire inductor might not have a DC path to ground.
-F caps represent the film capacitors. These are significantly smaller, but have no ESR, and handle higher frequencies better than the electrolytic.\\
+F caps represent the film capacitors. These are significantly smaller, but have no ESR, and handle higher frequencies better than the E caps.\\
 
 The controller is modeled on the bottom half of figure~\ref{fig:plecs_electrical}. 
 Other than the PI controllers, it contains parallel scale down and overmodulation.
@@ -948,7 +977,7 @@ The efficiency quickly reaches above 90 \%, which is quite good. \\
 However, there is a loss in the ESR of the E caps.
 The current ripple is displayed on figure~\ref{fig:plecs_current_ripple}
 
-\todo[inline]{Martin: Maybe this should be omitted, since we so far do not have anything about capacitor choices. Morten: maybe. leave it for now. Or simply explain why we don't have anythign about the caps}
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.7\linewidth]{graphics/plecs_current_ripple}
@@ -956,7 +985,7 @@ The current ripple is displayed on figure~\ref{fig:plecs_current_ripple}
 	\label{fig:plecs_current_ripple}
 \end{figure}
 
-The large current ripple would result in up to 190 \si{\watt} of loss, which is a lot more than anticipated.
+The large current ripple would result in up to 190 \si{\watt} of loss, which is a lot more than the capacitors can handle.
 Not only is this power loss damaging for the efficiency of the inverter, it also produces a lot of heat, that is not absorbed by the heatsink.
 A reason for this high number is likely the ideal switching used in Plecs. 
 Because of this, the current from the supply can step from zero to 300 A instantaneously. 
@@ -989,11 +1018,6 @@ It is possible to drive a PMAC motor with three phases of naturally sampled PWM.
 The inverter has a large thermal capacity, meaning that it would keep cool for the duration, it is being used. 
 However, according to plecs, the current ripple in the electrolytic capacitors greatly exceeds what they are rated for.
 It was tried to add a ESL inductor to the capacitors, but that caused the simulation to become much slower to the point where it would not run at all.
-
-
-
-
-
 
 \subsection{Simulation of the Over-Current Protection Circuit}
 \todo[inline]{Thomas: I'm not sure the placement of this makes sense.. Morten: it is a bit out of context from the stuff above. but it is as a simulation so i guess its fine.}
