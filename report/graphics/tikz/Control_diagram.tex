@@ -58,7 +58,7 @@
 						dashed,
 						red,
 						rectangle,
-						text width=45em,
+						text width=37.4em,
 						minimum height=30em,
 						node distance=0em]						
 						
@@ -78,8 +78,8 @@
 
 %% Surround block
 %\node [blockhuge,yshift=-10em,xshift=30em](surroundblock){};
-\node [blockzybo,yshift=-10em,xshift=13.5em](Zybo){};
-\node [xshift=-6.2em,yshift=-24em](){Zybo Board};
+\node [blockzybo,yshift=-10em,xshift=10.5em](Zybo){};
+\node [xshift=-5em,yshift=-24em](){Zybo Board};
 
 %% D and Q blocks:
 \node [block](IQ){$I_q$ Controller};
@@ -95,11 +95,11 @@
 
 
 %% Driver block
-\node [blocktall, right of=PWM](DRVR){Driver};
+\node [blocktall, right of=PWM,xshift=4em](DRVR){Driver};
 
 
 %% Three Phase Inverter
-\node [blocktall, right of=DRVR,xshift=2em](TPI){Three Phase Inverter};
+\node [blocktall, right of=DRVR](TPI){Three Phase Inverter};
 
 
 %% Motor block
@@ -112,7 +112,7 @@
 \node [block, below of=Motor,yshift=-2em](Encoder){Encoder};
 
 %% Current Calculation
-\node [blocktall, below of=DRVR,yshift=-2em](Calc){Current Calculation};
+\node [blocktall, below of=PWM,yshift=-2em,xshift=4.5em](Calc){Current Calculation};
 
 %% Clark Park
 \node [blocktall, left of=Calc](ABC){Clarke Park Transform};
@@ -160,7 +160,7 @@
 \path[line](Motor) -- node[xshift=0.8em]{$\theta_m$}(Encoder);
 
 %% Encoder to 2x Clark Park + PWM
-\path[line](Encoder.south) -|++(0,-2) --++(-14.76,0) |-node[circle,fill,inner sep=2pt]{}node[xshift=-0.8em]{$\theta_i$} ++(0,4.8) -|  (PWM.south);
+\path[line](Encoder.south) -|++(0,-2) --++(-15.46,0) |-node[circle,fill,inner sep=2pt]{}node[xshift=-0.8em]{$\theta_i$} ++(0,4.8) -|  (PWM.south);
 \path[line](Encoder.south) -|++(0,-2) -| (ITrans.south);
 \path[line](Encoder.south) -|++(0,-2) -| node[circle,fill,inner sep=2pt]{} node[yshift=-0.8em]{$\theta_i$} (ABC.south);
 
@@ -171,8 +171,8 @@
 
 
 %% Clark Park Transform to DQ inputs
-\path[line](ABC.150) --node[xshift=-0.7em,yshift=0.5em]{$I_d$}++(-7.5,0) |- ([yshift=-1em]ID.west);
-\path[line](ABC.210) --node[yshift=0.5em]{$I_q$}++(-8,0) |- ([yshift=-1em]IQ.west);
+\path[line](ABC.150) --node[xshift=-0.7em,yshift=0.5em]{$I_d$}++(-5.5,0) |- ([yshift=-1em]ID.west);
+\path[line](ABC.210) --node[yshift=0.5em]{$I_q$}++(-6,0) |- ([yshift=-1em]IQ.west);
 
 %% Inverter to current calc (on the lines to the motor)
 \path[line](TPI.24) --node[circle,fill,inner sep=2pt,xshift=0.7em]{}++(0.5,0) |-node[xshift=-12em,yshift=0.5em]{$I_a$} (Calc.30);
