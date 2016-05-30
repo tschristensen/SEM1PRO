@@ -1,24 +1,13 @@
 %!TEX root = ../main.tex
 \newpage
 \section{Controller Design}\label{sec:controller_design}
-Controlling the PMAC motor will be done using the principles of field oriented control, which uses the Clarke Park Transform (dq0 transform) to transform three phase AC into two phase DC for much easier regulation. Controlling the PMAC motor is done by producing a change to the PWM inverter input. This is done by monitoring two of the three current inputs to the motor and transforming them using the dq0 transform. \newline
+Controlling the PMAC motor will be done using the principles of field oriented control, which uses the Clarke Park Transform (dq0 transform) to transform three phase AC into two phase DC, allowing for easier regulation.
+Controlling the PMAC motor is done by varying the PWM input to the inverter.
+This is done by monitoring two of the three current inputs to the motor and transforming them using the dq0 transform as discussed in \ref{sec:clarkepark}. \newline
 
+The requirement for this project outlines that the motor must be torque controlled, hence the flux demand will be zero while the torque demand will be defined by the torque pedal. 
 
-The Clarke Park transform is integral to the type of control desired for the PMAC motor, so it must be understood. It is done by 'transforming the stator currents into a rotating reference frame that is locked to the rotation of the rotor' (\cite{electric_motor_and_drives} p.221). The transform starts by viewing the three phase star connection of the PMAC motor and displaying each phase as ABC (or W U and V as seen on figure \ref{fig:dq_transform_ref_frames} from the book cited \cite{electric_motor_and_drives}). This ABC current is first transform into a stationary frame of only two phases called the $\alpha \beta$ transform and then further transformed into dq0. When in dq0 form the reference frame rotates with the angular velocity $\omega$ of the motor, while being referenced to the stationary frame of the $\alpha \beta$ frame. This transform yields a d and q DC value and a zero, which are respectively referred to a torque and a flux demand in the controller.\newline
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=.65\linewidth]{graphics/ABC_to_dq_ref_frame}
-	\caption{Clarke Park Transform reference frames. Source: \cite{electric_motor_and_drives}}
-	\label{fig:dq_transform_ref_frames}
-\end{figure}
-
-
-The requirement for this project outlines that the motor must be torque controlled, hence the flux demand will be zero while the torque demand will be defined by the speeder pedal. After the dq values have been compared to the reference/demand values the error is fed to a controller which will adjust the output accordingly. This output is transformed using the inverse dq0 transform, which yields a three phase AC signal that can be fed into the inverter and yield a new motor speed. \newline
-
-Illustrating this, the block diagram presented in section 4 can be retrieved. Figure \ref{fig:control_process_sec8}. This shows how the current of the three phase AC values are retrieved from the motor input, transformed to dq0 and then compared to reference values. The $i_d$ value will be zero as it is the flux reference, while the $i_q$ value will be set by the speeder pedal as a torque reference. The controller acts upon these and the dq values are transformed back to ABC three phase AC and fed to the inverter.
-
-In reality it is not a torque value that must be a reference for the controller, but a current value, as the current determines the torque. Taking this into account will be part of creating a functional model of the motor.
+The procedure of torque control is illustrated by figure \ref{fig:blockdiagram2}, which is repeated here for convenience.
 
 \begin{figure}[H]
 	\centering
@@ -27,35 +16,39 @@ In reality it is not a torque value that must be a reference for the controller,
 	\label{fig:control_process_sec8}
 \end{figure}
 
-To properly control this, a mathematical model of the PMAC motor from section 7 is required to derive controller values for the two controllers labelled "$I_q$ Controller" and "$I_d$ Controller" in figure \ref{fig:control_process_sec8}. To model the PMAC motor an equivalent circuit of the motor will be used. For an AC electrical motor the equivalent circuit can be represented by the diagram presented on figure \ref{fig:PMSM_Equivalent_d_axis} and \ref{fig:PMSM_Equivalent_q_axis}.\newline
+The three phase input to the motor is measured and transformed to dq.
+After the transformation, the two signals, $I_d$ and $I_q$ are compared to the reference values and fed to the controllers.
+The $I_d$ reference will be zero as this is the flux reference.
+The $I_q$ reference is set by the torque pedal.
+The controller acts upon these values ant they are transformed back to ABC three phase AC.
+After this PWM is adjusted and the signals are routed through the driver to the inverter.
 
-These figures show that the PMAC motor can be represented as an electrical diagram with the physical properties represented by inductors and resistors. The connection between the rotor and stator works like a transformer, with coils generating a change in either part to represent the stator to rotor relation. The coils on the rotor move with respect to those on the stator, so there is a variation in the amount of movement between them, which is important for the generation of torque. The circuit is split into two parts, one for the torque and one for the flux. Which is exactly what is done through the dq0 transform. \newline
+The torque reference, $I_q$, is in fact a current reference.
+As such, torque control is equal to current control.
+Taking this into account will be part of creating a functional model of the motor.\\
+
+To model the PMAC motor, an equivalent circuit of the motor will be used. 
+The equivalent circuit can be represented by the diagram presented on figure \ref{fig:PMSM_Equivalent_q_axis}.\newline
+
+This figure shows that the q-axis of the PMAC motor can be represented as an electrical diagram with the physical properties represented by inductors and resistors.
 
 \begin{figure}[!h]
 	\centering
-	\begin{subfigure}[t]{.5\linewidth}
-		\includegraphics[width=\textwidth]{graphics/d_axis_equivalent}
-		\caption{PMAC motor equivalent circuit, d-axis}
-		\label{fig:PMSM_Equivalent_d_axis}
-	\end{subfigure}
-	\hspace{1cm}
-	\begin{subfigure}[t]{.30\linewidth}
-		\includegraphics[width=\textwidth]{graphics/q_axis_equivalent}
-		\caption{PMAC motor equivalent circuit, q-axis}
-		\label{fig:PMSM_Equivalent_q_axis}
-	\end{subfigure}
-	\caption{PMAC Motor $I_d $ and $I_q$ equivalent diagrams.\cite{pmac_equivalent_diagram}}
+	\includegraphics[width=.4\textwidth]{graphics/q_axis_equivalent}
+	\caption{PMAC motor equivalent circuit, q-axis}
+	\label{fig:PMSM_Equivalent_q_axis}
 \end{figure}
 
-The components shown are: the mutual inductance $l_s$, $L_{md}$ and $L_{mq}$. Armature resistance $R_s$ and flux leakage for both d and q axes. The most important values here are the q-axis inductor and resistance which directly affect how much torque is gained from inputting current to the PMAC motor. During this section the components above will be named as follows.
+The components shown are: the mutual inductance $l_s$ and $L_{mq}$. Armature resistance $R_s$ and flux linkage. 
+The most important values here are the q-axis inductor and resistance which directly affect how much torque is gained from inputting current to the PMAC motor. 
+During this section the components above will be named as follows.
 
 \begin{equation}
-R_{sq}=R_a, \quad L_{md}+L_{mq}=L_a=L_q \quad 
+R_{s}=R_a, \quad L_{mq}=L_a
 \end{equation}
 
-Another thing that can be learned from this electrical equivalent diagram is that the magnet on the rotor side, on the d-axis diagram figure \ref{fig:PMSM_Equivalent_d_axis}, can be seen as a current source $i_m$. A change in flux of this magnet will induce a force resulting in current in the magnet. This is shown with the $R_m$ resistor. Through this it is apparent that the d-axis is the flux part of the motor, while q is the current.
-
-To current control the motor, the model and controller will be developed for the q-axis of this equivalent diagram. The q-axis by itself resembles the equivalent circuit of a DC motor very much and this can be used to design a mathematical model of the motor.
+To current control the motor, the model and controller will be developed for this equivalent diagram. 
+The q-axis by itself resembles the equivalent circuit of a DC motor and this can be used to design a mathematical model of the motor.
 
 \subsection{State Space Model}
 A state space model is derived from the physical representation of a PMAC motor, figure \ref{fig:State_space_model1}, consisting of an electrical part on the left and a mechanical part on the right side of the model. The model is made in MatLab Simulink. The model is very similar to that of a DC motor when interpreted like this.
@@ -67,9 +60,9 @@ A state space model is derived from the physical representation of a PMAC motor,
 	\label{fig:State_space_model1}
 \end{figure}
 
-Reducing the model of figure \ref{fig:State_space_model1} to use transfer functions for the electrical and mechanical parts results in a more simple model with fewer loops. It is shown on figure \ref{fig:State_space_model3}. 
-%It can be used to find controller values if the torque load and wind resistance are seen as outside disturbances. The controller should be able to handle the amount of disturbance that can be found in these values. The wind resistance will get proportionally larger the faster the kart is moving, but for this first model it will not be taken into account. 
-In the electric part of the circuit a new value $TS$ has been added to the denominator of the transfer function, this value is the electromagnetic time constant of the stator, defined as $TS=L_a/R_a$. The constant defined $J_{pro}$ is the projected inertia of the kart, based on the expected weight with a driver and also adding the inertia of each gearing cog.
+Reducing the model of figure \ref{fig:State_space_model1} to use transfer functions for the electrical and mechanical parts results in a more simple model with fewer loops. 
+It is shown on figure \ref{fig:State_space_model3}. 
+In the electric part of the circuit a new value $TS$ has been added to the denominator of the transfer function, this value is the electromagnetic time constant of the stator, defined as $TS=L_a/R_a$. The constant defined $J_{pro}$ is the projected inertia of the kart, based on the expected weight with a driver and also adding the inertia of each gear.
 
 \begin{figure}[H]
 	\centering
@@ -79,7 +72,7 @@ In the electric part of the circuit a new value $TS$ has been added to the denom
 \end{figure}
 
 \subsubsection{No Inductor Model}
-The model from figure \ref{fig:State_space_model1} can be reduced by removing the inductance completely, this yields a model of reduced order. Reducing the order results in a model that can be easier to derive a controller for, because it removes a pole from the system. 
+The model from figure \ref{fig:State_space_model1} can be reduced by removing the inductance completely, this yields a model of reduced order. Reducing the order results in a model that can be easier to derive a controller for, since it removes a pole from the system. 
 %The assumption here is that the inductor and integrators result in a very fast pole, that will be too fast to really affect the system. Whether this is a correct assumption will be tested with a simulation of either model. 
 This reduced order model is seen on figure \ref{fig:State_space_model_reduced_order}.
 
@@ -110,7 +103,9 @@ A pole-zero map of both models will be used to see whether the inductor can be r
 
 The pole-zero plot shows that the inductor pole is much faster than the mechanical pole, so it should be possible to remove it. \newline
 
-The two state space models will be simulated with MatLab Simulink to see how much the system is affected by the removal of the inductor. This will be shown by applying a constant voltage of $26.2V$ and then monitoring the results in both current output and angular velocity. Figure \ref{fig:Full_Vs_Reduced1_Current} and \ref{fig:Full_Vs_Reduced1_Speed} show these simulations.
+The two state space models are simulated with MatLab Simulink to see how the system is affected by the removal of the inductor. 
+A constant voltage of $26.2\si{\volt}$ is applied to each model.
+Figure \ref{fig:Full_Vs_Reduced1_Current} and \ref{fig:Full_Vs_Reduced1_Speed} show these simulations.
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[t]{.45\linewidth}
@@ -127,11 +122,18 @@ The two state space models will be simulated with MatLab Simulink to see how muc
 	\caption{Matlab simulation of each model with the same input}
 \end{figure}
 
- A problem shows up by these simulations. The speed looks fine for the no inductor model but the current starts at a high value. The current starts out as a simple multiplication of the input voltage multiplied by the $1/R$ gain to equal $4000A$. The amplitude of speed and current are not important at this time, as that will be controlled later, but since the model does not ramp up the current like the  full order model, a controller will not be derived for this reduced order model.
+ A problem shows up in these simulations. 
+ The speed behaves well for the no inductor model, but the current starts at a high value. 
+ The current starts out as a simple multiplication of the input voltage multiplied by the $1/R$ gain to equal $4000\si{\ampere}$. 
+ The amplitude of speed and current are not important at this time, as that will be controlled later, but since the model does not ramp up the current like the  full order model, a controller will not be derived for this reduced order model.
 
 \subsubsection{Reduced Order Model - No Mechanical Part}
 \label{sec:reduced_model_1}
-Because of the problem with reducing the model by removing the inductor, this section will focus on reducing the order by removing the mechanical part. This model will be an experiment to remove the slow pole from the full order model. This will affect the system significantly. The mechanical system will now be seen as a disturbance. It can be seen on figure \ref{fig:State_space_model_reduced_order_v2}.
+Because of the problem with reducing the model by removing the inductor, this section will focus on reducing the order by removing the mechanical part.
+This model will be an experiment to remove the slow pole from the full order model. 
+This will affect the system significantly. 
+The mechanical system will now be seen as a disturbance. 
+It can be seen on figure \ref{fig:State_space_model_reduced_order_v2}.
 
 \begin{figure}[H]
 	\centering
@@ -464,13 +466,9 @@ The controller to be used for the kart will be determined by running a more in d
 
 
 \subsection{Discretization}
-<<<<<<< HEAD
-Discretizing the controller is required to use it in the embedded software. This is because the digital world of computers does not function in the same continuous form as the physical world. Everything is based on clock cycles and bits. So to make a controller function it must compute the integral based on calculations performed on a per clock basis. 
-\todo[inline]{Morten: above is new. please read ty! :)}
-To do this, the values of $K_p$ and $K_i$ can be used as they are, but for both a PI and IP controller the integrator must be discretized. An integrator in discrete is done by using a numerical integration method. The choice here will be the Trapezoidal method, which has the output equation given as equation \ref{eq:trap_integrat}. 
-=======
-Discretizing the controller is required to use it in the software. To do this, the values of $K_p$ and $K_i$ can be used as they are, but for both a PI and IP controller the integrator must be discretized. An integrator in discrete is done by using a numerical integration method. The choice here will be the Trapezoidal method, which has the output equation given as equation \ref{eq:trap_integrat}. 
->>>>>>> bc6adc466200d3cf249f4d577c821890b638706c
+Discretizing the controller is required to use it in the software. 
+To do this, the values of $K_p$ and $K_i$ can be used as they are, but for both a PI and IP controller the integrator must be discretized. 
+An integrator in discrete is done by using a numerical integration method. The choice here will be the Trapezoidal method, which has the output equation given as equation \ref{eq:trap_integrat}. 
 
 \begin{equation}
 y_{n+1} = y_{n} + \frac{1}{2}h \left( f(t_n,y_n)+f(t_{n+1},y_{n+1}) \right)

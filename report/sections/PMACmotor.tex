@@ -8,6 +8,17 @@ Initially the functionality of the motor will be described, then certain motor p
 Lastly a parking test will be performed to determine the angle of the encoder mounted on the motor. 
 The motor used to drive the go-kart is an 8-pole non-salient permanent magnet synchronous motor. 
 
+\subsection{Clarke-Park}
+\label{sec:clarkepark}
+The Clarke Park transform is integral to the type of control desired for the PMAC motor, so it must be understood. It is done by 'transforming the stator currents into a rotating reference frame that is locked to the rotation of the rotor' (\cite{electric_motor_and_drives} p.221). The transform starts by viewing the three phase star connection of the PMAC motor and displaying each phase as ABC (or W U and V as seen on figure \ref{fig:dq_transform_ref_frames} from the book cited \cite{electric_motor_and_drives}). This ABC current is first transform into a stationary frame of only two phases called the $\alpha \beta$ transform and then further transformed into dq0. When in dq0 form the reference frame rotates with the angular velocity $\omega$ of the motor, while being referenced to the stationary frame of the $\alpha \beta$ frame. This transform yields a d and q DC value and a zero, which are respectively referred to a torque and a flux demand in the controller.\newline
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.65\linewidth]{graphics/ABC_to_dq_ref_frame}
+	\caption{Clarke Park Transform reference frames. Source: \cite{electric_motor_and_drives}}
+	\label{fig:dq_transform_ref_frames}
+\end{figure}
+
 \subsection{Motor description}\label{sub:motor_descrpition}
 The motor used is a 3-phase Wye-connected, 8-pole non-salient permanent magnet AC motor, the Motenergy ME1117.
 Although there are many different types of PMAC motors, there is no physical difference between brushless DC motors (BLDC), permanent magnet AC motors (PMAC), and permanent magnet synchronous motors (PMSM). 
