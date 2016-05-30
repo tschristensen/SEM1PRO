@@ -54,13 +54,7 @@ By constantly placing the stator field ahead of the rotor, the motor will start 
 Thus it is necessary to know the position of the rotor in order to determine the angle of the stator field.
 For that measurement, an encoder will be used.
 
-\subsection{Motor Parameterization}\label{sub:1117_param}
-Due to the sparse information available from the manufacturer of the motor, it is necessary to measure some of the parameters of the motor. 
-It will also be necessary to determine exactly what these parameters define, since the manufacturer has not defined certain things such as what current measurement is related to torque through $K_T$.
-Parameters to determine are the back-EMF constant, $K_E$, the armature resistance, $R_a$, and the armature inductance, $L_a$.
-Each of the following sections describe the procedure used to find each of these parameters. 
-
-\subsubsection{Back-EMF and Torque Constant}\label{sub:KE-KT}
+\subsection{Definition of Back-EMF Constant and Torque Constant}
 The parameters $K_E$ and $K_T$ must be the same for a PMAC motor, since they are dependent on the flux produced in the permanent magnet of the rotor. 
 Another reason, that they are the same is, that the motor converts electrical energy to mechanical energy, and electrical energy is the product of current and voltage, and (rotational) mechanical energy is the product of torque and angular velocity. 
 A mismatch between $K_E$ and $K_T$ implies, that power appears or disappears, which cannot happen. 
@@ -165,18 +159,25 @@ Figure~\ref{fig:torque_contribution_dphi} shows torque contribution from each of
 	\caption{Torque contribution of each phase as a function of the phase difference}
 	\label{fig:torque_contribution_dphi}
 \end{figure}
-
-Adding these three contributions gives equation~\ref{eq:torque_fucntion_angle}.
-
-If $d\theta = 90 \si{\degree}$, equation~\ref{eq:torque_fucntion_angle} becomes:
-
+	
+	Adding these three contributions gives equation~\ref{eq:torque_fucntion_angle}.
+	
+	If $d\theta = 90 \si{\degree}$, equation~\ref{eq:torque_fucntion_angle} becomes:
+	
 \begin{equation}
-T = \frac{3}{2}K_t \cdot I
-\label{eq:torque_function_90deg}
+	T = \frac{3}{2}K_t \cdot I
+	\label{eq:torque_function_90deg}
 \end{equation}
-
+	
 It is easier to measure $K_E$ than $K_T$ and they are defined as the same. \\
 
+\subsection{Motor Parameterization}\label{sub:1117_param}
+Due to the sparse information available from the manufacturer of the motor, it is necessary to measure some of the parameters of the motor. 
+It will also be necessary to determine exactly what these parameters define, since the manufacturer has not defined certain things such as what current measurement is related to torque through $K_T$.
+Parameters to determine are the back-EMF constant, $K_E$, the armature resistance, $R_a$, and the armature inductance, $L_a$.
+Each of the following sections describe the procedure used to find each of these parameters. 
+
+\subsubsection{Measuring Back-EMF Constant}\label{sub:KE-KT}
 To find $K_E$, a hand-held power drill is used to rotate the motor at a constant speed. 
 An oscilloscope with a differential probe is used to measure the voltage between two of the phases. 
 Because of the high input impedance of the differential probe, there is no current and thus the armature inductance and resistance can be neglected. 
