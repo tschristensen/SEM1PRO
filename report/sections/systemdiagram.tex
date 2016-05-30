@@ -2,15 +2,14 @@
 
 \section{System Analysis}
 To get an overview of the system connections and all the major components needed to make the kart run, a system diagram is made based on the wiring diagram seen in figure \ref{fig:Kart_wiring_diagram}. 
-Figure \ref{fig:blockdiagram1} shows a simplified diagram of the wiring, where the Zybo board has replaced the Sevcon Gen4 controller. \newline
+Figure \ref{fig:blockdiagram1} shows a simplified diagram of the wiring, where the Zybo board has replaced the Sevcon Gen4 controller. \\
 
-The highlighted green component is the Zybo board.
+The green component represents the Zybo board.
 The PMAC motor, the driver and the inverter are all placed to the right of the controller board.
 Both the driver and inverter are parts of the Sevcon Gen4 controller and as such, they must be developed.
 The two blocks next to the motor are LEM current sensors. 
-Two of these are sufficient as the third current can be calculated using Kirchoff's current law.
-The encoder is measuring the rotational position of the rotor and feeding it to the controller.
-All three encoder signals might not be needed but they will be routed to have the opportunity to do so. \newline
+Two of these are sufficient as the third current can be calculated using Kirchoff's Current Law.
+The encoder is measuring the rotational position of the rotor and feeding it to the controller.\\
 
 To the left of the Zybo the different safety systems are placed.
 These will ensure that starting, stopping and emergency procedures are handled safely, preferably without any burned components.
@@ -26,7 +25,7 @@ The final parts to the left are the torque pedal for the kart and the battery su
 \end{figure}
 
 A diagram of the functionality of the wanted control process can be seen in figure \ref{fig:blockdiagram2}.
-The different blocks of the figure will be explained in depth in the coming sections, but is presented here to give an overview of the complete system.
+The different blocks of the figure will be explained in depth in the coming sections, but are presented here to give an overview of the complete system.
 
 \begin{figure}[H]
 	\centering
@@ -38,21 +37,21 @@ The different blocks of the figure will be explained in depth in the coming sect
 The following sections will explain what needs to be done in different areas to achieve the functionality of figure \ref{fig:blockdiagram1} and \ref{fig:blockdiagram2}    
 
 \subsection{Electronics}
-In order to fulfill the task some electric circuits will be developed to perform certain tasks. 
+In order to fulfil the requirements of the project, electric circuits will be developed to perform certain tasks. 
 The tasks at hand for the electronic circuits were found to be: 
 
 \begin{itemize}
 \item Overcurrent protection.
 \item Circuitry for LEM current transducer output.
-\item Power supplies Zybo board, current transducers and other parts of the circuit.
-\item Torque pedal downscale. The torque pedal output must be scaled as to not burn the ADC on the Zybo board.
+\item Power supplies for the Zybo board, current transducers and other parts of the circuit.
+\item Torque pedal downscale. The torque pedal output must be scaled to comply with the input characteristics of the Zybo board.
 \item Various logic to control different parts of the system, including logic level shifting for the encoders as well as circuitry for a drive enable signal.
 \item Driver circuit. A driver is needed to control the inverter.
 \end{itemize}
 All of the above points will be explored further in section \ref{sec:electronics}.
 
 \subsection{Embedded System}
-An embedded system is needed in the project in order to perform certain tasks.
+An embedded system is needed in the project in order to perform the tasks shown in the red box in figure \ref{fig:blockdiagram2}.
 These tasks include:
 
 \begin{itemize}
@@ -78,9 +77,8 @@ Parameterisation of the motor will be done as a part of the analysis.
 This analysis as well as a general explanation of the functionality of a PMAC motor will be presented throughout section \ref{sec:PMAC}.
 
 \subsection{Control Theory}
-In order to make the go kart drive optimally a controller needs to be developed. 
+To make the go kart drive optimally a controller needs to be developed. 
 A three phase PMAC motor needs a three phase sinosoidal signal to drive and as this is problematic to control directly some transformation will be needed. 
-As the control algorihm will need to be run on a embedded system a discretization of the controller will be needed. 
-The development of the controlelr will be described in detail in section \ref{sec:controller_design}.
-
+As the control algorihm will need to be run on an embedded system a discrete controller is needed. 
+The development of the controller will be described in detail in section \ref{sec:controller_design}.
 \clearpage

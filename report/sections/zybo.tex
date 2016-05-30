@@ -12,13 +12,13 @@ Throughout the remainder of the report the FPGA part will be referred to as the 
 An analysis of the complete system yielded the functionalities listed below for the Zybo board. 
 
 \begin{itemize}
-\item Digital inputs and outputs
-\item Generating PWM
-\item Measuring voltage output from LEM sensors and torque pedal
-\item UART communication with external PC
-\item Control algorithms for dq-control
-\item Read position from encoder
-\item SPI communication as master
+\item Digital inputs and outputs.
+\item Generating PWM.
+\item Measuring voltage output from LEM sensors and torque pedal.
+\item UART communication with external PC.
+\item Control algorithms.
+\item Read position from encoder.
+\item SPI communication as master.
 \end{itemize}
 
 As can be seen on the list there are multiple tasks that needs to be handled. 
@@ -59,7 +59,7 @@ Furthermore center aligned PWM has the benefit of producing symmetrical PWM.
 Symmetrical PWM has a well defined midpoint where the current can be sampled correctly. 
 The high limit for the counter can be calculated for a given frequency, $f$, by the following:
 $$H = L + \frac{f_{Zybo}}{f\cdot 2}$$
-Where H is the high limit, L is the low limit and $f_{zybo}$ is the Zybo clock frequency.
+Where $H$ is the high limit, $L$ is the low limit and $f_{zybo}$ is the Zybo clock frequency.
 The PWM counter system can be seen in figure \ref{fig:pwm_counter}.
 The counter block will count up or down depending on the input. 
 The output from the counter value will go into to two compare blocks along with the high and low limits.
@@ -74,11 +74,11 @@ These signals are then fed to an m-code block which contains a simple state mach
 The counter out signal can be seen in figure \ref{fig:pwm_graph}.
 This signal is then fed into the PWM generator shown in figure \ref{fig:pwm}. 
 The duty cycle is given to the PWM generator as data type u32, an integer type.
-Therefore the dutycycle is given in a range of 0 to 1000, giving a resolution of 0.1\%.
+Therefore the duty cycle is given in a range of 0 to 1000, giving a resolution of 0.1\%.
 The switching limit is the value, where when the counter value equals, switches the polarity of the PWM output.
 The switching limit is calculated from the following:
 $$l = (1 - \frac{d}{1000}) \cdot r$$
-Where l is the switching limit, d is the dutycycle in the range 0 - 1000 and r is the counter range.
+Where $l$ is the switching limit, $d$ is the dutycycle in the range 0 - 1000 and $r=H-L$ is the counter range.
 A register will then make sure that the switching limit is only applied when the counter is lowest.
 This is important as otherwise the dutycycle may be corrupted by misaligning the PWM.
 The compare block will make the PWM signal by comparing the switcing limit to the counter value.
@@ -141,7 +141,7 @@ This is a non-reentrant function that will return all the characters until the f
 Every consecutive call to the function with \texttt{NULL} as the first parameter will continue the search through the same array.
 With the command split into tokens it is parsed using a simple if-structure, comparing each argument in the command using \texttt{strcmp()} until a value can be set.
 
-\begin{lstlisting}[captionpos=b,style=customCpp, caption={Something clever!.THOMASSSS!}, label=lis:cutcommand, escapeinside={(*@}{@*)}]
+\begin{lstlisting}[captionpos=b,style=customCpp, caption={Interface task, the code responsible for decoding commands.}, label=lis:cutcommand, escapeinside={(*@}{@*)}]
 if(rx_flag)
 {
   char* cmd = strtok(rx_buffer, DELIMITER);
@@ -185,18 +185,18 @@ The task polls data from the ADC in order to get the raw data for the phase curr
 The raw data from the ADC is then calculated into voltages and the two currents are calculated by:
 
 \begin{equation}
-	 I = \frac{V_{measured}}{R_m} \cdot NS
+	 I_{measured} = \frac{V_{measured}-0.5\si{\volt}}{R_m} \cdot N_S
 \end{equation}
-
+This was discussed previously in section \ref{sec:electronics}.
 $I_c$ is calculated based on the assumption that the three currents form a balanced three phase system.
 The resistance of the torque pedal potentiometer is calculated from the measured voltage and equation \ref{eq:pedal_back_calc}.
 
 $I_a$, $I_b$, $I_c$ and $\theta$ are then used to perform a Clarke Park transformation and obtaining the values of $I_d$ and $I_q$. 
-$I_d$ and $I_q$ should be controlled towards a set point by two separate controllers.
-The point for $I_d$ is 0 as will be explained in section  \ref{sec:controller_design}. 
-The point, $q_{set}$, for $I_q$ should be related to the maximum allowed current, $q_{max}$, and the position of the torque pedal in percent, $pedal_\%$:
+$I_d$ and $I_q$ should be controlled towards a set value by two separate controllers.
+The value for $I_d$ is 0 as will be explained in section  \ref{sec:controller_design}. 
+The value, $q_{set}$, for $I_q$ should be related to the maximum allowed current, $q_{max}$, and the position of the torque pedal in percent, $p$:
 \begin{equation}
-	q_{set} = pedal_\% \cdot q_{max}
+	q_{set} = p \cdot q_{max}
 \end{equation}
 It was chosen to use two PI controllers as will be described in section \ref{sec:controller_design}.
 The code for one of the controllers can be seen in listing \ref{lis:controller_code}.
@@ -221,8 +221,7 @@ if(enable){
 d_previous_error = d_error;
 
 \end{lstlisting}
-Afterwards \texttt{d\_output} and \texttt{q\_output} are 
-Afterwards the output values are downscaled if they exceed the maximum limits.
+Afterwards \texttt{d\_output} and \texttt{q\_output} are downscaled if they exceed the maximum limits.
 The code for downscaling can be seen in \ref{lis:saturation}.
 
 \begin{lstlisting}[captionpos=b,style=customCpp, caption={[C code for downscaling.]C code for detecting and downscaling output values that exceed the maximum limits.}, label=lis:saturation]
@@ -259,7 +258,7 @@ The ADC measures the difference between differential analog input pins $V_p$ and
 The IP core is configured to use AXI4LITE connection, simultaneous selection, unipolar mode and event mode.
 Simultaneous selection mode is used as it allows simultaneous sampling on the dual ADC. 
 When using simultaneous sampling the phase relationship is preserved.
-When unipolar mode is enabled the input range between $V_p$ and $V_n$ is 1 \si{\volt} and the input voltage must always be positive with respect to ground.
+When unipolar mode is enabled the input range between $V_p$ and $V_n$ is 1\si{\volt} and the input voltage must always be positive with respect to ground.
 Setting the ADC in event mode, means that the ADC will only sample when there is a rising edge on its CONVST pin. 
 The CONVST pin is connected to the top signal of the PWM generator meaning that the ADC will sample in the center of the PWM pulse.
 This is done to sample the current correctly. 
@@ -346,7 +345,7 @@ It then makes the data available on the AXI4LITE bus, where it can be read from 
 As described earlier the Zybo board will need to set certain parameters on the DRV8301 chip using SPI communication. 
 The Zynq chip has two SPI controllers in the PS area of the chip, which can be setup to communicate with external devices.
 By investigation of the Zynq datasheet \cite{zynq_reference} it was found that it is not possible to configure the SPI controller to meet the requirements of the DRV8301. 
-More specifically, it is not possible to configure the clock signal to go low for a minimum of 40 \si{\nano\second} \cite{DRV8301}, before Slave Select goes low. 
+More specifically, it is not possible to configure the clock signal to go low for a minimum of 40 \si{\nano\second} \cite{DRV8301}, before Slave Select, \texttt{SCS} goes low. 
 
 Two solutions are proposed to solve to this problem:
 
@@ -355,7 +354,7 @@ Two solutions are proposed to solve to this problem:
 	\item Use the SPI controller in PS and delay the Slave Select signal physically.
 \end{enumerate}
 
-Clearly, the correct solution to the problem is to develop an SPI driver, but due to time considarations it was decided to use the SPI controller of the Zynq.
+The correct solution to the problem is to develop an SPI driver, but due to time considarations it was decided to use the SPI controller of the Zynq.
 
 SPI 1 on the Zynq is used as it can be ported to MIO channels 10 to 15, which can be accessed through the PMOD connectors of the Zybo board. 
 The SPI controller is initialized in software and is configured to be in master mode, manual chip select mode and manual start mode by writing to the configuration register Config\_reg0.
@@ -373,7 +372,7 @@ The transmission of \texttt{0b0001000000110000} was measured using an oscillosco
 
 \subsection{Task frequencies}
 Table \ref{tabl:task_freq} shows the frequencies at which the task are run.
-The PWM task will be run at 20 \si{\kilo\hertz} as this allows for updates of dutycycles at the same frequency as the PWM generator.
+The PWM task will be run at 20 \si{\kilo\hertz} as this allows for updates of duty cycles at the same frequency as the PWM generator.
 The controller task will run at 5 \si{\kilo\hertz} as will be explained in section \ref{sec:controller_design}.
 The most essential functionality of the interface task is to update the enable variable. 
 As the driver chip shuts down the inverter in case of an overcurrent event it is not very time critical to do so.
