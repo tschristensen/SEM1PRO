@@ -803,7 +803,6 @@ Both the PI controllers could work, but the faster response gives very precise c
 In section \ref{sec:controller_design} an IP controller based on a reduced order model without any mechanical part is discussed.
 Based on this controller analysis, it can be concluded that this reduction is not acceptable as this would result in an unstable system.
 The IP controller itself adds a pole to the system which moves the remaining fast pole to become a complex conjugate pair that will result in a decaying oscillating response to a step. This oscillation proves to be too much when adding the slow poles of the mechanical system. As it has been proven now, this controller is not able to account for the mechanical system as a disturbance, which is unsurprising really giving the scope of the mechanics involved.
-\todo[inline]{Morten: First sentence is very long and stupid? help :P}
 
 \subsection{Plecs model}\label{sub:sim_plecs_electrical}
 As previously mentioned, the Plecs model differs vastly from the Simulink model in the electrical network, as it more closely resembles the real analog circuit. 
