@@ -4,7 +4,9 @@
 Controlling the PMAC motor will be done using the principles of field oriented control, which uses the Clarke Park Transform (dq0 transform) to transform three phase AC into two phase DC for much easier regulation. Controlling the PMAC motor is done by producing a change to the PWM inverter input. This is done by monitoring two of the three current inputs to the motor and transforming them using the dq0 transform. \newline
 
 
-The Clarke Park transform is integral to the type of control desired for the PMAC motor, so it must be understood. It is done by 'transforming the stator currents into a rotating reference frame that is locked to the rotation of the rotor' (\cite{electric_motor_and_drives} p.221). The transform starts by viewing the three phase star connection of the PMAC motor and displaying each phase as ABC (or W U and V as seen on figure \ref{fig:dq_transform_ref_frames} from the book cited \cite{electric_motor_and_drives}). This ABC current is first transform into a stationary frame of only two phases called the $\alpha \beta$ transform and then further transformed into dq0. When in dq0 form the reference frame rotates with the angular velocity $\omega$ of the motor, while being referenced to the stationary frame of the $\alpha \beta$ frame. This transform yields a d and q DC value and a zero, which are respectively referred to a torque and a flux demand in the controller.\newline
+The Clarke Park transform is integral to the type of control desired for the PMAC motor, so it must be understood. It is done by 'transforming the stator currents into a rotating reference frame that is locked to the rotation of the rotor' (\cite{electric_motor_and_drives} p.221). The transform starts by viewing the three phase star connection of the PMAC motor and displaying each phase as ABC (or W U and V as seen on figure \ref{fig:dq_transform_ref_frames} from the book cited \cite{electric_motor_and_drives}). This ABC current is first transform into a stationary frame of only two phases called the $\alpha \beta$ \todo{along horizontal and vertial axes of the three phase stationary windings}transform\todo{ed} and then further transformed into dq0\todo{zero isn't necessary for a balanced load, and if it's not mentioned in alpha beta, it should not be mentioned here.}. When in dq0 form the \todo{what?}reference frame rotates with the angular velocity $\omega$ of the motor, while being referenced to the stationary frame of the $\alpha \beta$ frame. This transform yields a d and q DC value and a zero, which are respectively referred to a torque and a flux demand in the controller.\newline
+
+\todo{clarke park transformation can only be done for current, voltage and flux linkage.}
 
 \begin{figure}[H]
 	\centering
@@ -13,6 +15,49 @@ The Clarke Park transform is integral to the type of control desired for the PMA
 	\label{fig:dq_transform_ref_frames}
 \end{figure}
 
+Clarke-park:
+\begin{equation}
+\left[ \begin{array}{c}
+I_d \\ I_q
+\end{array} \right]
+=
+\frac{2}{3}
+\begin{bmatrix}
+\cos (\Phi) & \cos(\Phi - \gamma) & \cos( \Phi + \gamma) \\
+-\sin (\Phi) & -\sin(\Phi - \gamma) & -\sin( \Phi + \gamma)
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+I_A \\
+I_B \\
+I_C
+\end{bmatrix}
+%\label{eq:sim_clark-park}
+\end{equation}
+
+where $\gamma = \tfrac{2 \pi}{3}$. 
+
+inverse clarke-park:
+
+Inverse Clark-Park transformation is done by equation~\ref{eq:sim_inverse_clark-park}.
+
+\begin{equation}
+\left[ \begin{array}{c}
+I_A \\ I_B \\I_C
+\end{array} \right]
+=
+\begin{bmatrix}
+\cos (\Phi) & -\sin (\Phi) \\
+\cos(\Phi - \gamma) & -\sin(\Phi - \gamma) \\
+\cos(\Phi + \gamma) & -\sin( \Phi + \gamma) 
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+I_d \\
+I_q
+\end{bmatrix}
+%\label{eq:sim_inverse_clark-park}
+\end{equation}
 
 The requirement for this project outlines that the motor must be torque controlled, hence the flux demand will be zero while the torque demand will be defined by the speeder pedal. After the dq values have been compared to the reference/demand values the error is fed to a controller which will adjust the output accordingly. This output is transformed using the inverse dq0 transform, which yields a three phase AC signal that can be fed into the inverter and yield a new motor speed. \newline
 
@@ -23,7 +68,7 @@ In reality it is not a torque value that must be a reference for the controller,
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1\linewidth]{graphics/ContolProcessDiagram}
-	\caption{The control process as illustrated in the system overview section}
+	\caption{The control process as illustrated in the system overview section.}
 	\label{fig:control_process_sec8}
 \end{figure}
 
@@ -105,7 +150,7 @@ A pole-zero map of both models will be used to see whether the inductor can be r
 		\caption{PZ map of no inductor model}
 		\label{fig:PZmap_Reduced}
 	\end{subfigure}
-	\caption{Matlab Simulink PZ Map of each model}
+	\caption{Matlab Simulink PZ Map of each model.}
 \end{figure}
 
 The pole-zero plot shows that the inductor pole is much faster than the mechanical pole, so it should be possible to remove it. \newline
@@ -124,7 +169,7 @@ The two state space models will be simulated with MatLab Simulink to see how muc
 		\caption{Simulation of speed for full and no inductor models (almost stacked on each other).}
 		\label{fig:Full_Vs_Reduced1_Speed}
 	\end{subfigure}
-	\caption{Matlab simulation of each model with the same input}
+	\caption{Matlab simulation of each model with the same input.}
 \end{figure}
 
  A problem shows up by these simulations. The speed looks fine for the no inductor model but the current starts at a high value. The current starts out as a simple multiplication of the input voltage multiplied by the $1/R$ gain to equal $4000A$. The amplitude of speed and current are not important at this time, as that will be controlled later, but since the model does not ramp up the current like the  full order model, a controller will not be derived for this reduced order model.
@@ -136,7 +181,7 @@ Because of the problem with reducing the model by removing the inductor, this se
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.55\linewidth]{graphics/mechanical_reduced_order_to_pdf}
-	\caption{Reduced order PMAC motor model version}
+	\caption{Reduced order PMAC motor model version.}
 	\label{fig:State_space_model_reduced_order_v2}
 \end{figure}
 
@@ -158,7 +203,7 @@ Figure \ref{fig:Full_Vs_Reduced2} shows the current.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.55\linewidth]{graphics/Full_Vs_Reduced2_Current}
-	\caption{Full order vs reduced order model}
+	\caption{Full order vs reduced order model.}
 	\label{fig:Full_Vs_Reduced2}
 \end{figure}
 
@@ -196,7 +241,7 @@ The model of figure \ref{fig:State_space_model4} can be rearranged to simplify t
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.95\linewidth]{graphics/plant_with_pi_to_pdf}
-	\caption{PMAC motor model as a plant with PI control}
+	\caption{PMAC motor model as a plant with PI control.}
 	\label{fig:State_space_model6}
 \end{figure}
 
@@ -342,7 +387,7 @@ The pole-zero map for the transfer function including the controller confirms th
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.55\linewidth]{graphics/full_order_w_pid_to_pdf}
-	\caption{PZ map with the controller}
+	\caption{PZ map with the controller.}
 	\label{fig:PZmap_Control_full}
 \end{figure}
 
@@ -367,7 +412,7 @@ Finding the controller values for this model is done as it was for the full orde
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.95\linewidth]{graphics/plant_with_ip_to_pdf}
-	\caption{Reduced order system with an IP controller}
+	\caption{Reduced order system with an IP controller.}
 	\label{fig:IPcontroller1}
 \end{figure}
 
@@ -404,7 +449,7 @@ The closed loop transfer function results in the pzmap of figure \ref{fig:PZmapI
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.55\linewidth]{graphics/reduced_order_model_w_ip_controller_to_pdf}
-	\caption{PZ map of the reduced order system with an IP controller}
+	\caption{PZ map of the reduced order system with an IP controller.}
 	\label{fig:PZmapIPcontroller1}
 \end{figure}
 
@@ -425,6 +470,7 @@ The derivations above have resulted in controller gain values as seen in table \
 \multicolumn{1}{|l|}{Reduced Order} & \multicolumn{1}{l|}{$7e^{-4}$} & \multicolumn{1}{l|}{0.324}    \\ \cline{1-3}
 
 \label{tab:cont_gains}
+\caption{$K_p$ and $K_i$ derived in previous sections.}
 \end{tabular}
 \end{table}
 
@@ -436,7 +482,7 @@ Figure \ref{fig:Input_ref} is the input reference signal which simulates the tor
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.50\linewidth]{graphics/Control_signal_input}
-	\caption{Input reference for the controller}
+	\caption{Input reference for the controller.}
 	\label{fig:Input_ref}
 \end{figure}
 

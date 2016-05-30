@@ -165,7 +165,7 @@ In the Simscape model, the tyre is modelled by a friction block in series with t
 The tyre block consists of static and dynamic friction.
 Tyre slip is a comprehensive area of study, so the rotational friction block isn't necessarily accurate. 
 However, it does enable sudden changes in motor speed and load, similar to spinning and locking the wheels.
-The tyre consists of static, dynamic and viscous friction. The static and dynamic frictions are are calculated by equation~\ref{eq:static_dynamic_friction}
+The tyre block consists of static, dynamic and viscous friction. The static and dynamic frictions are are calculated by equation~\ref{eq:static_dynamic_friction}
 
 \begin{equation}
 F_f = F_N \cdot c_f \cdot dm
@@ -175,25 +175,13 @@ F_f = F_N \cdot c_f \cdot dm
 where 
 
 \begin{equation}
-F_N = mg
+F_N = mg \cdot dm
 \end{equation}
 
-\begin{table}[!h]
-	\centering
-	\begin{tabular}{r | l}
-		Static friction coefficient, $\mathrm{c_s}$ & 1 \\
-		\hline
-		Dynamic friction coefficient, $\mathrm{c_d}$ & 0.7 \\
-		\hline
-		Weight distribution, dm & 0.6
-	\end{tabular}
-	\caption{Table of friction values}
-	\label{tab:friction_values}
-\end{table}
-
-
-The constant, $dm$ is the weight distribution of the gokart, so that $dm=0$ means the entire mass of the gokart is on the front wheels, and $dm=1$ means the whole weight distribution is on the driving wheels.
-The constants used for simulations are listed in table~\ref{tab:friction_values}
+and $c_f$ is either the static or dynamic friction, depending on if the wheels are slipping. 
+The constant, dm is the distribution of mass so that $dm=0$ means the entire mass of the gokart is on the front wheels, and $dm=1$ means the whole weight distribution is on the driving wheels.
+The viscous friction is zero.
+The static friction coefficient, $c_f$ is 1, the dynamic friction is 0.7, and the mass distribution is 0.6.
 
 The brake subsystem is a PI controlled ideal torque source, which will attempt to bring the go kart to a halt when the brake is pressed.
 Without a PI controller, there is a strong possibility that the brake would suddenly make the motor go backwards instead of stopping.\\
@@ -283,11 +271,9 @@ The signal builder block is used to shape the torque requested by the pedal.
 This torque is converted into the current used in the controller by multiplying with $\tfrac{3}{2 K_t}$.
 The Clarke-Park block converts $\mathrm{I_{AB}}$ to $\mathrm{I_{dq}}$. 
 
-\todo{The equation should be moved to clarke-park section}
-
 \begin{equation}
 \left[ \begin{array}{c}
-	I_d \\ I_q
+I_d \\ I_q
 \end{array} \right]
 =
 \frac{2}{3}
