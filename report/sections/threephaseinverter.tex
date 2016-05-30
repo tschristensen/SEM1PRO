@@ -1,15 +1,14 @@
 %!TEX root = ../main.tex
-\section{Three phase inverter}
+\section{Three Phase Inverter}
 \label{sec:inverter}
 This section will describe the design of the three-phase inverter used to drive the PMAC motor in this project.
 This includes the calculations and considerations done.
 Initially, a short overview of the principle of operation of a three-phase inverter is given.
 
-\subsection{Principle of Operation of the Three-Phase Inverter}
-\todo[inline]{Thomas: I have to question whether this is the appropriate title for this section?}
+\subsection{Operation of a Three-Phase Inverter}
 A three-phase inverter enables the use of a DC supply in variable frequency control of a three-phase load.
 In this project the DC supply is a battery and the load, a PMAC motor.
-Figure \ref{fig:threephaseinverter} is a simulink model showing the most basic three-phase inverter.
+Figure \ref{fig:threephaseinverter} is a Simulink model showing the most basic three-phase inverter.
 As can be seen, the inverter consists of three half-bridges for a total of six switches.
 Each pair of switches can never be on at the same time as this would result in shorting the battery.
 
@@ -21,22 +20,16 @@ Each pair of switches can never be on at the same time as this would result in s
 \end{figure}
 
 This type of inverter only works with a balanced load, such as the PMAC motor.
-A balanced three-phase load implies, that the sum of current in the three phases is zero, and no current through a neutral wire.
-As the inverter does not have a connection to the neutral point of the load, it could not supply an unbalanced load, such as those in UPS'es and solar cells.
-\todo[inline]{Martin: added something about it being a balanced load}
+A balanced three-phase load implies, that the sum of the currents in the three phases is always equal tp zero, and no current is running through a neutral wire.
+As the inverter does not have a connection to the neutral point of the load, it could not supply an unbalanced load, such as those in uninterruptible power supplies (UPS's) and solar cells.
 
 Several schemes exist to control the switches.
 Throughout this project a PWM modulation technique using sinusoids as reference is used.
 Figure \ref{fig:countercarrier} is a depiction of the modulation technique.
-A counter is continuously counting up and down, creating a triangle wave.
-\todo[inline]{Martin: This is not about the software, so how we generate the PWM isn necessary}
-This is called the carrier wave.
-The carrier wave is compared to a sinusoidal reference signal.
-The frequency of the sinusoidal will be the fundamental frequency of the output voltage.
-\todo[inline]{Martin: Not sure what you mean by output voltage}
-Whenever the reference cross the carrier wave, the gate voltages of the relevant half-bridge invert, of course taking into account the necessary dead time to avoid short circuiting the power rail.
-This technique produces naturally sampled PWM, a desirable trait due to the lower harmonic distortion when compared to other types of PWM.
-Additionally, the speed of the motor can be easily changed simply by changing the fundamental frequency.
+A carrier wave is compared to a sinusoidal reference signal.
+By low-pass filtering the output voltage, the fundamental frequency can be revealed.
+Whenever the reference crosses the carrier wave, the gate voltages of the relevant half-bridge invert, of course the necessary dead time has to be added to avoid short circuiting the power rail.
+This technique produces naturally sampled, center aligned PWM, a desirable trait due to the lower harmonic distortion when compared to other types of PWM.
 
 \begin{figure}[h!]
 	\centering
@@ -44,41 +37,41 @@ Additionally, the speed of the motor can be easily changed simply by changing th
 	\caption{Naturally sampled PWM using a sinusoid as fundamental frequency.}
 	\label{fig:countercarrier}
 \end{figure}
-\todo[inline]{Martin: Maybe get a darker color for the lower plot}
-\todo[inline]{Martin: We should extend this to a three phase inverter, as this is only one half bridge, and that is not even a DC inverter}
 
 \subsection{Choosing the MOSFETs}\label{sub:choosing_mosfets}
 \label{sec:mosfet}
 Before choosing MOSFETs for the three phase inverter one will have to keep in mind the application parameters.
-Firstly the batteries\cite{superB} will have average nominal voltage of $52.8V$ and end of charge voltage at $60.8V$.
-The MOSFETs will therefor need to be able to handle a minimum drain to source voltage, $V_{DS}$, of 60.8V. 
+Firstly, the batteries\cite{superB} will have an average nominal voltage of $52.8$\si{\volt} and end of charge voltage at $60.8\si{\volt}$.
+The MOSFETs will therefor need to be able to handle a minimum drain to source voltage, $V_{DS}$, of 60.8\si{\volt}. 
 Secondly, the current drawn by the motor can reach a maximum peak of 300A.
-Thirdly, the motor driver\cite{DRV8301} will supply a gate voltage, $V_{GS}$, of 9.5V to 11.5V. 
-The MOSFETs will therefor need to be fully conducting at $V_{GS} = 9.5V$ and be able to handle the driver supplied range.
+Thirdly, the motor driver\cite{DRV8301} will supply a gate voltage, $V_{GS}$, of 9.5\si{\volt} to 11.5\si{\volt}. 
+The MOSFETs will therefore need to be fully conducting at $V_{GS} = 9.5V$ and be able to handle the driver supplied range.
 The three main requirements are listed in table \ref{tab:req1}\\
 
 \begin{table}[h!]
-	\caption{Three main requirements as a starting point for choosing the MOSFETs}
 	\centering
 	\begin{tabular}{clr}
 		  & Requirement\\
 		  \hline
-		1 & Can handle minimum voltage of & 60.8V\\
-		2 & Can handle minimum current of & 300A\\
-		3 & Operating at $V_{GS}$ of  & 9.5V \\
+		1 & Can handle minimum voltage of & 60.8\si{\volt}\\
+		2 & Can handle minimum current of & 300\si{\ampere}\\
+		3 & Operating at $V_{GS}$ of  & 9.5\si{\volt} \\
 		\hline
 	\end{tabular}
+	\caption{Three main requirements as a starting point for choosing the MOSFETs}
 	\label{tab:req1}
 \end{table}
 
 Due to high currents through the MOSFETs, the heat dissipation is assumed to be high as well. 
 To prevent overheating and burning out the MOSFETs they will be mounted on to a heat sink. 
 Therefore a through hole package will be required for this application. 
-Because of its size and easy mounting, the chosen package is the TO-247 package\cite{TO_247}. When looking for MOSFETs that add up to the requirements of table~\ref{tab:req1}, the International rectifier power MOSFET IRFP4468PBF is chosen.
+Because of its size and easy mounting, the chosen package is the TO-247 \cite{TO_247}. 
+The TO-247 is the largest housing available and is not capable of handling the current.
+When looking for MOSFETs that add up to the requirements of table~\ref{tab:req1}, the International rectifier power MOSFET IRFP4468PBF is chosen.
+It does not exactly meet the requirements, but paralleling at least two of these will.
 
 \begin{table}[h!]
 	\centering
-	\caption{Some important parameters from the IRFP4468PBF MOSFET datasheet\cite{IRF4468PbF}. All parameters are found at junction temperature $T_J = 25^{\circ}$C}
 \begin{tabular}{|l|l|c|c|c|c|}
 	\hline
 	\multicolumn{1}{|c|}{Symbol} & \multicolumn{1}{|c|}{Parameter} & Min. & Typ. &
@@ -98,14 +91,15 @@ Because of its size and easy mounting, the chosen package is the TO-247 package\
 	 \hline
 	 
 \end{tabular}
+\caption{Some important parameters from the IRFP4468PBF MOSFET datasheet\cite{IRF4468PbF}. All parameters are found at junction temperature $T_J = 25^{\circ}$C}
 \label{tab:MOSdata}
 \end{table}
 The TO-247 package has a continuous drain current limit of 195A that is only around two third of the minimum current requirement. 
-With that in mind, the MOSFET parameters in table~\ref{tab:MOSdata} seem to be a  suitable chose for the application if more than one MOSFET is used for each switching side. 
-Using the parallel setup, the MOSFETs are assumed to share the current equally. 
+With that in mind, the MOSFET parameters in table~\ref{tab:MOSdata} seem to be a  suitable choice for the application if more than one MOSFET is used for each switching side. 
+Using a parallel setup, the MOSFETs are assumed to share the current equally. 
 If one would draw more current than the others, the temperature would rise causing $R_{DS(on)}$ to rise as seen in figure~\ref{fig:tj_rds}. 
-That will then result in reduced current.
-As will be later discussed, parallel setup will also have effect on the total power loss.
+Which will result in reduced current.
+As will be later discussed, parallel setup will also have an effect on the total power loss.
 
 
 \subsection{Power Loss}
@@ -118,7 +112,7 @@ P_{loss} = P_{c} + P_{sw}
 \end{equation}
 
 For simplicity the power loss will be estimated from a single phase of the inverter circuit seen in figure~\ref{fig:single_phase}. 
-The current $I_{out}$ is drawn by some load $R_{load}$ that will absorb the load power $P_{load}$ which is given by equation\ref{eq:p_load}. 
+The current $I_{out}$ is drawn by some load $R_{load}$ that will absorb the load power $P_{load}$ which is given by equation \ref{eq:p_load}. 
 Since there are two switches, $Q_1$ and $Q_2$, it is assumed that the load power is delivered equally from both. The output power, $P_{Q}$, of each switch is given by equation~\ref{eq:P_Q}  
 
 
@@ -136,12 +130,12 @@ P_{load} = R_{load} I_{out,rms}^2
 \end{equation}
 
 \begin{equation}
-P_{Q} = \dfrac{P_{load}}{2} = R_{load} I_{Qi,rms}^2
+P_{Qi} = \dfrac{P_{load}}{2} = R_{load} I_{Qi,rms}^2
 \label{eq:P_Q}
 \end{equation}
 
 
-With insertion of equation~\ref{eq:p_load} into~\ref{eq:P_Q} and solving for $I_{Qi,rms}$, equation~\ref{eq:I_qrms} is formed.
+Inserting equation~\ref{eq:p_load} into~\ref{eq:P_Q} and solving for $I_{Qi,rms}$, equation~\ref{eq:I_qrms} is formed.
 
 \begin{equation}
 \dfrac{R_{load} I_{out,rms}^2}{2} = R_{load} I_{Qi,rms}^2 \rightarrow I_{Qi,rms} = \dfrac{I_{out,rms}}{\sqrt{2}} 
@@ -155,7 +149,8 @@ I_{Qi,rms} = \dfrac{I_{out,rms}}{\sqrt{2}} = \dfrac{I_{out}}{\sqrt{2}\sqrt{2}} =
 \end{equation}
 
 
-As mentioned earlier each switching setup will consist of $n$ number of MOSFETs in parallel. Therefor the Drain current of each parallel MOSFET becomes $I_{Pi,rms}$ in equation~\ref{eq:I_pi}.
+As mentioned earlier each switching setup will consist of $n$ number of MOSFETs in parallel. 
+Therefore the drain current of each parallel MOSFET becomes $I_{Pi,rms}$ in equation~\ref{eq:I_pi}.
 
 \begin{equation}
 I_{Pi,rms}=\dfrac{I_{Qi,rms}}{n} = \dfrac{I_{out}}{2n}
@@ -165,10 +160,10 @@ I_{Pi,rms}=\dfrac{I_{Qi,rms}}{n} = \dfrac{I_{out}}{2n}
 \subsubsection{Conduction loss}\label{sub:Cunduction_loss}
 
 
-Conduction loss of the MOSFETs can be calculated using equation~\ref{eq:p_c}
+Conduction loss of each MOSFET can be calculated using equation~\ref{eq:p_c}
 
 \begin{equation}
-P_{c} = R_{DS(on)} I_{Pi,rms}^2
+P_{c} = R_{DS(on)}\cdot I_{Pi,rms}^2
 \label{eq:p_c}
 \end{equation}
 
@@ -189,7 +184,7 @@ R_{DS(on),@T_J} =  \alpha R_{DS(on),@25\si{\celsius}}
 	\label{fig:tj_rds}
 \end{figure}
 
-If assumed that the junction temperature will be around $100 \si{\celsius}$ one can estimate the factor being somewhere close to $\alpha = 1.6$. 
+If assumed that the junction temperature will be around $100 \si{\celsius}$ one can estimate the factor being approximately $\alpha = 1.6$. 
 The instantaneous conduction loss for each MOSFET in parallel can then be estimated using equations~\ref{eq:p_c}, \ref{eq:I_pi} and \ref{eq:Rdstj} to form equation~\ref{eq:P_cp}.
 
 \begin{equation}
@@ -224,7 +219,7 @@ t_{c,off} = t_{rv} + t_{fi}
 \label{eq:time_off}
 \end{eqnarray}
 
-The voltage rise and fall times $t_{rv}$ and $t_{fv}$ respectively in figure~\ref{fig:sw_loss} are the time it takes the drain to source voltage, $V_{DS}$ to rise from zero to $V{in}$ and opposite. 
+The voltage rise and fall times, $t_{rv}$ and $t_{fv}$ respectively, in figure~\ref{fig:sw_loss} are the time it takes the drain to source voltage, $V_{DS}$ to rise from zero to $V_{in}$ and opposite. 
 The values are defined in the MOSFET datasheet\cite{IRF4468PbF} as the rise and fall times $t_r$ and $t_f$ seen in figure~\ref{fig:sw_time_wavef}. 
 The times are listed in table~\ref{tab:tf_tr}.
 Equation~\ref{eq:tfv_tr} and \ref{eq:trv_tf} show the relation.
@@ -238,7 +233,6 @@ Equation~\ref{eq:tfv_tr} and \ref{eq:trv_tf} show the relation.
 
 \begin{table}[h!]
 	\centering
-	\caption{$V_{GS}$ rise and fall time taken from datasheet}
 	\begin{tabular}{|c|c|c|c|}
 		\hline
 		Symbol & Parameter & Typ. & Units\\
@@ -247,6 +241,7 @@ Equation~\ref{eq:tfv_tr} and \ref{eq:trv_tf} show the relation.
 		$t_f$ & Fall Time & 260 & ns\\
 		\hline
 	\end{tabular}
+	\caption{$V_{GS}$ rise and fall time taken from datasheet}
 	\label{tab:tf_tr}
 \end{table}
 
@@ -265,21 +260,21 @@ From there one can see that the current rise and fall times, $t_{ri}$ and $t_{fi
 	\centering
 	\begin{subfigure}[b]{0.4\textwidth}
 		\includegraphics[width=\textwidth]{graphics/mos_turn_on}
-		\caption{turn on}
+		\caption{Turn on characteristic.}
 		\label{fig:Turn_on}
 	\end{subfigure}
 	~
 	\begin{subfigure}[b]{0.4\textwidth}
 		\includegraphics[width=\textwidth]{graphics/mos_turn_off}
-		\caption{turn off}
+		\caption{Turn off characteristic.}
 		\label{fig:Turn_off}
 	\end{subfigure}
-	\caption{the turn on and off characteristics of the MOSFETs.}
+	\caption{The turn on and off characteristics of the MOSFETs.}
 	\label{fig:turn_on_off}
 \end{figure}
 
-The gate to source current, $I_(gs)$ is defined in equation\ref{eq:I_gs} where $dt$ are the current rise and fall times $t_{ri}$ and $t_{fi}$ respectively. 
-$dV$ is the difference between $V_{GS(th)}$ and $V_{GS(I_0)}$ as seen in equation~\ref{eq:dv} and n is the number of MOSFETs in parallel.
+The gate to source current, $I_{gs}$ is defined in equation \ref{eq:I_gs} where $dt$ is the current rise and fall times $t_{ri}$ and $t_{fi}$ respectively. 
+$dV$ is the difference between $V_{GS(th)}$ and $V_{GS(I_0)}$ as seen in equation~\ref{eq:dv} and $n$ is the number of MOSFETs in parallel.
 
 \begin{equation}
 I_{gs} = nC\dfrac{dV}{dt} 
@@ -293,9 +288,9 @@ dV = |V_{GS(I_0)} - V_{GS(th)}|
 
 For simplicity it is assumed that the gate charge current remains constant. 
 Then one can assume that the gate to source current is known. 
-The motor driver sources up to $1.7A$ when in the on state and sinks up to $2A$ when in off state\cite{DRV8301}. 
+The motor driver sources up to $1.7\si{\ampere}$ when switching to the on state and sinks up to $2.3\si{\ampere}$ when switching to the off state\cite{DRV8301}. 
 Equation~\ref{eq:I_gs} can then be rearranged for $dt$ as shown in equation~\ref{eq:dt}. 
-It is assumed that the charge current will be a constant for.
+It is assumed that the charge current will be constant for the duration of the turn on and turn off times.
 
 \begin{equation}
 dt = nC\dfrac{dV}{I_{gs}}
@@ -306,19 +301,19 @@ dt = nC\dfrac{dV}{I_{gs}}
 
 \subsection{Total Power loss}
 
-The instantaneous power losses are calculated for up to 10 MOSFETs in parallel using equations~\ref{eq:P_cp}, \ref{eq:P_sw} and~\ref{eq:p_loss} where the switching frequency is $f_s = 20kHz$. Figures~\ref{fig:ploss_single} and~\ref{fig:ploss_comb} show the results.
+The instantaneous power losses are calculated for up to 10 MOSFETs in parallel using equations~\ref{eq:P_cp}, \ref{eq:P_sw} and~\ref{eq:p_loss} where the switching frequency is $f_s = 20\si{\kilo\hertz}$. Figures~\ref{fig:ploss_single} and~\ref{fig:ploss_comb} shows the results.
 
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale = 0.5]{graphics/pwr_loss_single}
-	\caption{Instantaneous Power losses of a single MOSFET in a parallel setup as a function of number of MOSFETs}
+	\caption{Instantaneous power losses of a single MOSFET in a parallel setup as a function of number of MOSFETs}
 	\label{fig:ploss_single}
 \end{figure}
 
-In Figure~\ref{fig:ploss_single} the losses are calculated for each MOSFET in a parallel setup of $n$ MOSFETs. 
-One will notice, as former stated, that the number of MOSFETs in parallel, effects the power loss much.
-The conduction loss will decrease fast and will become close to nothing when $n$ increases. 
+In figure~\ref{fig:ploss_single} the losses are calculated for each MOSFET in a parallel setup of $n$ MOSFETs. 
+One will notice, as previously stated, that the number of MOSFETs in parallel, affects the power losses significantly.
+The conduction loss will decrease rapidly and will become close to nothing when $n$ increases. 
 This happens because the current is equally divided between the MOSFETs, thus, each MOSFET has less current flowing through. 
 The switching loss however increases with $n$ and will become dominant. In that case the gate capacitance will increase by a factor of $n$ causing the switching loss to increase.
 
@@ -329,45 +324,45 @@ The switching loss however increases with $n$ and will become dominant. In that 
 	\label{fig:ploss_comb}
 \end{figure}
 
-From the combined power loss shown in figure~\ref{fig:ploss_comb}, it is clear that the total instantaneous power loss is smallest when $n = 2$ or $P_{loss} \approx 95W$. 
-The design will have two MOSFETs in parallel switching each phase. The total instantaneous power loss will then become for all three phases as seen in equation~\ref{eq:P_loss_total}.
+From the combined power loss shown in figure~\ref{fig:ploss_comb}, it is clear that the total instantaneous power loss is smallest when $n = 2$ or $P_{loss} \approx 95\si{\watt}$. 
+The design will have two MOSFETs in parallel switching each phase. The average power loss at maximum RMS current will become for all three phases as seen in equation~\ref{eq:P_loss_total}.
 \begin{equation}
-P_{loss,total} = 95*6 = 570W
+P_{loss,total} = 95\cdot 6 = 570\si{\watt}
 \label{eq:P_loss_total}
 \end{equation}
 
 \subsection{Temperature}
 
 The power losses defined in previous sections will cause the MOSFETs to heat up while operating. 
-Therefore they will be mounted on to a heat sink as mentioned in section\ref{sub:choosing_mosfets}. 
+Therefore they will be mounted onto a heat sink as mentioned in section \ref{sub:choosing_mosfets}. 
 To get an estimate on how hot the MOSFETs will be, equations~\ref{eq:Ta}, \ref{eq:Tc} and \ref{eq:Tj} are used. 
-$T_s$ is the MOSFET source temperature, $T_c$ the case temperature  and $T_j$ is the junction temperature.
-The parameter can be seen in table~\ref{tab:temp_param}. 
-to get some idea of the temperature it is assumed that the time it takes the motor to get from zero to full power, $t = 5s$. 
-The system will for that time be operating at maximum torque.
-in reality, other factors will effect the power dissipation but will not be discussed further.
+$T_s$ is the heat sink temperature, $T_c$ the case temperature  and $T_j$ is the junction temperature.
+The parameters can be seen in table~\ref{tab:temp_param}. 
+To get an estimate of the temperature it is assumed that the time it takes the go-kart to get from zero to full speed, $t = 5s$. 
+The system will for that time be operating at maximum torque, for maximum time.
+In reality, other factors will effect the power dissipation but will not be discussed further.
  
 
 \begin{table}[h!]
 	\centering
-	\caption{Parameters used to calculate the temperature}
 	\begin{tabular}{|c|l|c|c|}
 		\hline
 		Symbol & \multicolumn{1}{c|}{Parameter} & Value & Units\\
 		\hline
 		$T_{J,max}$ & MOSFET maximum junction temperature & 175 & \si{\celsius}\\
 		\hline
-		$R_{jc}$ & MOSFET Junction to Case thermal resistance & 0.29 & \multirow{3}{*}{\si{\celsius/W}}\\
+		$R_{jc}$ & MOSFET junction to case thermal resistance & 0.29 & \multirow{3}{*}{\si{\celsius/W}}\\
 		\cline{1-3}
-		$Re_{cs}$ & MOSFET Case to Sink thermal resistance & 0.24 &\\
+		$Re_{cs}$ & MOSFET case to sink thermal resistance & 0.24 &\\
 		\cline{1-3}
-		$R_{sa}$ & heat sink Thermal resistance & 0.29 & \\
+		$R_{sa}$ & Heat sink thermal resistance & 0.29 & \\
 		\hline
-		$C_s$ & heat sink Thermal capacitance  & 2190 &\si{\joule/\celsius}\\
+		$C_s$ & Heat sink thermal capacitance  & 2190 &\si{\joule/\celsius}\\
 		\hline
-		$P_{loss,total}$ & instantaneous power loss of each MOSFET & 570 & \si{\watt}\\
+		$P_{loss,total}$ & Instantaneous power loss of each MOSFET & 570 & \si{\watt}\\
 		\hline
 	\end{tabular}
+	\caption{Parameters used to calculate the temperature.}
 	\label{tab:temp_param}
 \end{table}
 
@@ -406,11 +401,10 @@ The developed layout can be seen in figure \ref{fig:inverter_design}.
 
 \begin{figure}[h!]
 	\centering
-	%\includegraphics[width=0.7\linewidth]{graphics/inverter_placeholder}
+	\includegraphics[width=0.7\linewidth]{graphics/inverter_placeholder}
 	\caption{Placehodler....}
 	\label{fig:inverter_design}
 \end{figure}
-As it can be seen it was chosen to build the inverter on a large heatsink, where also the Zybo, digital and analog board are mounted. 
+As it can be seen it was chosen to build the inverter on a large heatsink, where also the Zybo, digital and analog boards are mounted for mechanical integrity. 
 Below the heatsink three fans were places to produce airflow on the heatsink for better heat dissipation.
-\clearpage
 
