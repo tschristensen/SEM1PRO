@@ -450,7 +450,7 @@ The controller to be used for the kart will be determined by running a more in d
 
 
 \subsection{Discretization}
-Discretizing the controller is required to use it in the embedded software. This is because the digital world of computer chips do not function in the same continuous form that real life does. Everything is based on clock cycles and bits. So to make a controller function it must compute the integral based on calculations perfomed on a per clock basis. 
+Discretizing the controller is required to use it in the embedded software. This is because the digital world of computers does not function in the same continuous form as the physical world. Everything is based on clock cycles and bits. So to make a controller function it must compute the integral based on calculations performed on a per clock basis. 
 \todo[inline]{Morten: above is new. please read ty! :)}
 To do this, the values of $K_p$ and $K_i$ can be used as they are, but for both a PI and IP controller the integrator must be discretized. An integrator in discrete is done by using a numerical integration method. The choice here will be the Trapezoidal method, which has the output equation given as equation \ref{eq:trap_integrat}. 
 

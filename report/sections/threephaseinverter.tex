@@ -21,17 +21,13 @@ Each pair of switches can never be on at the same time as this would result in s
 \end{figure}
 
 This type of inverter only works with a balanced load, such as the PMAC motor.
-A balanced three-phase load implies, that the sum of current in the three phases is zero, and no current through a neutral wire.
-As the inverter does not have a connection to the neutral point of the load, it could not supply an unbalanced load, such as those in UPS'es and solar cells.
-\todo[inline]{Martin: added something about it being a balanced load}
+A balanced three-phase load implies, that the sum of the currents in the three phases is always equal tp zero, and no current is running through a neutral wire.
+As the inverter does not have a connection to the neutral point of the load, it could not supply an unbalanced load, such as those in uninterruptible power supplies (UPS's) and solar cells.
 
 Several schemes exist to control the switches.
 Throughout this project a PWM modulation technique using sinusoids as reference is used.
 Figure \ref{fig:countercarrier} is a depiction of the modulation technique.
-A counter is continuously counting up and down, creating a triangle wave.
-\todo[inline]{Martin: This is not about the software, so how we generate the PWM isn necessary}
-This is called the carrier wave.
-The carrier wave is compared to a sinusoidal reference signal.
+A carrier wave is compared to a sinusoidal reference signal.
 The frequency of the sinusoidal will be the fundamental frequency of the output voltage.
 \todo[inline]{Martin: Not sure what you mean by output voltage}
 Whenever the reference cross the carrier wave, the gate voltages of the relevant half-bridge invert, of course taking into account the necessary dead time to avoid short circuiting the power rail.
