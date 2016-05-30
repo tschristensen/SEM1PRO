@@ -43,7 +43,7 @@ It can also be seen that the rotor is accelerated within a fraction of an electr
 Various issues were encountered while creating prototypes of especially the analog and digital boards.
 Several iterations were etched before a satisfactory result was obtained.
 Due to delivery issues, the components were not available until very late in the process and there was not sufficient time remaining to fully debug the boards.
-The driver board was made to function as was intended and is used in section \todo[inline]{Thomas: section that describes testing of the power board.}.
+The driver board was made to function as was intended and is used in the test in section \ref{sec:powertest}.
 As mentioned in previous sections, the strategy used for OCP changed throughout the testing phase.
 It became apparent that it was infeasible to spend the time necessary to have the analog board functioning in time for the deadline.
 In the meantime the OCP of the DRV8301 was understood, allowing to use this feature instead.\\
@@ -53,17 +53,16 @@ The errors found on the analog and digital boards are mostly related to layout a
 For this reason it is the conviction of the group that one or two revisions of the boards would be necessary to fully debug them.
 
 \subsection{Power Board}
+\label{sec:powertest}
 To ensure that the power board was working correctly a test of it was performed. 
 As described in the previous section the developed digital and analog board were not made to function because of time constraints. 
 Instead two simple boards were developed for testing purposes. 
 They only housed the bare minimum functionality of the original boards. 
 That being scaling of output from LEM sensors and torque pedal, routing of signals to/from the DRV8301 and a CR circuit for delaying the SPI slave select signal. 
 \todo[inline]{More Martin? - Mikkel}
-The already tested embedded system on the Zybo was connected and prpgrammed to run the motor.  
-The motor span and ensured that the power board was working correctly. 
-Several exciting measurements on the powerboard comes into mind, but were not done because of time constraints.
-\todo[inline]{Too emotional. I know. Can somebody fix - Mikkel.}
-
+The already tested embedded system on the Zybo was connected and programmed to run the motor.  
+Upon powering on the system the motor starting running, verifying that the inverter is functioning correctly.
+Unfortunately, due to time constraints, it has not been possible to verify that it meets the requirements to run the motor on the Go-Kart.
 
 
 
