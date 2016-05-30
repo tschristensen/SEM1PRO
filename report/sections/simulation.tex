@@ -29,9 +29,8 @@ The mechanical system consists of a mass of the go-kart with driver, turbulent a
 \end{figure}
 
 Figure~\ref{fig:mechanical_full} shows the block diagram of the mechanical part, that the motor will drive.
-\todo{Thomas: So, a model of the kart? Martin: Yeah a very simple one.}
 Starting from the left, the Permanent Magnet Synchronous Motor is the motor and the Ideal Rotational Motion Sensor is used for the Clarke-Park transformations. 
-The first inertia block contains both the inertia of the motor, which is 0.0052, \todo[inline]{potatoes? add a unit!} and the motor-side gear \todo[inline]{which is unknown for the motor side gear?}. 
+The first inertia block contains both the inertia of the motor, which is 0.0052 \si{\kilogram\meter\squared} and the motor-side gear, which can be calculated by equation~\ref{eq:inertia_of_disc}. 
 Inertias on the same rod can be added together, so instead of having an inertia for the motor, and one for the motor-side gear, one inertia is enough
 The inertia of the gear depends on its size. 
 Assuming, that the gear is a disc, the mass is calculated by:
@@ -41,7 +40,7 @@ m_{G1} = \rho \pi r^2 \cdot h
 \label{eq:mass of disc}
 \end{equation}
 
-where $\rho$ is the mass density of iron of $7870 \dfrac{kg}{m^3}$, \todo[inline]{use tfrac for in-text fractions? this one is quite big atm.} r is the radius, and h is the thickness of 7 mm.
+where $\rho$ is the mass density of iron of $7870 \frac{kg}{m^3}$, r is the radius, and h is the thickness of 7 mm.
 Radius is defined by the number of teeth of the gear, G, and the pitch, which is the distance between two adjacent teeth, which is 12.5 mm.
 Hence the radius can be calculated by equation~\ref{eq:radius_from_G}
 \begin{equation}
@@ -59,12 +58,23 @@ J_G = \frac{mr^2}{2} = \frac{\rho \pi r^2 \cdot h \cdot r^2}{2} = G^4 \frac{\rho
 \end{equation}
 
 This equation is used to dertermine the inertia of the two cogs, the motor-side cog, G1, has 12 teeth, and the wheel-side cog, G2, has 50 teeth. 
-This ratio, G2/G1 is put into the block "Gear Box".\todo[inline]{in what figure? reference}
+This ratio, G2/G1 is put into the block "Gear Box" on figure~\ref{fig:mechanical_full}.
+Transferring torque and angular velocity through a gear according to equation~\ref{eq:gear_transfer}
+
+\begin{equation}
+\begin{split}
+T_2 = \frac{G_2}{G_1} T_1 \\
+\omega_2 = \frac{G_1}{G_2} \omega_1
+\end{split}
+\label{eq:gear_transfer}
+\end{equation}
+
+Mechanical since power is the product of torque and speed, which means the power is conserved through the gear.
 
 The mass is set to 150 - 250 kg, depending on the driver, and this includes the mass of the car.
 This is done to test different situations -- a high mass would have more stable speeds, but also cause more power loss in the inverter, whereas a lower mass would be more prone to wheel spin.\\
 
-Wind resistance has a significant effect on the speed of the kart, especially at higher speeds.
+Wind resistance represents a larger friction than any other frictions, once the go-kart reach higher speeds.
 Wind resistance of a gokart is primarily turbulent, and can be calculated by equation~\ref{eq:wind_resistance}.
 
 \begin{equation}
@@ -73,8 +83,11 @@ F=-\frac{1}{2} \rho A c v^2
 \end{equation}
 
 where $\rho$ is the density of air, $A$ is the frontal area, $c$ is the drag coefficient and $v$ is the speed. 
-The frontal area has been approximated to two boxes with the combined area of 0.6\si{\metre\squared}.\todo[inline]{Martin: add a picture of a go kart with two boxes across it, the lower one being 1 m wide, and 0.4 m high, and the second one being 0.5 m wide an 0.4 m high.} 
-The density of air is approximately 1.225 \si{\kilogram\per\metre\cubed}, $c$ is approximately 0.8, according to a paper about air resistance found online. \todo[inline]{Thomas: Ofcourse you have a reference to this paper? If not, find one and add it to the bib.tex file. Martin: Yes, but it's a long address, I don't know where I'd put it because we literally only use one number: http://www.torvergata-karting.it/filemanager/download/191/The\%20evaluation\%20of\%20aerodynamic\%20drag\%20of\%20go-karts\%20by\%20means\%20of\%20coast\%20down\%20test\%20and\%20CFD\%20analysis.pdf - Morten: add it with name and author in the back. cite it here. The link is not needed}
+The frontal area has been approximated to two rectangles with the combined area of 0.6 \si{\metre\squared}.
+The lower rectangle is 1 m wide, and 40 cm high, and represents primarily the kart with the battery packs on the side, and spoiler at the back.
+The upper box of 40x40 cm represents the driver.
+These measurements are estimates, so accuracy is questionable.
+The density of air is approximately 1.225 \si{\kilogram\per\metre\cubed}, $c$ is approximately 0.8\cite{gokart_constant}.
 The constants are multiplied into one constant called $c\_drag$, as shown in equation~\ref{eq:cdrag}
 
 \begin{equation}
@@ -83,41 +96,55 @@ F=c_{drag} v^2 = -0.296 v^2
 \end{equation}
 
 These constants are put into the gain block, "Drag coefficient", and multiplied by the square of the speed. 
-The result is put into an ideal force source as seen on figure~\ref{fig:mechanical_full}. 
+The result is put into an ideal force source as seen on figure~\ref{fig:mechanical_full}. \\
 
 This system can be simplified, so that all inertia and mass is combined in one block and the gear and wheel can be removed. 
-This is done by a set of rules that apply for this mechanical circuit: This gear box reduces the speed, and increases torque, much like a transformer reduces voltage and increases current.. 
-When converting from linear to rotational mechanics, torque is force times radius of the wheel, and speed is angular velocity times radius.
-To turn the mass, m, into an inertia, assume a cylindrical shell with radius r, and mass m. Inertia is then calculated by:
+This is done by a set of rules that apply for this mechanical circuit: This gear box reduces the speed, and increases torque, much like a transformer reduces voltage and increases current.
+Rotational and translational mechanics are tied together by equation~\ref{eq:rotational_translational}.
+
+\begin{equation}
+\begin{split}
+T = J \cdot r \\
+v = \omega \cdot r
+\end{split}
+\label{eq:rotational_translational}
+\end{equation}
+
+\todo{would it be better to have the translational on the same side instead?}
+
+To turn the mass of the vehicle, m, into an inertia, assume that the entire mass is mounted on the surface of the driving wheels. 
+This means, the inertia can be considered a shell with mass m, and radius r, in which case, inertia can be calculated as:
 
 \begin{equation}
 J=mr^2
 \end{equation}
 
-This inertia can then be added to the inertia $J\_G2$. Same rules apply for a gear as for a transformer when reflecting a load from one side to the other, as shown in equation~\ref{eq:inertia_reflect}
+Since the mass is now an inertia, it can be added to the inertia $J\_G2$.\\
+
+Same rules apply for a gear as for a transformer when reflecting a load from one side to the other.
+This means, that a torque source driving an inertia through a gear, is experiencing an inertial load calculated by equation~\ref{eq:inertia_reflect}.
 
 \begin{equation}
 \label{eq:inertia_reflect}
 J_{ref} = \frac{G1^2}{G2^2} J
 \end{equation}
-\todo[inline]{Morten: I don't get what Jref is completely.}
 
 This inertia is then added to the inertia of the motor and $\mathrm{J_{G1}}$:
 
 \begin{equation}
 J = (mr^2+J_{G2}) \cdot \big(\tfrac{G1}{G2}\big)^2 + J_{G1}+J_M
 \end{equation}
+%
+For a mass of 250 kg, this comes to 0.282\si{\kilogram\metre\squared}.\newline
 
-For a mass of 250 kg, this comes to 0.282\si{\kilogram\metre\squared}.
-
-In equation~\ref{eq:cdrag}, speed can be replaced with angular velocity and a gain, and force can be replaced by torque and a gain. So the equation becomes this: \todo[inline]{Morten: Reference !}
+In equation~\ref{eq:cdrag}, speed can be replaced with angular velocity and a the gear ratio, and force can be replaced by torque and the gear ratio, according to equation~\ref{eq:rotational_translational}. So the equation becomes this:
 
 \begin{equation}
-\frac{T G2}{r G1} = c_{drag} \big(\omega r \tfrac{G1}{G2}\big)^2
+\frac{T G2}{r G1} = c_{drag} \cdot \big(\omega r \tfrac{G1}{G2}\big)^2
 \end{equation}
 
 Isolating $T$, we get:
-\todo{Thomas: Poor omega :'(. Martin: I like your humor}
+
 \begin{equation}
 T= c_{drag} \Big(\frac{G1 r}{G2}\Big)^3 \omega^2 \approx -11.1\cdot 10^{-6} \omega^2
 \end{equation}
@@ -132,11 +159,9 @@ The mechanical diagram is reduced to figure ~\ref{fig:reduced_mechanical_system}
 	\end{center}
 \end{figure}
 
-This can be ported to Plecs, where all the used mechanical parts exist. 
-Only difference is, that the inertia block is placed inline with the wire, and not as an appendage.
-\todo{Thomas: These are technical details that are completely irrelevant in relation to the simulations. Martin: Yeah but it does look different.}
-Finally, for the Simscape model, the tire is modelled by a friction block in series with the rotor, and the brake is modelled in a subsystem, as seen on figure~\ref{fig:simulations_mechanical_simscape}.
-\todo[inline]{Morten: Why is plecs mentioned here. the models i see are simscape?}
+This can be ported to Plecs, where all the used mechanical parts exist.
+Finally, for the Simscape model, the tyre is modelled by a friction block in series with the rotor, and the brake is modelled in a subsystem, as seen on figure~\ref{fig:simulations_mechanical_simscape}.
+\todo[inline]{Morten: Why is plecs mentioned here. the models i see are simscape? Martin: because Plecs does not model braking and slip. Maybe this should be shown as plecs as well?}
 
 \begin{figure}[H]
 	\begin{center}
@@ -146,53 +171,84 @@ Finally, for the Simscape model, the tire is modelled by a friction block in ser
 	\end{center}
 \end{figure}
 
-The tyre block consists of static and dynamic.
+The tyre block consists of static and dynamic friction.
 Tyre slip is a comprehensive area of study, so the rotational friction block isn't necessarily accurate. 
 However, it does enable sudden changes in motor speed and load, similar to spinning and locking the wheels.
+The tyre consists of static, dynamic and viscous friction. The static and dynamic frictions are are calculated by equation~\ref{eq:static_dynamic_friction}
+
+\begin{equation}
+F_f = F_N \cdot c_f \cdot dm
+\label{eq:static_dynamic_friction}
+\end{equation}
+
+where 
+
+\begin{equation}
+F_N = mg
+\end{equation}
+
+The constant, dm is the weight distribution of the gokart, so that dm=0 means the entire mass of the gokart is on the front wheels, and dm=1 means the whole weight distribution is on the driving wheels.
+The constants used for simulations are listed in table~\ref{tab:friction_values}
+
+\begin{table}
+	\centering
+	\begin{tabular}{r | l}
+		Static friction coefficient, $\mathrm{c_s}$ & 1 \\
+		\hline
+		Dynamic friction coefficient, $\mathrm{c_d}$ & 0.7 \\
+		\hline
+		Weight distribution, dm & 0.6
+	\end{tabular}
+	\caption{Table of friction values}
+	\label{tab:friction_values}
+\end{table}
+
+
 The brake subsystem is a PI controlled ideal torque source, which will attempt to bring the go kart to a halt when the brake is pressed.
-Without a PI controller, there is a strong possibility that the brake would suddenly make the motor go backwards.
-Lastly the inertia is split into the inertia of the motor and gears on the left of the tyre, and the inertia due to the mass of the car on the right.
-Since the brake block is still connected directly to the rod of the motor, a gain block is used to scale down the torque through the gear. 
-\todo[inline]{Morten: last sentence. i don't understand where this gain is. Overall this paragraph has a lot of information, maybe a newline in between.}
+Without a PI controller, there is a strong possibility that the brake would suddenly make the motor go backwards instead of stopping.\\
+Lastly the inertia is split into two inertia blocks, one containing motor and gear inertia on the left of the tyre, and the inertia due to the mass of the car on the right.
+The brake on the go-kart is mounted on the rear axle, which means the torque it produces must be scaled down to represent the torque seen on the motor rod.
 
 \subsection{Motor Model}\label{sub:motor_model_simscape}
-The Permanent Magnet Synchronous Motor is found in Simscape $\rightarrow$ SimPowerSystem $\rightarrow$ Simscape Components $\rightarrow$ Machines $\rightarrow$ Permanent Magnet Rotor. 
-\todo[inline]{Thomas: Irrelevant. Morten: Agreed!}
-This is a quite simple model, with only four parameters: Number of pole pairs, flux linkage of the magnet, inductance and armature resistance. 
-A similar block can be found in Plecs under Electrical $\rightarrow$ Machines. 
-\todo[inline]{Thomas: Again, Irrelevant. Morten: somewhat, this intro should be rewritten slightly. doesn't matter how they are found.}
-This model has the same parameters as in Simscape, but also inertia and friction.
+Both Simscape and Plecs have built in models of pmac motors.
+They have the four basic parameters: Number of pole pairs, flux linkage of the magnet, inductance and armature resistance. 
+The parameters used for simulations are listed in table~\ref{tab:motor_parameters_in_simulations}.
 
 \begin{table}[h]
 	\centering
-	\begin{tabular}{| S | S | S |}
+	\begin{tabular}{| S | S |}
 		\hline
-		{Simscape parameters} & {Plecs parameters} & {Value} \\
+		{Parameterss} &  {Value} \\
 		\hline
-		{Permanent magnet flux linkage} & {Flux induced by magnet Phi} & {1.83225e-2} \\
+		{Permanent magnet flux linkage} & {1.83225e-2} \\
 		\hline
-		{Stator Inductance, Ld, Lq, L0} & {Stator inductance Ld Lq} & {4e-5}\\
+		{Stator Inductance, $\mathrm{L_d}$, $\mathrm{L_q}$, $\mathrm{L_0}$}& {4e-5}\\
 		\hline
-		{Stator resistance per Phase, Rs} & {Stator resistance R} & {6.5e-3}\\
+		{Stator resistance per Phase, Rs} & {6.5e-3}\\
 		\hline
-		{Number of pole pairs} & {Number of pole pairs p} & {4}\\
+		{Number of pole pairs} & {4}\\
 		\hline
 	\end{tabular}
 	\caption{Parameters used in simulations.}
 	\label{tab:motor_parameters_in_simulations}
 \end{table}
-\todo[inline]{Morten: Fix table with correct lowercases for Ld Lq etc. and correct greek letters for phi etc.}
 
+On top of this, the Plecs model also has built in friction coefficient, which is set to 1e-5, and inertia, which is set to 0.0052.
 
-One thing to note in both  cases is that the flux linkage is divided by the number of pole pairs. \todo[inline]{Morten: i don't really get why we are looking at this. Must have better flow from the preveious section}
+One thing to note in both  cases is that the flux linkage is divided by the number of pole pairs. \todo[inline]{Morten: i don't really get why we are looking at this. Must have better flow from the preveious section. Martin: it should be replicable, so such oddities should be mentioned}
 The reason for this is likely a matter of definitions, and the relation has been deduced using simulations. 
 Armature resistance and inductances are per-phase, and the values used are found in section~\ref{sub:1117_param}.
 
 \subsection{Electrical Network and control}\label{sub:sim_electrical}
 This is where the Simulink and Plecs block diagram differ a lot. 
 The purpose of using Simulink is that it is quick and easy to change multiple parameters in order to develop and test a controller. 
-The advantage in Plecs is its ability to simulate switch mode power electronics, where there is a vast ratio between the minimum timestep defined by the switching frequencies, and the duration of the simulation. \todo[inline]{I am not sure i understand why this ratio is important? Martin: Different simulators have different methods. Plecs simulates right before and right after a switching event, that means 4 time steps per period per switch. Highside and lowside transistors switch at the same time, so a three phase inverter at 20 kHz means the whole circuit needs to be solved (at least) 240.000 times per second. Simulink does not solve switches as easy, so the number is significantly higher. Morten: worth mentoining in the text?}
-The sparse electrical network along with the discrete controller and modulation blocks have been shown in figure~\ref{fig:simulations_electrical}.
+The advantage in Plecs is its ability to simulate switch mode power electronics, where there is a vast ratio between the minimum timestep defined by the switching frequencies, and the duration of the simulation.
+Plecs considers semiconductors as ideal switches, that go from zero to full conduction in one timestep.
+This allows Plecs to only solve the circuit right before and after each switching, rather than taking several small time steps as the voltages and currents traverse the active region.
+As both the high side and low side mosfets of each phase switch simultaneously, each PWM period of simulation contains up to six switching events. 
+At 20 kHz, this means, the whole circuit needs to be solved 120.000 times per second, so using plecs is still not fast.
+But compared to simulink or even worse, spice, it is tremendously fast.
+The electrical network along with the discrete controller and modulation blocks have been shown in figure~\ref{fig:simulations_electrical}.
 
 \begin{figure}[h]
 	\begin{center}
@@ -203,7 +259,7 @@ The sparse electrical network along with the discrete controller and modulation 
 \end{figure}
 
 The motor block has an external connection to neutral, which the real motor doesn't have. 
-This neutral seems to need a dc path to ground, and so does the controlled voltage sources. 
+This neutral seems to need a DC path to ground, and so does the controlled voltage sources. 
 Since the external ground cannot be connected to the internal star point of the motor, the connection is made with a very large resistor of 1\si{\giga\ohm}. 
 The lighter blue wire going into the "\texttildelow" port of the PMSM block is a three phase electrical cable, which is used throughout the SimPowerSystem sublibrary, and the Splitter collects three wires into a cable. \\
 
@@ -217,8 +273,8 @@ Here, the finite precision of the encoder is simulated by equation~\ref{eq:Encod
 output = \left\lfloor \Bigg( \frac{\phi \cdot 256}{2 \pi} + 0.5 \Bigg) \% 256\right\rfloor
 \end{equation}
 
-where \% is the mod function. 
-The purpose of that is to wrap \todo{Wrap is the common way of saying, if a number goes outside a range, it restarts from the other end of the range, like an integer overflow is (ofteh) handled in coding.} the output to a value between 0 and 255, which can be used for look-up tables. 
+where \% is the modulo function. 
+The purpose of that is to wrap \todo{Wrap is the common way of saying, if a number goes outside a range, it restarts from the other end of the range, like an integer overflow is (often) handled in coding.} the output to a value between 0 and 255, which can be used for look-up tables. 
 The round down function rounds a number, effectively quantizing the output. 
 The reason for using round down rather than just round is to ensure, that the number ranges from 0 to 255. 
 To combat the inaccuracy of the round down function, 0.5 is added. 
@@ -242,8 +298,10 @@ This can be seen on figure~\ref{fig:simulations_zybo}.
 
 The Clarke-Park and PWM generation blocks are running in variable time steps, and the Discrete controller runs with a fixed step of 0.1 \si{\milli\second}.
 The signal builder block is used to shape the torque requested by the pedal.
-This torque is converted into the current used in the controller by multiplying with $\tfrac{3}{2 KT_T}$. \todo[inline]{Morten I write kt as $K_t$ we should uniform it.}
+This torque is converted into the current used in the controller by multiplying with $\tfrac{3}{2 K_t}$.
 The Clarke-Park block converts $\mathrm{I_{AB}}$ to $\mathrm{I_{dq}}$. 
+
+\todo{The equation should be moved to clarke-park section}
 
 \begin{equation}
 \left[ \begin{array}{c}
@@ -279,13 +337,12 @@ The block diagram of the discrete controller is shown on figure~\ref{fig:sim_con
 
 The two independent current controllers are drawn in blue boxes. 
 The feedback comes from the Idq port on the left.
-The constants, Kp and Ki, are calculated in chapter~\ref{sec:controller_design}, and divided by half the battery voltage. \todo[inline]{Morten: did this change? i think you said something}
-This is done, because the controller designs produce a voltage, whereas the simulink controller produces a percentage of half the battery voltage.
-Similarly the implemented controller in chapter~\ref{sec:Embedded_Design} produces a range from -1 to 1, so the controller constants need to be scaled acordingly
-\todo[inline]{Martin: I'm actually not sure about the implemented controller. Morten: who knows. i don't either}
+The constants, $\mathrm{K_p}$ and $\mathrm{K_i}$, are calculated in chapter~\ref{sec:controller_design}, and divided by half the battery voltage.
+This is done, because the controllers designed in chapter~\ref{sec:controller_design} produce a voltage, whereas the simulink controller produces a percentage of half the battery voltage, i.e. between -1 and 1.
+Similarly the implemented PWM block in section~\ref{sub:Architecture} takes integers in the range from 0 to 1000, so the controller constants need to be scaled accordingly\\
 The integrator block uses trapezoidal integration, and the output is limited to $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$.
 This is to ensure, that the integrator does not wind up\todo{Martin: Is there a better term for when the integrator keeps becoming larger, because the output is saturated somewhere? Morten: Diverges? (reverse convergence)}.
-The saturation block to the left of the q current controller limits the input to between 0 and a maximum current.
+The saturation block to the left of the q current controller on figure~\ref{fig:sim_controller_diagram} limits the input to between 0 and a maximum current.
 The PI controllers produce duty cycle values in the range of $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, although it is possible to exceed this range at this point in the diagram.\\
 
 It is necessary to ensure, that the controller does not produce values outside the range that can be generated using PWM. 
@@ -296,6 +353,7 @@ For this reason, the magnitude of the two controller outputs is calculated in th
 If the magnitude is larger than $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, the Parallel scale down subsystem is processed. 
 The functionality is explained in listing~\ref{code:parallel_scale_down}.
 
+\todo[inline]{Martin: Probably explained in zybo.tex?}
 \begin{lstlisting}[style=customMATLAB, label={code:parallel_scale_down}, caption = Matlab code for parallel scale down function]
 d = dq(1) * 2 / sqrt(3); 	% Split the input vector
 q = dq(2) * 2 / sqrt(3); 	% into two values
@@ -324,11 +382,12 @@ For comparison, the d and q axis duty cycles have been simulated and are shown o
 	\label{fig:parallel_scale_down_graphs}
 \end{figure}
 
-The graphs are simulated with a car mass of 200 kg, and settling time of 0.01 s.
-At 2.5 s, the magnitude exceeds $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, at which point both the d and q output is scaled down. 
+The graphs are simulated with a car mass of 200\si{\kilogram}, and settling time of 0.01s.
+At 2.5s, the magnitude of the dq-vectors exceeds $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, at which point both the d and q output is scaled down. 
 On figure~\ref{fig:after_saturation}, this transition is almost invisible along the q-curve. 
 As the torque produced by the motor is reduced due to saturation of the supply, the need for a large negative d-duty is reduced, as both d and q current is reduced.
 This will be explained further on.
+\todo{Martin: will it though?}
 
 Inverse Clark-Park transformation is done by equation~\ref{eq:sim_inverse_clark-park}.
 
@@ -361,6 +420,7 @@ The trigonometric functions used in equation~\ref{eq:sim_inverse_clark-park} are
 
 The majority of this block diagram calculates the inverse Clarke-Park transformation, and in the upper right corner, the third harmonic injection is calculated using the knowledge given in the paper 'A Novel Third Harmonic Injection Method for Closed Loop Control of PMSM Motors' \cite{third_harmonic_injection}. \\
 
+\todo[inline]{Martin:Third harmonic should be earlier in the report}
 The issue is that, when using field oriented control, the stator voltage does not remain at a constant angle relative to the rotor angle.
 That means, that calculating the third harmonic isn't as simple as multiplying the rotor position with three. 
 Doing this will result in the the third harmonic being out of phase with the three sinusoidal voltage waveforms as speed increases.
@@ -433,8 +493,9 @@ The simulation will be run with both PI and IP controllers, with values describe
 
 \subsubsection{PI controller}\label{sub:PI05}
 
-At first, a simulation will be run where the throttle is pressed fully from 0.12 s to 5 s, \todo[inline]{Morten: Similar to the one used in controller design section. where Kp and Ki values also are taken from} and then released.
-The load is 200 kg, which is enough to guard against wheel spin.
+At first, a simulation will be run where the throttle is pressed fully from 0.12s to 5s, and then released.
+This input is similar to the one used in chapter~\ref{sec:controller_design}.
+The load is 200kg, which is enough to guard against wheel spin.
 The resultant current along the d and q axes have been plotted in figure~\ref{fig:Sim_results_pi_Idq}.
 
 \begin{figure}[H]
@@ -445,15 +506,20 @@ The resultant current along the d and q axes have been plotted in figure~\ref{fi
 \end{figure}
 
 Much like on figure~\ref{fig:Output_Full}, the current steps up nicely with almost no overshoot. 
-There is also a small steady state error of about 2 \%. \todo[inline]{Morten: Which was expected based on the controller design where the steady state error was 5A or 1-2\%}
-The noise on both the d and q current at 1.8\si{\second} is caused by the quantization of the encoder. 
-It seems to cause a resonation when the motor is runing at 2250 RPM, that the Clake-park transformation can't handle.
-Meanwhile, the d-axis current is kept very low, at least until 2.6 seconds, when the voltage starts saturating. 
-A small error (of up to -20 A) is not a big issue, as this is likely to occur if the position encoder is not perfectly aligned.
+There is also a small steady state error of about 2 \%, which is expected.
+There is a small current noise on $\mathrm{I_q}$ and especially $\mathrm{I_d}$, which is caused by the quantization of the encoder.
+Using a higher frequency for the discrete controller reduce this ripple. 
+For these simulations, 10\si{\kilo\hertz} has been used
+Lower frequencies can be used with acceptably low noise noise, up to 0.5\si{\kilo \hertz}.
+The extra noise on both the d and q current at 1.8\si{\second} is imaging error, caused by the quantization of the encoder and the frequency of the controller.
+For controller frequency, the error happens when the motor is running at 2250 RPM.
+Lower frequencies mean, that the error happens at lower motor speeds. \\
+The d-axis current is kept very close to zero, at least until 2.6 seconds, when the voltage starts saturating. 
+A small error (of up to -20 A) is not a big issue, as this is likely to occur anyway if the position encoder is not perfectly aligned.\\
 When saturation occurs, the current drops off almost exponentially. 
-As the speed increases, the voltage needed to produce torque lowers until it's only enough to compensate for the drag.
+This makes sense, because as the speed increases, the voltage needed to produce torque lowers until it's only enough to compensate for the drag.
 At 5 seconds, when the throttle is released, both the d and q current ripples a bit. 
-This is due to the way saturation is handled, but it's not a major ground for concern.
+This is due to the way saturation is handled, but the ripple is not a major ground for concern.
 
 The voltage waveforms must not be saturated, and should remain sinusoidal with third harmonic injection.
 This is shown on figure~\ref{fig:Sim_results_pi_phase_voltage}
@@ -467,10 +533,10 @@ This is shown on figure~\ref{fig:Sim_results_pi_phase_voltage}
 
 The reason for stepping voltage instead of a smooth curve is the limited resolution of the encoder. 
 This is not an issue, because these steps will induce a high frequency noise, that the inductance of the motor will choke.
-Figure~\ref{fig:Sim_results_pi_phase_voltage} shows that the voltage waveforms span the whole range, even at speeds where the controller output is outside the $\mathrm{\pm} 1.15$.
+Figure~\ref{fig:Sim_results_pi_phase_voltage} shows that the voltage waveforms span the whole range, even at speeds where the controller output is outside the $\mathrm{\pm}1.15$.
 This works independently from the controller, and will work both for the PI and IP controller. \\
 
-When the throttle is released after 5 s, the power should ideally not become negative, as the inverter is not designed to handle regenerative braking.
+When the throttle is released after 5s, the power should ideally not become negative, as the inverter is not designed to handle regenerative braking.
 This means, that it is not known what happens if the motor tries to push power back to the battery.
 Figure~\ref{fig:Sim_results_pi_phase_power} shows a short power undershoot occurring when the controller input goes from full to zero.
 
@@ -481,8 +547,8 @@ Figure~\ref{fig:Sim_results_pi_phase_power} shows a short power undershoot occur
 	\label{fig:Sim_results_pi_phase_power}
 \end{figure}
 
-The power peaks at $\mathrm{-400 \si{\watt}}$ for a short time.
-Integrating the power from 5.06 to 5.5 s gives an energy of $\mathrm{-25 \si{\joule}}$.
+The power peaks at -400\si{\watt} for a short time.
+Integrating the power from 5.06to 5.5s gives an energy of -25\si{\joule}.
 This is not likely to cause problems, as this energy easily could be lost in the inverter.
 The issue is larger when releasing the throttle while the kart is accelerating. 
 This is shown on figure~\ref{fig:Sim_results_pi05_large_power_undershoot}.
@@ -494,10 +560,10 @@ This is shown on figure~\ref{fig:Sim_results_pi05_large_power_undershoot}.
 	\label{fig:Sim_results_pi05_large_power_undershoot}
 \end{figure}
 
-Integrating this undershoot yields $\mathrm{-62 \si{\joule}}$. 
+Integrating this undershoot yields -62\si{\joule}. 
 This is not a major concern, however it causes a ripple in the speed, that might be felt. \\
 
-To simulate wheel spin and wheel lock, the mass of the go-kart has been lowered to 150 kg, and the weight distribution has been reduced to 50 \% on the rear wheels.
+To simulate wheel spin and wheel lock, the mass of the go-kart has been lowered to 150kg, and the weight distribution has been reduced to 0.5.
 Torque input is initially set to full for one second, and then declining to zero for the next 4 seconds, as shown in figure~\ref{fig:torque_setpoint_waveform}.
 After this, the brake will be active, and finally the motor will be producing torque again.
 
@@ -566,7 +632,7 @@ Figure~\ref{fig:slip_and_current_braking} shows the wheel slip and current for t
 	\label{fig:slip_and_current_braking}
 \end{figure}
 
-The brake steps to 66 \si{\newton\meter} at $\mathrm{5.36 \si{\second}}$, and ramps up until it hits a limit of $\mathrm{102 \si{\newton \meter}}$ at $\mathrm{6 \si{\second}}$. \todo[inline]{Morten: needs correct math names. also in the next bit}
+The brake steps to 66Nm at 5.36\si{\second}, and ramps up until it hits a limit of 102Nm at 6\si{\second}.
 During this time, it can be seen, that the q-axis current is positive, which means, the motor produces some forward torque when the brake is active. 
 This is a flaw in the controller, that it doesn't settle quickly enough
 This results in an energy waste of $\mathrm{150 \si{\watt}}$.
@@ -587,8 +653,7 @@ In order to do that, the wire going into the Kp gain block must be connected wit
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.5\linewidth]{graphics/ip_controller_in_full_system}
-	\caption{Input to Kp gain blocks are connected to the Idq feedback wire instead of the output of the subtraction 'circle'} \todo[inline]{Morten: is this sentence finished?}
-	\label{fig:ip_controller_in_full_system}
+	\caption{Input to $\mathrm{K_p}$ gain blocks are connected to the $\mathrm{I_{dq}}$ feedback wire instead of the output of the subtraction 'circle'.}
 \end{figure}
 
 Like the PI controller, the parameters are calculated using a settling time of $\mathrm{50 \si{\milli \second}}$.
@@ -612,7 +677,7 @@ Figure~\ref{fig:Sim_results_ip_Idq} shows the d and q-axis current as the contro
 \end{figure}
 
 By comparison to the PI controller, the IP controller does significantly worse.
-The steady state error of the q-controller is 10 \%, while the has a stead state error of $\mathrm{16\si{\ampere}}$. \todo[inline]{Moten: Sentence incomplete!}
+The steady state error of the q-controller is 10\%, while the d-controller has a steady state error of $\mathrm{16\si{\ampere}}$.
 What's even worse is, that the q-axis current goes below zero before the throttle is released after $\mathrm{5\si{\second}}$.
 That means, that when driving the go-kart at full throttle, the speed of the go-kart will start oscillating quite notably.
 At 5 seconds, the throttle is released, at which point the current should be zero. 
@@ -671,28 +736,29 @@ Figure~\ref{fig:slip_and_current_braking_ip} displays the slip and current when 
 \end{figure}
 
 From 5 to 6.3\si{\second}, the wheel does not start locking. 
-However, the d and q-axis current is still oscillating from the current step displayed on figure~\ref{fig:sim_results_ip_slip_acceleration_current}, so it's hard to determine if how the controller handles non-blocking braking. \todo[inline]{Morten: some gramatical errors here.}
+However, the d and q-axis current are still oscillating from the current step displayed on figure~\ref{fig:sim_results_ip_slip_acceleration_current}, so it's hard to determine how the controller handles non-blocking braking.
 At 6.3\si{\second}, the brakes lock, at which time, both the d and q-axis current oscillate.
-This causes the wheel deceleration to be halted at 6.5\si{\second}, as seen on figure~\ref{fig:sim_results_ip_slip_abraking}.
+Because of the forward torque produced by the motor, the wheel deceleration is halted at 6.5\si{\second}, as seen on figure~\ref{fig:sim_results_ip_slip_abraking}.
 Because of the slow settling time of the controller, it takes 1.1 seconds for the wheels to block completely. 
 This cause a tremendous waste of energy.
-The same happens when the brake is released again.//
+The same happens when the brake is released again, only this time, the energy is transferred from the motor to the battery.//
 
 \subsubsection{PI controller with faster settling time}\label{sub:PI01}
 
 Since neither of the two controller designs work optimally, the PI controller will be redesigned with a settling time of $\mathrm{10 \si{\milli \second}}$.
 The controller is designed for a load of $\mathrm{200 \si{\kilogram}}$.
-\todo[inline]{Morten: weird spacing in the equation and e-3 is not raised}
 The control parameters in equation~\ref{eq:10ms_settling_time_param} are divided by half the battery voltage
 
 \begin{equation}
-K_P = 1.64 \\%1.637719093817946
-K_I = 2.6e-3 %0.002604159942864
+\begin{split}
+K_P &= 1.64 \\%1.637719093817946
+K_I &= 2.6 \cdot 10^{-3} %0.002604159942864
+\end{split}
 \label{eq:10ms_settling_time_param}
 \end{equation}
 
 The reason for not using this settling time was, that it provided a large overshoot, which was also evident in this more elaborate simulator.
-Introducing a rate limiter block in the Discrete controller subsystem between the q setpoint port and the saturation block will reduce the overshoot to less than 1 \%.
+Introducing a rate limiter block in the Discrete controller subsystem between the q setpoint port and the saturation block will reduce the overshoot to less than 1\%.
 This block is displayed on figure~\ref{eq:IP_controller_constants}.
 The rising and falling rates are set to $\mathrm{10 \si{\kilo \ampere \per \second}}$ and $\mathrm{-10 \si{\kilo \ampere \per \second}}$.
 This is fast enough, that a driver would not notice.
@@ -703,13 +769,14 @@ Figure~\ref{fig:Sim_results_pi01_Idq} shows the positive and negative current st
 	\centering
 	\includegraphics[width = 0.7\linewidth]{graphics/Sim_results_pi01_Idq}
 	\caption{d and q axis current is a lot more precise than on figure~\ref{fig:Sim_results_pi_Idq}}
-	\label{fig:Sim_results_p01i_Idq}
+	\label{fig:Sim_results_pi01_Idq}
 \end{figure}
 
-The faster controller is much more precise.
+The faster $\mathrm{I_{q}}$-controller is much more precise.
 The rate limiter ensures, that the overshoot is less than 1 percent.
 The steady state error is so small compared to the noise, that it's hard to determine what it is.
-There is a small current overshoot when the pedal is released of only -3\si{\ampere}. The power caused by this is shown on figure~\ref{fig:Sim_results_pi01_power}
+However, the $\mathrm{I_{d}}$-controller is more noisy, but still close to zero.
+There is a small current undershoot when the pedal is released of only -3\si{\ampere}. The power caused by this is shown on figure~\ref{fig:Sim_results_pi01_power}
 
 \begin{figure}[H]
 	\centering
@@ -797,17 +864,17 @@ A faster controller was calculated with tremendous results.
 
 \todo[inline]{Morten: some colors would be perfect for this table}
 
-Both the PI controllers could work, but the faster response gives very precise current control. 
-\todo[inline]{Martin: Morten, maybe you can write something clever about why the ip controller is so bad. Morten: ok will try ! this next bit is new}
-
-In section \ref{sec:controller_design} an IP controller based on a reduced order model without any mechanical part is discussed.
-Based on this controller analysis, it can be concluded that this reduction is not acceptable as this would result in an unstable system.
-The IP controller itself adds a pole to the system which moves the remaining fast pole to become a complex conjugate pair that will result in a decaying oscillating response to a step. This oscillation proves to be too much when adding the slow poles of the mechanical system. As it has been proven now, this controller is not able to account for the mechanical system as a disturbance, which is unsurprising really giving the scope of the mechanics involved.
+Both the PI controllers could work, but the faster response gives very precise current control.
+The IP controller was designed in section~\ref{sec:controller_design} based on a reduced order system without any mechanical part. 
+Evidently, the motor along with the mass of the gokart has a slow pole, that the IP controller does not handle.
+The IP controller adds a pole to the systems, which makes the fast pole on figure~\ref{fig:PZmap_reduced_v2} complex conjugate poles that can oscillate.
+This oscillation proves to be too much when adding the slow poles of the mechanical system.
+As it has been proven now, this controller is not able to account for the mechanical system as a disturbance, which is unsurprising really giving the scope of the mechanics involved.
 
 \subsection{Plecs model}\label{sub:sim_plecs_electrical}
 As previously mentioned, the Plecs model differs vastly from the Simulink model in the electrical network, as it more closely resembles the real analog circuit. 
 It is shown on figure~\ref{fig:plecs_electrical}.
-\todo[inline]{Thomas: This needs something more.. Martin: ya think? Thomas: I think... Martin: OK Fine then}
+\todo[inline]{Thomas: This needs something more.. Martin: ya think? Thomas: I think... Martin: OK Fine then. Martin: Better now?}
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width = \textwidth]{graphics/Plecs_electrical}
@@ -838,11 +905,11 @@ E_{off} = \frac{1}{2} V_{DS} \cdot |I_D| \cdot  t_{c,off}
 
 Because the a negative current would cause the same loss, as a positive current, the absolute is taken of the drain current.
 All losses are calculated for two mosfets in parallel, conducting the combined current.
-Figure~\ref{fig:turn-on_loss_lut} shows the 2D lookup table of turn on losses as a graph.
+Figure~\ref{fig:turn-on_loss_lut} shows the 2D lookup table of turn on losses as a graph, with current and voltage on the floor axes, and energy on the vertical axis.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width = 0.6\linewidth]{graphics/turn-on_loss_lut}
+	\includegraphics[width = 0.7\linewidth]{graphics/turn-on_loss_lut}
 	\caption{Turn on losses calculated from equation~\ref{eq:plecs_switching_losses}.}
 	\label{fig:turn-on_loss_lut}
 \end{figure}
@@ -860,30 +927,24 @@ CthG along with Heatsink Thermal Resistance models the 30x30 heatsink used to mo
 CthG has a thermal capacity of 2100 \si{\kelvin \per \joule}, which is based on its size and the thermal capacity of aluminium, acording to~\ref{eq:thermal_capacity}.
 
 \begin{equation}
-C_{th} = v \cdot C_{Rv}
+C_{th} = v \cdot \rho_m C_{p}
 \label{eq:thermal_capacity}
 \end{equation}
-\todo{Martin: Can we quote wikipedia? Morten: no. at least use the sources that are on the bottom of the wiki page.}
 
-where $C_{Rv}$ is the volumetric heat capacity of aliminium, which is 2.422. 
+where $C_{p}$ is the specific heat capacity of aliminium, which is 910 \si{\joule\per\kilogram\kelvin}
+
+\todo{Reference in footnote: http://www.engineeringtoolbox.com/specific-heat-metals-d_152.html}, 
+and $\mathrm{\rho_m}$ is the mass density of aluminium.\todo{Reference in footnote: http://www.coolmagnetman.com/magconda.html}. 
 For a heatsink of 30x30x1 cm, the heat capacity is then 2180 \si{\kelvin \per \joule}.
+\todo{Morten: Check the latex file here, outcommented some links that would not build}
+
+
+\todo[inline]{Martin: I think maybe Erlingur has written about this.}
 
 The battery is modelled with a DC voltage source of 52.8 \si{\volt}.
-In series with this is a non-ideal wire modelled by a resistor of 0.77 \si{\milli \ohm}, and an inductor of 6 \si{\micro \henry}.
-This has been calculated by~\ref{eq:wire_calculation}.
-\begin{eqnarray}
-R_{wire} &=& \frac{1.7e-8 \si{\ohm \meter} \cdot 5 \si{\meter}}{50 \si{\milli \meter \squared}}  + 200 \si{ \micro \ohm}\\
-L_{wire} &=& 12.5 \si{\nano \henry \per \centi \meter} \cdot 5 \si{\meter}
-\label{eq:wire_calculation}
-\end{eqnarray}
-The battery wire is a 150\si{\mm\squared} wire, at five meters long including the connection to all the batteries. 
-The 200 \si{\micro \ohm} is the resistance of the relay.
-12.5 \si{\nano \henry \per \centi \meter} is a reasonable estimate of the inductance of a wire\footnote{According to a lecturer of the group, Morten Nymand}.\\
-
-The E caps represent the electrolytic capacitor bank, consisting of 8 2200\si{\micro \farad} capacitors in parallel. 
-Bank ESR is the parallel ESR of these 8 capacitors, of 12.25 \si{\milli \ohm}.
+In series with this is a non-ideal wire as described in section~\ref{sub:Capacitors}
 Bank EPR is a gigaohm resistor needed for the simulation -- it will not run without it, because the wire inductor might not have a DC path to ground.
-F caps represent the film capacitors. These are significantly smaller, but have no ESR, and handle higher frequencies better than the electrolytic.\\
+F caps represent the film capacitors. These are significantly smaller, but have no ESR, and handle higher frequencies better than the E caps.\\
 
 The controller is modeled on the bottom half of figure~\ref{fig:plecs_electrical}. 
 Other than the PI controllers, it contains parallel scale down and overmodulation.
@@ -919,7 +980,7 @@ The efficiency quickly reaches above 90 \%, which is quite good. \\
 However, there is a loss in the ESR of the E caps.
 The current ripple is displayed on figure~\ref{fig:plecs_current_ripple}
 
-\todo[inline]{Martin: Maybe this should be omitted, since we so far do not have anything about capacitor choices. Morten: maybe. leave it for now. Or simply explain why we don't have anythign about the caps}
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.7\linewidth]{graphics/plecs_current_ripple}
@@ -927,7 +988,7 @@ The current ripple is displayed on figure~\ref{fig:plecs_current_ripple}
 	\label{fig:plecs_current_ripple}
 \end{figure}
 
-The large current ripple would result in up to 190 \si{\watt} of loss, which is a lot more than anticipated.
+The large current ripple would result in up to 190 \si{\watt} of loss, which is a lot more than the capacitors can handle.
 Not only is this power loss damaging for the efficiency of the inverter, it also produces a lot of heat, that is not absorbed by the heatsink.
 A reason for this high number is likely the ideal switching used in Plecs. 
 Because of this, the current from the supply can step from zero to 300 A instantaneously. 
@@ -960,11 +1021,6 @@ It is possible to drive a PMAC motor with three phases of naturally sampled PWM.
 The inverter has a large thermal capacity, meaning that it would keep cool for the duration, it is being used. 
 However, according to plecs, the current ripple in the electrolytic capacitors greatly exceeds what they are rated for.
 It was tried to add a ESL inductor to the capacitors, but that caused the simulation to become much slower to the point where it would not run at all.
-
-
-
-
-
 
 \subsection{Simulation of the Over-Current Protection Circuit}
 \todo[inline]{Thomas: I'm not sure the placement of this makes sense.. Morten: it is a bit out of context from the stuff above. but it is as a simulation so i guess its fine.}
@@ -1019,6 +1075,7 @@ This is apparent when noticing that the error is mostly identical between the re
 	\caption{\ref{fig:fullwaverectifier} is the the full wave rectifier used to rectify the current signals. \ref{fig:fullwaverectifiersim} shows the rectified version, PR, of one of the phase signals, P1, as well as the error of the rectification.}
 	\label{fig:rectifiersim}
 \end{figure}
+\todo[inline]{Thomas: It would be nice to have numbers on the simulated phase shift done by the recifier.}
 
 After rectification the signal is fed to a Schmitt-trigger with hysteresis voltages $V_h=0.475\si{\volt}$ and $V_l=0.25\si{\volt}$.
 These signals are shown in figure \ref{fig:schmitt}.
