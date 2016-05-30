@@ -32,7 +32,7 @@ Using an RTCS simplifies scheduling tasks to run at different frequencies.
 As an RTCS has no way to preempt tasks it leaves the responsibility of preserving real time performance of the system to the programmer.
 khaOS was chosen before other RTCS as the group had prior knowledge about the system from an Embedded Systems course.
 
-\subsection{Architecture}
+\subsection{Architecture}\label{sub:Architecture}
 The software functionalities are grouped into tasks based on functionality and desired frequency.
 A task diagram of the complete system on the Zybo can be seen in figure \ref{fig:task_diagram}.
 
@@ -51,7 +51,7 @@ A task diagram of the complete system on the Zybo can be seen in figure \ref{fig
 As can be seen, various signals are coming from the outside world through the PL into the PS.
 All tasks, IP cores and I/O peripherals will be described in the coming sections.
 
-\subsubsection{Three phase PWM generator}
+\subsubsection{Three phase PWM generator}\label{sub:PWM_generation}
 The PWM generator is placed in the PL and is developed using Xilinx System Generator in Matlab Simulink.
 The generator is made to have adjustable frequency and duty cycle.
 It was chosen to generate center aligned PWM as this introduces less harmonic distortion than edge aligned PWM \cite{power_switching_converters}. 

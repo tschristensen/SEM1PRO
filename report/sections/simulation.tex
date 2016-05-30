@@ -29,9 +29,8 @@ The mechanical system consists of a mass of the go-kart with driver, turbulent a
 \end{figure}
 
 Figure~\ref{fig:mechanical_full} shows the block diagram of the mechanical part, that the motor will drive.
-\todo{Thomas: So, a model of the kart? Martin: Yeah a very simple one.}
 Starting from the left, the Permanent Magnet Synchronous Motor is the motor and the Ideal Rotational Motion Sensor is used for the Clarke-Park transformations. 
-The first inertia block contains both the inertia of the motor, which is 0.0052, \todo[inline]{potatoes? add a unit!} and the motor-side gear \todo[inline]{which is unknown for the motor side gear?}. 
+The first inertia block contains both the inertia of the motor, which is 0.0052 \si{\kilogram\meter\squared} and the motor-side gear, which can be calculated by equation~\ref{eq:inertia_of_disc}. 
 Inertias on the same rod can be added together, so instead of having an inertia for the motor, and one for the motor-side gear, one inertia is enough
 The inertia of the gear depends on its size. 
 Assuming, that the gear is a disc, the mass is calculated by:
@@ -41,7 +40,7 @@ m_{G1} = \rho \pi r^2 \cdot h
 \label{eq:mass of disc}
 \end{equation}
 
-where $\rho$ is the mass density of iron of $7870 \dfrac{kg}{m^3}$, \todo[inline]{use tfrac for in-text fractions? this one is quite big atm.} r is the radius, and h is the thickness of 7 mm.
+where $\rho$ is the mass density of iron of $7870 \frac{kg}{m^3}$, r is the radius, and h is the thickness of 7 mm.
 Radius is defined by the number of teeth of the gear, G, and the pitch, which is the distance between two adjacent teeth, which is 12.5 mm.
 Hence the radius can be calculated by equation~\ref{eq:radius_from_G}
 \begin{equation}
@@ -59,12 +58,23 @@ J_G = \frac{mr^2}{2} = \frac{\rho \pi r^2 \cdot h \cdot r^2}{2} = G^4 \frac{\rho
 \end{equation}
 
 This equation is used to dertermine the inertia of the two cogs, the motor-side cog, G1, has 12 teeth, and the wheel-side cog, G2, has 50 teeth. 
-This ratio, G2/G1 is put into the block "Gear Box".\todo[inline]{in what figure? reference}
+This ratio, G2/G1 is put into the block "Gear Box" on figure~\ref{fig:mechanical_full}.
+Transferring torque and angular velocity through a gear according to equation~\ref{eq:gear_transfer}
+
+\begin{equation}
+\begin{split}
+T_2 = \frac{G_2}{G_1} T_1 \\
+\omega_2 = \frac{G_1}{G_2} \omega_1
+\end{split}
+\label{eq:gear_transfer}
+\end{equation}
+
+Mechanical since power is the product of torque and speed, which means the power is conserved through the gear.
 
 The mass is set to 150 - 250 kg, depending on the driver, and this includes the mass of the car.
 This is done to test different situations -- a high mass would have more stable speeds, but also cause more power loss in the inverter, whereas a lower mass would be more prone to wheel spin.\\
 
-Wind resistance has a significant effect on the speed of the kart, especially at higher speeds.
+Wind resistance represents a larger friction than any other frictions, once the go-kart reach higher speeds.
 Wind resistance of a gokart is primarily turbulent, and can be calculated by equation~\ref{eq:wind_resistance}.
 
 \begin{equation}
@@ -73,8 +83,11 @@ F=-\frac{1}{2} \rho A c v^2
 \end{equation}
 
 where $\rho$ is the density of air, $A$ is the frontal area, $c$ is the drag coefficient and $v$ is the speed. 
-The frontal area has been approximated to two boxes with the combined area of 0.6\si{\metre\squared}.\todo[inline]{Martin: add a picture of a go kart with two boxes across it, the lower one being 1 m wide, and 0.4 m high, and the second one being 0.5 m wide an 0.4 m high.} 
-The density of air is approximately 1.225 \si{\kilogram\per\metre\cubed}, $c$ is approximately 0.8, according to a paper about air resistance found online. \todo[inline]{Thomas: Ofcourse you have a reference to this paper? If not, find one and add it to the bib.tex file. Martin: Yes, but it's a long address, I don't know where I'd put it because we literally only use one number: http://www.torvergata-karting.it/filemanager/download/191/The\%20evaluation\%20of\%20aerodynamic\%20drag\%20of\%20go-karts\%20by\%20means\%20of\%20coast\%20down\%20test\%20and\%20CFD\%20analysis.pdf - Morten: add it with name and author in the back. cite it here. The link is not needed}
+The frontal area has been approximated to two rectangles with the combined area of 0.6 \si{\metre\squared}.
+The lower rectangle is 1 m wide, and 40 cm high, and represents primarily the kart with the battery packs on the side, and spoiler at the back.
+The upper box of 40x40 cm represents the driver.
+These measurements are estimates, so accuracy is questionable.
+The density of air is approximately 1.225 \si{\kilogram\per\metre\cubed}, $c$ is approximately 0.8\cite{gokart_constant}.
 The constants are multiplied into one constant called $c\_drag$, as shown in equation~\ref{eq:cdrag}
 
 \begin{equation}
@@ -83,24 +96,38 @@ F=c_{drag} v^2 = -0.296 v^2
 \end{equation}
 
 These constants are put into the gain block, "Drag coefficient", and multiplied by the square of the speed. 
-The result is put into an ideal force source as seen on figure~\ref{fig:mechanical_full}. 
+The result is put into an ideal force source as seen on figure~\ref{fig:mechanical_full}. \\
 
 This system can be simplified, so that all inertia and mass is combined in one block and the gear and wheel can be removed. 
-This is done by a set of rules that apply for this mechanical circuit: This gear box reduces the speed, and increases torque, much like a transformer reduces voltage and increases current.. 
-When converting from linear to rotational mechanics, torque is force times radius of the wheel, and speed is angular velocity times radius.
-To turn the mass, m, into an inertia, assume a cylindrical shell with radius r, and mass m. Inertia is then calculated by:
+This is done by a set of rules that apply for this mechanical circuit: This gear box reduces the speed, and increases torque, much like a transformer reduces voltage and increases current.
+Rotational and translational mechanics are tied together by equation~\ref{eq:rotational_translational}.
+
+\begin{equation}
+\begin{split}
+T = J \cdot r \\
+v = \omega \cdot r
+\end{split}
+\label{eq:rotational_translational}
+\end{equation}
+
+\todo{would it be better to have the translational on the same side instead?}
+
+To turn the mass of the vehicle, m, into an inertia, assume that the entire mass is mounted on the surface of the driving wheels. 
+This means, the inertia can be considered a shell with mass m, and radius r, in which case, inertia can be calculated as:
 
 \begin{equation}
 J=mr^2
 \end{equation}
 
-This inertia can then be added to the inertia $J\_G2$. Same rules apply for a gear as for a transformer when reflecting a load from one side to the other, as shown in equation~\ref{eq:inertia_reflect}
+Since the mass is now an inertia, it can be added to the inertia $J\_G2$.\\
+
+Same rules apply for a gear as for a transformer when reflecting a load from one side to the other.
+This means, that a torque source driving an inertia through a gear, is experiencing an inertial load calculated by equation~\ref{eq:inertia_reflect}.
 
 \begin{equation}
 \label{eq:inertia_reflect}
 J_{ref} = \frac{G1^2}{G2^2} J
 \end{equation}
-\todo[inline]{Morten: I don't get what Jref is completely.}
 
 This inertia is then added to the inertia of the motor and $\mathrm{J_{G1}}$:
 
@@ -108,16 +135,16 @@ This inertia is then added to the inertia of the motor and $\mathrm{J_{G1}}$:
 J = (mr^2+J_{G2}) \cdot \big(\tfrac{G1}{G2}\big)^2 + J_{G1}+J_M
 \end{equation}
 
-For a mass of 250 kg, this comes to 0.282\si{\kilogram\metre\squared}.
+For a mass of 250 kg, this comes to 0.282\si{\kilogram\metre\squared}.\\
 
-In equation~\ref{eq:cdrag}, speed can be replaced with angular velocity and a gain, and force can be replaced by torque and a gain. So the equation becomes this: \todo[inline]{Morten: Reference !}
+In equation~\ref{eq:cdrag}, speed can be replaced with angular velocity and a the gear ratio, and force can be replaced by torque and the gear ratio, according to equation~\ref{eq:rotational_translational}. So the equation becomes this:
 
 \begin{equation}
-\frac{T G2}{r G1} = c_{drag} \big(\omega r \tfrac{G1}{G2}\big)^2
+\frac{T G2}{r G1} = c_{drag} \cdot \big(\omega r \tfrac{G1}{G2}\big)^2
 \end{equation}
 
 Isolating $T$, we get:
-\todo{Thomas: Poor omega :'(. Martin: I like your humor}
+
 \begin{equation}
 T= c_{drag} \Big(\frac{G1 r}{G2}\Big)^3 \omega^2 \approx -11.1\cdot 10^{-6} \omega^2
 \end{equation}
@@ -132,11 +159,9 @@ The mechanical diagram is reduced to figure ~\ref{fig:reduced_mechanical_system}
 	\end{center}
 \end{figure}
 
-This can be ported to Plecs, where all the used mechanical parts exist. 
-Only difference is, that the inertia block is placed inline with the wire, and not as an appendage.
-\todo{Thomas: These are technical details that are completely irrelevant in relation to the simulations. Martin: Yeah but it does look different.}
-Finally, for the Simscape model, the tire is modelled by a friction block in series with the rotor, and the brake is modelled in a subsystem, as seen on figure~\ref{fig:simulations_mechanical_simscape}.
-\todo[inline]{Morten: Why is plecs mentioned here. the models i see are simscape?}
+This can be ported to Plecs, where all the used mechanical parts exist.
+Finally, for the Simscape model, the tyre is modelled by a friction block in series with the rotor, and the brake is modelled in a subsystem, as seen on figure~\ref{fig:simulations_mechanical_simscape}.
+\todo[inline]{Morten: Why is plecs mentioned here. the models i see are simscape? Martin: because Plecs does not model braking and slip. Maybe this should be shown as plecs as well?}
 
 \begin{figure}[H]
 	\begin{center}
@@ -146,53 +171,54 @@ Finally, for the Simscape model, the tire is modelled by a friction block in ser
 	\end{center}
 \end{figure}
 
-The tyre block consists of static and dynamic.
+The tyre block consists of static and dynamic friction.
 Tyre slip is a comprehensive area of study, so the rotational friction block isn't necessarily accurate. 
-However, it does enable sudden changes in motor speed and load, similar to spinning and locking the wheels.
+However, it does enable sudden changes in motor speed and load, similar to spinning and locking the wheels.\\
 The brake subsystem is a PI controlled ideal torque source, which will attempt to bring the go kart to a halt when the brake is pressed.
-Without a PI controller, there is a strong possibility that the brake would suddenly make the motor go backwards.
-Lastly the inertia is split into the inertia of the motor and gears on the left of the tyre, and the inertia due to the mass of the car on the right.
-Since the brake block is still connected directly to the rod of the motor, a gain block is used to scale down the torque through the gear. 
-\todo[inline]{Morten: last sentence. i don't understand where this gain is. Overall this paragraph has a lot of information, maybe a newline in between.}
+Without a PI controller, there is a strong possibility that the brake would suddenly make the motor go backwards instead of stopping.\\
+Lastly the inertia is split into two inertia blocks, one containing motor and gear inertia on the left of the tyre, and the inertia due to the mass of the car on the right.
+The brake on the go-kart is mounted on the rear axle, which means the torque it produces must be scaled down to represent the torque seen on the motor rod.
 
 \subsection{Motor Model}\label{sub:motor_model_simscape}
-The Permanent Magnet Synchronous Motor is found in Simscape $\rightarrow$ SimPowerSystem $\rightarrow$ Simscape Components $\rightarrow$ Machines $\rightarrow$ Permanent Magnet Rotor. 
-\todo[inline]{Thomas: Irrelevant. Morten: Agreed!}
-This is a quite simple model, with only four parameters: Number of pole pairs, flux linkage of the magnet, inductance and armature resistance. 
-A similar block can be found in Plecs under Electrical $\rightarrow$ Machines. 
-\todo[inline]{Thomas: Again, Irrelevant. Morten: somewhat, this intro should be rewritten slightly. doesn't matter how they are found.}
-This model has the same parameters as in Simscape, but also inertia and friction.
+Both Simscape and Plecs have built in models of pmac motors.
+They have the four basic parameters: Number of pole pairs, flux linkage of the magnet, inductance and armature resistance. 
+The parameters used for simulations are listed in table~\ref{tab:motor_parameters_in_simulations}.
 
 \begin{table}[h]
 	\centering
-	\begin{tabular}{| S | S | S |}
+	\begin{tabular}{| S | S |}
 		\hline
-		{Simscape parameters} & {Plecs parameters} & {Value} \\
+		{Parameterss} &  {Value} \\
 		\hline
-		{Permanent magnet flux linkage} & {Flux induced by magnet Phi} & {1.83225e-2} \\
+		{Permanent magnet flux linkage} & {1.83225e-2} \\
 		\hline
-		{Stator Inductance, Ld, Lq, L0} & {Stator inductance Ld Lq} & {4e-5}\\
+		{Stator Inductance, $\mathrm{L_d}$, $\mathrm{L_q}$, $\mathrm{L_0}$}& {4e-5}\\
 		\hline
-		{Stator resistance per Phase, Rs} & {Stator resistance R} & {6.5e-3}\\
+		{Stator resistance per Phase, Rs} & {6.5e-3}\\
 		\hline
-		{Number of pole pairs} & {Number of pole pairs p} & {4}\\
+		{Number of pole pairs} & {4}\\
 		\hline
 	\end{tabular}
 	\caption{Parameters used in simulations.}
 	\label{tab:motor_parameters_in_simulations}
 \end{table}
-\todo[inline]{Morten: Fix table with correct lowercases for Ld Lq etc. and correct greek letters for phi etc.}
 
+On top of this, the Plecs model also has built in friction coefficient, which is set to 1e-5, and inertia, which is set to 0.0052.
 
-One thing to note in both  cases is that the flux linkage is divided by the number of pole pairs. \todo[inline]{Morten: i don't really get why we are looking at this. Must have better flow from the preveious section}
+One thing to note in both  cases is that the flux linkage is divided by the number of pole pairs. \todo[inline]{Morten: i don't really get why we are looking at this. Must have better flow from the preveious section. Martin: it should be replicable, so such oddities should be mentioned}
 The reason for this is likely a matter of definitions, and the relation has been deduced using simulations. 
 Armature resistance and inductances are per-phase, and the values used are found in section~\ref{sub:1117_param}.
 
 \subsection{Electrical Network and control}\label{sub:sim_electrical}
 This is where the Simulink and Plecs block diagram differ a lot. 
 The purpose of using Simulink is that it is quick and easy to change multiple parameters in order to develop and test a controller. 
-The advantage in Plecs is its ability to simulate switch mode power electronics, where there is a vast ratio between the minimum timestep defined by the switching frequencies, and the duration of the simulation. \todo[inline]{I am not sure i understand why this ratio is important? Martin: Different simulators have different methods. Plecs simulates right before and right after a switching event, that means 4 time steps per period per switch. Highside and lowside transistors switch at the same time, so a three phase inverter at 20 kHz means the whole circuit needs to be solved (at least) 240.000 times per second. Simulink does not solve switches as easy, so the number is significantly higher. Morten: worth mentoining in the text?}
-The sparse electrical network along with the discrete controller and modulation blocks have been shown in figure~\ref{fig:simulations_electrical}.
+The advantage in Plecs is its ability to simulate switch mode power electronics, where there is a vast ratio between the minimum timestep defined by the switching frequencies, and the duration of the simulation.
+Plecs considers semiconductors as ideal switches, that go from zero to full conduction in one timestep.
+This allows Plecs to only solve the circuit right before and after each switching, rather than taking several small time steps as the voltages and currents traverse the active region.
+As both the high side and low side mosfets of each phase switch simultaneously, each PWM period of simulation contains up to six switching events. 
+At 20 kHz, this means, the whole circuit needs to be solved 120.000 times per second, so using plecs is still not fast.
+But compared to simulink or even worse, spice, it is tremendously fast.
+The electrical network along with the discrete controller and modulation blocks have been shown in figure~\ref{fig:simulations_electrical}.
 
 \begin{figure}[h]
 	\begin{center}
@@ -203,7 +229,7 @@ The sparse electrical network along with the discrete controller and modulation 
 \end{figure}
 
 The motor block has an external connection to neutral, which the real motor doesn't have. 
-This neutral seems to need a dc path to ground, and so does the controlled voltage sources. 
+This neutral seems to need a DC path to ground, and so does the controlled voltage sources. 
 Since the external ground cannot be connected to the internal star point of the motor, the connection is made with a very large resistor of 1\si{\giga\ohm}. 
 The lighter blue wire going into the "\texttildelow" port of the PMSM block is a three phase electrical cable, which is used throughout the SimPowerSystem sublibrary, and the Splitter collects three wires into a cable. \\
 
@@ -217,8 +243,8 @@ Here, the finite precision of the encoder is simulated by equation~\ref{eq:Encod
 output = \left\lfloor \Bigg( \frac{\phi \cdot 256}{2 \pi} + 0.5 \Bigg) \% 256\right\rfloor
 \end{equation}
 
-where \% is the mod function. 
-The purpose of that is to wrap \todo{Wrap is the common way of saying, if a number goes outside a range, it restarts from the other end of the range, like an integer overflow is (ofteh) handled in coding.} the output to a value between 0 and 255, which can be used for look-up tables. 
+where \% is the modulo function. 
+The purpose of that is to wrap \todo{Wrap is the common way of saying, if a number goes outside a range, it restarts from the other end of the range, like an integer overflow is (often) handled in coding.} the output to a value between 0 and 255, which can be used for look-up tables. 
 The round down function rounds a number, effectively quantizing the output. 
 The reason for using round down rather than just round is to ensure, that the number ranges from 0 to 255. 
 To combat the inaccuracy of the round down function, 0.5 is added. 
@@ -242,7 +268,7 @@ This can be seen on figure~\ref{fig:simulations_zybo}.
 
 The Clarke-Park and PWM generation blocks are running in variable time steps, and the Discrete controller runs with a fixed step of 0.1 \si{\milli\second}.
 The signal builder block is used to shape the torque requested by the pedal.
-This torque is converted into the current used in the controller by multiplying with $\tfrac{3}{2 KT_T}$. \todo[inline]{Morten I write kt as $K_t$ we should uniform it.}
+This torque is converted into the current used in the controller by multiplying with $\tfrac{3}{2 K_t}$.
 The Clarke-Park block converts $\mathrm{I_{AB}}$ to $\mathrm{I_{dq}}$. 
 
 \begin{equation}
@@ -279,13 +305,12 @@ The block diagram of the discrete controller is shown on figure~\ref{fig:sim_con
 
 The two independent current controllers are drawn in blue boxes. 
 The feedback comes from the Idq port on the left.
-The constants, Kp and Ki, are calculated in chapter~\ref{sec:controller_design}, and divided by half the battery voltage. \todo[inline]{Morten: did this change? i think you said something}
-This is done, because the controller designs produce a voltage, whereas the simulink controller produces a percentage of half the battery voltage.
-Similarly the implemented controller in chapter~\ref{sec:Embedded_Design} produces a range from -1 to 1, so the controller constants need to be scaled acordingly
-\todo[inline]{Martin: I'm actually not sure about the implemented controller. Morten: who knows. i don't either}
+The constants, $\mathrm{K_p}$ and $\mathrm{K_i}$, are calculated in chapter~\ref{sec:controller_design}, and divided by half the battery voltage.
+This is done, because the controllers designed in chapter~\ref{sec:controller_design} produce a voltage, whereas the simulink controller produces a percentage of half the battery voltage, i.e. between -1 and 1.
+Similarly the implemented PWM block in section~\ref{sub:Architecture} takes integers in the range from 0 to 1000, so the controller constants need to be scaled accordingly\\
 The integrator block uses trapezoidal integration, and the output is limited to $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$.
 This is to ensure, that the integrator does not wind up\todo{Martin: Is there a better term for when the integrator keeps becoming larger, because the output is saturated somewhere? Morten: Diverges? (reverse convergence)}.
-The saturation block to the left of the q current controller limits the input to between 0 and a maximum current.
+The saturation block to the left of the q current controller on figure~\ref{fig:sim_controller_diagram} limits the input to between 0 and a maximum current.
 The PI controllers produce duty cycle values in the range of $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, although it is possible to exceed this range at this point in the diagram.\\
 
 It is necessary to ensure, that the controller does not produce values outside the range that can be generated using PWM. 
@@ -324,8 +349,8 @@ For comparison, the d and q axis duty cycles have been simulated and are shown o
 	\label{fig:parallel_scale_down_graphs}
 \end{figure}
 
-The graphs are simulated with a car mass of 200 kg, and settling time of 0.01 s.
-At 2.5 s, the magnitude exceeds $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, at which point both the d and q output is scaled down. 
+The graphs are simulated with a car mass of 200\si{\kilogram}, and settling time of 0.01s.
+At 2.5\si{\second}s, the magnitude exceeds $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, at which point both the d and q output is scaled down. 
 On figure~\ref{fig:after_saturation}, this transition is almost invisible along the q-curve. 
 As the torque produced by the motor is reduced due to saturation of the supply, the need for a large negative d-duty is reduced, as both d and q current is reduced.
 This will be explained further on.
