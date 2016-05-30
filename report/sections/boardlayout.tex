@@ -55,6 +55,13 @@ During this research the functionality of the OCP was more well understood.
 Due to difficulties with the debugging of the custom OCP circuitry presented below, it was decided to use the built-in OCP function of the DRV8301.
 This is discussed in more detail in section \ref{sec:driverboard}.\\
 
+\begin{figure}[!h]
+	\centering
+	\noindent\makebox[\textwidth]{\includegraphics[width=2\linewidth, trim=0cm 9cm 0cm 8cm]{graphics/sumamp}}
+	\caption{The non-inverting summing amplifier used to calculate the current in the third phase.}
+	\label{fig:sumamp}
+\end{figure}
+
 Regardless of this change, it was decided to keep the description of the original OCP circuitry as this constitutes a significant portion of the work done on the project.
 This description continues here:
 Since only two phases are measured directly it is necessary to calculate the third.
@@ -68,14 +75,9 @@ The output of this amplifier is given by:
 No amplification of the signals is wanted, thus the resistances are all set to $R=10\si{\kilo\ohm}$.
 With all three phase signals available it is possible to process them to detect any OCE's. 
 
-\begin{figure}
-	\centering
-	\noindent\makebox[\textwidth]{\includegraphics[width=2\linewidth, trim=0cm 9cm 0cm 8cm]{graphics/sumamp}}
-	\caption{The non-inverting summing amplifier used to calculate the current in the third phase.}
-	\label{fig:sumamp}
-\end{figure}
 
-\begin{figure}
+
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width=\linewidth, trim=0cm 6cm 0cm 5cm]{graphics/ocp_phase}
 	\caption{One phase of the over-current protection circuit.}
@@ -182,18 +184,25 @@ Figure \ref{fig:torquepedaldownscale} is a depiction of the circuit used to read
 $R_1$ and $\mathrm{R_P}$ form a variable voltage divider of the 15\si{\volt} rail.
 The analog input of the ADC in the FPGA, however, is limited to 0-1\si{\volt}.
 Therefore it is necessary to downscale the voltage.
-Intuitively this could be done using simply a voltage divider, but since the torque pedal functions as a voltage divider, the varying resistance distribution of the torque pedal would influence the voltage divider.
-For this reason a voltage follower is used to isolate the two circuits.
-In addition, a 5.1\si{\volt} zener diode is clamping the signal to ground in order to protect the ADC of the Zybo.
-Due to the mechanical nature of this signal it is expected to be reasonably noisy, therefore a filtering capacitor is placed on the output.
-This will act as a low-pass filter, stabilising the output signal.
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=.75\linewidth,trim=0cm 1.5cm 0cm 2cm]{graphics/torque_pedal_downscale}
 	\caption{Circuit used to scale the voltage from the torque pedal from $0V\rightarrow5V$ to $0V\rightarrow1V$.}
 	\label{fig:torquepedaldownscale}
 \end{figure}
+Intuitively this could be done using simply a voltage divider, but since the torque pedal functions as a voltage divider, the varying resistance distribution of the torque pedal would influence the voltage divider.
+For this reason a voltage follower is used to isolate the two circuits.
+In addition, a 5.1\si{\volt} zener diode is clamping the signal to ground in order to protect the ADC of the Zybo.
+Due to the mechanical nature of this signal it is expected to be reasonably noisy, therefore a filtering capacitor is placed on the output.
+This will act as a low-pass filter, stabilising the output signal.
 
+\begin{figure}[!h]
+	\begin{center}
+		\includegraphics[width=10cm]{graphics/pedal_voltage.pdf}
+		\label{fig:pedal_voltage}
+		\caption{Voltage as a function of the pedal resistance.}
+	\end{center}
+\end{figure}
 The resistance of the pedal is assumed to change linearly, which means the voltage division does not. 
 Voltage at the point TP as a function of pedal is:
 
@@ -212,14 +221,6 @@ R_P = \frac{V_{TP}\cdot R1 \cdot (R2 + R3)}{R3 \cdot (V_{CC} - T_{TP}) -  V_{TP}
 
 Finally, due to the mechanical nature of the torque pedal, this signal is likely to be noisy.
 C$_1$ is placed in order to filter this noise.
-
-\begin{figure}[H]
-	\begin{center}
-		\includegraphics[width=10cm]{graphics/pedal_voltage.pdf}
-		\label{fig:pedal_voltage}
-		\caption{Voltage as a function of the pedal resistance.}
-	\end{center}
-\end{figure}
 
 \subsection{Digital Board}
 The digital board is used mostly as an interconnection board between the various electronic components in the system.

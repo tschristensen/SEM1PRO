@@ -864,9 +864,7 @@ A faster controller was calculated with tremendous results.
 
 \todo[inline]{Morten: some colors would be perfect for this table}
 
-Both the PI controllers could work, but the faster response gives very precise current control. 
-\todo[inline]{Martin: Morten, maybe you can write something clever about why the ip controller is so bad. Morten: ok will try ! this next bit is new. Martin: Tried to rewrite some of it.}
-
+Both the PI controllers could work, but the faster response gives very precise current control.
 The IP controller was designed in section~\ref{sec:controller_design} based on a reduced order system without any mechanical part. 
 Evidently, the motor along with the mass of the gokart has a slow pole, that the IP controller does not handle.
 The IP controller adds a pole to the systems, which makes the fast pole on figure~\ref{fig:PZmap_reduced_v2} complex conjugate poles that can oscillate.
