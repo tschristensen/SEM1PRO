@@ -77,15 +77,17 @@ It does not exactly meet the requirements, but paralleling at least two of these
 	\multicolumn{1}{|c|}{Symbol} & \multicolumn{1}{|c|}{Parameter} & Min. & Typ. &
 	 Max. & Units\\
 	\hline
-	$I_D$ & Continuous Drain Current (Silicon Limited) & - & - & 290 & A\\
+	$I_D$ & Continuous Drain Current (Silicon Limited) & - & - & 290 &  \multirow{2}{*}{A}\\
+	\cline{1-5}
+	%\multirow{3}{*}{\si{\celsius/W}}\\
+	%\cline{1-3}
+	$I_D$ & Continuous Drain Current (Package Limited) & - & - & 195 &\\
 	\hline
-	$I_D$ & Continuous Drain Current (Package Limited) & - & - & 195 & A\\
-	\hline
-	$V_{GS}$ & Gate to Source Voltage & - & - & $\pm$20 & V\\
-	\hline
-	 $V_{GS(th)}$ & Gate Threshold Voltage & 2.0 & - & 4.0 & V\\
-	 \hline
-	 $V_{(BR}DSS$ & Drain to Source Breakdown Voltage & 100 & - & - & V\\
+	$V_{GS}$ & Gate to Source Voltage & - & - & $\pm$20 & \multirow{3}{*}{V}\\
+	\cline{1-5}
+	 $V_{GS(th)}$ & Gate Threshold Voltage & 2.0 & - & 4.0 & \\
+	 \cline{1-5}
+	 $V_{(BR)DSS}$ & Drain to Source Breakdown Voltage & 100 & - & - & \\
 	 \hline
 	 $R_{DS(on)}$ & Static Drain to Source On Resistance & - & 2.0 & 2.6 & m$\Omega$\\
 	 \hline
@@ -119,41 +121,41 @@ Since there are two switches, $Q_1$ and $Q_2$, it is assumed that the load power
 \begin{figure}[!h]
 	\centering
 	\includestandalone[width=0.2\textwidth]{graphics/mosfets}
-	\caption{Single phase}
+	\caption{Single phase from where the MOSFET current is calculated.}
 	\label{fig:single_phase}
 \end{figure}
 
 
 \begin{equation}
-P_{load} = R_{load} I_{out,rms}^2
+P_{load} = R_{load} I_{out,RMS}^2
 \label{eq:p_load}
 \end{equation}
 
 \begin{equation}
-P_{Qi} = \dfrac{P_{load}}{2} = R_{load} I_{Qi,rms}^2
+P_{Qi} = \dfrac{P_{load}}{2} = R_{load} I_{Qi,RMS}^2
 \label{eq:P_Q}
 \end{equation}
 
 
-Inserting equation~\ref{eq:p_load} into~\ref{eq:P_Q} and solving for $I_{Qi,rms}$, equation~\ref{eq:I_qrms} is formed.
+Inserting equation~\ref{eq:p_load} into~\ref{eq:P_Q} and solving for $I_{Qi,RMS}$, equation~\ref{eq:I_qRMS} is formed.
 
 \begin{equation}
-\dfrac{R_{load} I_{out,rms}^2}{2} = R_{load} I_{Qi,rms}^2 \rightarrow I_{Qi,rms} = \dfrac{I_{out,rms}}{\sqrt{2}} 
-\label{eq:I_qrms}
+\dfrac{R_{load} I_{out,RMS}^2}{2} = R_{load} I_{Qi,RMS}^2 \rightarrow I_{Qi,RMS} = \dfrac{I_{out,RMS}}{\sqrt{2}} 
+\label{eq:I_qRMS}
 \end{equation}
 Which then again can be expressed as in equation~\ref{eq:I_qi}.
 
 \begin{equation}
-I_{Qi,rms} = \dfrac{I_{out,rms}}{\sqrt{2}} = \dfrac{I_{out}}{\sqrt{2}\sqrt{2}} = \dfrac{I_{out}}{2}
+I_{Qi,RMS} = \dfrac{I_{out,RMS}}{\sqrt{2}} = \dfrac{I_{out}}{\sqrt{2}\sqrt{2}} = \dfrac{I_{out}}{2}
 \label{eq:I_qi}
 \end{equation}
 
 
 As mentioned earlier each switching setup will consist of $n$ number of MOSFETs in parallel. 
-Therefore the drain current of each parallel MOSFET becomes $I_{Pi,rms}$ in equation~\ref{eq:I_pi}.
+Therefore the drain current of each parallel MOSFET becomes $I_{Pi,RMS}$ in equation~\ref{eq:I_pi}.
 
 \begin{equation}
-I_{Pi,rms}=\dfrac{I_{Qi,rms}}{n} = \dfrac{I_{out}}{2n}
+I_{Pi,RMS}=\dfrac{I_{Qi,RMS}}{n} = \dfrac{I_{out}}{2n}
 \label{eq:I_pi}
 \end{equation}
 
@@ -163,7 +165,7 @@ I_{Pi,rms}=\dfrac{I_{Qi,rms}}{n} = \dfrac{I_{out}}{2n}
 Conduction loss of each MOSFET can be calculated using equation~\ref{eq:p_c}
 
 \begin{equation}
-P_{c} = R_{DS(on)}\cdot I_{Pi,rms}^2
+P_{c} = R_{DS(on)}\cdot I_{Pi,RMS}^2
 \label{eq:p_c}
 \end{equation}
 
@@ -180,7 +182,7 @@ R_{DS(on),@T_J} =  \alpha R_{DS(on),@25\si{\celsius}}
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale =0.7]{graphics/T_n_R_compare}
-	\caption{The $R_{DS(on)}$ and $T_J$ relation at $I_D = 180A$ and $V_{GS} = 10V$}
+	\caption{The $R_{DS(on)}$ and $T_J$ relation at $I_D = 180A$ and $V_{GS} = 10V$\cite{IRF4468PbF}.}
 	\label{fig:tj_rds}
 \end{figure}
 
@@ -188,7 +190,7 @@ If assumed that the junction temperature will be around $100 \si{\celsius}$ one 
 The instantaneous conduction loss for each MOSFET in parallel can then be estimated using equations~\ref{eq:p_c}, \ref{eq:I_pi} and \ref{eq:Rdstj} to form equation~\ref{eq:P_cp}.
 
 \begin{equation}
-P_{c} = R_{DS(on),@100\si{\celsius}} I_{Pi,rms}^2 =  R_{DS(on),@100\si{\celsius}} \bigg(\dfrac{I_{out}}{2n}\bigg)^2
+P_{c} = R_{DS(on),@100\si{\celsius}} I_{Pi,RMS}^2 =  R_{DS(on),@100\si{\celsius}} \bigg(\dfrac{I_{out}}{2n}\bigg)^2
 \label{eq:P_cp}
 \end{equation}
 
@@ -202,13 +204,13 @@ P_{sw} = \dfrac{1}{2} V_{in} I_D (t_{c,on} + t_{c,off} ) f_{s}
 \label{eq:P_sw}
 \end{equation}
 
-where $I_D$ is the drain current, $I_{Pi,rms}$, of each MOSFET from equation~\ref{eq:I_pi} and $\mathrm{V_{in}}$ is the supply voltage for the inverter. 
+where $I_D$ is the drain current, $I_{Pi,RMS}$, of each MOSFET from equation~\ref{eq:I_pi} and $\mathrm{V_{in}}$ is the supply voltage for the inverter. 
 The times $t_{c,on} $ and $ t_{c,off} $ are the combined on and off time respectively and are defined in figure~\ref{fig:sw_loss} as equation~\ref{eq:time_on} and~\ref{eq:time_off}
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale = 0.5]{graphics/sw_losses}
-	\caption[MOSFET switching losses.]{MOSFET switching losses. $t_{ri}$ and $t_{fi}$ are the current,$I_D$, rise and fall times respectively and $t_{rv}$ and $t_{fv}$ are the rise and fall time of $D_{DS}$ respectively.}
+	\caption[MOSFET switching losses.]{MOSFET switching losses. $t_{ri}$ and $t_{fi}$ are the current,$I_D$, rise and fall times respectively and $t_{rv}$ and $t_{fv}$ are the rise and fall time of $D_{DS}$ respectively\cite{pwrElectronics}.}
 	\label{fig:sw_loss}
 \end{figure}
 
@@ -227,7 +229,7 @@ Equation~\ref{eq:tfv_tr} and \ref{eq:trv_tf} show the relation.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale = 0.5]{graphics/sw_time_wavef}
-	\caption{Switching Time Waveforms where }
+	\caption{Switching Time WavefoRMS\cite{IRF4468PbF}.}
 	\label{fig:sw_time_wavef}
 \end{figure}
 
@@ -237,11 +239,11 @@ Equation~\ref{eq:tfv_tr} and \ref{eq:trv_tf} show the relation.
 		\hline
 		Symbol & Parameter & Typ. & Units\\
 		\hline
-		$t_r$ & Rise Time & 230 & ns\\
-		$t_f$ & Fall Time & 260 & ns\\
+		$t_r$ & Rise Time & 230 & \multirow{2}{*}{ns}\\
+		$t_f$ & Fall Time & 260 & \\
 		\hline
 	\end{tabular}
-	\caption{$V_{GS}$ rise and fall time taken from datasheet}
+	\caption{$V_{GS}$ rise and fall time taken from datasheet\cite{IRF4468PbF}.}
 	\label{tab:tf_tr}
 \end{table}
 
@@ -269,7 +271,7 @@ From there one can see that the current rise and fall times, $t_{ri}$ and $t_{fi
 		\caption{Turn off characteristic.}
 		\label{fig:Turn_off}
 	\end{subfigure}
-	\caption{The turn on and off characteristics of the MOSFETs.}
+	\caption{The turn on and off characteristics of the MOSFETs\cite{pwrElectronics}.}
 	\label{fig:turn_on_off}
 \end{figure}
 
@@ -307,7 +309,7 @@ The instantaneous power losses are calculated for up to 10 MOSFETs in parallel u
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale = 0.5]{graphics/pwr_loss_single}
-	\caption{Instantaneous power losses of a single MOSFET in a parallel setup as a function of number of MOSFETs}
+	\caption{Instantaneous power losses of a single MOSFET in a parallel setup as a function of number of MOSFETs.}
 	\label{fig:ploss_single}
 \end{figure}
 
@@ -320,7 +322,7 @@ The switching loss however increases with $n$ and will become dominant. In that 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale = 0.5]{graphics/pwr_loss_comb}
-	\caption{Combined instantaneous power losses of each parallel setup as a function of number of MOSFETs}
+	\caption{Combined instantaneous power losses of each parallel setup as a function of number of MOSFETs.}
 	\label{fig:ploss_comb}
 \end{figure}
 
