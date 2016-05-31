@@ -1,10 +1,10 @@
 %!TEX root = ../main.tex
 \section{Simulation}\label{sec:Simulations}
 Simulation tools have been a great help, not only in understanding the electromechanical system, and design a controller from it, but also in estimating requirements for the electrical components.
-Both Simscape and Plecs Standalone have been used, as they excel at different purposes. 
-Simscape is used to test the controller on a system with as much realism as possible to make sure the go-kart functions, whereas Plecs is used to simulate the inverter to determine whether there will be heating issues during operation.
+Both Simulink and Plecs Standalone have been used, as they excel at different purposes. 
+Simulink is used to test the controller on a system with as much realism as possible to make sure the go-kart functions, whereas Plecs is used to simulate the inverter to determine whether there will be heating issues during operation.
 
-Simscape will be used to simulate how the controller handles certain events:
+Simulink will be used to simulate how the controller handles certain events:
 
 \begin{itemize}
 	\item Actuation of torque pedal.
@@ -151,12 +151,12 @@ The mechanical diagram is reduced to figure ~\ref{fig:reduced_mechanical_system}
 	\end{center}
 \end{figure}
 
-In the Simscape model, the tyre is modelled by a friction block in series with the rotor, and the brake is modelled in a subsystem, as seen on figure~\ref{fig:simulations_mechanical_simscape}.
+In the Simulink model, the tyre is modelled by a friction block in series with the rotor, and the brake is modelled in a subsystem, as seen on figure~\ref{fig:simulations_mechanical_simscape}.
 
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width = 12cm]{graphics/simulations_mechanical_simscape.png}
-		\caption{Block diagram for the mechanical system used in Simscape.}
+		\caption{Block diagram for the mechanical system used in Simulink.}
 		\label{fig:simulations_mechanical_simscape}
 	\end{center}
 \end{figure}
@@ -188,7 +188,7 @@ Lastly the inertia is split into two inertia blocks, one containing motor and ge
 The brake on the go-kart is mounted on the rear axle, which means the torque it produces must be scaled down to represent the torque seen on the motor rod.
 
 \subsection{Motor Model}\label{sub:motor_model_simscape}
-Both Simscape and Plecs have built in models of PMAC motors.
+Both Simulink and Plecs have built in models of PMAC motors.
 They have the four basic parameters: Number of pole pairs, flux linkage of the magnet, inductance and armature resistance. 
 The parameters used for simulations are listed in table~\ref{tab:motor_parameters_in_simulations}.
 
@@ -282,7 +282,7 @@ The block diagram of the discrete controller is shown on figure~\ref{fig:sim_con
 The two independent current controllers are drawn in blue boxes. 
 The feedback comes from the $I_{dq}$ port on the left.
 The constants, $K_p$ and $K_i$, are calculated in section~\ref{sec:controller_design}, and divided by half the battery voltage.
-This is done, because the controllers designed in section~\ref{sec:controller_design} produce a voltage, whereas the simulink controller produces a percentage of half the battery voltage, i.e. between -1 and 1.
+This is done, because the controllers designed in section~\ref{sec:controller_design} produce a voltage, whereas the Simulink controller produces a percentage of half the battery voltage, i.e. between -1 and 1.
 Similarly the implemented PWM block in section~\ref{sub:Architecture} takes integers in the range from 0 to 1000, so the controller constants need to be scaled accordingly\\
 The integrator block uses trapezoidal integration, and the output is limited to $\pm \tfrac{2}{\sqrt{(3)}}$.
 This is to ensure, that the integrator does not wind up.
