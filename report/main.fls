@@ -348,15 +348,6 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmcsc10.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmcsc10.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr17.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/sdu_logo.eps
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/sdu_logo.eps
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/sdu_logo.eps
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/sdu_logo-eps-converted-to.pdf
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/sdu_logo-eps-converted-to.pdf
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/sdu_logo.eps
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/sdu_logo-eps-converted-to.pdf
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/sdu_logo-eps-converted-to.pdf
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/graphics/sdu_logo-eps-converted-to.pdf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT /var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map
@@ -372,9 +363,6 @@ OUTPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.toc
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.tdo
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.tdo
 OUTPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.tdo
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.lot
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.lot
-OUTPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.lot
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/introduction.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/introduction.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/requirements.tex
