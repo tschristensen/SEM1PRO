@@ -36,12 +36,6 @@ khaOS was chosen before other RTCS as the group had prior knowledge about the sy
 The software functionalities are grouped into tasks based on functionality and desired frequency.
 A task diagram of the complete system on the Zybo can be seen in figure \ref{fig:task_diagram}.
 
-%\begin{figure}[!h]
-%	\includestandalone[width=\textwidth]{graphics/taskdiagram}
-%	\caption[Task diagram]{Task diagram showing software tasks as green circles, shared variables as yellow boxes, IP cores as blue boxes, I/O periphirals as limegreen oxes, % external signals as orange boxes and external components in red. The PS and PL areas are marked accordingly and arrows show the data and signal direction.}
-%	\label{fig:task_diagram }
-%\end{figure}
-
 \begin{figure}[!h]
   \includegraphics[width=\textwidth]{graphics/taskdiagram}
   \caption[Task diagram]{Task diagram showing software tasks as green circles, shared variables as yellow boxes, IP cores as blue boxes, I/O peripherals as lime green boxes, external signals as orange boxes and external components as red boxes. The PS and PL areas are marked accordingly and arrows show the data and signal direction. $C_p$ consists of various controller parameters.}
@@ -106,16 +100,10 @@ The interface task reads external signals, outputs digital signals and controls 
 This includes ensuring that the state of the enable variable, read by the controller and the PWM task, is correct.
 The basic functionality of the interface task can be seen in the flowchart of figure \ref{fig:interface}.
 
-%\begin{figure}[!h]
-%	\centering
-%	\includegraphics[width=0.7\linewidth]{graphics/interface_task}
-%	\caption[Block diagram of PWM generator.]{Simulink block diagram of the counter in the PWM generator.}
-%	\label{fig:interface}
-%\end{figure}
-
 \begin{figure}[!h]
 	\centering
-	\includestandalone[width=0.5\textwidth]{graphics/interface_flow}
+	%\includestandalone[width=0.5\textwidth]{graphics/interface_flow}
+	\includegraphics[width=0.5\textwidth]{graphics/interface_flow}
 	\caption[Interface task.]{Flow chart illustrating the basic functionality of the interface task.}
 	\label{fig:interface}
 \end{figure}
