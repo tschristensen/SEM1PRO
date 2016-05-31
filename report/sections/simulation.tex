@@ -336,24 +336,25 @@ The simulation will be run with both PI and IP controllers, with values describe
 Throughout this section the PI controller developed in section \ref{sec:controller_design} for a full order system will be tested.
 At first, a simulation will be run where the throttle is pressed fully from 0.12s to 5s, and then released.
 This is displayed on figure~\ref{fig:torque_input}.
-
 \begin{figure}[!h]
+	\begin{subfigure}[b]{.49\linewidth}
 	\centering
-	\includegraphics[width = 0.7\linewidth]{graphics/torque_input}
+	\includegraphics[width = \linewidth]{graphics/torque_input}
 	\caption{Torque step input for the tests performed in this section}
 	\label{fig:torque_input}
+	\end{subfigure}
+	\begin{subfigure}[b]{.49\linewidth}
+	\centering
+	\includegraphics[width=\linewidth]{graphics/Sim_results_pi_Idq}
+	\caption{d and q current simulated with a positive and negative step.}
+	\label{fig:Sim_results_pi_Idq}
+	\end{subfigure}
+	\caption{Torque input and simulated current output.}
 \end{figure}
 
 This input is similar to the one used in section~\ref{sec:controller_design}.
 The mass is 200kg.
 The resultant current along the d and q axes have been plotted in figure~\ref{fig:Sim_results_pi_Idq}.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.7\linewidth]{graphics/Sim_results_pi_Idq}
-	\caption{d and q current simulated with a positive and negative step.}
-	\label{fig:Sim_results_pi_Idq}
-\end{figure}
 
 Much like on figure~\ref{fig:Output_Full}, the current steps up nicely with almost no overshoot. 
 There is also a small steady state error of about 2 \%, as was the case in section \ref{sec:controller_design}.
@@ -373,7 +374,7 @@ This is due to the way saturation is handled, but the ripple is not a major grou
 The voltage waveforms must not be saturated, and should remain sinusoidal with third harmonic injection.
 This is shown on figure~\ref{fig:Sim_results_pi_phase_voltage}
 
-\begin{figure}[H]
+\begin{figure}[!h]
 	\centering
 	\includegraphics[width = 0.7\linewidth]{graphics/Sim_results_pi_phase_voltage}
 	\caption{Voltage waveforms measured when the motor is running at 4000rpm.}
@@ -547,14 +548,6 @@ The main use of this model is the simulation of heat dissipation throughout the 
 As previously mentioned, the Plecs model differs vastly from the Simulink model in the electrical network, as it more closely resembles the real analog circuit. 
 It is shown on figure~\ref{fig:plecs_electrical}.
 
-\begin{figure}[H]
-	\begin{center}
-		\includegraphics[angle = 90,width = 0.63\linewidth]{graphics/Plecs_electrical}
-		\caption{Block diagram for the svm plecs simlations.}
-		\label{fig:plecs_electrical}
-	\end{center}
-\end{figure}
-
 The simulation utilizes the fast PI controller from page~\pageref{sub:PI01}. 
 It simulates the switching inverter utilizing ideal switches as opposed to more realistic MOSFETs with limited current rate of change. 
 Because of the ideal switching, it is not necessary to include antiparallel diodes, nor deadtime.
@@ -586,6 +579,13 @@ The thermal resistance of 0.145\si{\joule \per \kelvin} represents the case-to-s
 The datasheet value was divided by two, because there are two TO-247 houses conducting the heat.
 CthG along with Heatsink Thermal Resistance models the 30x30 heat sink used to mount the inverter. 
 CthG has a thermal capacity of 2100 \si{\kelvin \per \joule}, which is based on its size and the thermal capacity of aluminium, according to~\ref{eq:thermal_capacity}.
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[angle = 90,width = 0.63\linewidth]{graphics/Plecs_electrical}
+		\caption{Block diagram for the svm plecs simlations.}
+		\label{fig:plecs_electrical}
+	\end{center}
+\end{figure}
 
 The battery is modelled with a DC voltage source of 52.8 \si{\volt}.
 In series with this is a non-ideal wire with an inductance and resistance.
