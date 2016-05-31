@@ -475,8 +475,9 @@ y_{n+1} = y_{n} + \frac{1}{2}h \left( f(t_n,y_n)+f(t_{n+1},y_{n+1}) \right)
 
 Here n is the time step, t is the time and y is the function to integrate. The trapezoidal method yields a more precise method than forward or backwards Euler methods, due to it being 2nd order precise ($O(h^2)$), but it takes twice the computation power.
 
-\subsection{Third Harmonic Injection}
-To utialize the voltage range of the power supply better, it was decided to use third harmonic injection.
+\subsection{Third Harmonic Injection}\label{sub:third_harmonic_injection}
+Due to the limited battery voltage, it is not possible to drive the motor to speeds close to the maximum set by the manufacturer.
+Because the internal star point of the motor is not connected to the outside, it is possible to gain an additional 15\% 
 Adding a $\frac{1}{6}$ of the third harmonic will result in 15 \% more line to line voltage. 
 The resulting waveforms can be seen in section \ref{sec:Simulations}.
 Studies of literature \cite{third_harmonic_injection} presented an uncomplicated way of adding the third harmonic: 
