@@ -332,7 +332,7 @@ The majority of this block diagram calculates the inverse Clarke Park transforma
 \subsection{Simulation Results}\label{sub:simulink_results}
 The simulation will be run with both PI and IP controllers, with values described in sections~\ref{sub:full_order_controller_values} and~\ref{sub:reduced_order_controller_values}. \\
 
-\subsubsection{PI controller}\label{sub:PI05}
+\subsubsection{PI Controller}\label{sub:PI05}
 Throughout this section the PI controller developed in section \ref{sec:controller_design} for a full order system will be tested.
 At first, a simulation will be run where the throttle is pressed fully from 0.12s to 5s, and then released.
 This is displayed on figure~\ref{fig:torque_input}.
@@ -414,7 +414,7 @@ This is shown on figure~\ref{fig:Sim_results_pi05_large_power_undershoot}.
 Integrating this undershoot yields -62\si{\joule}. 
 This is not a major concern, however it causes a ripple in the speed, that might be felt. \\
 
-\subsubsection{IP controller}\label{sub:IP05}
+\subsubsection{IP Controller}\label{sub:IP05}
 Throughout this section the IP controller developed in section \ref{sec:controller_design} for the reduced order system is tested.
 In order to do that, the wire going into the Kp gain block must be connected with the feedback wire, instead of the output of the summation block
 
@@ -451,7 +451,7 @@ Figure~\ref{fig:Sim_results_ip_Idq} shows the d and q-axis current as the contro
 \end{figure}
 
 By comparison to the PI controller, the IP controller does significantly worse.
-The steady state error of the q-controller is 10\%, while the d-controller has a steady state error of $d16\si{\ampere}$.
+The steady state error of the q-controller is 10\%, while the d-controller has a steady state error of $16\si{\ampere}$.
 What's even worse is, that the q-axis current goes below zero before the throttle is released after $5\si{\second}$.
 That means, that when driving the go-kart at full throttle, the speed of the go-kart will start oscillating quite notably.
 At 5 seconds, the throttle is released, at which point the current should be zero. 
@@ -537,7 +537,7 @@ This oscillation proves to be too much when adding the slow poles of the mechani
 As it has shown, this controller is not able to account for the mechanical system as a disturbance, which is unsurprising really giving the scope of the mechanics involved.
 It was found that the PI controller designed for the lowest settling time showed the best performance.
 Further tuning of the control variables could potentially yield better results.
-\subsection{Plecs model}\label{sub:sim_plecs_electrical}
+\subsection{Plecs Model}\label{sub:sim_plecs_electrical}
 The reason for using Plecs is that it handles semiconductors as ideal switches.
 This greatly reduces the time required to simulate switch mode voltages.
 As both the high side and low side MOSFETs of each phase switch simultaneously, each PWM period of simulation contains up to six switching events. 
