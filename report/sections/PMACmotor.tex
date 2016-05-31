@@ -217,7 +217,7 @@ T = T_a + T_b + T_c
 The torque produced as a function of the angle difference can be calculated with equation~\ref{eq:torque_fucntion_angle}:
 
 \begin{equation}
-T(d\theta) = \frac{3}{2} I \cdot K_T \cdot sin(d\theta)
+T(d\theta) = \frac{3}{2} I \cdot K_t \cdot sin(d\theta)
 \label{eq:torque_fucntion_angle}
 \end{equation}
 
@@ -246,12 +246,12 @@ It is easier to measure $K_e$ than $K_t$ and they are defined as the same. \\
 
 \subsection{Motor Parameterization}\label{sub:1117_param}
 Due to the sparse information available from the manufacturer of the motor, it is necessary to measure some of the parameters of the motor. 
-It will also be necessary to determine exactly what these parameters define, since the manufacturer has not defined certain things such as what current measurement is related to torque through $K_T$.
-Parameters to determine are the back-EMF constant, $K_E$, the armature resistance, $R_a$, and the armature inductance, $L_a$.
+It will also be necessary to determine exactly what these parameters define, since the manufacturer has not defined certain things such as what current measurement is related to torque through $K_t$.
+Parameters to determine are the back-EMF constant, $K_e$, the armature resistance, $R_a$, and the armature inductance, $L_a$.
 Each of the following sections describe the procedure used to find each of these parameters. 
 
 \subsubsection{Measuring Back-EMF Constant}\label{sub:KE-KT}
-To find $K_E$, a hand-held power drill is used to rotate the motor at a constant speed. 
+To find $K_e$, a hand-held power drill is used to rotate the motor at a constant speed. 
 An oscilloscope with a differential probe is used to measure the voltage between two of the phases. 
 Because of the high input impedance of the differential probe, there is no current and thus the armature inductance and resistance can be neglected. 
 The peak-peak voltage and the corresponding frequency is noted in the table below:
@@ -275,30 +275,30 @@ The peak-peak voltage and the corresponding frequency is noted in the table belo
 \end{table}
 
 The phase amplitude of the voltage is calculated by dividing the voltages in table~\ref*{tab:KE_measurements} with $2\sqrt{3}$. The mechanical angular velocity is calculated by multiplying the frequency in table~\ref*{tab:KE_measurements} with $2\pi$, and dividing with $4$ pole pairs. 
-The resultant voltages and velocities are divided to calculate $K_E$, and the average is calculated for these. 
+The resultant voltages and velocities are divided to calculate $K_e$, and the average is calculated for these. 
 The result is:
 
 \begin{equation}\label{eq:K_E}
-K_E = K_T = 0.0733 \si{\volt\second\per\radian}
+K_e = K_t = 0.0733 \si{\volt\second\per\radian}
 \end{equation}
 
 with a spread of 1.3\%. 
-According to the datasheet, $K_T$ is 0.13. 
-This is 1.77 times higher than the measured $K_E$. 
+According to the datasheet, $K_t$ is 0.13. 
+This is 1.77 times higher than the measured $K_e$. 
 There are two potential reasons for this.
 One is, that the manufacturer uses line-to-line currents and voltages instead, since the difference is close to $\sqrt{3}$. 
-Another possible reason is, that the manufacturer defines $K_T$ as the torque produced with the given q-current, in which case $K_T = 1.5K_E$, and the measured $K_T$ is about 15\% below the manufacturer's datasheet. 
+Another possible reason is, that the manufacturer defines $K_t$ as the torque produced with the given q-current, in which case $K_t = 1.5K_e$, and the measured $K_t$ is about 15\% below the manufacturer's datasheet. 
 Whatever the reason, equation~\ref{eq:K_E} will be used throughout this report. \\
 
 This means, the maximum speed and torque can be calculated:
 
 \begin{equation}
-\omega _{max} = \frac{V_{bat}}{2 K_E} = 360 \si{\radian \per \s} 
+\omega _{max} = \frac{V_{bat}}{2 K_e} = 360 \si{\radian \per \s} 
 \label{eq:max_rotational_speed}
 \end{equation}
 
 \begin{equation}
-T_{max} = I_{max} \cdot \frac{3}{2} K_T = 33 Nm
+T_{max} = I_{max} \cdot \frac{3}{2} K_t = 33 Nm
 \label{eq:max_torque}
 \end{equation}
 
@@ -375,8 +375,8 @@ The resulting waveforms are plotted in figure~\ref{fig:20kHz_squarewave_di}
 
 It appears, that there is some proportionality between the derivative of the current, and the voltage across this inductor.
 
-The inductance is generally lower than the terminal-to-terminal inductance provided by the manufacturer of 0.1 \si{\milli\henry}. 
-The average inductance varies a bit with different frequencies, and 20 kHz is actually the lowest.
+The inductance is generally lower than the terminal-to-terminal inductance provided by the manufacturer of 0.1\si{\milli\henry}. 
+The average inductance varies a bit with different frequencies, and 20\si{\kilo\hertz} is actually the lowest.
 
 \begin{table}[H]
 	\begin{center}
@@ -398,9 +398,9 @@ The average inductance varies a bit with different frequencies, and 20 kHz is ac
 
 The inductances in table~\ref{tab:inductance_and_current_ripple} is the inductance from one terminal to another, so the per-phase inductance will be half.
 The inductance determines the phase shift on the sinusoidal voltages and currents driving the motor, and the current ripple at the switching frequency.
-The maximum frequency of these are determined by the maximum rotational speed of the motor calculated in equation~\ref{eq:max_rotational_speed}, which equals 229 \si{\hertz}.
-So when modelling the motor, one must settle on a value of $L_d$ and $L_q$ that is close to the the low frequency inductance of 0.473 \si{\milli\henry}, and the higher frequency inductance of 0.316 \si{\milli\henry}. 
-For modelling the motor, an inductance of 0.4 \si{\milli\henry} will be used for both $L_d$ and $L_q$. 
+The maximum frequency of these are determined by the maximum rotational speed of the motor calculated in equation~\ref{eq:max_rotational_speed}, which equals 229\si{\hertz}.
+So when modelling the motor, one must settle on a value of $L_d$ and $L_q$ that is close to the the low frequency inductance of 0.473\si{\milli\henry}, and the higher frequency inductance of 0.316\si{\milli\henry}. 
+For modelling the motor, an inductance of 0.4\si{\milli\henry} will be used for both $L_d$ and $L_q$. 
 
 \subsection{Parking Test}\label{sub:parking_test}
 The encoder is positioned on the axle of the motor at an unknown angle. 

@@ -427,8 +427,8 @@ In order to do that, the wire going into the Kp gain block must be connected wit
 The parameters are divided by half the battery voltage, and shown in equation~\ref{eq:IP_controller_constants}.
 
 \begin{equation}
-K_P = -2.65e-5 \\%1515151515156e-05
-K_I = 1.23e-2 %0.012272727272727
+K_p = -2.65\cdot 10^{-5} \quad %1515151515156e-05 
+K_i = 1.23\cdot 10^{-2} %0.012272727272727
 \label{eq:IP_controller_constants}
 \end{equation}
 
@@ -463,14 +463,14 @@ The total energy being delivered back in the timespan shown on figure~\ref{fig:S
 
 \subsubsection{PI Controller with Faster Settling Time}\label{sub:PI01}
 
-Since neither of the two controller designs work optimally, the PI controller will be redesigned with a settling time of $10 \si{\milli \second}$.
-The controller is designed for a load of $200 \si{\kilogram}$.
+Since neither of the two controller designs work optimally, the PI controller will be redesigned with a settling time of $10\si{\milli \second}$.
+The controller is designed for a load of $200\si{\kilogram}$.
 The control parameters in equation~\ref{eq:10ms_settling_time_param} are divided by half the battery voltage
 
 \begin{equation}
 \begin{split}
-K_P &= 1.64 \\%1.637719093817946
-K_I &= 2.6 \cdot 10^{-3} %0.002604159942864
+K_p &= 1.64 \\%1.637719093817946
+K_i &= 2.6 \cdot 10^{-3} %0.002604159942864
 \end{split}
 \label{eq:10ms_settling_time_param}
 \end{equation}
@@ -505,7 +505,7 @@ There is a small current undershoot when the pedal is released of only -3\si{\am
 	\caption{Characteristics of IP controller.}
 \end{figure}
 
-The power undershoot is significantly smaller, and lasts for a shorter time, meaning that the energy returned to the inverter is reduced from 25 \si{\joule} to just 600 \si{\milli \joule}.
+The power undershoot is significantly smaller, and lasts for a shorter time, meaning that the energy returned to the inverter is reduced from 25\si{\joule} to just 600\si{\milli \joule}.
 
 \subsubsection{Conclusion of Controller Comparison}\label{sub:simulink_conclusion}
 
@@ -532,7 +532,7 @@ A faster controller was calculated with tremendous results.
 Both the PI controllers could work, but the faster response gives very precise current control.
 The IP controller was designed in section~\ref{sec:controller_design} based on a reduced order system without any mechanical part. 
 Evidently, the motor along with the mass of the go-kart has a slow pole, that the IP controller does not handle.
-The IP controller adds a pole to the systems, which makes the fast pole on figure~\ref{fig:PZmap_reduced_v2} complex conjugate poles that can oscillate.
+The IP controller adds a pole to the systems, which makes the fast pole on figure~\ref{fig:PZmap_full} complex conjugate poles that can oscillate.
 This oscillation proves to be too much when adding the slow poles of the mechanical system.
 As it has shown, this controller is not able to account for the mechanical system as a disturbance, which is unsurprising really giving the scope of the mechanics involved.
 It was found that the PI controller designed for the lowest settling time showed the best performance.
@@ -541,15 +541,15 @@ Further tuning of the control variables could potentially yield better results.
 The reason for using Plecs is that it handles semiconductors as ideal switches.
 This greatly reduces the time required to simulate switch mode voltages.
 As both the high side and low side MOSFETs of each phase switch simultaneously, each PWM period of simulation contains up to six switching events. 
-At 20 kHz, this means, the whole circuit needs to be solved 120.000 times per second, so using plecs is still not fast.
+At 20\si{\kilo\hertz}, this means, the whole circuit needs to be solved 120.000 times per second, so using plecs is still not fast.
 The main use of this model is the simulation of heat dissipation throughout the circuit.
 
 As previously mentioned, the Plecs model differs vastly from the Simulink model in the electrical network, as it more closely resembles the real analog circuit. 
 It is shown on figure~\ref{fig:plecs_electrical}.
-\todo[inline]{make vertical!}
+
 \begin{figure}[H]
 	\begin{center}
-		\includegraphics[width = \linewidth]{graphics/Plecs_electrical}
+		\includegraphics[angle = 90,width = 0.63\linewidth]{graphics/Plecs_electrical}
 		\caption{Block diagram for the svm plecs simlations.}
 		\label{fig:plecs_electrical}
 	\end{center}
@@ -562,7 +562,7 @@ Because of the ideal switching, it is not necessary to include antiparallel diod
 Figure~\ref{fig:plecs_electrical} shows the three phase inverter.
 The blue rectangle around each mosfet is a heat sink, that absorbs all the power loss within it.
 These are used to emulate the case of the transistors. 
-Each of these have a heat capacity of 0.01 \si{\kelvin \per \joule } \\ 
+Each of these have a heat capacity of 0.01\si{\kelvin \per \joule } \\ 
 Each transistor represent one pair of transistors, where the on-resistance is zero.
 The transistors have the same thermal model, with look-up tables for switch-on and switch-off energies based on equation~\ref{eq:P_sw}.
 The energy lost per switch is calculated by equation~\ref{eq:plecs_switching_losses}.
@@ -582,7 +582,7 @@ It should be noted, that the heat sink box includes all losses inside, meaning i
 This is part of the reason, the on-resistance has been set to zero, the other part being faster simulation. \\
 
 All heat sink boxes are connected through a thermal resistor (the blue ones) to a shunt thermal capacitor (CthG).
-The thermal resistance of 0.145 \si{\joule \per \kelvin} represents the case-to-sink thermal resistance as read from the datasheet.
+The thermal resistance of 0.145\si{\joule \per \kelvin} represents the case-to-sink thermal resistance as read from the datasheet.
 The datasheet value was divided by two, because there are two TO-247 houses conducting the heat.
 CthG along with Heatsink Thermal Resistance models the 30x30 heat sink used to mount the inverter. 
 CthG has a thermal capacity of 2100 \si{\kelvin \per \joule}, which is based on its size and the thermal capacity of aluminium, according to~\ref{eq:thermal_capacity}.
