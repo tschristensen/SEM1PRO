@@ -1,10 +1,10 @@
 %!TEX root = ../main.tex
 \section{Simulation}\label{sec:Simulations}
 Simulation tools have been a great help, not only in understanding the electromechanical system, and design a controller from it, but also in estimating requirements for the electrical components.
-Both Simscape and Plecs Standalone have been used, as they excel at different purposes. 
-Simscape is used to test the controller on a system with as much realism as possible to make sure the go-kart functions, whereas Plecs is used to simulate the inverter to determine whether there will be heating issues during operation.
+Both Simulink and Plecs Standalone have been used, as they excel at different purposes. 
+Simulink is used to test the controller on a system with as much realism as possible to make sure the go-kart functions, whereas Plecs is used to simulate the inverter to determine whether there will be heating issues during operation.
 
-Simscape will be used to simulate how the controller handles certain events:
+Simulink will be used to simulate how the controller handles certain events:
 
 \begin{itemize}
 	\item Actuation of torque pedal.
@@ -14,7 +14,7 @@ Simscape will be used to simulate how the controller handles certain events:
 \end{itemize}
 
 In all cases, the controller should ensure that the motor produces the requested torque.
-The kart does not have regenerative braking, so negative torque will be a problem.
+The go-kart does not have regenerative braking, so negative torque will be a problem.
 The Plecs simulations do not need these details, but the mechanical system still needs a representation of mass of the car, the gear, the wheel and wind resistance. 
 
 \subsection{Mechanical System}\label{sub:Simulations_mec}
@@ -23,7 +23,7 @@ The mechanical system consists of a mass of the go-kart with driver, turbulent a
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=15cm]{graphics/simulations_mechanical_full.png}
-	\caption{Block diagram of the mechanical system}
+	\caption{Block diagram of the mechanical system.}
 	\label{fig:mechanical_full}
 \end{figure}
 
@@ -74,7 +74,7 @@ The mass is set to 150 - 250kg, depending on the driver, and this includes the m
 This is done to test different situations -- a high mass would have more stable speeds, but also cause more power loss in the inverter, whereas a lower mass would be more prone to wheel spin.\\
 
 Wind resistance represents a larger friction than any other frictions, once the go-kart reach higher speeds.
-Wind resistance of a gokart is primarily turbulent, and can be calculated by equation~\ref{eq:wind_resistance}.
+Wind resistance of a go-kart is primarily turbulent, and can be calculated by equation~\ref{eq:wind_resistance}.
 
 \begin{equation}
 \label{eq:wind_resistance}
@@ -146,17 +146,17 @@ The mechanical diagram is reduced to figure ~\ref{fig:reduced_mechanical_system}
 \begin{figure}[H]
 	\begin{center}
 	\includegraphics[width=12cm]{graphics/simulations_mechanical_simplified.png}
-	\caption{Block diagram of the reduced mechanical system}
+	\caption{Block diagram of the reduced mechanical system.}
 	\label{fig:reduced_mechanical_system}
 	\end{center}
 \end{figure}
 
-In the Simscape model, the tyre is modelled by a friction block in series with the rotor, and the brake is modelled in a subsystem, as seen on figure~\ref{fig:simulations_mechanical_simscape}.
+In the Simulink model, the tyre is modelled by a friction block in series with the rotor, and the brake is modelled in a subsystem, as seen on figure~\ref{fig:simulations_mechanical_simscape}.
 
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width = 12cm]{graphics/simulations_mechanical_simscape.png}
-		\caption{Block diagram for the mechanical system used in Simscape}
+		\caption{Block diagram for the mechanical system used in Simulink.}
 		\label{fig:simulations_mechanical_simscape}
 	\end{center}
 \end{figure}
@@ -178,17 +178,17 @@ F_N = mg \cdot dm
 \end{equation}
 
 and $c_f$ is either the static or dynamic friction, depending on if the wheels are slipping. 
-The constant, dm is the distribution of mass so that $dm=0$ means the entire mass of the gokart is on the front wheels, and $dm=1$ means the whole weight distribution is on the driving wheels.
+The constant, dm is the distribution of mass so that $dm=0$ means the entire mass of the go-kart is on the front wheels, and $dm=1$ means the whole weight distribution is on the driving wheels.
 The viscous friction is zero.
 The static friction coefficient is 1, the dynamic friction is 0.7, and the mass distribution is 0.6.
 
-The brake subsystem is a PI controlled ideal torque source, which will attempt to bring the go kart to a halt when the brake is pressed.
+The brake subsystem is a PI controlled ideal torque source, which will attempt to bring the go-kart to a halt when the brake is pressed.
 Without a PI controller, there is a strong possibility that the brake would suddenly make the motor go backwards instead of stopping.\\
 Lastly the inertia is split into two inertia blocks, one containing motor and gear inertia on the left of the tyre, and the inertia due to the mass of the car on the right.
 The brake on the go-kart is mounted on the rear axle, which means the torque it produces must be scaled down to represent the torque seen on the motor rod.
 
 \subsection{Motor Model}\label{sub:motor_model_simscape}
-Both Simscape and Plecs have built in models of PMAC motors.
+Both Simulink and Plecs have built in models of PMAC motors.
 They have the four basic parameters: Number of pole pairs, flux linkage of the magnet, inductance and armature resistance. 
 The parameters used for simulations are listed in table~\ref{tab:motor_parameters_in_simulations}.
 
@@ -239,7 +239,7 @@ Here, the finite precision of the encoder is simulated by equation~\ref{eq:Encod
 
 \begin{equation}
 \label{eq:Encoder_block_function}
-output = \left\lfloor \Bigg( \frac{\phi \cdot 256}{2 \pi} + 0.5 \Bigg) \% 256\right\rfloor
+output = \left\lfloor \Bigg( \frac{\theta \cdot 256}{2 \pi} + 0.5 \Bigg) \% 256\right\rfloor
 \end{equation}
 
 where \% is the modulo function. 
@@ -259,7 +259,7 @@ This can be seen on figure~\ref{fig:simulations_zybo}.
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width = 12cm]{graphics/simulations_zybo}
-		\caption{Block diagram describing the Zybo part of the system}
+		\caption{Block diagram describing the Zybo part of the system.}
 		\label{fig:simulations_zybo}
 	\end{center}
 \end{figure}
@@ -275,14 +275,14 @@ The block diagram of the discrete controller is shown on figure~\ref{fig:sim_con
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 16cm]{graphics/sim_controller_diagram}
-	\caption{Block diagram of discrete PI controller}
+	\caption{Block diagram of discrete PI controller.}
 	\label{fig:sim_controller_diagram}
 \end{figure}
 
 The two independent current controllers are drawn in blue boxes. 
 The feedback comes from the $I_{dq}$ port on the left.
 The constants, $K_p$ and $K_i$, are calculated in section~\ref{sec:controller_design}, and divided by half the battery voltage.
-This is done, because the controllers designed in section~\ref{sec:controller_design} produce a voltage, whereas the simulink controller produces a percentage of half the battery voltage, i.e. between -1 and 1.
+This is done, because the controllers designed in section~\ref{sec:controller_design} produce a voltage, whereas the Simulink controller produces a percentage of half the battery voltage, i.e. between -1 and 1.
 Similarly the implemented PWM block in section~\ref{sub:Architecture} takes integers in the range from 0 to 1000, so the controller constants need to be scaled accordingly\\
 The integrator block uses trapezoidal integration, and the output is limited to $\pm \tfrac{2}{\sqrt{(3)}}$.
 This is to ensure, that the integrator does not wind up.
@@ -302,15 +302,15 @@ For comparison, the d and q axis duty cycles have been simulated and are shown o
 	\centering
 	\begin{subfigure}[t]{.49\linewidth}
 		\includegraphics[width=\textwidth]{graphics/before_saturation}
-		\caption{Before parallel scale down}
+		\caption{Before parallel scale down.}
 		\label{fig:before_saturation}
 	\end{subfigure}
 	\begin{subfigure}[t]{.49\linewidth}
 		\includegraphics[width=\textwidth]{graphics/after_saturation}
-		\caption{After parallel scale down}
+		\caption{After parallel scale down.}
 		\label{fig:after_saturation}
 	\end{subfigure}
-	\caption{dq duty cycle values before and after parallel scale down}
+	\caption{dq duty cycle values before and after parallel scale down.}
 	\label{fig:parallel_scale_down_graphs}
 \end{figure}
 
@@ -322,11 +322,11 @@ As the torque produced by the motor is reduced due to saturation of the supply, 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 14cm]{graphics/sim_PWM_generation}
-	\caption{Block diagram of the PWM generator}
+	\caption{Block diagram of the PWM generator.}
 	\label{fig:sim_PWM_generation}
 \end{figure}
 
-The majority of this block diagram calculates the inverse Clarke Park transformation, and in the upper right corner, the third harmonic injection is calculated using the knowledge given in \cite{third_harmonic_injection}. \\
+The majority of this block diagram calculates the inverse Clarke Park transformation, and in the upper right corner, the third harmonic injection is calculated using the knowledge given in~\ref{sub:third_harmonic_injection}. \\
 
 
 The issue is that, when using field oriented control, the stator voltage does not remain at a constant angle relative to the rotor angle.
@@ -400,15 +400,23 @@ The simulation will be run with both PI and IP controllers, with values describe
 \subsubsection{PI controller}\label{sub:PI05}
 Throughout this section the PI controller developed in section \ref{sec:controller_design} for a full order system will be tested.
 At first, a simulation will be run where the throttle is pressed fully from 0.12s to 5s, and then released.
+This is displayed on figure~\ref{fig:torque_input}.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width = 0.7\linewidth]{graphics/torque_input}
+	\caption{Torque step input for the tests performed in this section}
+	\label{fig:torque_input}
+\end{figure}
+
 This input is similar to the one used in section~\ref{sec:controller_design}.
 The mass is 200kg.
 The resultant current along the d and q axes have been plotted in figure~\ref{fig:Sim_results_pi_Idq}.
 
-\todo[inline]{Input signal needed}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{graphics/Sim_results_pi_Idq}
-	\caption{d and q current simulated with a positive and negative step}
+	\caption{d and q current simulated with a positive and negative step.}
 	\label{fig:Sim_results_pi_Idq}
 \end{figure}
 
@@ -419,7 +427,7 @@ Using a higher frequency for the discrete controller reduce this ripple.
 For these simulations, 10\si{\kilo\hertz} has been used
 lower frequencies can be used with acceptably low noise, up to 0.5\si{\kilo \hertz}.
 The extra noise on both the d and q current at 1.8\si{\second} is imaging error, caused by the quantization of the encoder and the frequency of the controller.
-For controller frequency, the error happens when the motor is running at 2250 RPM.
+For controller frequency, the error happens when the motor is running at 2250rpm.
 Lower frequencies mean, that the error happens at lower motor speeds. \\
 The d-axis current is kept very close to zero, at least until 2.6 seconds, when the voltage starts saturating. 
 A small error (of up to -20 A) is not a big issue, as this is likely to occur anyway if the position encoder is not perfectly aligned.\\
@@ -433,7 +441,7 @@ This is shown on figure~\ref{fig:Sim_results_pi_phase_voltage}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.7\linewidth]{graphics/Sim_results_pi_phase_voltage}
-	\caption{Voltage waveforms measured when the motor is running at 4000 RPM}
+	\caption{Voltage waveforms measured when the motor is running at 4000rpm.}
 	\label{fig:Sim_results_pi_phase_voltage}
 \end{figure}
 
@@ -450,13 +458,13 @@ Figure~\ref{fig:Sim_results_pi_phase_power} shows a short power undershoot occur
 	\begin{subfigure}[b]{.49\linewidth}
 		\centering
 		\includegraphics[width = \linewidth]{graphics/Sim_results_pi_phase_power}
-		\caption{Power undershoot when throttle is released}
+		\caption{Power undershoot when throttle is released.}
 		\label{fig:Sim_results_pi_phase_power}
 	\end{subfigure}
 	\begin{subfigure}[b]{.49\linewidth}
 		\centering
 		\includegraphics[width = \linewidth]{graphics/Sim_results_pi05_large_power_undershoot}
-		\caption{Power undershoot crosses zero 33 ms after the throttle is released}
+		\caption{Power undershoot crosses zero 33 ms after the throttle is released.}
 		\label{fig:Sim_results_pi05_large_power_undershoot}
 	\end{subfigure}
 	\caption{Undershoot when releasing torque pedal.}
@@ -465,7 +473,7 @@ Figure~\ref{fig:Sim_results_pi_phase_power} shows a short power undershoot occur
 The power peaks at -400\si{\watt} for a short time.
 Integrating the power from 5.06 to 5.5s gives an energy of -25\si{\joule}.
 This is not likely to cause problems, as this energy easily could be lost in the inverter.
-The issue is larger when releasing the throttle while the kart is accelerating. 
+The issue is larger when releasing the throttle while the go-kart is accelerating. 
 This is shown on figure~\ref{fig:Sim_results_pi05_large_power_undershoot}.
 
 Integrating this undershoot yields -62\si{\joule}. 
@@ -489,20 +497,19 @@ K_I = 1.23e-2 %0.012272727272727
 \label{eq:IP_controller_constants}
 \end{equation}
 
-Figure~\ref{fig:Sim_results_ip_Idq} shows the d and q-axis current as the controller is given a positive and a negative step.
-\todo[inline]{refer to input figure}
+Figure~\ref{fig:Sim_results_ip_Idq} shows the d and q-axis current as the controller is given a positive and a negative step, as seen on figure~\ref{torque_input}.
 
 \begin{figure}[H]
 	\begin{subfigure}[t]{.49\linewidth}
 		\centering
 		\includegraphics[width = \linewidth]{graphics/Sim_results_ip_Idq}
-		\caption{d and q axis current with a positive and negative step with the IP controller}
+		\caption{d and q axis current with a positive and negative step with the IP controller.}
 		\label{fig:Sim_results_ip_Idq}
 	\end{subfigure}
 	\begin{subfigure}[t]{.49\linewidth}
 		\centering
 		\includegraphics[width = \linewidth]{graphics/Sim_results_ip_power}
-		\caption{Negative power caused by oscillation}
+		\caption{Negative power caused by oscillation.}
 		\label{fig:Sim_results_ip_power}
 	\end{subfigure}
 	\caption{Characteristics of IP controller.}
@@ -551,7 +558,7 @@ There is a small current undershoot when the pedal is released of only -3\si{\am
 	\begin{subfigure}[t]{.49\linewidth}
 		\centering
 		\includegraphics[width = \linewidth]{graphics/Sim_results_pi01_Idq}
-		\caption{d and q axis current is a lot more precise than on figure~\ref{fig:Sim_results_pi_Idq}}
+		\caption{d and q axis current is a lot more precise than on figure~\ref{fig:Sim_results_pi_Idq}.}
 		\label{fig:Sim_results_pi01_Idq}
 	\end{subfigure}
 	\begin{subfigure}[t]{.49\linewidth}
@@ -583,15 +590,13 @@ A faster controller was calculated with tremendous results.
 		{Torque release} & {Small power returned}& {Oscillation}& {Great response}  \\
 		\hline
 	\end{tabular}
-	\caption{Table comparing the abilities of the three tested controllers}
+	\caption{Table comparing the abilities of the three tested controllers.}
 	\label{tab:simulink_conclusion}
 \end{table}
 
-\todo[inline]{make gray}
-
 Both the PI controllers could work, but the faster response gives very precise current control.
 The IP controller was designed in section~\ref{sec:controller_design} based on a reduced order system without any mechanical part. 
-Evidently, the motor along with the mass of the gokart has a slow pole, that the IP controller does not handle.
+Evidently, the motor along with the mass of the go-kart has a slow pole, that the IP controller does not handle.
 The IP controller adds a pole to the systems, which makes the fast pole on figure~\ref{fig:PZmap_reduced_v2} complex conjugate poles that can oscillate.
 This oscillation proves to be too much when adding the slow poles of the mechanical system.
 As it has shown, this controller is not able to account for the mechanical system as a disturbance, which is unsurprising really giving the scope of the mechanics involved.
@@ -620,7 +625,7 @@ It simulates the switching inverter utilizing ideal switches as opposed to more 
 Because of the ideal switching, it is not necessary to include antiparallel diodes, nor deadtime.
 
 Figure~\ref{fig:plecs_electrical} shows the three phase inverter.
-The blue rectangle around each mosfet is a heatsink, that absorbs all the power loss within it.
+The blue rectangle around each mosfet is a heat sink, that absorbs all the power loss within it.
 These are used to emulate the case of the transistors. 
 Each of these have a heat capacity of 0.01 \si{\kelvin \per \joule } \\ 
 Each transistor represent one pair of transistors, where the on-resistance is zero.
@@ -638,13 +643,13 @@ All losses are calculated for two MOSFETs in parallel, conducting the combined c
 
 Conduction loss is dependent on the temperature of the mosfet. 
 This however, does not change the on-resistance in the circuit, this is not possible to do in Plecs.
-It should be noted, that the heatsink-box includes all losses inside, meaning it includes both the loss specified in the thermal model, but also the loss due to a non-zero on-resistance. 
+It should be noted, that the heat sink box includes all losses inside, meaning it includes both the loss specified in the thermal model, but also the loss due to a non-zero on-resistance. 
 This is part of the reason, the on-resistance has been set to zero, the other part being faster simulation. \\
 
-All heatsink boxes are connected through a thermal resistor (the blue ones) to a shunt thermal capacitor (CthG).
+All heat sink boxes are connected through a thermal resistor (the blue ones) to a shunt thermal capacitor (CthG).
 The thermal resistance of 0.145 \si{\joule \per \kelvin} represents the case-to-sink thermal resistance as read from the datasheet.
 The datasheet value was divided by two, because there are two TO-247 houses conducting the heat.
-CthG along with Heatsink Thermal Resistance models the 30x30 heatsink used to mount the inverter. 
+CthG along with Heatsink Thermal Resistance models the 30x30 heat sink used to mount the inverter. 
 CthG has a thermal capacity of 2100 \si{\kelvin \per \joule}, which is based on its size and the thermal capacity of aluminium, according to~\ref{eq:thermal_capacity}.
 
 %\begin{equation}
@@ -668,7 +673,7 @@ The test will be performed with a mass of 250 \si{\kilogram}.
 The current setpoint definced in the Signal Builder block goes to 300 and remains there for 10 seconds.
 The simulation will be used to estimate voltage ripple from the capacitor bank, the AC current going into the electrolytic capacitors and the loss in the MOSFETs.
 
-Figure~\ref{fig:plecs_power_loss} shows the heat transfer to the heatsink.
+Figure~\ref{fig:plecs_power_loss} shows the heat transfer to the heat sink.
 As there is a very low heat capacity in each of the MOSFETs, it's safe to assume, that this represents the total loss in the inverter
 
 \begin{figure}[H]
@@ -681,7 +686,7 @@ As there is a very low heat capacity in each of the MOSFETs, it's safe to assume
 	\begin{subfigure}[t]{.49\linewidth}
 		\centering
 		\includegraphics[width = \linewidth]{graphics/plecs_current_ripple}
-		\caption{Current ripple in the electrolytic capacitors, in RMS}
+		\caption{Current ripple in the electrolytic capacitors, in RMS.}
 		\label{fig:plecs_current_ripple}
 	\end{subfigure}
 	\caption{MOSFET and capacitor loss.}
@@ -700,7 +705,7 @@ Figure~\ref{fig:plecs_inverter_efficiency} displays the efficiency of the invert
 The current ripple is displayed on figure~\ref{fig:plecs_current_ripple}
 
 The large current ripple would result in up to 190 \si{\watt} of loss, which is a lot more than the capacitors can handle.
-Not only is this power loss damaging for the efficiency of the inverter, it also produces a lot of heat, that is not absorbed by the heatsink.
+Not only is this power loss damaging for the efficiency of the inverter, it also produces a lot of heat, that is not absorbed by the heat sink.
 A reason for this high number is likely the ideal switching used in Plecs. 
 Because of this, the current from the supply can step from zero to 300 A instantaneously. 
 In a more realistic simulation, stray inductances would limit the current slew rate. \\
@@ -716,14 +721,14 @@ Figure~\ref{fig:plecs_voltage_ripple} displays the voltage ripple of the capacit
 	\begin{subfigure}[t]{.49\linewidth}
 		\centering
 		\includegraphics[width = \linewidth]{graphics/plecs_heatsink_temperature}
-		\caption{Temperature increase of the heatsink.}
+		\caption{Temperature increase of the heat sink.}
 		\label{fig:plecs_heatsink_temperature}
 	\end{subfigure}
 	\caption{Voltage ripple and temperature profile.}
 \end{figure}
 
 The voltage ripple is quite low, less than 5 V, which means the inverter is supplied with an almost constant voltage, and the AC output is not begin disrupted by much.\\
-Figure~\ref{fig:plecs_heatsink_temperature} displays the heatsink temperature  during the full throttle test
+Figure~\ref{fig:plecs_heatsink_temperature} displays the heat sink temperature  during the full throttle test
 
 The temperature only increases 0.8 \si{\degree \celsius} during the test, so it easily handles the 500 \si{\watt} of heat generated by the MOSFETs. 
 The reason for this limited temperature increase is the size of the thermal capacitance, rather than the low thermal resistance.\\
