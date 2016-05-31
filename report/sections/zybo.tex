@@ -36,12 +36,6 @@ khaOS was chosen before other RTCS as the group had prior knowledge about the sy
 The software functionalities are grouped into tasks based on functionality and desired frequency.
 A task diagram of the complete system on the Zybo can be seen in figure \ref{fig:task_diagram}.
 
-%\begin{figure}[!h]
-%	\includestandalone[width=\textwidth]{graphics/taskdiagram}
-%	\caption[Task diagram]{Task diagram showing software tasks as green circles, shared variables as yellow boxes, IP cores as blue boxes, I/O periphirals as limegreen oxes, % external signals as orange boxes and external components in red. The PS and PL areas are marked accordingly and arrows show the data and signal direction.}
-%	\label{fig:task_diagram }
-%\end{figure}
-
 \begin{figure}[!h]
   \includegraphics[width=\textwidth]{graphics/taskdiagram}
   \caption[Task diagram]{Task diagram showing software tasks as green circles, shared variables as yellow boxes, IP cores as blue boxes, I/O peripherals as lime green boxes, external signals as orange boxes and external components as red boxes. The PS and PL areas are marked accordingly and arrows show the data and signal direction. $C_p$ consists of various controller parameters.}
@@ -51,7 +45,7 @@ A task diagram of the complete system on the Zybo can be seen in figure \ref{fig
 As can be seen, various signals are coming from the outside world through the PL into the PS.
 All tasks, IP cores and I/O peripherals will be described in the coming sections.
 
-\subsubsection{Three phase PWM generator}\label{sub:PWM_generation}
+\subsubsection{Three Phase PWM Generator}\label{sub:PWM_generation}
 The PWM generator is placed in the PL and is developed using Xilinx System Generator in Matlab Simulink.
 The generator is made to have adjustable frequency and duty cycle.
 It was chosen to generate center aligned PWM as this introduces less harmonic distortion than edge aligned PWM \cite{power_switching_converters}. 
@@ -101,21 +95,15 @@ As the PWM generator should be able to do three independent PWM signal there are
 \end{figure}
 
 
-\subsubsection{Interface task}
+\subsubsection{Interface Task}
 The interface task reads external signals, outputs digital signals and controls the other tasks.
 This includes ensuring that the state of the enable variable, read by the controller and the PWM task, is correct.
 The basic functionality of the interface task can be seen in the flowchart of figure \ref{fig:interface}.
 
-%\begin{figure}[!h]
-%	\centering
-%	\includegraphics[width=0.7\linewidth]{graphics/interface_task}
-%	\caption[Block diagram of PWM generator.]{Simulink block diagram of the counter in the PWM generator.}
-%	\label{fig:interface}
-%\end{figure}
-
 \begin{figure}[!h]
 	\centering
-	\includestandalone[width=0.5\textwidth]{graphics/interface_flow}
+	%\includestandalone[width=0.5\textwidth]{graphics/interface_flow}
+	\includegraphics[width=0.5\textwidth]{graphics/interface_flow}
 	\caption[Interface task.]{Flow chart illustrating the basic functionality of the interface task.}
 	\label{fig:interface}
 \end{figure}
@@ -171,7 +159,7 @@ Once the value is set a message is returned to the user, informing of the succes
 The system is made with expandability in mind, currently only a \texttt{set} command is implemented.
 This could easily be extended to a \texttt{read} or perhaps a \texttt{shutdown} command.
 
-\subsubsection{Controller task}
+\subsubsection{Controller Task}
 \begin{figure}[!h]
 	\centering
 	\includestandalone[width=0.9\textwidth]{graphics/tikz/Block_diagram1tikz}
@@ -233,7 +221,7 @@ if(total_output_magnitude > MAX_TOTAL_OUTPUT){
 }
 \end{lstlisting}
 
-\subsubsection{PWM task}
+\subsubsection{PWM Task}
 The basic functionality of the PWM task can be seen in the block diagram of figure \ref{fig:pwm_task}.
 The task needs to take the outputs from the controller task and transform it into duty cycles that can be feed to the PWM generator in the PL area of the Zybo. 
 The PWM task is separate from the controller task as it might be preferable to have the two tasks run at different frequencies.
@@ -266,7 +254,7 @@ Channels 6 and 14 are paired together in simultaneous mode, meaning that they wi
 These are the channels that the outputs from the two LEM sensors are connected to. 
 The torque pedal signal will be routed to channel 7 which will be sampled after channel 6 and 14.
 The top signal from the PWM generator will start the sampling and therefore it will also set the sampling frequency.
-As the PWM frequency is 20 \si{\kilo\hertz} the ADC sampling frequency will be as well.
+As the PWM frequency is 20\si{\kilo\hertz} the ADC sampling frequency will be as well.
 
 \subsubsection{UART RX/TX}
 In order to facilitate communication between the Zybo board and a PC, a small UART connection is established.
@@ -333,7 +321,7 @@ The physical RMB28MD encoder signals are interfaced by an IP Core.
 The IP core outputs a clock to the RMB28MD chip and reads data from a data pin. 
 It then makes the data available on the AXI4LITE bus, where it can be read from software by the PWM task. 
 
-\subsection{SPI communication}
+\subsection{SPI Communication}
 
 %\begin{figure}[!h]
 %	\centering
@@ -359,6 +347,7 @@ The correct solution to the problem is to develop an SPI driver, but due to time
 SPI 1 on the Zynq is used as it can be ported to MIO channels 10 to 15, which can be accessed through the PMOD connectors of the Zybo board. 
 The SPI controller is initialized in software and is configured to be in master mode, manual chip select mode and manual start mode by writing to the configuration register Config\_reg0.
 In order to comply with the SPI specifications of the DRV8301 it was configured with the XSPIPS\_CLK\_PHASE\_1\_OPTION in order to make data valid on falling edges of the clock. 
+
 The time constant of an RC filter is used to delay the voltage Slave Select signal, according to equation~\ref{eq:RC_discharge}
 
 \begin{equation}
@@ -368,12 +357,8 @@ V_{IL} = V\cdot e^{\frac{-t}{\tau}}
 
 Where $V_{IL}$ is the low input threshold for digital pins on the driver, $V$ is the supply voltage of the driver and $\tau = R\cdot C$.
 The voltage drops exponentially, and the time it takes to reach $V_{IL}$ should be at least 40ns, so to be safe, the filter will be designed with 80ns in mind.
-With a resistor of 1\si{\kilo\ohm}, yields a capacitor of 56\si{\pico\farad}.
-A capacitor of 33\si{\pico\farad} was chosen 
-
-
- of a capacitor is utilized to make a delay on the Slave Select signal, by putting a XX capacitor and XX resistor in series with the signal.
-\todo[inline]{Thomas: Are they in series? + numbers instead of XX XX}
+A resistor of 1\si{\kilo\ohm}, yields a capacitor of 56\si{\pico\farad}.
+A capacitor of 33\si{\pico\farad} was chosen.
 The transmission of \texttt{0b0001000000110000} was measured using an oscilloscope and can be seen in figure \ref{fig:spi_graph}.
 
 \begin{figure}[!h]
@@ -383,16 +368,16 @@ The transmission of \texttt{0b0001000000110000} was measured using an oscillosco
 	\label{fig:spi_graph}
 \end{figure}
 
-\subsection{Task frequencies}
+\subsection{Task Frequencies}
 Table \ref{tabl:task_freq} shows the frequencies at which the task are run.
-The PWM task will be run at 20 \si{\kilo\hertz} as this allows for updates of duty cycles at the same frequency as the PWM generator.
-The controller task will run at 5 \si{\kilo\hertz} as will be explained in section \ref{sec:controller_design}.
+The PWM task will be run at 20\si{\kilo\hertz} as this allows for updates of duty cycles at the same frequency as the PWM generator.
+The controller task will run at 5\si{\kilo\hertz} as will be explained in section \ref{sec:controller_design}.
 The most essential functionality of the interface task is to update the enable variable. 
 As the driver chip shuts down the inverter in case of an overcurrent event it is not very time critical to do so.
 Therefore it was chosen to run the interface task at 1\si{\kilo\hertz}.
 The UART tasks are not in any way crucial and can therefore be run at a low frequency, though it has to be fast enough for the user to feel that the system is responding, 100\si{\hertz} was chosen.
 
-\begin{table}[]
+\begin{table}[!h]
 \centering
 \begin{tabular}{|l|l|}
 \hline
@@ -421,7 +406,7 @@ However, it does not interfere with the functionality of the program and will, d
 \begin{figure}[!h]
 	\begin{center}
 		\includegraphics[width=\linewidth]{graphics/timing}
-		\caption{Timing.}
+		\caption{Timing test of the task running in khaOS.}
 		\label{fig:timing}
 	\end{center}
 \end{figure}

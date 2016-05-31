@@ -35,7 +35,7 @@ This figure shows that the q-axis of the PMAC motor can be represented as an ele
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=.4\textwidth]{graphics/q_axis_equivalent}
-	\caption{PMAC motor equivalent circuit, q-axis}
+	\caption{PMAC motor equivalent circuit, q-axis.}
 	\label{fig:PMSM_Equivalent_q_axis}
 \end{figure}
 
@@ -62,7 +62,7 @@ A state space model is derived from the physical representation of a PMAC motor,
 
 Reducing the model of figure \ref{fig:State_space_model1} to use transfer functions for the electrical and mechanical parts results in a more simple model with fewer loops. 
 It is shown on figure \ref{fig:State_space_model3}. 
-In the electric part of the circuit a new value $TS$ has been added to the denominator of the transfer function, this value is the electromagnetic time constant of the stator, defined as $TS=L_a/R_a$. The constant defined $J_{pro}$ is the projected inertia of the kart, based on the expected weight with a driver and also adding the inertia of each gear.
+In the electric part of the circuit a new value $TS$ has been added to the denominator of the transfer function, this value is the electromagnetic time constant of the stator, defined as $TS=L_a/R_a$. The constant defined $J_{pro}$ is the projected inertia of the go-kart, based on the expected weight with a driver and also adding the inertia of each gear.
 
 \begin{figure}[H]
 	\centering
@@ -89,13 +89,13 @@ A pole-zero map of both models will be used to see whether the inductor can be r
 	\centering
 	\begin{subfigure}[t]{.45\linewidth}
 		\includegraphics[width=\textwidth]{graphics/full_order_model_pz_map}
-		\caption{PZ map of full order model}
+		\caption{PZ map of full order model.}
 		\label{fig:PZmap_full}
 	\end{subfigure}
 	\hspace{0.5cm}
 	\begin{subfigure}[t]{.45\linewidth}
 		\includegraphics[width=\textwidth]{graphics/reduced_order_model_pz_map}
-		\caption{PZ map of no inductor model}
+		\caption{PZ map of no inductor model.}
 		\label{fig:PZmap_Reduced}
 	\end{subfigure}
 	\caption{Matlab Simulink PZ Map of each model.}
@@ -142,7 +142,7 @@ It can be seen on figure \ref{fig:State_space_model_reduced_order_v2}.
 	\label{fig:State_space_model_reduced_order_v2}
 \end{figure}
 
-The model is basically an LR circuit where the output is the current. Which will just go as high as the L and R allows and stay there, since the back emf is not included. 
+The model is basically an LR circuit where the output is the current. Which will just go as high as the L and R allows and stay there, since the back-EMF is not included. 
 %A PZ map should shows that the slow pole to the right is removed. Figure \ref{fig:PZmap_reduced_v2} shows the result.
 %\begin{figure}[H]
 %	\centering
@@ -164,7 +164,7 @@ Figure \ref{fig:Full_Vs_Reduced2} shows the current.
 	\label{fig:Full_Vs_Reduced2}
 \end{figure}
 
-This shows that the current ramps up and stays there. The current starts at zero and ramps up. The downward slope of the full order model is caused by the back emf which is removed in the reduced model.
+This shows that the current ramps up and stays there. The current starts at zero and ramps up. The downward slope of the full order model is caused by the back-EMF which is removed in the reduced model.
 %
 %This model could be used with a controller, but will require some simulations with the motor after a controller has been developed, the downward slope of the full order model is caused by the mechanical system getting saturated by current, this should not change how each model is affected by current control, because a fast and robust controller is desired.
 
@@ -308,6 +308,7 @@ Solving the above equation for $K_p$ and $K_i$ yields the equation two equations
 %\end{equation}
 \begin{equation}
 K_p=(3 \alpha - \frac{K_v}{J_{pro}}- \frac{R_a}{2L_a})L_a
+\label{eq:solved_d1}
 \end{equation}\newline
 %\begin{equation}
 %3 \alpha^2= \frac{2K_t^2}{2J_{pro}L_a}+ \frac{K_vR_a}{J_{pro}L_a}+ \frac{K_i}{L_a}+ \frac{K_pK_v}{2J_{pro}}
@@ -315,6 +316,7 @@ K_p=(3 \alpha - \frac{K_v}{J_{pro}}- \frac{R_a}{2L_a})L_a
 %\end{equation}
 \begin{equation}
 K_i=(3 \alpha^2- \frac{K_pK_v}{2J_{pro}}- \frac{K_vR}{J_{pro}L_a}- \frac{3K_t^2}{2J_{pro}L_a})L_a
+\label{eq:solved_d2}
 \end{equation}
 
 
@@ -447,20 +449,20 @@ Figure \ref{fig:output_both} shows how both models perform with the controller v
 	\centering
 	\begin{subfigure}[t]{.45\linewidth}
 		\includegraphics[width=\textwidth]{graphics/Controlled_response_Fullorder}
-		\caption{Current output response of the full order model to the signal input given in figure \ref{fig:Input_ref}}
+		\caption{Current output response of the full order model to the signal input given in figure \ref{fig:Input_ref}.}
 		\label{fig:Output_Full}
 	\end{subfigure}
 	\hspace{0.5cm}
 	\begin{subfigure}[t]{.45\linewidth}
 		\includegraphics[width=\textwidth]{graphics/Controlled_response_LR}
-		\caption{Current output response of LC model to the signal input given in figure \ref{fig:Input_ref}}
+		\caption{Current output response of LC model to the signal input given in figure \ref{fig:Input_ref}.}
 		\label{fig:Output_LC}
 	\end{subfigure}
-	\caption{Simulations of each model with their controllers}
+	\caption{Simulations of each model with their controllers.}
 	\label{fig:output_both}
 \end{figure}
 
-The controller to be used for the kart will be determined by running a more in depth simulation in the next section, this simulation will include the physical systems, breaks, torque etc. A choice will be made based on controller performance in these tests.
+The controller to be used for the go-kart will be determined by running a more in depth simulation in the next section, this simulation will include the physical systems, breaks, torque etc. A choice will be made based on controller performance in these tests.
 
 
 \subsection{Discretization}
@@ -475,14 +477,73 @@ y_{n+1} = y_{n} + \frac{1}{2}h \left( f(t_n,y_n)+f(t_{n+1},y_{n+1}) \right)
 
 Here n is the time step, t is the time and y is the function to integrate. The trapezoidal method yields a more precise method than forward or backwards Euler methods, due to it being 2nd order precise ($O(h^2)$), but it takes twice the computation power.
 
-\subsection{Third Harmonic Injection}
-To utialize the voltage range of the power supply better, it was decided to use third harmonic injection.
+\subsection{Third Harmonic Injection}\label{sub:third_harmonic_injection}
+Due to the limited battery voltage, it is not possible to drive the motor to speeds close to the maximum set by the manufacturer.
+Because the internal star point of the motor is not connected to the outside, it is possible to gain an additional 15\% by way of third harmonic injection.
+The reason for this is, that the controller can add the same voltage offset to all three terminals of the motor without changing the currents, thus avoiding the peaks of the sinusoidals.
+There are several ways of doing this, but only the sinusoidal will be considered here. 
 Adding a $\frac{1}{6}$ of the third harmonic will result in 15 \% more line to line voltage. 
-The resulting waveforms can be seen in section \ref{sec:Simulations}.
-Studies of literature \cite{third_harmonic_injection} presented an uncomplicated way of adding the third harmonic: 
+The resulting waveforms can be seen in section~\ref{fig:Sim_results_pi_phase_voltage}, on page~\pageref{fig:Sim_results_pi_phase_voltage}.\\
+
+The issue is that, when using field oriented control, the stator voltage does not remain at a constant angle relative to the rotor angle.
+That means, that calculating the third harmonic isn't as simple as multiplying the rotor position with three. 
+Doing this will result in the the third harmonic being out of phase with the three sinusoidal voltage waveforms as speed increases.
+This will result in higher peak voltages at certain speeds.
+Instead, the third harmonic needs to be calculated from the dq output from the controller. \\
+
+Equation (9) in the paper\cite{third_harmonic_injection} defines the three phase voltage of a balances system without third harmonic injection:
+
 \begin{equation}
-	t_h = \frac{1}{6}\cdot \sin{(3\cdot \arcsin{(\frac{a}{\sqrt{d^2+q^2}})}})
+\left[ \begin{array}{c}
+V_A \\ V_B \\V_C
+\end{array} \right]
+=
+\left[ \begin{array}{c}
+V \sin(\Theta) \\
+V \sin(\Theta - 120 \si{\degree}) \\
+V \sin(\Theta + 120 \si{\degree})
+\end{array} \right]
+\label{eq:equation_9}
 \end{equation}
-Where $t_h$ is the portion of the third harmonic that needs to be added to each phase, d and q are from the Clarke Park transform and a is phase a.
+
+where $\mathrm{\Theta}$ is the instantaneous phase, and V is the instantaneous magnitude, calculated as:
+
+\begin{equation}
+V = \sqrt{V_q ^2 + V_d ^2}
+\label{eq:v_from_vdq}
+\end{equation}
+
+Note that equation~\ref{eq:v_from_vdq} is not equal to equation 10 in the paper\cite{third_harmonic_injection}, because this dividing with 1.5 is done in the Clarke Park transform block. 
+
+From equation~\ref{eq:equation_9}, we know that:
+
+\begin{equation}
+\Theta = \sin^{-1} \Big(\frac{V_A}{V}\Big)
+\label{eq:equation_11}
+\end{equation}
+
+The third harmonic sinusoidal is given in equation (12) of the paper\cite{third_harmonic_injection}, and shown in equation~\ref{eq:v_th}
+
+\begin{equation}
+V_{th} = \frac{1}{6} \sin(3 \Theta) = \frac{1}{6} \sin\Bigg(3 \sin^{-1} \Big(\frac{V_A}{V}\Big)\Bigg)
+\label{eq:v_th} 
+\end{equation}
+
+This third harmonic sinusoidal is added to each of the phases, as shown in equation~\ref{eq:equations_14}
+
+\begin{equation}
+\begin{bmatrix}
+V_{Ath} \\
+V_{Bth} \\
+V_{Cth}
+\end{bmatrix}
+=
+\begin{bmatrix}
+V_A + V_{th} \\
+V_B + V_{th} \\
+V_C + V_{th}
+\end{bmatrix}
+\label{eq:equations_14}
+\end{equation}
 
 \clearpage

@@ -13,7 +13,7 @@ We would like to thank our supervisors, Karsten Holm Andersen and Jacob Lykke Pe
 A word of thanks goes to our lecturers; Morten Nymand who has, on numerous occasions, provided assistance in the technical aspects of board layout and power electronics, and Jørgen Christian Larsen for saving countless hours of frustration with his assistance on Xilinx and all of the problems that follow.
 Additionally, for helping with practical aspects of the project including layout and sourcing of components, Thanks to Jesper Nielsen.
 
-\vspace{2cm}
+\vspace{1cm}
 \begin{center}
 	\begin{minipage}[t]{.49\textwidth}\large
 		\begin{center}
@@ -40,15 +40,26 @@ Additionally, for helping with practical aspects of the project including layout
 	\end{minipage}
 \end{center}
 
+\vspace{1.2cm}
+  \begin{center}
+    \textsl{The report, source code, data, plotting script and simulations can be found at:}  
+    \end{center}
+    \vspace{-5pt}
+    \begin{center}
+	\renewcommand{\UrlFont}{\color{black}\normalsize\tt}
+    \url{github.com/mikkeljae/SEM1PRO_ELECTRONICS}
+   \end{center}
 \newpage
+
 \section*{Abstract}
 \addcontentsline{toc}{section}{Abstract}
-\todo[inline]{Add one line on motivation}
-Within this report is described the process of creating a three-phase inverter and a controller for a Go-Kart.
+The topic of motor control for electric vehicles is a fast growing industry both in terms of academic studies and in terms of economy.
+This report describes the process of creating a three phase inverter and a controller for an electrical go-kart.
 This process requires work in a variety of fields, including: electronics design, embedded design, control theory and power electronics.
 Extensive simulation as well as calculations on the system was done in order to more accurately determine the necessary components to be used in the inverter.
 The embedded system containing the controller, PWM generator and various other essential components were developed using Xilinx tools, such as System Generator.
 It was made possible to drive a smaller PMAC motor using the controller and inverter developed, however certain parts of the project remain unsolved.
 Making the electronics function properly was abandoned as there was insufficient time to spin another board.
 Much of the testing and verification of the system has also not been sufficiently examined.
-This, unfortunately, includes testing the inverter on the Go-Kart.
+This, unfortunately, includes testing the inverter on the go-kart.
+

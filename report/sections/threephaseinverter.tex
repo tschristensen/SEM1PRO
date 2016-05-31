@@ -1,26 +1,26 @@
 %!TEX root = ../main.tex
 \section{Three Phase Inverter}
 \label{sec:inverter}
-This section will describe the design of the three-phase inverter used to drive the PMAC motor in this project.
+This section will describe the design of the three phase inverter used to drive the PMAC motor in this project.
 This includes the calculations and considerations done.
-Initially, a short overview of the principle of operation of a three-phase inverter is given.
+Initially, a short overview of the principle of operation of a three phase inverter is given.
 
-\subsection{Operation of a Three-Phase Inverter}
-A three-phase inverter enables the use of a DC supply in variable frequency control of a three-phase load.
+\subsection{Operation of a Three Phase Inverter}
+A three phase inverter enables the use of a DC supply in variable frequency control of a three phase load.
 In this project the DC supply is a battery and the load, a PMAC motor.
-Figure \ref{fig:threephaseinverter} is a Simulink model showing the most basic three-phase inverter.
+Figure \ref{fig:threephaseinverter} is a Simulink model showing the most basic three phase inverter.
 As can be seen, the inverter consists of three half-bridges for a total of six switches.
 Each pair of switches can never be on at the same time as this would result in shorting the battery.
 
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=\linewidth,trim=0cm 5cm 0cm 1cm]{graphics/threephaseinverter}
-	\caption{Simulink model of a simple three-phase inverter for a balanced load.}
+	\caption{Simulink model of a simple three phase inverter for a balanced load.}
 	\label{fig:threephaseinverter}
 \end{figure}
 
 This type of inverter only works with a balanced load, such as the PMAC motor.
-A balanced three-phase load implies, that the sum of the currents in the three phases is always equal tp zero, and no current is running through a neutral wire.
+A balanced three phase load implies, that the sum of the currents in the three phases is always equal tp zero, and no current is running through a neutral wire.
 As the inverter does not have a connection to the neutral point of the load, it could not supply an unbalanced load, such as those in uninterruptible power supplies (UPS's) and solar cells.
 
 Several schemes exist to control the switches.
@@ -58,7 +58,7 @@ The three main requirements are listed in table \ref{tab:req1}\\
 		3 & Operating at $V_{GS}$ of  & 9.5\si{\volt} \\
 		\hline
 	\end{tabular}
-	\caption{Three main requirements as a starting point for choosing the MOSFETs}
+	\caption{Three main requirements as a starting point for choosing the MOSFETs.}
 	\label{tab:req1}
 \end{table}
 
@@ -194,7 +194,7 @@ P_{c} = R_{DS(on),@100\si{\celsius}} I_{Pi,RMS}^2 =  R_{DS(on),@100\si{\celsius}
 \label{eq:P_cp}
 \end{equation}
 
-\subsubsection{Switching loss}
+\subsubsection{Switching Loss}
 Whenever any MOSFET is switching from its on state to its off state or vice versa, a small amount of energy is lost, as the MOSFET passes through its active region.
 This loss can be found with experiments or estimated from calculations. 
 An experiment will not be carried out at this point but the loss will be estimated with calculations and assumptions using equation~\ref{eq:P_sw}.
@@ -229,7 +229,7 @@ Equation~\ref{eq:tfv_tr} and \ref{eq:trv_tf} show the relation.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale = 0.5]{graphics/sw_time_wavef}
-	\caption{Switching Time WavefoRMS\cite{IRF4468PbF}.}
+	\caption{Switching Time Waveforms\cite{IRF4468PbF}.}
 	\label{fig:sw_time_wavef}
 \end{figure}
 
@@ -301,7 +301,7 @@ dt = nC\dfrac{dV}{I_{gs}}
 
 
 
-\subsection{Total Power loss}
+\subsection{Total Power Loss}
 
 The instantaneous power losses are calculated for up to 10 MOSFETs in parallel using equations~\ref{eq:P_cp}, \ref{eq:P_sw} and~\ref{eq:p_loss} where the switching frequency is $f_s = 20\si{\kilo\hertz}$. Figures~\ref{fig:ploss_single} and~\ref{fig:ploss_comb} shows the results.
 
@@ -379,8 +379,6 @@ T_j & = & T_c + P_{loss}R_{jc}
 \label{eq:Tj}
 \end{eqnarray}
 
-
-
 The temperatures are calculated to be:
 
 \begin{eqnarray*}
@@ -389,24 +387,48 @@ T_c & = &  49\si{\celsius}\\
 T_j & = &  77\si{\celsius}\\
 \end{eqnarray*}
 
+The thermal capacity, $C_s$ of the heat sink is calculated using equation~\ref{eq:thermal_capacity}.
+
+\begin{equation}
+C_{s} = v \cdot \rho_m C_{p}
+\label{eq:thermal_capacity}
+\end{equation}
+
+where $C_{p}$ is the specific heat capacity of aluminium, which is 910 \si{\joule\per\kilogram\kelvin}, and $\rho_m$ is the mass density of aluminium.
+For a heatsink of 30x30x1\si{\centi\metre}, the heat capacity is 2180 \si{\kelvin \per \joule}.
+
 The calculated junction temperature is well below the maximum ratings shown in table~\ref{tab:temp_param}. If it is assumed that the go-kart will be operating with full power loss for t = 5min the temperature will reach $T_j \approx$ 140\si{\celsius}. Thus, it is safe to assume that the MOSFETs will not reach the maximum limit.
 
 
-\subsection{Inverter layout}
+\subsection{Inverter Layout}
 The layout of the inverter was mostly done by the other group though discussion about design and assembly were made between the two groups.
 In this section the overall principles of the layout is described.
-As the inverter has to work with large currents and fast switching, all parasitic inductors should be avoided.
-This is generally done by avoiding long wires as they contain a considerable inductance. 
-It was not possible to avoid wires completely and therefore the inverter has some wires which are kept short and are twisted together to minimize inductance. 
-The inverter should have a large groundplane to avoid difference in potential across the ground. 
+As the inverter has to switch large currents, all parasitic inductances should be avoided.
+This is generally done by avoiding long wires as they all contribute with extra inductance.
+Wires are not completely avoidable, but they should be kept short, and forward and return wires should be twisted to keep them in close proximity.\\
+The power stage of the inverter needs a higly conductive ground plane as well as a power plane, which is connected to the battery voltage.
+This is done with two 1mm thick plates of copper, separated by Kapton tape. 
+This is a temperature resistant insulating tape meaning that there is no galvanic connection from the power plane on top, to the ground plane on the bottom.
 The developed layout can be seen in figure \ref{fig:inverter_design}.
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.7\linewidth]{graphics/inverter_placeholder}
-	\caption{Placehodler....}
+	\includegraphics[width=0.7\linewidth]{graphics/Bertha1}
+	\caption{Picture of the finished three phase inverter with mounted Zybo, analogue and digital boards.}
 	\label{fig:inverter_design}
 \end{figure}
-As it can be seen it was chosen to build the inverter on a large heatsink, where also the Zybo, digital and analog boards are mounted for mechanical integrity. 
-Below the heatsink three fans were places to produce airflow on the heatsink for better heat dissipation.
 
+As it can be seen, the the inverter was build on a large heat sink, along with the the Zybo, digital and analogue boards. 
+This heat sink is much larger than needed, but it was chosen for its structural integrity along with its cooling capability.
+The heat sink is mounted on an aluminium box, that blocks for air flow from the sides.\\
+Below the heat sink three fans were places to produce airflow on the heat sink for better heat dissipation.
+This was necessary because the heat sink needs to be mounted vertically for passive convection to work properly. \\ 
+
+The wires from the batteries will introduce inductance to the system in the order of a few \si{\micro\henry}.
+This will cause the current not to change instantaneously, when the upper MOSFETs are switched.
+Capacitors are added to filter this behavior.
+It is chosen to add eight Panasonic Aluminum Electrolytic Capacitors , each having capacitance of 2200$\mu$F.
+Those are added to smoothen out low frequency voltage spikes.
+These each have an equivalent series resistance of 57\si{\milli\ohm}, and can handle currents of 4.06\si{\ampere} each.
+To counter for the higher frequency, another eight film capacitors with capacitance of 4.7$\mu$F are added.
+  

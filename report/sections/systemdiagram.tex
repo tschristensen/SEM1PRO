@@ -1,7 +1,7 @@
 %!TEX root = ../main.tex
 
 \section{System Analysis}
-To get an overview of the system connections and all the major components needed to make the kart run, a system diagram is made based on the wiring diagram seen in figure \ref{fig:Kart_wiring_diagram}. 
+To get an overview of the system connections and all the major components needed to make the go-kart run, a system diagram is made based on the wiring diagram seen in figure \ref{fig:Kart_wiring_diagram}. 
 Figure \ref{fig:blockdiagram1} shows a simplified diagram of the wiring, where the Zybo board has replaced the Sevcon Gen4 controller. \\
 
 The green component represents the Zybo board.
@@ -14,8 +14,8 @@ The encoder is measuring the rotational position of the rotor and feeding it to 
 To the left of the Zybo the different safety systems are placed.
 These will ensure that starting, stopping and emergency procedures are handled safely, preferably without any burned components.
 On top are the different switches, the key switch, the emergency switch and the enable switch.
-Below these is the undervoltage protection circuit which ensures that the kart is only driving when sufficient power is supplied. 
-The final parts to the left are the torque pedal for the kart and the battery supply.
+Below these is the undervoltage protection circuit which ensures that the go-kart is only driving when sufficient power is supplied. 
+The final parts to the left are the torque pedal for the go-kart and the battery supply.
 
 \begin{figure}[H]
 	\centering
@@ -65,8 +65,8 @@ These tasks include:
 The overall software design and development will be explored further in section \ref{sec:emb}.
 
 \subsection{Power Electronics}
-A three-phase inverter will be developed throughout this project.
-The functionality of the inverter is to convert the DC voltage of the batteries into a three-phase sinusoidal signal needed to run the motor.
+A three phase inverter will be developed throughout this project.
+The functionality of the inverter is to convert the DC voltage of the batteries into a three phase sinusoidal signal needed to run the motor.
 Much of the complication in this part lies in choosing the right components for the high currents necessary for driving the motor.
 The development of the power electronics is discussed in detail in section \ref{sec:inverter}.
 This includes aspects, such as calculating switching losses and heat dissipation.
@@ -77,7 +77,7 @@ Parameterisation of the motor will be done as a part of the analysis.
 This analysis as well as a general explanation of the functionality of a PMAC motor will be presented throughout section \ref{sec:PMAC}.
 
 \subsection{Control Theory}
-To make the go kart drive optimally a controller needs to be developed. 
+To make the go-kart drive optimally a controller needs to be developed. 
 A three phase PMAC motor needs a three phase sinosoidal signal to drive and as this is problematic to control directly some transformation will be needed. 
 As the control algorihm will need to be run on an embedded system a discrete controller is needed. 
 The development of the controller will be described in detail in section \ref{sec:controller_design}.
