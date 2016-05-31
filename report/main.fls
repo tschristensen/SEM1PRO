@@ -360,9 +360,6 @@ INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.toc
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.toc
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
 OUTPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.toc
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.tdo
-INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.tdo
-OUTPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/main.tdo
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/introduction.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/introduction.tex
 INPUT /home/mikkeljaedicke/Documents/SEM1PRO/report/sections/requirements.tex
