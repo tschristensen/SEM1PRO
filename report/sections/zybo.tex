@@ -254,7 +254,7 @@ Channels 6 and 14 are paired together in simultaneous mode, meaning that they wi
 These are the channels that the outputs from the two LEM sensors are connected to. 
 The torque pedal signal will be routed to channel 7 which will be sampled after channel 6 and 14.
 The top signal from the PWM generator will start the sampling and therefore it will also set the sampling frequency.
-As the PWM frequency is 20 \si{\kilo\hertz} the ADC sampling frequency will be as well.
+As the PWM frequency is 20\si{\kilo\hertz} the ADC sampling frequency will be as well.
 
 \subsubsection{UART RX/TX}
 In order to facilitate communication between the Zybo board and a PC, a small UART connection is established.
@@ -373,8 +373,8 @@ The transmission of \texttt{0b0001000000110000} was measured using an oscillosco
 
 \subsection{Task frequencies}
 Table \ref{tabl:task_freq} shows the frequencies at which the task are run.
-The PWM task will be run at 20 \si{\kilo\hertz} as this allows for updates of duty cycles at the same frequency as the PWM generator.
-The controller task will run at 5 \si{\kilo\hertz} as will be explained in section \ref{sec:controller_design}.
+The PWM task will be run at 20\si{\kilo\hertz} as this allows for updates of duty cycles at the same frequency as the PWM generator.
+The controller task will run at 5\si{\kilo\hertz} as will be explained in section \ref{sec:controller_design}.
 The most essential functionality of the interface task is to update the enable variable. 
 As the driver chip shuts down the inverter in case of an overcurrent event it is not very time critical to do so.
 Therefore it was chosen to run the interface task at 1\si{\kilo\hertz}.
