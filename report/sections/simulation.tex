@@ -419,7 +419,7 @@ Using a higher frequency for the discrete controller reduce this ripple.
 For these simulations, 10\si{\kilo\hertz} has been used
 lower frequencies can be used with acceptably low noise, up to 0.5\si{\kilo \hertz}.
 The extra noise on both the d and q current at 1.8\si{\second} is imaging error, caused by the quantization of the encoder and the frequency of the controller.
-For controller frequency, the error happens when the motor is running at 2250 RPM.
+For controller frequency, the error happens when the motor is running at 2250rpm.
 Lower frequencies mean, that the error happens at lower motor speeds. \\
 The d-axis current is kept very close to zero, at least until 2.6 seconds, when the voltage starts saturating. 
 A small error (of up to -20 A) is not a big issue, as this is likely to occur anyway if the position encoder is not perfectly aligned.\\
@@ -433,7 +433,7 @@ This is shown on figure~\ref{fig:Sim_results_pi_phase_voltage}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.7\linewidth]{graphics/Sim_results_pi_phase_voltage}
-	\caption{Voltage waveforms measured when the motor is running at 4000 RPM.}
+	\caption{Voltage waveforms measured when the motor is running at 4000rpm.}
 	\label{fig:Sim_results_pi_phase_voltage}
 \end{figure}
 
@@ -620,7 +620,7 @@ It simulates the switching inverter utilizing ideal switches as opposed to more 
 Because of the ideal switching, it is not necessary to include antiparallel diodes, nor deadtime.
 
 Figure~\ref{fig:plecs_electrical} shows the three phase inverter.
-The blue rectangle around each mosfet is a heatsink, that absorbs all the power loss within it.
+The blue rectangle around each mosfet is a heat sink, that absorbs all the power loss within it.
 These are used to emulate the case of the transistors. 
 Each of these have a heat capacity of 0.01 \si{\kelvin \per \joule } \\ 
 Each transistor represent one pair of transistors, where the on-resistance is zero.
@@ -638,13 +638,13 @@ All losses are calculated for two MOSFETs in parallel, conducting the combined c
 
 Conduction loss is dependent on the temperature of the mosfet. 
 This however, does not change the on-resistance in the circuit, this is not possible to do in Plecs.
-It should be noted, that the heatsink-box includes all losses inside, meaning it includes both the loss specified in the thermal model, but also the loss due to a non-zero on-resistance. 
+It should be noted, that the heat sink box includes all losses inside, meaning it includes both the loss specified in the thermal model, but also the loss due to a non-zero on-resistance. 
 This is part of the reason, the on-resistance has been set to zero, the other part being faster simulation. \\
 
-All heatsink boxes are connected through a thermal resistor (the blue ones) to a shunt thermal capacitor (CthG).
+All heat sink boxes are connected through a thermal resistor (the blue ones) to a shunt thermal capacitor (CthG).
 The thermal resistance of 0.145 \si{\joule \per \kelvin} represents the case-to-sink thermal resistance as read from the datasheet.
 The datasheet value was divided by two, because there are two TO-247 houses conducting the heat.
-CthG along with Heatsink Thermal Resistance models the 30x30 heatsink used to mount the inverter. 
+CthG along with Heatsink Thermal Resistance models the 30x30 heat sink used to mount the inverter. 
 CthG has a thermal capacity of 2100 \si{\kelvin \per \joule}, which is based on its size and the thermal capacity of aluminium, according to~\ref{eq:thermal_capacity}.
 
 %\begin{equation}
@@ -668,7 +668,7 @@ The test will be performed with a mass of 250 \si{\kilogram}.
 The current setpoint definced in the Signal Builder block goes to 300 and remains there for 10 seconds.
 The simulation will be used to estimate voltage ripple from the capacitor bank, the AC current going into the electrolytic capacitors and the loss in the MOSFETs.
 
-Figure~\ref{fig:plecs_power_loss} shows the heat transfer to the heatsink.
+Figure~\ref{fig:plecs_power_loss} shows the heat transfer to the heat sink.
 As there is a very low heat capacity in each of the MOSFETs, it's safe to assume, that this represents the total loss in the inverter
 
 \begin{figure}[H]
@@ -700,7 +700,7 @@ Figure~\ref{fig:plecs_inverter_efficiency} displays the efficiency of the invert
 The current ripple is displayed on figure~\ref{fig:plecs_current_ripple}
 
 The large current ripple would result in up to 190 \si{\watt} of loss, which is a lot more than the capacitors can handle.
-Not only is this power loss damaging for the efficiency of the inverter, it also produces a lot of heat, that is not absorbed by the heatsink.
+Not only is this power loss damaging for the efficiency of the inverter, it also produces a lot of heat, that is not absorbed by the heat sink.
 A reason for this high number is likely the ideal switching used in Plecs. 
 Because of this, the current from the supply can step from zero to 300 A instantaneously. 
 In a more realistic simulation, stray inductances would limit the current slew rate. \\
@@ -716,14 +716,14 @@ Figure~\ref{fig:plecs_voltage_ripple} displays the voltage ripple of the capacit
 	\begin{subfigure}[t]{.49\linewidth}
 		\centering
 		\includegraphics[width = \linewidth]{graphics/plecs_heatsink_temperature}
-		\caption{Temperature increase of the heatsink.}
+		\caption{Temperature increase of the heat sink.}
 		\label{fig:plecs_heatsink_temperature}
 	\end{subfigure}
 	\caption{Voltage ripple and temperature profile.}
 \end{figure}
 
 The voltage ripple is quite low, less than 5 V, which means the inverter is supplied with an almost constant voltage, and the AC output is not begin disrupted by much.\\
-Figure~\ref{fig:plecs_heatsink_temperature} displays the heatsink temperature  during the full throttle test
+Figure~\ref{fig:plecs_heatsink_temperature} displays the heat sink temperature  during the full throttle test
 
 The temperature only increases 0.8 \si{\degree \celsius} during the test, so it easily handles the 500 \si{\watt} of heat generated by the MOSFETs. 
 The reason for this limited temperature increase is the size of the thermal capacitance, rather than the low thermal resistance.\\
