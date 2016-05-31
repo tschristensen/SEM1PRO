@@ -432,7 +432,7 @@ K_i = 1.23\cdot 10^{-2} %0.012272727272727
 \label{eq:IP_controller_constants}
 \end{equation}
 
-Figure~\ref{fig:Sim_results_ip_Idq} shows the d and q-axis current as the controller is given a positive and a negative step, as seen on figure~\ref{torque_input}.
+Figure~\ref{fig:Sim_results_ip_Idq} shows the d and q-axis current as the controller is given a positive and a negative step, as seen on figure~\ref{fig:torque_input}.
 
 \begin{figure}[H]
 	\begin{subfigure}[t]{.49\linewidth}
@@ -621,7 +621,7 @@ As there is a very low heat capacity in each of the MOSFETs, it's safe to assume
 
 The loss reaches a maximum of 500 \si{\watt}, which is lower than anticipated.
 This might be because, the Plecs simulation takes into account for switchings that are not worst case scenario. 
-Figure~\ref{fig:plecs_inverter_efficiency} displays the efficiency of the inverter. 
+
 
 %\begin{figure}[H]
 %	\centering
@@ -706,8 +706,8 @@ This is apparent when noticing that the error is mostly identical between the re
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=.75\linewidth, trim=0cm 2cm 0cm 2cm]{graphics/fullwaverectifier}
-	\label{fig:fullwaverectifier}
 	\caption{Full wave rectifier used to rectify the current signals.}
+	\label{fig:fullwaverectifier}
 \end{figure}
 
 \begin{figure}[H]

@@ -66,10 +66,16 @@ The overall software design and development will be explored further in section 
 
 \subsection{Power Electronics}
 A three phase inverter will be developed throughout this project.
-The functionality of the inverter is to convert the DC voltage of the batteries into a three phase sinusoidal signal needed to run the motor.
-Much of the complication in this part lies in choosing the right components for the high currents necessary for driving the motor.
+Specifications for the inverter are:
+
+\begin{itemize}
+	\item Must be able to generate three AC phases from one common DC supply using PWM.
+	\item It should be able to handle 300A amplitude
+	\item It must be able to handle 65V amplitude.
+	\item Noise from the inverter must not disturb the other electronics.
+	\item The inverter must not become too hot during prolonged use.
+\end{itemize}
 The development of the power electronics is discussed in detail in section \ref{sec:inverter}.
-This includes aspects, such as calculating switching losses and heat dissipation.
 
 \subsection{PMAC Motor}
 The PMAC motor provided needs to be analysed in order to drive it optimally and simulate the performance of it. 
