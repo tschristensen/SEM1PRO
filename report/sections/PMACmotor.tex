@@ -8,6 +8,78 @@ Initially the functionality of the motor will be described, then certain motor p
 Lastly a parking test will be performed to determine the angle of the encoder mounted on the motor. 
 The motor used to drive the go-kart is an 8-pole non-salient permanent magnet synchronous motor. 
 
+\subsection{Clarke Park Transform}
+\label{sec:clarkepark}
+The Clarke Park transform is integral to the type of control desired for the PMAC motor, so it must be understood. It is done by 'transforming the stator currents into a rotating reference frame that is locked to the rotation of the rotor' (\cite{electric_motor_and_drives} p.221). The transform starts by viewing the three phase star connection of the PMAC motor and displaying each phase as ABC (or W U and V as seen on figure \ref{fig:dq_transform_ref_frames} from the book cited \cite{electric_motor_and_drives}). This ABC current is first transform into a stationary frame of only two phases called the $\alpha \beta$ transform and then further transformed into dq0. When in dq0 form the reference frame rotates with the angular velocity $\omega$ of the motor, while being referenced to the stationary frame of the $\alpha \beta$ frame. This transform yields a d and q DC value and a zero, which are respectively referred to a torque and a flux demand in the controller.\newline
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.65\linewidth]{graphics/ABC_to_dq_ref_frame}
+	\caption{Clarke Park Transform reference frames. Source: \cite{electric_motor_and_drives}}
+	\label{fig:dq_transform_ref_frames}
+\end{figure}
+
+The Clarke Park transform is integral to the type of control desired for the PMAC motor, so it must be understood. It is done by 'transforming the stator currents into a rotating reference frame that is locked to the rotation of the rotor' (\cite{electric_motor_and_drives} p.221). The transform starts by viewing the three phase star connection of the PMAC motor and displaying each phase as ABC (or W U and V as seen on figure \ref{fig:dq_transform_ref_frames} from the book cited \cite{electric_motor_and_drives}). This ABC current is first transform into a stationary frame of only two phases called the $\alpha \beta$ \todo{along horizontal and vertial axes of the three phase stationary windings}transform\todo{ed} and then further transformed into dq0\todo{zero isn't necessary for a balanced load, and if it's not mentioned in alpha beta, it should not be mentioned here.}. When in dq0 form the \todo{what?}reference frame rotates with the angular velocity $\omega$ of the motor, while being referenced to the stationary frame of the $\alpha \beta$ frame. This transform yields a d and q DC value and a zero, which are respectively referred to a torque and a flux demand in the controller.\newline
+
+\todo{clarke park transformation can only be done for current, voltage and flux linkage.}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.65\linewidth]{graphics/ABC_to_dq_ref_frame}
+	\caption{Clarke Park Transform reference frames. Source: \cite{electric_motor_and_drives}}
+	\label{fig:dq_transform_ref_frames}
+\end{figure}
+
+Clarke-park:
+\begin{equation}
+\left[ \begin{array}{c}
+I_d \\ I_q
+\end{array} \right]
+=
+\frac{2}{3}
+\begin{bmatrix}
+\cos (\Phi) & \cos(\Phi - \gamma) & \cos( \Phi + \gamma) \\
+-\sin (\Phi) & -\sin(\Phi - \gamma) & -\sin( \Phi + \gamma)
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+I_A \\
+I_B \\
+I_C
+\end{bmatrix}
+%\label{eq:sim_clark-park}
+\end{equation}
+
+where $\gamma = \tfrac{2 \pi}{3}$. 
+
+inverse clarke-park:
+
+Inverse Clark-Park transformation is done by equation~\ref{eq:sim_inverse_clark-park}.
+
+\begin{equation}
+\left[ \begin{array}{c}
+I_A \\ I_B \\I_C
+\end{array} \right]
+=
+\begin{bmatrix}
+\cos (\Phi) & -\sin (\Phi) \\
+\cos(\Phi - \gamma) & -\sin(\Phi - \gamma) \\
+\cos(\Phi + \gamma) & -\sin( \Phi + \gamma) 
+\end{bmatrix}
+\cdot
+\begin{bmatrix}
+I_d \\
+I_q
+\end{bmatrix}
+%\label{eq:sim_inverse_clark-park}
+\end{equation}
+
+The requirement for this project outlines that the motor must be torque controlled, hence the flux demand will be zero while the torque demand will be defined by the speeder pedal. After the dq values have been compared to the reference/demand values the error is fed to a controller which will adjust the output accordingly. This output is transformed using the inverse dq0 transform, which yields a three phase AC signal that can be fed into the inverter and yield a new motor speed. \newline
+
+Illustrating this, the block diagram presented in section 4 can be retrieved. Figure \ref{fig:control_process_sec8}. This shows how the current of the three phase AC values are retrieved from the motor input, transformed to dq0 and then compared to reference values. The $i_d$ value will be zero as it is the flux reference, while the $i_q$ value will be set by the speeder pedal as a torque reference. The controller acts upon these and the dq values are transformed back to ABC three phase AC and fed to the inverter.
+
+In reality it is not a torque value that must be a reference for the controller, but a current value, as the current determines the torque. Taking this into account will be part of creating a functional model of the motor.
+
 \subsection{Motor description}\label{sub:motor_descrpition}
 The motor used is a 3-phase Wye-connected, 8-pole non-salient permanent magnet AC motor, the Motenergy ME1117.
 Although there are many different types of PMAC motors, there is no physical difference between brushless DC motors (BLDC), permanent magnet AC motors (PMAC), and permanent magnet synchronous motors (PMSM). 
