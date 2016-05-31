@@ -281,8 +281,8 @@ The block diagram of the discrete controller is shown on figure~\ref{fig:sim_con
 
 The two independent current controllers are drawn in blue boxes. 
 The feedback comes from the $I_{dq}$ port on the left.
-The constants, $K_p$ and $K_i$, are calculated in chapter~\ref{sec:controller_design}, and divided by half the battery voltage.
-This is done, because the controllers designed in chapter~\ref{sec:controller_design} produce a voltage, whereas the simulink controller produces a percentage of half the battery voltage, i.e. between -1 and 1.
+The constants, $K_p$ and $K_i$, are calculated in section~\ref{sec:controller_design}, and divided by half the battery voltage.
+This is done, because the controllers designed in section~\ref{sec:controller_design} produce a voltage, whereas the simulink controller produces a percentage of half the battery voltage, i.e. between -1 and 1.
 Similarly the implemented PWM block in section~\ref{sub:Architecture} takes integers in the range from 0 to 1000, so the controller constants need to be scaled accordingly\\
 The integrator block uses trapezoidal integration, and the output is limited to $\pm \tfrac{2}{\sqrt{(3)}}$.
 This is to ensure, that the integrator does not wind up.
@@ -400,7 +400,7 @@ The simulation will be run with both PI and IP controllers, with values describe
 \subsubsection{PI controller}\label{sub:PI05}
 Throughout this section the PI controller developed in section \ref{sec:controller_design} for a full order system will be tested.
 At first, a simulation will be run where the throttle is pressed fully from 0.12s to 5s, and then released.
-This input is similar to the one used in chapter~\ref{sec:controller_design}.
+This input is similar to the one used in section~\ref{sec:controller_design}.
 The mass is 200kg.
 The resultant current along the d and q axes have been plotted in figure~\ref{fig:Sim_results_pi_Idq}.
 
