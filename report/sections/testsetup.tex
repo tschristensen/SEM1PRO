@@ -3,11 +3,11 @@
 This section will describe how the system was implemented and tested on both a test setup and the real go-kart setup. 
 
 \subsection{Test Setup}
-In order to test subparts of the complete system a test setup was introduced.
-It consists of a permanent magnet motor of the type PM5113 with a RMB28MD encoder module mounted with a small distance to the end of the shaft.
+In order to test subparts of the complete system, a test setup was introduced.
+It consists of a permanent magnet motor of the type PM5113 with a RMB28MD encoder mounted on top.
 The setup furthermore consists of a 74HCT14 level shift interface board and a dual H-bridge and can be seen in figure \ref{fig:small_motor_setup}.
 The setup was made and soldered by the supervisors of the project.
-The full setup with H-bridge can be used to test the functionality of the Embedded System.
+The full setup with H-bridges can be used to test the functionality of the Embedded System.
 The motor and encoder can be used to test the full system.
 
 \begin{figure}[!h]
@@ -18,16 +18,17 @@ The motor and encoder can be used to test the full system.
 \end{figure}
 
 \subsection{PWM generating}
-To test whether or not the Clarke Park transformation and the PWM generating on the Zybo board was working correctly a test was conducted.
+To test whether the Clarke Park transformation and the PWM generation on the Zybo board was working correctly a test was conducted.
 The test setup, described in the previous section, was used.
-The three legs of the H-bridge was connected to the control pins for the upper MOSFETS for phase a, b and c.
+The three output pins of the half bridges are connected to the terminals of the motor.
 A constant value for q was chosen and d was set to zero. 
 The angle of the rotor was measured and used to do the Clarke Park transformation. 
 No current measurements were done, meaning that the only feedback was the angle.
 Each of the signals from the output pins of the Zybo board were, in addition to the H-bridge, connected to an electric lowpass filter consisting of a 10 \si{\kilo\ohm} resistor and a 22 \si{\nano\farad} capacitor. 
-The voltage across the capacatior was measured by an oscilloscope as the power supply for the H-bridge was turned on.
+The voltage across the capacitor was measured by an oscilloscope as the power supply for the H-bridge was turned on.
 The measured phase voltages can be seen in figure \ref{fig:small_motor_phases}.
-As the observant reader will notice there are no third harmonic on the graphs, this is because third harmonic injection were not included at the time of the test. 
+As the observant reader will notice there are no third harmonic on the graphs.
+This is because third harmonic injection were not included at the time of the test. 
 It can be seen that the three phase voltages are created correctly by the Zybo board.
 It can also be seen that the rotor is accelerated within a fraction of an electrical revolution, which is expected as there is no torque load. 
 
@@ -50,19 +51,18 @@ In the meantime the OCP of the DRV8301 was understood, allowing to use this feat
 
 As shown in section \ref{sec:electricsimulation}, the general behaviour of the OCP circuit is working as intended.
 The errors found on the analog and digital boards are mostly related to layout and unintentional short circuits.
+In addition, the board were designed early in the process, without certain knowledge about the zybo and the driver, that has been acquired now.
 For this reason it is the conviction of the group that one or two revisions of the boards would be necessary to fully debug them.
 
 \subsection{Power Board}
 \label{sec:powertest}
-To ensure that the power board was working correctly a test of it was performed. 
+To ensure that the power board was working correctly, a test of it was performed using . 
 As described in the previous section the developed digital and analog board were not made to function because of time constraints. 
 Instead two simple boards were developed for testing purposes. 
-They only housed the bare minimum functionality of the original boards. 
-That being scaling of output from LEM sensors and torque pedal, routing of signals to/from the DRV8301 and a CR circuit for delaying the SPI slave select signal. 
-\todo[inline]{More Martin? - Mikkel}
+They only contained the bare minimum functionality of the original boards: scaling of output from LEM sensors and torque pedal, routing of signals to/from the DRV8301 and a RC circuit for delaying the SPI slave select signal. 
 The already tested embedded system on the Zybo was connected and programmed to run the motor.  
 Upon powering on the system the motor starting running, verifying that the inverter is functioning correctly.
-Unfortunately, due to time constraints, it has not been possible to verify that it meets the requirements to run the motor on the Go-Kart.
+Unfortunately, due to time constraints, it has not been possible to verify that it meets the requirements to run the motor on the go-kart.
 
 
 
