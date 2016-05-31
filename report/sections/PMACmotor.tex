@@ -19,18 +19,18 @@ The Clarke Park transform is integral to the type of control desired for the PMA
 	\label{fig:dq_transform_ref_frames}
 \end{figure}
 
-The Clarke Park transform is integral to the type of control desired for the PMAC motor, so it must be understood. It is done by 'transforming the stator currents into a rotating reference frame that is locked to the rotation of the rotor' (\cite{electric_motor_and_drives} p.221). The transform starts by viewing the three phase star connection of the PMAC motor and displaying each phase as ABC (or W U and V as seen on figure \ref{fig:dq_transform_ref_frames} from the book cited \cite{electric_motor_and_drives}). This ABC current is first transform into a stationary frame of only two phases called the $\alpha \beta$ \todo{along horizontal and vertial axes of the three phase stationary windings}transform\todo{ed} and then further transformed into dq0\todo{zero isn't necessary for a balanced load, and if it's not mentioned in alpha beta, it should not be mentioned here.}. When in dq0 form the \todo{what?}reference frame rotates with the angular velocity $\omega$ of the motor, while being referenced to the stationary frame of the $\alpha \beta$ frame. This transform yields a d and q DC value and a zero, which are respectively referred to a torque and a flux demand in the controller.\newline
+The Clarke Park transform is integral to the type of control desired for the PMAC motor, so it must be understood.
+It is done by 'transforming the stator currents into a rotating reference frame that is locked to the rotation of the rotor' (\cite{electric_motor_and_drives} p.221).
+The transform starts by viewing the three phase star connection of the PMAC motor and displaying each phase as ABC (or W U and V as seen on figure \ref{fig:dq_transform_ref_frames} from the book cited \cite{electric_motor_and_drives}).
+This ABC current is initially transformed into a stationary frame of only two phases, along horizontal and vertical axes of the three phase stationary windings, called the $\alpha \beta$ transformation.
+This is the Clarke transform.
+These axes are then further transformed into dq axes, that rotate along with the rotor. 
+This is the Park transform.
+This allows the controller to generate a magnetic field relative to the rotor.
+The q-axis current controls the torque produced in the motor, and the d-axis current controls the flux.\\
 
-\todo{clarke park transformation can only be done for current, voltage and flux linkage.}
+It is not relevant what the $\alpha\beta$ currents or voltages are, so the Clarke Park transform will be done in one step. This is described in equation~\ref{eq:sim_clark-park}.
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=.65\linewidth]{graphics/ABC_to_dq_ref_frame}
-	\caption{Clarke Park Transform reference frames. Source: \cite{electric_motor_and_drives}}
-	\label{fig:dq_transform_ref_frames}
-\end{figure}
-
-Clarke-park:
 \begin{equation}
 \left[ \begin{array}{c}
 I_d \\ I_q
@@ -47,10 +47,14 @@ I_A \\
 I_B \\
 I_C
 \end{bmatrix}
-%\label{eq:sim_clark-park}
+\label{eq:sim_clark-park}
 \end{equation}
 
 where $\gamma = \tfrac{2 \pi}{3}$. 
+
+This will be used to convert the controller output to reference signals for the PWM generator.
+
+The inverse Clarke Park transform is done by equation~\ref{eq:sim_inverse_clark-park}
 
 inverse clarke-park:
 
@@ -71,7 +75,7 @@ I_A \\ I_B \\I_C
 I_d \\
 I_q
 \end{bmatrix}
-%\label{eq:sim_inverse_clark-park}
+\label{eq:sim_inverse_clark-park}
 \end{equation}
 
 The requirement for this project outlines that the motor must be torque controlled, hence the flux demand will be zero while the torque demand will be defined by the speeder pedal. After the dq values have been compared to the reference/demand values the error is fed to a controller which will adjust the output accordingly. This output is transformed using the inverse dq0 transform, which yields a three phase AC signal that can be fed into the inverter and yield a new motor speed. \newline

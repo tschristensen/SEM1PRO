@@ -400,11 +400,19 @@ The simulation will be run with both PI and IP controllers, with values describe
 \subsubsection{PI controller}\label{sub:PI05}
 Throughout this section the PI controller developed in section \ref{sec:controller_design} for a full order system will be tested.
 At first, a simulation will be run where the throttle is pressed fully from 0.12s to 5s, and then released.
+This is displayed on figure~\ref{fig:torque_input}.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width = 0.7\linewidth]{graphics/torque_input}
+	\caption{Torque step input for the tests performed in this section}
+	\label{fig:torque_input}
+\end{figure}
+
 This input is similar to the one used in section~\ref{sec:controller_design}.
 The mass is 200kg.
 The resultant current along the d and q axes have been plotted in figure~\ref{fig:Sim_results_pi_Idq}.
 
-\todo[inline]{Input signal needed}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{graphics/Sim_results_pi_Idq}
@@ -489,8 +497,7 @@ K_I = 1.23e-2 %0.012272727272727
 \label{eq:IP_controller_constants}
 \end{equation}
 
-Figure~\ref{fig:Sim_results_ip_Idq} shows the d and q-axis current as the controller is given a positive and a negative step.
-\todo[inline]{refer to input figure}
+Figure~\ref{fig:Sim_results_ip_Idq} shows the d and q-axis current as the controller is given a positive and a negative step, as seen on figure~\ref{torque_input}.
 
 \begin{figure}[H]
 	\begin{subfigure}[t]{.49\linewidth}
@@ -586,8 +593,6 @@ A faster controller was calculated with tremendous results.
 	\caption{Table comparing the abilities of the three tested controllers}
 	\label{tab:simulink_conclusion}
 \end{table}
-
-\todo[inline]{make gray}
 
 Both the PI controllers could work, but the faster response gives very precise current control.
 The IP controller was designed in section~\ref{sec:controller_design} based on a reduced order system without any mechanical part. 
