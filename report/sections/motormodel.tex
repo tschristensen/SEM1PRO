@@ -35,7 +35,7 @@ This figure shows that the q-axis of the PMAC motor can be represented as an ele
 \begin{figure}[!h]
 	\centering
 	\includegraphics[width=.4\textwidth]{graphics/q_axis_equivalent}
-	\caption{PMAC motor equivalent circuit, q-axis}
+	\caption{PMAC motor equivalent circuit, q-axis.}
 	\label{fig:PMSM_Equivalent_q_axis}
 \end{figure}
 
@@ -62,7 +62,7 @@ A state space model is derived from the physical representation of a PMAC motor,
 
 Reducing the model of figure \ref{fig:State_space_model1} to use transfer functions for the electrical and mechanical parts results in a more simple model with fewer loops. 
 It is shown on figure \ref{fig:State_space_model3}. 
-In the electric part of the circuit a new value $TS$ has been added to the denominator of the transfer function, this value is the electromagnetic time constant of the stator, defined as $TS=L_a/R_a$. The constant defined $J_{pro}$ is the projected inertia of the kart, based on the expected weight with a driver and also adding the inertia of each gear.
+In the electric part of the circuit a new value $TS$ has been added to the denominator of the transfer function, this value is the electromagnetic time constant of the stator, defined as $TS=L_a/R_a$. The constant defined $J_{pro}$ is the projected inertia of the go-kart, based on the expected weight with a driver and also adding the inertia of each gear.
 
 \begin{figure}[H]
 	\centering
@@ -89,13 +89,13 @@ A pole-zero map of both models will be used to see whether the inductor can be r
 	\centering
 	\begin{subfigure}[t]{.45\linewidth}
 		\includegraphics[width=\textwidth]{graphics/full_order_model_pz_map}
-		\caption{PZ map of full order model}
+		\caption{PZ map of full order model.}
 		\label{fig:PZmap_full}
 	\end{subfigure}
 	\hspace{0.5cm}
 	\begin{subfigure}[t]{.45\linewidth}
 		\includegraphics[width=\textwidth]{graphics/reduced_order_model_pz_map}
-		\caption{PZ map of no inductor model}
+		\caption{PZ map of no inductor model.}
 		\label{fig:PZmap_Reduced}
 	\end{subfigure}
 	\caption{Matlab Simulink PZ Map of each model.}
@@ -142,7 +142,7 @@ It can be seen on figure \ref{fig:State_space_model_reduced_order_v2}.
 	\label{fig:State_space_model_reduced_order_v2}
 \end{figure}
 
-The model is basically an LR circuit where the output is the current. Which will just go as high as the L and R allows and stay there, since the back emf is not included. 
+The model is basically an LR circuit where the output is the current. Which will just go as high as the L and R allows and stay there, since the back-EMF is not included. 
 %A PZ map should shows that the slow pole to the right is removed. Figure \ref{fig:PZmap_reduced_v2} shows the result.
 %\begin{figure}[H]
 %	\centering
@@ -164,7 +164,7 @@ Figure \ref{fig:Full_Vs_Reduced2} shows the current.
 	\label{fig:Full_Vs_Reduced2}
 \end{figure}
 
-This shows that the current ramps up and stays there. The current starts at zero and ramps up. The downward slope of the full order model is caused by the back emf which is removed in the reduced model.
+This shows that the current ramps up and stays there. The current starts at zero and ramps up. The downward slope of the full order model is caused by the back-EMF which is removed in the reduced model.
 %
 %This model could be used with a controller, but will require some simulations with the motor after a controller has been developed, the downward slope of the full order model is caused by the mechanical system getting saturated by current, this should not change how each model is affected by current control, because a fast and robust controller is desired.
 
@@ -447,20 +447,20 @@ Figure \ref{fig:output_both} shows how both models perform with the controller v
 	\centering
 	\begin{subfigure}[t]{.45\linewidth}
 		\includegraphics[width=\textwidth]{graphics/Controlled_response_Fullorder}
-		\caption{Current output response of the full order model to the signal input given in figure \ref{fig:Input_ref}}
+		\caption{Current output response of the full order model to the signal input given in figure \ref{fig:Input_ref}.}
 		\label{fig:Output_Full}
 	\end{subfigure}
 	\hspace{0.5cm}
 	\begin{subfigure}[t]{.45\linewidth}
 		\includegraphics[width=\textwidth]{graphics/Controlled_response_LR}
-		\caption{Current output response of LC model to the signal input given in figure \ref{fig:Input_ref}}
+		\caption{Current output response of LC model to the signal input given in figure \ref{fig:Input_ref}.}
 		\label{fig:Output_LC}
 	\end{subfigure}
-	\caption{Simulations of each model with their controllers}
+	\caption{Simulations of each model with their controllers.}
 	\label{fig:output_both}
 \end{figure}
 
-The controller to be used for the kart will be determined by running a more in depth simulation in the next section, this simulation will include the physical systems, breaks, torque etc. A choice will be made based on controller performance in these tests.
+The controller to be used for the go-kart will be determined by running a more in depth simulation in the next section, this simulation will include the physical systems, breaks, torque etc. A choice will be made based on controller performance in these tests.
 
 
 \subsection{Discretization}

@@ -1,14 +1,14 @@
 %!TEX root = ../main.tex
 \section{Three Phase Inverter}
 \label{sec:inverter}
-This section will describe the design of the three-phase inverter used to drive the PMAC motor in this project.
+This section will describe the design of the three phase inverter used to drive the PMAC motor in this project.
 This includes the calculations and considerations done.
-Initially, a short overview of the principle of operation of a three-phase inverter is given.
+Initially, a short overview of the principle of operation of a three phase inverter is given.
 
 \subsection{Operation of a Three Phase Inverter}
-A three-phase inverter enables the use of a DC supply in variable frequency control of a three-phase load.
+A three phase inverter enables the use of a DC supply in variable frequency control of a three phase load.
 In this project the DC supply is a battery and the load, a PMAC motor.
-Figure \ref{fig:threephaseinverter} is a Simulink model showing the most basic three-phase inverter.
+Figure \ref{fig:threephaseinverter} is a Simulink model showing the most basic three phase inverter.
 As can be seen, the inverter consists of three half-bridges for a total of six switches.
 Each pair of switches can never be on at the same time as this would result in shorting the battery.
 
@@ -20,7 +20,7 @@ Each pair of switches can never be on at the same time as this would result in s
 \end{figure}
 
 This type of inverter only works with a balanced load, such as the PMAC motor.
-A balanced three-phase load implies, that the sum of the currents in the three phases is always equal tp zero, and no current is running through a neutral wire.
+A balanced three phase load implies, that the sum of the currents in the three phases is always equal tp zero, and no current is running through a neutral wire.
 As the inverter does not have a connection to the neutral point of the load, it could not supply an unbalanced load, such as those in uninterruptible power supplies (UPS's) and solar cells.
 
 Several schemes exist to control the switches.
@@ -58,7 +58,7 @@ The three main requirements are listed in table \ref{tab:req1}\\
 		3 & Operating at $V_{GS}$ of  & 9.5\si{\volt} \\
 		\hline
 	\end{tabular}
-	\caption{Three main requirements as a starting point for choosing the MOSFETs}
+	\caption{Three main requirements as a starting point for choosing the MOSFETs.}
 	\label{tab:req1}
 \end{table}
 

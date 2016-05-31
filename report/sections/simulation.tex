@@ -1,10 +1,10 @@
 %!TEX root = ../main.tex
 \section{Simulation}\label{sec:Simulations}
 Simulation tools have been a great help, not only in understanding the electromechanical system, and design a controller from it, but also in estimating requirements for the electrical components.
-Both Simscape and Plecs Standalone have been used, as they excel at different purposes. 
-Simscape is used to test the controller on a system with as much realism as possible to make sure the go-kart functions, whereas Plecs is used to simulate the inverter to determine whether there will be heating issues during operation.
+Both Simulink and Plecs Standalone have been used, as they excel at different purposes. 
+Simulink is used to test the controller on a system with as much realism as possible to make sure the go-kart functions, whereas Plecs is used to simulate the inverter to determine whether there will be heating issues during operation.
 
-Simscape will be used to simulate how the controller handles certain events:
+Simulink will be used to simulate how the controller handles certain events:
 
 \begin{itemize}
 	\item Actuation of torque pedal.
@@ -14,7 +14,7 @@ Simscape will be used to simulate how the controller handles certain events:
 \end{itemize}
 
 In all cases, the controller should ensure that the motor produces the requested torque.
-The kart does not have regenerative braking, so negative torque will be a problem.
+The go-kart does not have regenerative braking, so negative torque will be a problem.
 The Plecs simulations do not need these details, but the mechanical system still needs a representation of mass of the car, the gear, the wheel and wind resistance. 
 
 \subsection{Mechanical System}\label{sub:Simulations_mec}
@@ -23,7 +23,7 @@ The mechanical system consists of a mass of the go-kart with driver, turbulent a
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=15cm]{graphics/simulations_mechanical_full.png}
-	\caption{Block diagram of the mechanical system}
+	\caption{Block diagram of the mechanical system.}
 	\label{fig:mechanical_full}
 \end{figure}
 
@@ -74,7 +74,7 @@ The mass is set to 150 - 250kg, depending on the driver, and this includes the m
 This is done to test different situations -- a high mass would have more stable speeds, but also cause more power loss in the inverter, whereas a lower mass would be more prone to wheel spin.\\
 
 Wind resistance represents a larger friction than any other frictions, once the go-kart reach higher speeds.
-Wind resistance of a gokart is primarily turbulent, and can be calculated by equation~\ref{eq:wind_resistance}.
+Wind resistance of a go-kart is primarily turbulent, and can be calculated by equation~\ref{eq:wind_resistance}.
 
 \begin{equation}
 \label{eq:wind_resistance}
@@ -146,17 +146,17 @@ The mechanical diagram is reduced to figure ~\ref{fig:reduced_mechanical_system}
 \begin{figure}[H]
 	\begin{center}
 	\includegraphics[width=12cm]{graphics/simulations_mechanical_simplified.png}
-	\caption{Block diagram of the reduced mechanical system}
+	\caption{Block diagram of the reduced mechanical system.}
 	\label{fig:reduced_mechanical_system}
 	\end{center}
 \end{figure}
 
-In the Simscape model, the tyre is modelled by a friction block in series with the rotor, and the brake is modelled in a subsystem, as seen on figure~\ref{fig:simulations_mechanical_simscape}.
+In the Simulink model, the tyre is modelled by a friction block in series with the rotor, and the brake is modelled in a subsystem, as seen on figure~\ref{fig:simulations_mechanical_simscape}.
 
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width = 12cm]{graphics/simulations_mechanical_simscape.png}
-		\caption{Block diagram for the mechanical system used in Simscape}
+		\caption{Block diagram for the mechanical system used in Simulink.}
 		\label{fig:simulations_mechanical_simscape}
 	\end{center}
 \end{figure}
@@ -178,17 +178,17 @@ F_N = mg \cdot dm
 \end{equation}
 
 and $c_f$ is either the static or dynamic friction, depending on if the wheels are slipping. 
-The constant, dm is the distribution of mass so that $dm=0$ means the entire mass of the gokart is on the front wheels, and $dm=1$ means the whole weight distribution is on the driving wheels.
+The constant, dm is the distribution of mass so that $dm=0$ means the entire mass of the go-kart is on the front wheels, and $dm=1$ means the whole weight distribution is on the driving wheels.
 The viscous friction is zero.
 The static friction coefficient is 1, the dynamic friction is 0.7, and the mass distribution is 0.6.
 
-The brake subsystem is a PI controlled ideal torque source, which will attempt to bring the go kart to a halt when the brake is pressed.
+The brake subsystem is a PI controlled ideal torque source, which will attempt to bring the go-kart to a halt when the brake is pressed.
 Without a PI controller, there is a strong possibility that the brake would suddenly make the motor go backwards instead of stopping.\\
 Lastly the inertia is split into two inertia blocks, one containing motor and gear inertia on the left of the tyre, and the inertia due to the mass of the car on the right.
 The brake on the go-kart is mounted on the rear axle, which means the torque it produces must be scaled down to represent the torque seen on the motor rod.
 
 \subsection{Motor Model}\label{sub:motor_model_simscape}
-Both Simscape and Plecs have built in models of PMAC motors.
+Both Simulink and Plecs have built in models of PMAC motors.
 They have the four basic parameters: Number of pole pairs, flux linkage of the magnet, inductance and armature resistance. 
 The parameters used for simulations are listed in table~\ref{tab:motor_parameters_in_simulations}.
 
@@ -259,7 +259,7 @@ This can be seen on figure~\ref{fig:simulations_zybo}.
 \begin{figure}[H]
 	\begin{center}
 		\includegraphics[width = 12cm]{graphics/simulations_zybo}
-		\caption{Block diagram describing the Zybo part of the system}
+		\caption{Block diagram describing the Zybo part of the system.}
 		\label{fig:simulations_zybo}
 	\end{center}
 \end{figure}
@@ -275,14 +275,14 @@ The block diagram of the discrete controller is shown on figure~\ref{fig:sim_con
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 16cm]{graphics/sim_controller_diagram}
-	\caption{Block diagram of discrete PI controller}
+	\caption{Block diagram of discrete PI controller.}
 	\label{fig:sim_controller_diagram}
 \end{figure}
 
 The two independent current controllers are drawn in blue boxes. 
 The feedback comes from the $I_{dq}$ port on the left.
 The constants, $K_p$ and $K_i$, are calculated in section~\ref{sec:controller_design}, and divided by half the battery voltage.
-This is done, because the controllers designed in section~\ref{sec:controller_design} produce a voltage, whereas the simulink controller produces a percentage of half the battery voltage, i.e. between -1 and 1.
+This is done, because the controllers designed in section~\ref{sec:controller_design} produce a voltage, whereas the Simulink controller produces a percentage of half the battery voltage, i.e. between -1 and 1.
 Similarly the implemented PWM block in section~\ref{sub:Architecture} takes integers in the range from 0 to 1000, so the controller constants need to be scaled accordingly\\
 The integrator block uses trapezoidal integration, and the output is limited to $\pm \tfrac{2}{\sqrt{(3)}}$.
 This is to ensure, that the integrator does not wind up.
@@ -302,15 +302,15 @@ For comparison, the d and q axis duty cycles have been simulated and are shown o
 	\centering
 	\begin{subfigure}[t]{.49\linewidth}
 		\includegraphics[width=\textwidth]{graphics/before_saturation}
-		\caption{Before parallel scale down}
+		\caption{Before parallel scale down.}
 		\label{fig:before_saturation}
 	\end{subfigure}
 	\begin{subfigure}[t]{.49\linewidth}
 		\includegraphics[width=\textwidth]{graphics/after_saturation}
-		\caption{After parallel scale down}
+		\caption{After parallel scale down.}
 		\label{fig:after_saturation}
 	\end{subfigure}
-	\caption{dq duty cycle values before and after parallel scale down}
+	\caption{dq duty cycle values before and after parallel scale down.}
 	\label{fig:parallel_scale_down_graphs}
 \end{figure}
 
@@ -322,7 +322,7 @@ As the torque produced by the motor is reduced due to saturation of the supply, 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 14cm]{graphics/sim_PWM_generation}
-	\caption{Block diagram of the PWM generator}
+	\caption{Block diagram of the PWM generator.}
 	\label{fig:sim_PWM_generation}
 \end{figure}
 
@@ -416,7 +416,7 @@ The resultant current along the d and q axes have been plotted in figure~\ref{fi
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.7\linewidth]{graphics/Sim_results_pi_Idq}
-	\caption{d and q current simulated with a positive and negative step}
+	\caption{d and q current simulated with a positive and negative step.}
 	\label{fig:Sim_results_pi_Idq}
 \end{figure}
 
@@ -441,7 +441,7 @@ This is shown on figure~\ref{fig:Sim_results_pi_phase_voltage}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.7\linewidth]{graphics/Sim_results_pi_phase_voltage}
-	\caption{Voltage waveforms measured when the motor is running at 4000 RPM}
+	\caption{Voltage waveforms measured when the motor is running at 4000 RPM.}
 	\label{fig:Sim_results_pi_phase_voltage}
 \end{figure}
 
@@ -458,13 +458,13 @@ Figure~\ref{fig:Sim_results_pi_phase_power} shows a short power undershoot occur
 	\begin{subfigure}[b]{.49\linewidth}
 		\centering
 		\includegraphics[width = \linewidth]{graphics/Sim_results_pi_phase_power}
-		\caption{Power undershoot when throttle is released}
+		\caption{Power undershoot when throttle is released.}
 		\label{fig:Sim_results_pi_phase_power}
 	\end{subfigure}
 	\begin{subfigure}[b]{.49\linewidth}
 		\centering
 		\includegraphics[width = \linewidth]{graphics/Sim_results_pi05_large_power_undershoot}
-		\caption{Power undershoot crosses zero 33 ms after the throttle is released}
+		\caption{Power undershoot crosses zero 33 ms after the throttle is released.}
 		\label{fig:Sim_results_pi05_large_power_undershoot}
 	\end{subfigure}
 	\caption{Undershoot when releasing torque pedal.}
@@ -473,7 +473,7 @@ Figure~\ref{fig:Sim_results_pi_phase_power} shows a short power undershoot occur
 The power peaks at -400\si{\watt} for a short time.
 Integrating the power from 5.06 to 5.5s gives an energy of -25\si{\joule}.
 This is not likely to cause problems, as this energy easily could be lost in the inverter.
-The issue is larger when releasing the throttle while the kart is accelerating. 
+The issue is larger when releasing the throttle while the go-kart is accelerating. 
 This is shown on figure~\ref{fig:Sim_results_pi05_large_power_undershoot}.
 
 Integrating this undershoot yields -62\si{\joule}. 
@@ -503,13 +503,13 @@ Figure~\ref{fig:Sim_results_ip_Idq} shows the d and q-axis current as the contro
 	\begin{subfigure}[t]{.49\linewidth}
 		\centering
 		\includegraphics[width = \linewidth]{graphics/Sim_results_ip_Idq}
-		\caption{d and q axis current with a positive and negative step with the IP controller}
+		\caption{d and q axis current with a positive and negative step with the IP controller.}
 		\label{fig:Sim_results_ip_Idq}
 	\end{subfigure}
 	\begin{subfigure}[t]{.49\linewidth}
 		\centering
 		\includegraphics[width = \linewidth]{graphics/Sim_results_ip_power}
-		\caption{Negative power caused by oscillation}
+		\caption{Negative power caused by oscillation.}
 		\label{fig:Sim_results_ip_power}
 	\end{subfigure}
 	\caption{Characteristics of IP controller.}
@@ -558,7 +558,7 @@ There is a small current undershoot when the pedal is released of only -3\si{\am
 	\begin{subfigure}[t]{.49\linewidth}
 		\centering
 		\includegraphics[width = \linewidth]{graphics/Sim_results_pi01_Idq}
-		\caption{d and q axis current is a lot more precise than on figure~\ref{fig:Sim_results_pi_Idq}}
+		\caption{d and q axis current is a lot more precise than on figure~\ref{fig:Sim_results_pi_Idq}.}
 		\label{fig:Sim_results_pi01_Idq}
 	\end{subfigure}
 	\begin{subfigure}[t]{.49\linewidth}
@@ -590,13 +590,13 @@ A faster controller was calculated with tremendous results.
 		{Torque release} & {Small power returned}& {Oscillation}& {Great response}  \\
 		\hline
 	\end{tabular}
-	\caption{Table comparing the abilities of the three tested controllers}
+	\caption{Table comparing the abilities of the three tested controllers.}
 	\label{tab:simulink_conclusion}
 \end{table}
 
 Both the PI controllers could work, but the faster response gives very precise current control.
 The IP controller was designed in section~\ref{sec:controller_design} based on a reduced order system without any mechanical part. 
-Evidently, the motor along with the mass of the gokart has a slow pole, that the IP controller does not handle.
+Evidently, the motor along with the mass of the go-kart has a slow pole, that the IP controller does not handle.
 The IP controller adds a pole to the systems, which makes the fast pole on figure~\ref{fig:PZmap_reduced_v2} complex conjugate poles that can oscillate.
 This oscillation proves to be too much when adding the slow poles of the mechanical system.
 As it has shown, this controller is not able to account for the mechanical system as a disturbance, which is unsurprising really giving the scope of the mechanics involved.
@@ -686,7 +686,7 @@ As there is a very low heat capacity in each of the MOSFETs, it's safe to assume
 	\begin{subfigure}[t]{.49\linewidth}
 		\centering
 		\includegraphics[width = \linewidth]{graphics/plecs_current_ripple}
-		\caption{Current ripple in the electrolytic capacitors, in RMS}
+		\caption{Current ripple in the electrolytic capacitors, in RMS.}
 		\label{fig:plecs_current_ripple}
 	\end{subfigure}
 	\caption{MOSFET and capacitor loss.}
