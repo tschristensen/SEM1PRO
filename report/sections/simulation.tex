@@ -123,7 +123,7 @@ This means, that a torque source driving an inertia through a gear, is experienc
 J_{ref} = \frac{G1^2}{G2^2} J
 \end{equation}
 
-This inertia is then added to the inertia of the motor and $\mathrm{J_{G1}}$:
+This inertia is then added to the inertia of the motor and $J_{G1}$:
 
 \begin{equation}
 J = (mr^2+J_{G2}) \cdot \big(\tfrac{G1}{G2}\big)^2 + J_{G1}+J_M
@@ -287,7 +287,8 @@ Similarly the implemented PWM block in section~\ref{sub:Architecture} takes inte
 The integrator block uses trapezoidal integration, and the output is limited to $\pm \tfrac{2}{\sqrt{(3)}}$.
 This is to ensure, that the integrator does not wind up.
 The saturation block to the left of the q current controller on figure~\ref{fig:sim_controller_diagram} limits the input to between 0 and a maximum current.
-The PI controllers produce duty cycle values in the range of $\mathrm{\pm \tfrac{2}{\sqrt{(3)}}}$, although it is possible to exceed this range at this point in the diagram.\\
+The PI controllers produce duty cycle values in the range of 
+$\pm \tfrac{2}{\sqrt{(3)}}$, although it is possible to exceed this range at this point in the diagram.\\
 
 It is necessary to ensure, that the controller does not produce values outside the range that can be generated using PWM. 
 The obvious solution is to put a saturation block after each of the controllers, but a large value value from both controllers will still cause saturations.
@@ -350,7 +351,7 @@ V \sin(\Theta + 120 \si{\degree})
 \label{eq:equation_9}
 \end{equation}
 
-where $\mathrm{\Theta}$ is the instantaneous phase, and V is the instantaneous magnitude, calculated as:
+where $\Theta$ is the instantaneous phase, and V is the instantaneous magnitude, calculated as:
 
 \begin{equation}
 V = \sqrt{V_q ^2 + V_d ^2}
@@ -486,7 +487,7 @@ In order to do that, the wire going into the Kp gain block must be connected wit
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.75\linewidth]{graphics/ip_controller_in_full_system}
-	\caption{Input to $\mathrm{K_p}$ gain blocks are connected to the $\mathrm{I_{dq}}$ feedback wire instead of the output of the summation block.}
+	\caption{Input to $K_p$ gain blocks are connected to the $I_{dq}$ feedback wire instead of the output of the summation block.}
 \end{figure}
 
 The parameters are divided by half the battery voltage, and shown in equation~\ref{eq:IP_controller_constants}.
@@ -528,8 +529,8 @@ The total energy being delivered back in the timespan shown on figure~\ref{fig:S
 
 \subsubsection{PI Controller with Faster Settling Time}\label{sub:PI01}
 
-Since neither of the two controller designs work optimally, the PI controller will be redesigned with a settling time of $\mathrm{10 \si{\milli \second}}$.
-The controller is designed for a load of $\mathrm{200 \si{\kilogram}}$.
+Since neither of the two controller designs work optimally, the PI controller will be redesigned with a settling time of $10 \si{\milli \second}$.
+The controller is designed for a load of $200 \si{\kilogram}$.
 The control parameters in equation~\ref{eq:10ms_settling_time_param} are divided by half the battery voltage
 
 \begin{equation}
@@ -543,15 +544,15 @@ K_I &= 2.6 \cdot 10^{-3} %0.002604159942864
 The reason for not using the settling time of 1\si{\milli\second} is, that it provides a large overshoot, which was also evident in this more elaborate simulator.
 Introducing a rate limiter block in the Discrete controller subsystem between the q setpoint port and the saturation block will reduce the overshoot to less than 1\%.
 This block is displayed on figure~\ref{eq:IP_controller_constants}.
-The rising and falling rates are set to $\mathrm{10 \si{\kilo \ampere \per \second}}$ and $\mathrm{-10 \si{\kilo \ampere \per \second}}$.
+The rising and falling rates are set to $10 \si{\kilo \ampere \per \second}$ and $-10 \si{\kilo \ampere \per \second}$.
 This is fast enough, that a driver would not notice.
 
 Figure~\ref{fig:Sim_results_pi01_Idq} shows the positive and negative current step.
 
-The faster $\mathrm{I_{q}}$-controller is much more precise.
+The faster $I_{q}$-controller is much more precise.
 The rate limiter ensures, that the overshoot is less than 1 percent.
 The steady state error negligible.
-However, the $\mathrm{I_{d}}$-controller is more noisy, but still close to zero.
+However, the $I_{d}$-controller is more noisy, but still close to zero.
 There is a small current undershoot when the pedal is released of only -3\si{\ampere}. The power caused by this is shown on figure~\ref{fig:Sim_results_pi01_power}
 
 \begin{figure}[H]
