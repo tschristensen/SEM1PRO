@@ -387,6 +387,16 @@ T_c & = &  49\si{\celsius}\\
 T_j & = &  77\si{\celsius}\\
 \end{eqnarray*}
 
+The thermal capacity, $C_s$ of the heat sink is calculated using equation~\ref{eq:thermal_capacity}.
+
+\begin{equation}
+C_{s} = v \cdot \rho_m C_{p}
+\label{eq:thermal_capacity}
+\end{equation}
+
+where $C_{p}$ is the specific heat capacity of aluminium, which is 910 \si{\joule\per\kilogram\kelvin}, and $\rho_m$ is the mass density of aluminium.
+For a heatsink of 30x30x1\si{\centi\metre}, the heat capacity is 2180 \si{\kelvin \per \joule}.
+
 The calculated junction temperature is well below the maximum ratings shown in table~\ref{tab:temp_param}. If it is assumed that the go-kart will be operating with full power loss for t = 5min the temperature will reach $T_j \approx$ 140\si{\celsius}. Thus, it is safe to assume that the MOSFETs will not reach the maximum limit.
 
 
