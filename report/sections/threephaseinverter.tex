@@ -412,8 +412,13 @@ As it can be seen, the the inverter was build on a large heat sink, along with t
 This heat sink is much larger than needed, but it was chosen for its structural integrity along with its cooling capability.
 The heat sink is mounted on an aluminium box, that blocks for air flow from the sides.\\
 Below the heat sink three fans were places to produce airflow on the heat sink for better heat dissipation.
-This was necessary because the heat sink needs to be mounted vertically for passive convection to work properly. 
+This was necessary because the heat sink needs to be mounted vertically for passive convection to work properly. \\ 
 
-
-The wires from the batteries will introduce inductance to the system. This will cause the current not to change instantaneously. Capacitors are added to counteract this behavior. It is chosen to add eight Panasonic Aluminum Electrolytic Capacitors are added, each having capacitance of 2200$\mu$F. Those are added to smoothen out low frequency voltage spikes. To counter for the higher frequency, another eight film capacitors with capacitance of 4.7$\mu$F are added.
+The wires from the batteries will introduce inductance to the system in the order of a few \si{\micro\henry}.
+This will cause the current not to change instantaneously, when the upper MOSFETs are switched.
+Capacitors are added to filter this behavior.
+It is chosen to add eight Panasonic Aluminum Electrolytic Capacitors , each having capacitance of 2200$\mu$F.
+Those are added to smoothen out low frequency voltage spikes.
+These each have an equivalent series resistance of 57\si{\milli\ohm}, and can handle currents of 4.06\si{\ampere} each.
+To counter for the higher frequency, another eight film capacitors with capacitance of 4.7$\mu$F are added.
   
