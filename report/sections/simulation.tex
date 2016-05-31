@@ -28,7 +28,7 @@ The mechanical system consists of a mass of the go-kart with driver, turbulent a
 \end{figure}
 
 Figure~\ref{fig:mechanical_full} shows the block diagram of the mechanical part, that the motor will drive.
-Starting from the left, the Permanent Magnet Synchronous Motor is the motor and the Ideal Rotational Motion Sensor is used for the Clarke-Park transformations. 
+Starting from the left, the Permanent Magnet Synchronous Motor is the motor and the Ideal Rotational Motion Sensor is used for the Clarke Park transformations. 
 The first inertia block contains both the inertia of the motor, which is 0.0052 \si{\kilogram\meter\squared} and the motor-side gear, which can be calculated by equation~\ref{eq:inertia_of_disc}. 
 Inertias on the same rod can be added together, so instead of having an inertia for the motor, and one for the motor-side gear, one inertia is enough.
 The inertia of the gear depends on its size. 
@@ -253,7 +253,7 @@ The output is sent to the Zybo block, which will be explained in section~\ref{su
 The Zybo subdiagram generates duty cycles for each phase ranging from -1 to 1. 
 This value is then multiplied with 26.4\si{\volt} to represent half the battery voltage, and then saturated to ensure, that the ideal voltage sources do not provide more voltage than possible.
 \subsubsection{Zybo block}\label{sub:sim_zybo}
-The Zybo block consists of three other subsystems, corresponding with some of the blocks on the actual Zybo; Clarke-Park, Discrete controller and PWM generation.
+The Zybo block consists of three other subsystems, corresponding with some of the blocks on the actual Zybo; Clarke Park, Discrete controller and PWM generation.
 This can be seen on figure~\ref{fig:simulations_zybo}.
 
 \begin{figure}[H]
@@ -326,7 +326,7 @@ As the torque produced by the motor is reduced due to saturation of the supply, 
 	\label{fig:sim_PWM_generation}
 \end{figure}
 
-The majority of this block diagram calculates the inverse Clarke-Park transformation, and in the upper right corner, the third harmonic injection is calculated using the knowledge given in \cite{third_harmonic_injection}. \\
+The majority of this block diagram calculates the inverse Clarke Park transformation, and in the upper right corner, the third harmonic injection is calculated using the knowledge given in \cite{third_harmonic_injection}. \\
 
 
 The issue is that, when using field oriented control, the stator voltage does not remain at a constant angle relative to the rotor angle.
@@ -357,7 +357,7 @@ V = \sqrt{V_q ^2 + V_d ^2}
 \label{eq:v_from_vdq}
 \end{equation}
 
-Note that equation~\ref{eq:v_from_vdq} is not equal to equation 10 in the paper\cite{third_harmonic_injection}, because this dividing with 1.5 is done in the Clarke-Park transform block. 
+Note that equation~\ref{eq:v_from_vdq} is not equal to equation 10 in the paper\cite{third_harmonic_injection}, because this dividing with 1.5 is done in the Clarke Park transform block. 
 
 From equation~\ref{eq:equation_9}, we know that:
 
@@ -600,7 +600,7 @@ Further tuning of the control variables could potentially yield better results.
 \subsection{Plecs model}\label{sub:sim_plecs_electrical}
 The reason for using Plecs is that it handles semiconductors as ideal switches.
 This greatly reduces the time required to simulate switch mode voltages.
-As both the high side and low side mosfets of each phase switch simultaneously, each PWM period of simulation contains up to six switching events. 
+As both the high side and low side MOSFETs of each phase switch simultaneously, each PWM period of simulation contains up to six switching events. 
 At 20 kHz, this means, the whole circuit needs to be solved 120.000 times per second, so using plecs is still not fast.
 The main use of this model is the simulation of heat dissipation throughout the circuit.
 
@@ -616,7 +616,7 @@ It is shown on figure~\ref{fig:plecs_electrical}.
 \end{figure}
 
 The simulation utilizes the fast PI controller from page~\pageref{sub:PI01}. 
-It simulates the switching inverter utilizing ideal switches as opposed to more realistic mosfets with limited current rate of change. 
+It simulates the switching inverter utilizing ideal switches as opposed to more realistic MOSFETs with limited current rate of change. 
 Because of the ideal switching, it is not necessary to include antiparallel diodes, nor deadtime.
 
 Figure~\ref{fig:plecs_electrical} shows the three phase inverter.
@@ -634,7 +634,7 @@ E_{off} = \frac{1}{2} V_{DS} \cdot |I_D| \cdot  t_{c,off}
 \end{equation}
 
 Because a negative current would cause the same loss, as a positive current, the absolute is taken of the drain current.
-All losses are calculated for two mosfets in parallel, conducting the combined current.
+All losses are calculated for two MOSFETs in parallel, conducting the combined current.
 
 Conduction loss is dependent on the temperature of the mosfet. 
 This however, does not change the on-resistance in the circuit, this is not possible to do in Plecs.
@@ -666,16 +666,16 @@ However, overmodulation uses a different method than third harmonic injection, w
 
 The test will be performed with a mass of 250 \si{\kilogram}.
 The current setpoint definced in the Signal Builder block goes to 300 and remains there for 10 seconds.
-The simulation will be used to estimate voltage ripple from the capacitor bank, the AC current going into the electrolytic capacitors and the loss in the mosfets.
+The simulation will be used to estimate voltage ripple from the capacitor bank, the AC current going into the electrolytic capacitors and the loss in the MOSFETs.
 
 Figure~\ref{fig:plecs_power_loss} shows the heat transfer to the heatsink.
-As there is a very low heat capacity in each of the mosfets, it's safe to assume, that this represents the total loss in the inverter
+As there is a very low heat capacity in each of the MOSFETs, it's safe to assume, that this represents the total loss in the inverter
 
 \begin{figure}[H]
 	\begin{subfigure}[t]{.49\linewidth}
 		\centering
 		\includegraphics[width = \linewidth]{graphics/plecs_power_loss}
-		\caption{Power loss in the Mosfets}
+		\caption{Power loss in the MOSFETs}
 		\label{fig:plecs_power_loss}
 	\end{subfigure}
 	\begin{subfigure}[t]{.49\linewidth}
@@ -694,7 +694,7 @@ Figure~\ref{fig:plecs_inverter_efficiency} displays the efficiency of the invert
 %\begin{figure}[H]
 %	\centering
 %	\includegraphics[width = 0.7\linewidth]{graphics/plecs_inverter_efficiency}
-%	\caption{Efficiency of the inverter calculated from the electrical power going into the motor and the power lost in the mosfets}
+%	\caption{Efficiency of the inverter calculated from the electrical power going into the motor and the power lost in the MOSFETs}
 %	\label{fig:plecs_inverter_efficiency}
 %\end{figure}
 The current ripple is displayed on figure~\ref{fig:plecs_current_ripple}
@@ -725,7 +725,7 @@ Figure~\ref{fig:plecs_voltage_ripple} displays the voltage ripple of the capacit
 The voltage ripple is quite low, less than 5 V, which means the inverter is supplied with an almost constant voltage, and the AC output is not begin disrupted by much.\\
 Figure~\ref{fig:plecs_heatsink_temperature} displays the heatsink temperature  during the full throttle test
 
-The temperature only increases 0.8 \si{\degree \celsius} during the test, so it easily handles the 500 \si{\watt} of heat generated by the mosfets. 
+The temperature only increases 0.8 \si{\degree \celsius} during the test, so it easily handles the 500 \si{\watt} of heat generated by the MOSFETs. 
 The reason for this limited temperature increase is the size of the thermal capacitance, rather than the low thermal resistance.\\
 
 \subsubsection{Conclusion of Plecs simulations}\label{sub:plec_conclusion} 
