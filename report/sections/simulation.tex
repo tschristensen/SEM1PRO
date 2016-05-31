@@ -28,7 +28,7 @@ The mechanical system consists of a mass of the go-kart with driver, turbulent a
 \end{figure}
 
 Figure~\ref{fig:mechanical_full} shows the block diagram of the mechanical part, that the motor will drive.
-Starting from the left, the Permanent Magnet Synchronous Motor is the motor and the Ideal Rotational Motion Sensor is used for the Clarke-Park transformations. 
+Starting from the left, the Permanent Magnet Synchronous Motor is the motor and the Ideal Rotational Motion Sensor is used for the Clarke Park transformations. 
 The first inertia block contains both the inertia of the motor, which is 0.0052 \si{\kilogram\meter\squared} and the motor-side gear, which can be calculated by equation~\ref{eq:inertia_of_disc}. 
 Inertias on the same rod can be added together, so instead of having an inertia for the motor, and one for the motor-side gear, one inertia is enough.
 The inertia of the gear depends on its size. 
@@ -253,7 +253,7 @@ The output is sent to the Zybo block, which will be explained in section~\ref{su
 The Zybo subdiagram generates duty cycles for each phase ranging from -1 to 1. 
 This value is then multiplied with 26.4\si{\volt} to represent half the battery voltage, and then saturated to ensure, that the ideal voltage sources do not provide more voltage than possible.
 \subsubsection{Zybo block}\label{sub:sim_zybo}
-The Zybo block consists of three other subsystems, corresponding with some of the blocks on the actual Zybo; Clarke-Park, Discrete controller and PWM generation.
+The Zybo block consists of three other subsystems, corresponding with some of the blocks on the actual Zybo; Clarke Park, Discrete controller and PWM generation.
 This can be seen on figure~\ref{fig:simulations_zybo}.
 
 \begin{figure}[H]
@@ -326,7 +326,7 @@ As the torque produced by the motor is reduced due to saturation of the supply, 
 	\label{fig:sim_PWM_generation}
 \end{figure}
 
-The majority of this block diagram calculates the inverse Clarke-Park transformation, and in the upper right corner, the third harmonic injection is calculated using the knowledge given in \cite{third_harmonic_injection}. \\
+The majority of this block diagram calculates the inverse Clarke Park transformation, and in the upper right corner, the third harmonic injection is calculated using the knowledge given in \cite{third_harmonic_injection}. \\
 
 
 The issue is that, when using field oriented control, the stator voltage does not remain at a constant angle relative to the rotor angle.
@@ -357,7 +357,7 @@ V = \sqrt{V_q ^2 + V_d ^2}
 \label{eq:v_from_vdq}
 \end{equation}
 
-Note that equation~\ref{eq:v_from_vdq} is not equal to equation 10 in the paper\cite{third_harmonic_injection}, because this dividing with 1.5 is done in the Clarke-Park transform block. 
+Note that equation~\ref{eq:v_from_vdq} is not equal to equation 10 in the paper\cite{third_harmonic_injection}, because this dividing with 1.5 is done in the Clarke Park transform block. 
 
 From equation~\ref{eq:equation_9}, we know that:
 
