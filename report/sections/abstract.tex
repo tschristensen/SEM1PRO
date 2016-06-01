@@ -1,8 +1,6 @@
 %!TEX root = ../main.tex
 \section*{Preface}
 \addcontentsline{toc}{section}{Preface}
-\todo[]{Thomas: I rewrote this section to include our time conumdrum, also, the number of people in the class/group is irrelevant. If people have something more they think is appropriate for this section, please do not hesitate to add it.}
-
 This report is written in partial fulfilment of the first semester of the masters programme in electrical engineering at the University of Southern Denmark.
 Due to time constraints it was decided to collaborate across all the students in the class.
 For this reason most of the electrical circuitry was developed by the authors of this report whereas the power electronics was mostly devised by the other group.
@@ -14,28 +12,54 @@ Regardless, all aspects of the project will be discussed throughout the report.
 We would like to thank our supervisors, Karsten Holm Andersen and Jacob Lykke Pedersen for the invaluable assistance and patience they have exerted throughout the semester.
 A word of thanks goes to our lecturers; Morten Nymand who has, on numerous occasions, provided assistance in the technical aspects of board layout and power electronics, and Jørgen Christian Larsen for saving countless hours of frustration with his assistance on Xilinx and all of the problems that follow.
 Additionally, for helping with practical aspects of the project including layout and sourcing of components, Thanks to Jesper Nielsen.
-\todo{Spacing should be checked before print - Mikkel}
 
-\vspace{10cm}
-{
-\newcommand{\namesigdate}[2][5cm]{%
-  \begin{tabular}{@{}p{#1}@{}}
-    #2 \\[2\normalbaselineskip] \hrule \\[0pt]
-%    {\small \textit{Signature}}% \\[2\normalbaselineskip] \hrule %\\[0pt]
-    %{\small \textit{Date}}
-  \end{tabular}
-}
-\centering
-\noindent \namesigdate[4.3cm]{Martin Brøchner Andersen} \hspace{1cm} \namesigdate[4.3cm]{Morten Tholstrup Pedersen} \hspace{1cm} \namesigdate[4.3cm]{Mikkel Skarup Jaedicke} \\~\\~\\
-\centering
-\noindent \namesigdate[4.3cm]{Erlingur Ívar Jóhannsson} \hspace{1cm}  \namesigdate[4.3cm]{Thomas S. Christensen}
-}
-\bigskip
+\vspace{1cm}
+\begin{center}
+	\begin{minipage}[t]{.49\textwidth}\large
+		\begin{center}
+		Martin Brøchner Andersen\\
+		\vspace{1cm}
+		\hrule
+		\vspace{0.5cm}
+		Morten Tholstrup Pedersen\\
+		\vspace{1cm}
+		\hrule
+		\vspace{0.5cm}
+		Mikkel Skaarup Jaedicke\\
+		\vspace{1cm}
+		\hrule
+		\vspace{0.5cm}
+		Erlingur Ívar Jóhannsson\\
+		\vspace{1cm}
+		\hrule
+		\vspace{0.5cm}
+		Thomas Søndergaard Christensen
+		\vspace{1cm}
+		\hrule
+		\end{center} 
+	\end{minipage}
+\end{center}
 
+\vspace{1.2cm}
+  \begin{center}
+    \textsl{The report, source code, data, plotting script and simulations can be found at:}  
+    \end{center}
+    \vspace{-5pt}
+    \begin{center}
+	\renewcommand{\UrlFont}{\color{black}\normalsize\tt}
+    \url{github.com/mikkeljae/SEM1PRO_ELECTRONICS}
+   \end{center}
 \newpage
+
 \section*{Abstract}
 \addcontentsline{toc}{section}{Abstract}
+The topic of motor control for electric vehicles is a fast growing industry both in terms of academic studies and in terms of economy.
+This report describes the process of creating a three phase inverter and a controller for an electrical go-kart.
+This process requires work in a variety of fields, including: electronics design, embedded design, control theory and power electronics.
+Extensive simulation as well as calculations on the system was done in order to more accurately determine the necessary components to be used in the inverter.
+The embedded system containing the controller, PWM generator and various other essential components were developed using Xilinx tools, such as System Generator.
+It was made possible to drive a smaller PMAC motor using the controller and inverter developed, however certain parts of the project remain unsolved.
+Making the electronics function properly was abandoned as there was insufficient time to spin another board.
+Much of the testing and verification of the system has also not been sufficiently examined.
+This, unfortunately, includes testing the inverter on the go-kart.
 
-\todo[inline]{Thomas: I disagree with the foreign language part. Never has an IEEE article had an abstract in a language different from the language of the main report. The purpose of an abstract is to give a brief overview of the objectives and results of the work enclosed in the report.}
-
-Abstract in foreign language as is the norm. (greek or danish?)

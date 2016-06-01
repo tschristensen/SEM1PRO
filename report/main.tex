@@ -1,7 +1,8 @@
-\documentclass[a4paper,10pt]{article}
+\documentclass[a4paper,10pt, twoside]{article}
 \usepackage[utf8]{inputenc}
 \setcounter{tocdepth}{2} %Only show sections and subsections in toc.
 
+\usepackage{colortbl}
 \usepackage{siunitx} %Package for SI units
 \sisetup{per-mode=fraction}
 
@@ -10,10 +11,23 @@
 \usepackage{graphicx}
 \usepackage{standalone}
 
-\usepackage[font={small}]{caption}
-\usepackage{subcaption}
+\usepackage[font={footnotesize}]{caption}
+\usepackage[font={footnotesize}]{subcaption}
 
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
+%\hypersetup{
+%    colorlinks = false,
+%    linkbordercolor = {white},
+%}
+
+
+%\hypersetup{
+ %   colorlinks,
+ %   linkcolor={red!50!black},
+ %   citecolor={blue!50!black},
+ %   urlcolor={blue!80!black}
+%}
+
 \usepackage{float}
 \usepackage[procnames]{listings}
 \usepackage{epstopdf} %Convert EPS files to PDF format
@@ -24,8 +38,13 @@
 \usepackage{standalone}
 \usepackage{circuitikz} 	%Utility to draw circuits in tikz
 
-\usepackage{todonotes}
+\usepackage[disable]{todonotes}
 \usepackage{listings}
+\usepackage{multirow}
+
+
+\usepackage{url}
+\renewcommand{\UrlFont}{\large\tt}
 
 \usepackage{chngcntr} %Change the counters of objects. Used to make figure/table and equation counting specific to the section they are in.
 \counterwithin{figure}{section}
@@ -47,7 +66,7 @@
   }%
 }
 
-\usepackage{fullpage}
+\usepackage[inner=2cm,outer=4cm]{geometry}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{dred}{rgb}{0.545,0,0}
@@ -82,12 +101,7 @@
 }
 
 \usepackage{xcolor}
-\hypersetup{
-    colorlinks,
-    linkcolor={red!50!black},
-    citecolor={blue!50!black},
-    urlcolor={blue!80!black}
-}
+
 
 \definecolor{MATLABpurple}{RGB}{160,32,240}
 \definecolor{MATLABgreen}{RGB}{34,139,34}
@@ -107,6 +121,7 @@
 \author{Thomas Søndergaard Christensen, Erlingur Ívar Jóhannsson, Mikkel Skarup Jaedicke, Morten Tholstrup Pedersen, Martin Brøchner Andersen}
 \date{31/05/2016}
 
+
 \begin{document}
 \input{sections/titlepage.tex}
 \newpage
@@ -115,29 +130,25 @@
 \newpage
 \tableofcontents
 \newpage
-\listoffigures
-\listoftables
-\listoftodos
+%\listoftodos
+%\listoftables
 \clearpage
 \newpage
 \pagenumbering{arabic}
-%\input{sections/introduction}
-%\input{sections/requirements}
-%\input{sections/systemdescription}
-%\input{sections/systemdiagram}
-%\input{sections/boardlayout}
-%\input{sections/zybo}
+\input{sections/introduction}
+\input{sections/requirements}
+\input{sections/systemdescription}
+\input{sections/systemdiagram}
+\input{sections/boardlayout}
+\input{sections/zybo}
 \input{sections/threephaseinverter}
-%\input{sections/PMACmotor}
-%\input{sections/motormodel}
+\input{sections/PMACmotor}
+\input{sections/motormodel}
 \input{sections/simulation}
-%\input{sections/testsetup}
-%\input{sections/conclusion}
+\input{sections/testsetup}
+\input{sections/conclusion}
 \newpage
 \input{bib}
 \newpage
-\appendix
-\input{appendix/extendedlayout}
-
 \end{document}
 

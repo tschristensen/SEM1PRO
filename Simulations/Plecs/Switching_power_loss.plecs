@@ -39,7 +39,7 @@ Plecs {
   Schematic {
     Location      [0, 38; 1920, 993]
     ZoomFactor    1.33333
-    SliderPosition [21, -1]
+    SliderPosition [195, -1]
     ShowBrowser   off
     BrowserWidth  100
     Component {
@@ -4400,6 +4400,120 @@ Plecs {
         }
       }
     }
+    Component {
+      Type          Ammeter
+      Name          "Am4"
+      Show          on
+      Position      [920, 295]
+      Direction     right
+      Flipped       off
+    }
+    Component {
+      Type          Ammeter
+      Name          "Am5"
+      Show          on
+      Position      [920, 250]
+      Direction     right
+      Flipped       on
+    }
+    Component {
+      Type          Ammeter
+      Name          "Am6"
+      Show          on
+      Position      [1025, 280]
+      Direction     right
+      Flipped       on
+    }
+    Component {
+      Type          Scope
+      Name          "current"
+      Show          on
+      Position      [1070, 350]
+      Direction     up
+      Flipped       off
+      Location      [0, 0; 0, 0]
+      State         ""
+      SavedViews    ""
+      HeaderState   ""
+      PlotPalettes  ""
+      Axes          "3"
+      TimeRange     "0"
+      ScrollingMode "1"
+      SingleTimeAxis "1"
+      Open          "0"
+      Ts            "-1"
+      SampleLimit   "0"
+      XAxisLabel    ""
+      Axis {
+        Name          ""
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Axis {
+        Name          ""
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Axis {
+        Name          ""
+        AutoScale     1
+        MinValue      0
+        MaxValue      1
+        Signals       {}
+        SignalTypes   [ ]
+        Untangle      0
+        KeepBaseline  off
+        BaselineValue 0
+      }
+      Fourier {
+        SingleXAxis   on
+        AxisLabel     "Frequency"
+        Scaling       0
+        PhaseDisplay  0
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+        Axis {
+          Name          ""
+          AutoScale     1
+          MinValue      0
+          MaxValue      1
+          Signals       {}
+          Untangle      0
+          KeepBaseline  off
+          BaselineValue 0
+        }
+      }
+    }
     Connection {
       Type          Wire
       SrcComponent  "R1"
@@ -4582,31 +4696,30 @@ Plecs {
     }
     Connection {
       Type          Wire
-      SrcComponent  "3ph Meter"
+      SrcComponent  "FET3"
       SrcTerminal   1
-      Points        [960, 280]
+      Points        [840, 295; 875, 295]
       Branch {
-        Points        [960, 295; 875, 295]
-        Branch {
-          Points        [840, 295]
-          DstComponent  "FET3"
-          DstTerminal   1
-        }
-        Branch {
-          DstComponent  "D1"
-          DstTerminal   2
-        }
+        DstComponent  "Am4"
+        DstTerminal   2
       }
       Branch {
-        Points        [960, 250; 865, 250]
-        Branch {
-          DstComponent  "FET2"
-          DstTerminal   2
-        }
-        Branch {
-          DstComponent  "D2"
-          DstTerminal   1
-        }
+        DstComponent  "D1"
+        DstTerminal   2
+      }
+    }
+    Connection {
+      Type          Wire
+      SrcComponent  "FET2"
+      SrcTerminal   2
+      Points        [865, 250]
+      Branch {
+        DstComponent  "Am5"
+        DstTerminal   1
+      }
+      Branch {
+        DstComponent  "D2"
+        DstTerminal   1
       }
     }
     Connection {
@@ -5633,6 +5746,52 @@ Plecs {
         DstComponent  "Current Ripple1"
         DstTerminal   1
       }
+    }
+    Connection {
+      Type          Wire
+      SrcComponent  "Am4"
+      SrcTerminal   1
+      Points        [960, 295; 960, 280]
+      Branch {
+        DstComponent  "Am6"
+        DstTerminal   1
+      }
+      Branch {
+        Points        [960, 250]
+        DstComponent  "Am5"
+        DstTerminal   2
+      }
+    }
+    Connection {
+      Type          Wire
+      SrcComponent  "3ph Meter"
+      SrcTerminal   1
+      DstComponent  "Am6"
+      DstTerminal   2
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Am5"
+      SrcTerminal   3
+      Points        [980, 265; 980, 340]
+      DstComponent  "current"
+      DstTerminal   1
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Am4"
+      SrcTerminal   3
+      Points        [920, 365; 1040, 365]
+      DstComponent  "current"
+      DstTerminal   3
+    }
+    Connection {
+      Type          Signal
+      SrcComponent  "Am6"
+      SrcTerminal   3
+      Points        [1025, 350]
+      DstComponent  "current"
+      DstTerminal   2
     }
   }
   ProbeBlock {

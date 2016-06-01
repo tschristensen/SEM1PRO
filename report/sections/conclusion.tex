@@ -1,1 +1,18 @@
 \section{Conclusion}
+Throughout this report has been described the various steps taken to create a control system for an electric go-kart.
+As part of this, circuit boards were developed to take care of over current protection, scaling of signals and various other tasks.
+The OCP was simulated in order to verify its functionality
+However, except for the driver board, due to time constraints it was not possible to finish the boards in time for the deadline.
+A driver board was made to for the DRV8301, the driver chip used in the project.
+This board was made to work with a test setup which includes the inverter developed, a small PMAC motor and some temporary boards made to interface the signals of the system.
+Using this test setup it was possible to drive the motor, verifying that the inverter is functional.
+A controller for the system was created using the settling time formulae.
+The controller was tested using the extensive simulations made of the system using Simulink.
+The controller was discretized in preparation for using it on the embedded system.
+This was unfortunately not tested.
+The embedded system was programmed using khaOS, a Run To Complete Scheduler.
+Its real time performance was verified using an oscilloscope.\\
+
+Many parts of the project were not completed to the satisfaction of the group.
+Throughout there were problems with delivery of components as well as the quality of the boards created.
+This resulted in much time spent doing things not necessarily conducive to a better end product.

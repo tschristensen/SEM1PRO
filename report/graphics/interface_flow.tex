@@ -1,6 +1,7 @@
 \documentclass{standalone}
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows}
+\usetikzlibrary{shapes.geometric, arrows,arrows.meta}
+\tikzset{>={Latex[width=2mm,length=2mm]}}
 
 
 \begin{document}
@@ -25,25 +26,26 @@
 \node (e) [right of=cmr,xshift=1.5cm,yshift=-2cm] {};
 
 
-\node (dec) [decision, right of=ir,yshift=-3cm,xshift=5cm] {All drive signals good?};
+\node (dec) [decision, right of=ir,yshift=-3cm,xshift=5cm] {\texttt{EN\_GATE} high?};
 \node (eh) [process, below of=dec,yshift=-0.5cm] {Set enable high.};
-\node (dec1) [decision, below of=eh,yshift=-0.5cm] {All drive signals good?};
+\node (dec1) [decision, below of=eh,yshift=-0.5cm] {\texttt{EN\_GATE} high?};
 \node (el) [process, below of=dec1,yshift=-0.5cm] {Set enable low.};
 
 
-\draw [arrow] (start) -- (ir);
-\draw [arrow] (ir) -- (timer1);
-\draw [arrow] (timer1) --  node[anchor=east] {Yes}(mr);
-\draw [arrow] (mr) -- (timer2);
-\draw [arrow] (timer2) --  node[anchor=east] {Yes}(cmr);
+\path[->] (start) edge (ir);
+\path[->] (ir) edge (timer1);
+\path[->](timer1) edge  node[anchor=east] {Yes}(mr);
+\path[->] (mr) edge (timer2);
+\path[->](timer2) edge  node[anchor=east] {Yes}(cmr);
 \draw 		  (cmr.south) |- (e.north);
 \draw 		  (e.north) -- ([yshift=14cm]e.north);
-\draw [arrow] ([yshift=14cm]e.north) -| (dec.north);
+\draw ([yshift=14cm]e.north) -| (dec.north);
+\path[->] ([yshift=1cm]dec.north) edge (dec.north);
 
-\draw [arrow] (dec) -- node[anchor=east] {Yes}(eh);
+\path[->] (dec) edge node[anchor=east] {Yes}(eh);
 %\draw    (dec.west) node[anchor=south] {No}		-- ([xshift=-0.6cm]dec.west);
-\draw [arrow] (eh) -- (dec1);
-\draw [arrow] (dec1) -- node[anchor=east] {No}	(el);
+\path[->](eh) edge (dec1);
+\path[->](dec1) edge node[anchor=east] {No}	(el);
 \draw 		  (el) |- (e.north);
 
 

@@ -1,22 +1,21 @@
 %!TEX root = ../main.tex
 
 \section{System Analysis}
-To get an overview of the system connections and all the major components needed to make the kart run, a system diagram is made based on the wiring diagram seen in figure \ref{fig:Kart_wiring_diagram}. 
-Figure \ref{fig:blockdiagram1} shows a simplified diagram of the wiring, where the Zybo board has replaced the Sevcon Gen4 controller. \newline
+To get an overview of the system connections and all the major components needed to make the go-kart run, a system diagram is made based on the wiring diagram seen in figure \ref{fig:Kart_wiring_diagram}. 
+Figure \ref{fig:blockdiagram1} shows a simplified diagram of the wiring, where the Zybo board has replaced the Sevcon Gen4 controller. \\
 
-The highlighted green component is the Zybo board.
+The green component represents the Zybo board.
 The PMAC motor, the driver and the inverter are all placed to the right of the controller board.
 Both the driver and inverter are parts of the Sevcon Gen4 controller and as such, they must be developed.
 The two blocks next to the motor are LEM current sensors. 
-Two of these are sufficient as the third current can be calculated using Kirchoff's current law.
-The encoder is measuring the rotational position of the rotor and feeding it to the controller.
-All three encoder signals might not be needed but they will be routed to have the opportunity to do so. \newline
+Two of these are sufficient as the third current can be calculated using Kirchoff's Current Law.
+The encoder is measuring the rotational position of the rotor and feeding it to the controller.\\
 
 To the left of the Zybo the different safety systems are placed.
 These will ensure that starting, stopping and emergency procedures are handled safely, preferably without any burned components.
 On top are the different switches, the key switch, the emergency switch and the enable switch.
-Below these is the undervoltage protection circuit which ensures that the kart is only driving when sufficient power is supplied. 
-The final parts to the left are the torque pedal for the kart and the battery supply.
+Below these is the undervoltage protection circuit which ensures that the go-kart is only driving when sufficient power is supplied. 
+The final parts to the left are the torque pedal for the go-kart and the battery supply.
 
 \begin{figure}[H]
 	\centering
@@ -24,93 +23,68 @@ The final parts to the left are the torque pedal for the kart and the battery su
 	\caption{Wiring diagram with the Zybo board.}
 	\label{fig:blockdiagram1}
 \end{figure}
-\todo[inline]{Thomas: Changes to the graphic: Zybo, not Zynq - In the encoder block, GND overlaps with edge of block, Wires to LEM sensors look messy - is it possible to flip all blocks to have text correctly oriented everywhere - more distance needed between text in green block and edge of block - weird dot on GND wire of battery undervoltage detection - make all wires same thickness - minimize whitespace, especially vertically.}
-\todo[inline]{Mikkel: ADC is not +- 0.5 volt anymore}
-\todo[inline]{Mikkel: We use some other ports on the encodder now.}
-A more technical diagram of the drive control process can be seen on figure \ref{fig:blockdiagram2}
-This diagram shows that the input to the controller will be d and q values gained from performing a dq transform, also known as the Clarke-Park Transform.
-\todo[inline]{Thomas: I'm not quite sure that i understand what this means..}
-\todo[inline]{Mikkel: This needs to be explained a bit better. May I give it a try? }
-\todo[inline]{Mikkel: To the figure: The Zybo does not handle the driver.}
-These are calculations done from a three phase AC voltage that turns them into two DC voltage phases and a zero phase. 
-dq is used to control the motor speed because it allows for simplified calculations compared to using the three AC signals. \newline
 
-When the calculations have been performed an inverse transformation back to three AC phases is performed, and the PWM will function using these new values. The position value from the encoder is also required for these transforms and for the PWM generator, this is also shown in the diagram. \newline
-
+A diagram of the functionality of the wanted control process can be seen in figure \ref{fig:blockdiagram2}.
+The different blocks of the figure will be explained in depth in the coming sections, but are presented here to give an overview of the complete system.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1\linewidth]{graphics/ContolProcessDiagram}
-	\caption{Diagram of the drive control system}
+	\caption{Diagram of the drive control system.}
 	\label{fig:blockdiagram2}
 \end{figure}
 
-Based on the two diagrams seen in figures \ref{fig:blockdiagram1} and \ref{fig:blockdiagram2} an analysis of each section will be performed. 
+The following sections will explain what needs to be done in different areas to achieve the functionality of figure \ref{fig:blockdiagram1} and \ref{fig:blockdiagram2}    
 
 \subsection{Electronics}
-The electronics include the circuit boards that are required to fulfil the task.
-Three boards are developed, an analog board, a digital board and a small board to house the gate driver.
-\todo[inline]{Mikkel: Maybe we should just talk about what problems that has to be handled and not how we did it yet.}
-These three boards must implement the functions listed here:
-\todo[inline]{Mikkel: Battery undervoltage protection is done by the supervisors?.}
-\todo[inline]{Mikkel: Currente transducer = LEM right? Maybe it is better to write this}
+In order to fulfil the requirements of the project, electric circuits will be developed to perform certain tasks. 
+The tasks at hand for the electronic circuits were found to be: 
+
 \begin{itemize}
-\item The battery undervoltage protection circuit / Overcurrent protection.
-\item Current transducer. The transducer itself will be placed on the power wires to the motor, however the circuitry for reading the signal is placed on these boards.
-\item Power supplies. The Zybo board, the current transducer and other parts of the circuit requires a 5\si{\volt} rail and $\pm$15\si{\volt} rails.
-\item Torque pedal downscale. The torque pedal output must be scaled as to not burn the ADC on the Zybo board.
-\item Various logic to control different parts of the system, including logic level shifting for the encoders as well as the circuitry for a drive enable signal.
-\item Driver circuit. A small circuit is designed in order to house the driver chip used in the project.
+\item Overcurrent protection.
+\item Circuitry for LEM current transducer output.
+\item Power supplies for the Zybo board, current transducers and other parts of the circuit.
+\item Torque pedal downscale. The torque pedal output must be scaled to comply with the input characteristics of the Zybo board.
+\item Various logic to control different parts of the system, including logic level shifting for the encoders as well as circuitry for a drive enable signal.
+\item Driver circuit. A driver is needed to control the inverter.
 \end{itemize}
-\todo[inline]{Thomas: We have nothing to do with the undervoltage protection, that is taken care of in part of the wiring.}
 All of the above points will be explored further in section \ref{sec:electronics}.
 
-\subsection{Embedded}
-The embedded part of the project is made on a Zybo board.
-The Zybo board features a Zynq 7010 chip with a dual core 64-bit Arm processor. 
-Also included in the chip is an FPGA area (Programmable logic or PL).
-The PL will be used to create the logic required for generating the PWM signals needed to regulate the PMAC motor. 
-The Zybo board will need to implement the functions listed here:
-\todo[inline]{Mikkel: I don't think it should be specific yet. Only a listing of task to do..}
+\subsection{Embedded System}
+An embedded system is needed in the project in order to perform the tasks shown in the red box in figure \ref{fig:blockdiagram2}.
+These tasks include:
+
 \begin{itemize}
 \item Creation of PWM signals. The motor will require a three phase sinusoidal signal in order to run, this is created using PWM.
-\item Controller. The digital controller used to control the entire system will be implemented using the processer in the system
-\item Interface for peripherals. A number of switches, LED's, enable and fault signals are used in the control of the motor. The Zybo must implement the necessary interfaces in order to properly handle these signals.
-\item Conversion of the analog signal created by the current transducers into a digital signal which can be used in controlling the motor.
+\item Controller. The digital controller used to control the entire system will be implemented using the embedded system.
+\item Interface for peripherals. A number of switches, LED's, enable and fault signals are used in the control of the motor.
+\item Conversion of the analog signal created by the current transducers and the torque pedal into a digital signal which can be used in controlling the motor.
 \item Decoding the input from the encoder.
-\item Interface to a PC in order to update controller values or read relevant information.
+\item Interface to a computer in order to set and get relevant parameters.
 \end{itemize}
-
-The Zybo board is comparably a very powerful board in its size and should have no problems with these functions. 
-The overall software design and development will be explored further in section \ref{sec:embedded}.
+The overall software design and development will be explored further in section \ref{sec:emb}.
 
 \subsection{Power Electronics}
-The power electronics include the 3-phase driver and inverter. 
-The functionality of these is to convert the DC voltage of the batteries into the 3-phase AC needed to power the PMAC motor.
-Much of the complication in this part lies in choosing the right components for the high currents necessary for driving the motor.
-Taking all aspects, such as switching losses and heat dissipation, into account and still producing a capable drive signal, is the main focus of this section.
+A three phase inverter will be developed throughout this project.
+Specifications for the inverter are:
 
-Listing the functionality of the power electronics:
 \begin{itemize}
-\item Produce a 3-phase AC signal from a DC source.
-\item Don't burn or fail.
-\end{itemize} 
-\todo[inline]{Morten: Any more?}
-\todo[inline]{Mikkel: More!}
-
-The development of the power electronics is discussed in more detail in section \ref{sec:power}.
-\todo[inline]{Thomas: This part is a bit weak, I am sure there are more requirements - perhaps Erlingur knows something about it?}
+	\item Must be able to generate three AC phases from one common DC supply using PWM.
+	\item It should be able to handle 300A amplitude
+	\item It must be able to handle 65V amplitude.
+	\item Noise from the inverter must not disturb the other electronics.
+	\item The inverter must not become too hot during prolonged use.
+\end{itemize}
+The development of the power electronics is discussed in detail in section \ref{sec:inverter}.
 
 \subsection{PMAC Motor}
-\todo[inline]{Mikkel: Propel? And I think this section should be more like the other}
-Clearly, the function of the motor is to propel the go-kart forwards.
-It is equipped with an encoder which can, through SPI, provide the position of the rotor.
-Additionally, as mentioned previously, it is also necessary to measure the current running through each of the phases of the motor.
-In order to properly model the motor, it is necessary to have an accurate parameterisation of it.
-This parameterisation as well as a general explanation of the functionality of a PMAC motor will be presented throughout section \ref{sec:PMAC}.
+The PMAC motor provided needs to be analysed in order to drive it optimally and simulate the performance of it. 
+Parameterisation of the motor will be done as a part of the analysis. 
+This analysis as well as a general explanation of the functionality of a PMAC motor will be presented throughout section \ref{sec:PMAC}.
 
-This concludes the overview of the different parts of the system, the design of each part will be described in their individual sections.
+\subsection{Control Theory}
+To make the go-kart drive optimally a controller needs to be developed. 
+A three phase PMAC motor needs a three phase sinosoidal signal to drive and as this is problematic to control directly some transformation will be needed. 
+As the control algorihm will need to be run on an embedded system a discrete controller is needed. 
+The development of the controller will be described in detail in section \ref{sec:controller_design}.
 \clearpage
-
-
-\todo[inline]{Add something about simulation and control- Mikkel}
