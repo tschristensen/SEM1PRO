@@ -1,6 +1,6 @@
 Plecs {
   Name          "Switching_power_loss"
-  Version       "3.7"
+  Version       "4.0"
   CircuitModel  "ContStateSpace"
   StartTime     "0.0"
   StopTime      "10.0"
@@ -24,22 +24,23 @@ Plecs {
   InitializationCommands ""
   InitialState  "1"
   SystemState   ""
-  CodeGenTopologies "[]"
-  CodeGenSwitchingAlgorithm "1"
-  CodeGenMatrixCodingStyle "1"
   CodeGenParameterInlining "2"
   CodeGenInliningExceptions "AAAACwAAAAAA"
+  CodeGenFloatingPointFormat "2"
   CodeGenIntegerWordSize "32"
   CodeGenAbsTimeUsageMsg "3"
   CodeGenBaseName ""
   CodeGenOutputDir ""
   CodeGenExtraOpts ""
+  CodeGenTarget "Generic"
+  CodeGenTargetSettings ""
   ExtendedMatrixPrecision "1"
   MatrixSignificanceCheck "2"
+  ExternalModeSettings ""
   Schematic {
-    Location      [0, 38; 1920, 993]
+    Location      [0, 23; 1536, 784]
     ZoomFactor    1.33333
-    SliderPosition [195, -1]
+    SliderPosition [-1, 273]
     ShowBrowser   off
     BrowserWidth  100
     Component {
@@ -151,7 +152,7 @@ Plecs {
       }
       Parameter {
         Variable      "Inputs"
-        Value         "2"
+        Value         "1"
         Show          off
       }
     }
@@ -169,7 +170,7 @@ Plecs {
       }
       Parameter {
         Variable      "Inputs"
-        Value         "2"
+        Value         "1"
         Show          off
       }
     }
@@ -187,7 +188,7 @@ Plecs {
       }
       Parameter {
         Variable      "Inputs"
-        Value         "2"
+        Value         "1"
         Show          off
       }
     }
@@ -1249,6 +1250,7 @@ Plecs {
       Frame         [-50, -20; 50, 20]
       LabelPosition [0, 0]
       SampleTime    "-1"
+      CodeGenTarget "Generic"
       MaskIconFrame on
       MaskIconOpaque off
       MaskIconRotates on
@@ -1309,6 +1311,7 @@ Plecs {
           Frame         [-40, -20; 40, 20]
           LabelPosition [0, 0]
           SampleTime    "-1"
+          CodeGenTarget "Generic"
           MaskIconFrame on
           MaskIconOpaque off
           MaskIconRotates on
@@ -1507,6 +1510,7 @@ Plecs {
           Frame         [-40, -20; 40, 20]
           LabelPosition [0, 0]
           SampleTime    "-1"
+          CodeGenTarget "Generic"
           MaskIconFrame on
           MaskIconOpaque off
           MaskIconRotates on
@@ -1595,6 +1599,7 @@ Plecs {
           Frame         [-40, -20; 40, 20]
           LabelPosition [0, 0]
           SampleTime    "-1"
+          CodeGenTarget "Generic"
           MaskIconFrame on
           MaskIconOpaque off
           MaskIconRotates on
@@ -1745,6 +1750,57 @@ Plecs {
             }
           }
         }
+        Component {
+          Type          PulseGenerator
+          Name          "Pulse\nGenerator"
+          Show          on
+          Position      [325, 195]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "Hi"
+            Value         "1"
+            Show          off
+          }
+          Parameter {
+            Variable      "Lo"
+            Value         "0"
+            Show          off
+          }
+          Parameter {
+            Variable      "f"
+            Value         "1/8"
+            Show          off
+          }
+          Parameter {
+            Variable      "DutyCycle"
+            Value         "5/8"
+            Show          off
+          }
+          Parameter {
+            Variable      "Delay"
+            Value         "0"
+            Show          off
+          }
+        }
+        Component {
+          Type          RateLimiter
+          Name          "Rate Limiter"
+          Show          on
+          Position      [390, 195]
+          Direction     right
+          Flipped       off
+          Parameter {
+            Variable      "RisingRateLimit"
+            Value         "1"
+            Show          off
+          }
+          Parameter {
+            Variable      "FallingRateLimit"
+            Value         "-100"
+            Show          off
+          }
+        }
         Connection {
           Type          Signal
           SrcComponent  "Gain"
@@ -1754,10 +1810,16 @@ Plecs {
         }
         Connection {
           Type          Signal
-          SrcComponent  "Reverse"
-          SrcTerminal   1
-          Points        [345, 345; 345, 195]
+          SrcComponent  "Rate Limiter"
+          SrcTerminal   2
           DstComponent  "Gain"
+          DstTerminal   1
+        }
+        Connection {
+          Type          Signal
+          SrcComponent  "Pulse\nGenerator"
+          SrcTerminal   1
+          DstComponent  "Rate Limiter"
           DstTerminal   1
         }
       }
@@ -1791,6 +1853,7 @@ Plecs {
       LabelPosition [0, 23]
       LabelAlign    up
       SampleTime    "-1"
+      CodeGenTarget "Generic"
       MaskIconFrame on
       MaskIconOpaque off
       MaskIconRotates on
@@ -3761,6 +3824,7 @@ Plecs {
       Frame         [-20, -20; 20, 20]
       LabelPosition [0, 0]
       SampleTime    "-1"
+      CodeGenTarget "Generic"
       MaskIconFrame on
       MaskIconOpaque off
       MaskIconRotates on
