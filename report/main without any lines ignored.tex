@@ -1,0 +1,143 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\setcounter{tocdepth}{2} %Only show sections and subsections in toc.
+
+\usepackage{siunitx} %Package for SI units
+\sisetup{per-mode=fraction}
+
+\usepackage{textcomp} %Vertically centered tilde (~)
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\usepackage[font={small}]{caption}
+\usepackage{subcaption}
+
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage[procnames]{listings}
+\usepackage{epstopdf} %Convert EPS files to PDF format
+\usepackage{pdfpages} %Utility to include pdf documents into the report, used to include datasheets in appendices.
+
+\usepackage{tikz} 			%Utility to draw nice figures
+\usetikzlibrary{shapes.geometric, arrows}
+
+\usepackage{circuitikz} 	%Utility to draw circuits in tikz
+
+\usepackage{todonotes}
+\usepackage{listings}
+
+\usepackage{chngcntr} %Change the counters of objects. Used to make figure/table and equation counting specific to the section they are in.
+\counterwithin{figure}{section}
+\counterwithin{equation}{section}
+
+%Make counter of listings specific to sections
+\AtBeginDocument{%
+  \counterwithin*{lstlisting}{section}
+  \renewcommand{\thelstlisting}{%
+    \ifnum\value{subsection}=0
+      \thesection.\arabic{lstlisting}%
+    \else
+      \ifnum\value{subsubsection}=0
+        \thesection.\arabic{lstlisting}%
+      \else
+        \thesection.\arabic{lstlisting}%
+      \fi
+    \fi
+  }%
+}
+
+\usepackage{fullpage}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{dred}{rgb}{0.545,0,0}
+\definecolor{dblue}{rgb}{0,0,0.545}
+\definecolor{lgrey}{rgb}{0.9,0.9,0.9}
+\definecolor{gray}{rgb}{0.4,0.4,0.4}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.6}
+% Brewer color scheme
+% 1 #7fc97f (green)
+\definecolor{brewergreen}{RGB}{127,201,127}
+% 3 #fdc086 (orange)
+\definecolor{brewerorange}{RGB}{253,192,134}
+% 5 #386cb0 (blue)
+\definecolor{brewerblue}{RGB}{56,108,176}
+% 8 #666666 (grey)
+\definecolor{brewergrey}{RGB}{102,102,102}
+
+\lstdefinestyle{customCpp}{
+    backgroundcolor=\color{lgrey!40}, 
+    language=C++,
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\bfseries\color{brewergreen!70!black},
+    identifierstyle=\color{black},
+    stringstyle=\color{brewerblue}, 
+    commentstyle=\itshape\color{white!40!black},
+    showstringspaces=false,
+    frame=tb,
+    numberstyle=\tiny,
+    numbers=left,
+    numbersep = 3pt, 
+    linewidth=1\linewidth,
+}
+
+\usepackage{xcolor}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\definecolor{MATLABpurple}{RGB}{160,32,240}
+\definecolor{MATLABgreen}{RGB}{34,139,34}
+
+\lstdefinestyle{customMATLAB}{
+	basicstyle=\footnotesize\ttfamily,
+	language=MATLAB,
+	stringstyle=\color{purple},
+	commentstyle=\color{MATLABgreen},
+	keywordstyle=\color{black},
+	escapechar=&
+}
+
+\setlength{\parindent}{0pt}
+
+\title{Electronics - 1. Semester Project}
+\author{Thomas Søndergaard Christensen, Erlingur Ívar Jóhannsson, Mikkel Skarup Jaedicke, Morten Tholstrup Pedersen, Martin Brøchner Andersen}
+\date{31/05/2016}
+
+\begin{document}
+\input{sections/titlepage.tex}
+
+\newpage
+\pagenumbering{Roman}
+\input{sections/abstract}
+\newpage
+\tableofcontents
+\newpage
+\listoffigures
+\listoftables
+\listoftodos
+\clearpage
+\newpage
+\pagenumbering{arabic}
+\input{sections/introduction}
+\input{sections/requirements}
+\input{sections/systemdescription}
+\input{sections/systemdiagram}
+\input{sections/boardlayout}
+\input{sections/zybo}
+\input{sections/threephaseinverter}
+\input{sections/PMACmotor}
+\input{sections/motormodel}
+\input{sections/simulation}
+\input{sections/testsetup}
+\input{sections/conclusion}
+\newpage
+\input{bib}
+\newpage
+\appendix
+\input{appendix/extendedlayout}
+
+\end{document}
+
