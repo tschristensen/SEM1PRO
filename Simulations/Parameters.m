@@ -38,7 +38,7 @@ n2=-1:.01:1;
 third_phase = sin(3*asin(n2));
 
 % Simulation parameters
-T=1/10000;
+T=1/25000;
 
 %control parameters
 TS=L/R  ;        %Electromagnetic time constant
@@ -51,7 +51,7 @@ Num1=[2*J_pro 2*Kv*L];
 Den1=[2*J_pro*L 2*Kv*L+2*J_pro*R 3*Kt^2+2*Kv*R];
 Ds=tf(Num1,Den1);
 
-Tset=0.01;
+Tset=0.002;
  
  alpha=(1.5*(1+3))/Tset;
 Kp=(3*alpha-Kv/J_pro-(R/(2*L)))*L/26.4;
@@ -64,3 +64,8 @@ Ki=(3*alpha^2-((Kp*Kv)/(2*J_pro)-(Kv*R)/(J_pro*L)-(3*Kt^2)/(2*J_pro*L)))*L/26.4;
 %Kp = -(9/Tset - R/L)*L/26.4;
 %Ki = (4.5/Tset)^2*L/26.4;
 
+
+f=1000/3;
+t1=1e-3;
+t2=1/(6*f);
+t3=3e-4;
